@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-dark-700; }
+  body { @apply bg-[#0a0a0f] text-gray-100 font-sans; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-[#0a0a0f]; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FFD700, #B8860B); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #FFD700; }
+  ::selection { background: rgba(255, 215, 0, 0.3); color: #FFD700; }
+}
+
+@layer components {
+  .glass { @apply bg-[#0a0a0f]/80 backdrop-blur-xl border border-[#FFD700]/10; }
+  .glass-hover { @apply hover:bg-[#111]/80 hover:border-[#FFD700]/20 transition-all duration-300; }
+  .card { @apply glass rounded-2xl p-6 glass-hover; }
+  .card-glow { @apply card hover:shadow-lg hover:shadow-[#FFD700]/5; }
+  .btn-primary { @apply bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#DAA520] text-black font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-[#FFD700]/20 hover:shadow-[#FFD700]/40 hover:-translate-y-0.5 active:translate-y-0; }
+  .btn-secondary { @apply glass border border-[#FFD700]/20 hover:border-[#FFD700]/40 text-[#FFD700] font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0; }
+  .btn-ghost { @apply text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/5 font-medium py-2 px-4 rounded-lg transition-all duration-200; }
+  .btn-danger { @apply bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-red-500/20 hover:shadow-red-500/40; }
+  .input { @apply w-full bg-[#0a0a0f]/80 border border-[#333] rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/20 transition-all duration-200; }
+  .select { @apply input appearance-none cursor-pointer; }
+  .textarea { @apply input resize-none min-h-[100px]; }
+  .label { @apply block text-sm font-medium text-gray-300 mb-2; }
+  .badge { @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium; }
+  .badge-success { @apply badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20; }
+  .badge-warning { @apply badge bg-amber-500/10 text-amber-400 border border-amber-500/20; }
+  .badge-danger { @apply badge bg-red-500/10 text-red-400 border border-red-500/20; }
+  .badge-info { @apply badge bg-[#00D4FF]/10 text-[#00D4FF] border border-[#00D4FF]/20; }
+  .badge-gold { @apply badge bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/20; }
+  .section-title { @apply text-3xl md:text-4xl lg:text-5xl font-display font-bold bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#DAA520] bg-clip-text text-transparent; }
+  .section-subtitle { @apply text-gray-400 mt-2 text-lg; }
+  .gold-text { @apply bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#DAA520] bg-clip-text text-transparent; }
+  .crown-icon { @apply text-[#FFD700] drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]; }
+}
+
+@layer utilities {
+  .bg-gold-grid { background-image: linear-gradient(rgba(255,215,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+  .text-gradient-gold { @apply bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#DAA520] bg-clip-text text-transparent; }
+}
