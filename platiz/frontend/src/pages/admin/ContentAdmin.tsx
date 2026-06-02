@@ -20,7 +20,7 @@ export default function ContentAdmin() {
   }, []);
 
   useEffect(() => {
-    if (selectedCat) api.get(`/content/items/${selectedCat}`).then((r) => setItems(r.data)).catch(() => setItems([]));
+    if (selectedCat) api.get(`/content/items/${selectedCat}`).then((r) => setItems(r.data.items || r.data)).catch(() => setItems([]));
   }, [selectedCat]);
 
   const resetForm = () => { setForm({ title: '', description: '', link: '', video_url: '' }); setFile(null); setEditId(null); setShowForm(false); };
@@ -46,7 +46,7 @@ export default function ContentAdmin() {
       }
       resetForm();
       const { data } = await api.get(`/content/items/${selectedCat}`);
-      setItems(data);
+      setItems(data.items || data);
     } catch { toast.error('Error al guardar'); } finally { setLoading(false); }
   };
 
