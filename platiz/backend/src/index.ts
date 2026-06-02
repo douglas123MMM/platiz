@@ -23,7 +23,7 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/streams', streamRoutes);
 
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', version: 'v2.0', timestamp: new Date().toISOString() }));
 
 app.post('/api/setup-db', async (_req, res) => {
   try {
