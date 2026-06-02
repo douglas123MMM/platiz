@@ -8,8 +8,8 @@ const CATEGORIES = [
   { key: 'Noticias', label: 'Noticias', icon: '📰' },
   { key: 'Deportes', label: 'Deportes', icon: '⚽' },
   { key: 'Entretenimiento', label: 'Entretenimiento', icon: '🎬' },
-  { key: 'Cultura', label: 'Cultura', icon: '🎭' },
-  { key: 'Infantil', label: 'Infantil', icon: '🧒' },
+  { key: 'Documentales', label: 'Documentales', icon: '🌍' },
+  { key: 'Ciencia', label: 'Ciencia', icon: '🔬' },
   { key: 'Películas', label: 'Películas', icon: '🎥' },
 ];
 
@@ -61,23 +61,19 @@ export default function CinemaTV() {
 
   const filtered = activeCategory === 'all' ? media : activeCategory === 'Películas' ? media.filter((m) => m.type === 'movie') : media.filter((m) => m.genre === activeCategory);
 
-  const getPlayerSrc = (item: MediaContent): string | null => {
-    if (!item) return null;
+  const getPlayerSrc = (item: MediaContent): { src: string; isM3u8: boolean } => {
+    if (!item) return { src: '', isM3u8: false };
     const url = item.video_url;
-    if (url.endsWith('.m3u8')) return url;
+    if (url.endsWith('.m3u8')) return { src: url, isM3u8: true };
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
       const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/);
-      return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1` : null;
+      return m ? { src: `https://www.youtube.com/embed/${m[1]}?autoplay=1`, isM3u8: false } : { src: '', isM3u8: false };
     }
     if (url.includes('drive.google.com')) {
       const m = url.match(/\/d\/([^/]+)/);
-      return m ? `https://drive.google.com/file/d/${m[1]}/preview` : null;
+      return m ? { src: `https://drive.google.com/file/d/${m[1]}/preview`, isM3u8: false } : { src: '', isM3u8: false };
     }
-    if (url.includes('vimeo.com')) {
-      const m = url.match(/vimeo\.com\/(\d+)/);
-      return m ? `https://player.vimeo.com/video/${m[1]}?autoplay=1` : null;
-    }
-    return url;
+    return { src: url, isM3u8: false };
   };
 
   return (
@@ -119,13 +115,13 @@ export default function CinemaTV() {
               </div>
             ) : (
               <>
-                {activeItem.video_url.endsWith('.m3u8') ? (
+                {(() => { const ps = getPlayerSrc(activeItem); return ps.isM3u8 || activeItem.video_url.endsWith('.mp4') ? (
                   <video ref={videoRef} className="absolute inset-0 w-full h-full" controls autoPlay playsInline onError={() => setPlayerError(true)} poster={activeItem.image_url || undefined}>
-                    <source src={activeItem.video_url} type="application/x-mpegURL" />
+                    <source src={ps.src || activeItem.video_url} type={ps.isM3u8 ? 'application/x-mpegURL' : 'video/mp4'} />
                   </video>
                 ) : (
-                  <iframe src={getPlayerSrc(activeItem) || ''} className="absolute inset-0 w-full h-full" allow="autoplay; fullscreen" allowFullScreen onError={() => setPlayerError(true)} />
-                )}
+                  <iframe src={ps.src || ''} className="absolute inset-0 w-full h-full" allow="autoplay; fullscreen" allowFullScreen onError={() => setPlayerError(true)} />
+                ); })()}
                 <div className="absolute top-4 left-4 flex items-center gap-3">
                   <button onClick={() => { setActiveItem(null); setPlayerError(false); }} className="p-2 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"><HiX className="w-4 h-4" /></button>
                   <div className="bg-black/60 backdrop-blur px-3 py-1.5 rounded-full">
