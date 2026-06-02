@@ -43,6 +43,13 @@ app.post('/api/setup-db', async (_req, res) => {
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_type TEXT;');
+    await client.query('ALTER TABLE streams ADD COLUMN IF NOT EXISTS show_on_landing INTEGER DEFAULT 0;');
+    await client.query(`CREATE TABLE IF NOT EXISTS partners (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name TEXT NOT NULL, role TEXT, photo_url TEXT, link TEXT,
+      active INTEGER DEFAULT 1, sort_order INTEGER DEFAULT 0,
+      created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW()
+    );`);
     await client.end();
     res.json({ ok: true, message: 'Migraciones ejecutadas' });
   } catch (e: any) {
