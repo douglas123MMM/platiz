@@ -6,7 +6,8 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
   try {
     const { data, error } = await supabase.from('settings').select('*').maybeSingle();
     if (error && error.message.includes('does not exist')) {
-      return res.json({ whatsapp: '', telegram: '' });
+      res.json({ whatsapp: '', telegram: '' });
+      return;
     }
     res.json(data || { whatsapp: '', telegram: '' });
   } catch {
@@ -26,7 +27,8 @@ export async function updateSettings(req: AuthRequest, res: Response): Promise<v
     res.json({ message: 'Settings updated' });
   } catch (e: any) {
     if (e.message?.includes('does not exist')) {
-      return res.status(500).json({ error: 'La tabla settings no existe. Ejecuta el SQL de migracion.' });
+      res.status(500).json({ error: 'La tabla settings no existe. Ejecuta el SQL de migracion.' });
+      return;
     }
     res.status(500).json({ error: 'Internal server error' });
   }
