@@ -8,7 +8,10 @@
     { "source": "/(.*)", "destination": "/frontend/dist/$1" }
   ],
   "functions": {
-    "api/index.ts": {
+    "api/setup-db.ts": {
+      "memory": 512,
+      "maxDuration": 30
+    },
       "memory": 256,
       "maxDuration": 10
     }
