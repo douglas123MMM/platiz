@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import { AIProvider, ChatMessage, Conversation } from '../types';
-import { HiChat, HiPaperAirplane, HiTrash, HiPlus, HiMenu, HiChip } from 'react-icons/hi';
+import { IconChat, IconSend, IconTrash, IconPlus, IconMenu, IconAi } from '../icons/PremiumIcons';
 
 export default function ChatPage() {
   const [providers, setProviders] = useState<AIProvider[]>([]);
@@ -66,29 +66,29 @@ export default function ChatPage() {
       <div className={`${sidebarOpen ? 'fixed inset-0 z-50 flex' : 'hidden'} lg:relative lg:flex lg:w-80 flex-col glass rounded-2xl border border-[#FFD700]/10 overflow-hidden`}>
         <div className="p-4 border-b border-[#FFD700]/10 flex items-center justify-between">
           <h2 className="font-semibold text-white">Historial</h2>
-          <button onClick={newChat} className="btn-ghost p-2 rounded-lg"><HiPlus className="w-5 h-5" /></button>
+          <button onClick={newChat} className="btn-ghost p-2 rounded-lg"><IconPlus className="w-5 h-5" /></button>
         </div>
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {conversations.map((conv) => (
             <div key={conv.id} className={`group flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${activeConv === conv.id ? 'bg-[#FFD700]/10 border border-[#FFD700]/20' : 'hover:bg-[#FFD700]/5 border border-transparent'}`} onClick={() => loadConversation(conv.id)}>
-              <HiChat className="w-5 h-5 text-gray-500 flex-shrink-0" />
+              <IconChat className="w-5 h-5 text-gray-500 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">{conv.title}</p>
                 <p className="text-xs text-gray-500">{new Date(conv.updated_at).toLocaleDateString()}</p>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); deleteConv(conv.id); }} className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-all"><HiTrash className="w-4 h-4" /></button>
+              <button onClick={(e) => { e.stopPropagation(); deleteConv(conv.id); }} className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-all"><IconTrash className="w-4 h-4" /></button>
             </div>
           ))}
           {conversations.length === 0 && <p className="text-gray-500 text-sm text-center py-8">Sin conversaciones</p>}
         </div>
         <div className="p-4 border-t border-[#FFD700]/10">
-          <button onClick={newChat} className="btn-secondary w-full text-sm flex items-center justify-center gap-2"><HiPlus className="w-4 h-4" /> Nuevo chat</button>
+          <button onClick={newChat} className="btn-secondary w-full text-sm flex items-center justify-center gap-2"><IconPlus className="w-4 h-4" /> Nuevo chat</button>
         </div>
       </div>
 
       <div className="flex-1 flex flex-col glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
         <div className="p-4 border-b border-[#FFD700]/10 flex items-center gap-4">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 rounded-lg hover:bg-[#FFD700]/5 text-gray-400"><HiMenu className="w-5 h-5" /></button>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 rounded-lg hover:bg-[#FFD700]/5 text-gray-400"><IconMenu className="w-5 h-5" /></button>
           <HiChip className="w-6 h-6 text-[#FFD700]" />
           <span className="text-sm text-gray-300 font-medium">IA:</span>
           <select value={selectedProvider} onChange={(e) => setSelectedProvider(e.target.value)} className="bg-[#0a0a0f] border border-[#333] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FFD700]">
@@ -99,7 +99,7 @@ export default function ChatPage() {
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
           {messages.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center h-full text-center">
-              <HiChat className="w-16 h-16 text-gray-700 mb-4" />
+              <IconChat className="w-16 h-16 text-gray-700 mb-4" />
               <h3 className="text-xl font-display font-bold gold-text mb-2">Chat IA Global Dorado</h3>
               <p className="text-gray-600 max-w-md">Selecciona un proveedor de IA (ChatGPT, Gemini, Claude, Perplexity...) y comienza a chatear. Tus conversaciones se guardan automáticamente.</p>
             </div>
@@ -129,7 +129,7 @@ export default function ChatPage() {
         <div className="p-4 border-t border-[#FFD700]/10">
           <div className="flex gap-3">
             <input type="text" className="input flex-1" placeholder="Escribe tu mensaje a la IA..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()} />
-            <button onClick={sendMessage} disabled={loading || !input.trim() || !selectedProvider} className="btn-primary px-5 disabled:opacity-50 disabled:cursor-not-allowed"><HiPaperAirplane className="w-5 h-5" /></button>
+            <button onClick={sendMessage} disabled={loading || !input.trim() || !selectedProvider} className="btn-primary px-5 disabled:opacity-50 disabled:cursor-not-allowed"><IconSend className="w-5 h-5" /></button>
           </div>
         </div>
       </div>

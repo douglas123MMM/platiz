@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Banner } from '../../types';
 import toast from 'react-hot-toast';
-import { HiPlus, HiTrash, HiPencil, HiPhotograph, HiEye, HiEyeOff } from 'react-icons/hi';
+import { IconPlus, IconTrash, IconPencil, IconPhoto, IconEye, IconEyeOff } from '../../icons/PremiumIcons';
 
 export default function BannersAdmin() {
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -54,7 +54,7 @@ export default function BannersAdmin() {
           <h1 className="section-title text-2xl">Banners Promocionales</h1>
           <p className="section-subtitle">Sube imágenes promocionales para la portada de Global Dorado</p>
         </div>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="btn-primary flex items-center gap-2"><HiPlus className="w-4 h-4" /> Nuevo banner</button>
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="btn-primary flex items-center gap-2"><IconPlus className="w-4 h-4" /> Nuevo banner</button>
       </div>
 
       {showForm && (
@@ -96,7 +96,7 @@ export default function BannersAdmin() {
               </div>
             ) : (
               <div className="relative -mx-6 -mt-6 mb-4 h-48 bg-gradient-to-br from-[#111] to-[#0a0a0f] flex items-center justify-center">
-                <HiPhotograph className="w-12 h-12 text-gray-600" />
+                <IconPhoto className="w-12 h-12 text-gray-600" />
               </div>
             )}
             <div className="flex items-start justify-between">
@@ -106,16 +106,16 @@ export default function BannersAdmin() {
                 <span className={`badge mt-2 ${banner.active ? 'badge-success' : 'badge-danger'}`}>{banner.active ? 'Activo' : 'Inactivo'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => toggleActive(banner)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-white transition-colors">{banner.active ? <HiEyeOff className="w-4 h-4" /> : <HiEye className="w-4 h-4" />}</button>
-                <button onClick={() => { setForm({ title: banner.title, description: banner.description || '', link: banner.link || '' }); setEditId(banner.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#FFD700] transition-colors"><HiPencil className="w-4 h-4" /></button>
-                <button onClick={() => deleteBanner(banner.id)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-red-400 transition-colors"><HiTrash className="w-4 h-4" /></button>
+                <button onClick={() => toggleActive(banner)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-white transition-colors">{banner.active ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}</button>
+                <button onClick={() => { setForm({ title: banner.title, description: banner.description || '', link: banner.link || '' }); setEditId(banner.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#FFD700] transition-colors"><IconPencil className="w-4 h-4" /></button>
+                <button onClick={() => deleteBanner(banner.id)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-red-400 transition-colors"><IconTrash className="w-4 h-4" /></button>
               </div>
             </div>
           </div>
         ))}
         {banners.length === 0 && (
           <div className="col-span-full text-center py-12">
-            <HiPhotograph className="w-16 h-16 text-gray-700 mx-auto mb-4" />
+            <IconPhoto className="w-16 h-16 text-gray-700 mx-auto mb-4" />
             <p className="text-gray-500">No hay banners todavía</p>
           </div>
         )}

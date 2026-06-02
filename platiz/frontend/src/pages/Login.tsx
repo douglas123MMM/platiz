@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
 import toast from 'react-hot-toast';
-import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { IconEye, IconEyeOff } from '../icons/PremiumIcons';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -48,7 +48,7 @@ export default function Login() {
               <div className="relative">
                 <input type={showPassword ? 'text' : 'password'} className="input pr-12" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
-                  {showPassword ? <HiEyeOff className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
+                  {showPassword ? <IconEyeOff className="w-5 h-5" /> : <IconEye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
