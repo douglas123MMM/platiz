@@ -17,6 +17,10 @@ export async function register(req: AuthRequest, res: Response): Promise<void> {
       res.status(400).json({ error: 'Phone number is required' });
       return;
     }
+    if (password.length < 6) {
+      res.status(400).json({ error: 'Password must be at least 6 characters' });
+      return;
+    }
 
     const { data: existing } = await supabase.from('users').select('id').or(`email.eq.${email},username.eq.${username}`).maybeSingle();
     if (existing) {
