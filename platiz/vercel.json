@@ -1,17 +1,13 @@
 {
-  "buildCommand": "cd frontend && npm run build && echo BUILD_v8",
+  "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/dist",
   "installCommand": "npm install && cd frontend && npm install",
   "rewrites": [
-    { "source": "/setup-db", "destination": "/api/setup-db", "methods": ["GET", "POST"] },
     { "source": "/api/(.*)", "destination": "/api/index.ts" },
     { "source": "/(.*)", "destination": "/frontend/dist/$1" }
   ],
   "functions": {
-    "api/setup-db.ts": {
-      "memory": 512,
-      "maxDuration": 30
-    },
+    "api/index.ts": {
       "memory": 256,
       "maxDuration": 10
     }
