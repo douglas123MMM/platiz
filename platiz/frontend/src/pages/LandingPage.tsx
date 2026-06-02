@@ -93,6 +93,41 @@ export default function LandingPage() {
             <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> 80% Comisión</span>
             <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> Soporte 24/7</span>
           </div>
+
+          {landingVideos.length > 0 && (
+            <div className="mt-12 max-w-3xl mx-auto animate-slide-up">
+              <div className="glass rounded-2xl overflow-hidden border border-[#FFD700]/20 shadow-2xl shadow-[#FFD700]/5">
+                <div className="relative" style={{ aspectRatio: '16/9' }}>
+                  <iframe
+                    src={(() => {
+                      const v = landingVideos[0];
+                      const url = v.video_url;
+                      const type = v.video_type;
+                      if (type === 'youtube') {
+                        const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/);
+                        return m ? `https://www.youtube.com/embed/${m[1]}` : url;
+                      }
+                      if (type === 'gdrive') {
+                        const m = url.match(/\/d\/([^/]+)/);
+                        return m ? `https://drive.google.com/file/d/${m[1]}/preview` : url;
+                      }
+                      if (type === 'vimeo') {
+                        const m = url.match(/vimeo\.com\/(\d+)/);
+                        return m ? `https://player.vimeo.com/video/${m[1]}` : url;
+                      }
+                      if (type === 'm3u8') return url;
+                      return url;
+                    })()}
+                    className="absolute inset-0 w-full h-full"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title={landingVideos[0]?.title}
+                  />
+                </div>
+              </div>
+              <p className="text-center text-[#FFD700]/60 text-sm mt-3">{landingVideos[0]?.title}</p>
+            </div>
+          )}
         </div>
       </section>
 
