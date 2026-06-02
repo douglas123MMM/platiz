@@ -42,7 +42,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
-      <aside className={`fixed top-0 left-0 z-40 h-full w-72 bg-[#050508]/90 backdrop-blur-xl border-r border-[#FFD700]/10 transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed top-0 left-0 z-40 h-full w-72 bg-[#050508]/90 lg:bg-[#050508]/90 backdrop-blur-xl border-r border-[#FFD700]/10 transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ WebkitBackdropFilter: 'blur(24px)' }}>
         <div className="flex flex-col items-center px-3 py-3 border-b border-[#FFD700]/10">
           <Logo size={28} />
           <span className="text-[8px] text-[#FFD700]/50 uppercase tracking-[3px] mt-1">Transforma el Internet en Dinero</span>
