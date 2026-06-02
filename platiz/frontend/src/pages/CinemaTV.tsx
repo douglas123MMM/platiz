@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { MediaContent } from '../types';
-import { HiPlay, HiFilm, HiTv, HiPhotograph } from 'react-icons/hi';
+import { HiPlay, HiFilm, HiDesktopComputer, HiPhotograph } from 'react-icons/hi';
 
 const TABS = [
-  { key: 'live', label: 'TV en Vivo', icon: HiTv },
+  { key: 'live', label: 'TV en Vivo', icon: HiDesktopComputer },
   { key: 'movie', label: 'Películas', icon: HiFilm },
 ];
 
