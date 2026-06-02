@@ -80,6 +80,20 @@ export interface Partner {
   updated_at: string;
 }
 
+export interface MediaContent {
+  id: string;
+  title: string;
+  video_url: string;
+  image_url?: string;
+  category: string;
+  genre: string;
+  type: 'live' | 'movie';
+  active: number;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ChatMessage {
   id: string;
   user_id: string;

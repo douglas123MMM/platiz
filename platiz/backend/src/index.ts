@@ -13,6 +13,7 @@ import aiRoutes from './routes/aiRoutes';
 import streamRoutes from './routes/streamRoutes';
 import partnerRoutes from './routes/partnerRoutes';
 import settingsRoutes from './routes/settingsRoutes';
+import mediaRoutes from './routes/mediaRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -33,6 +34,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/streams', streamRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/media', mediaRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', version: 'v2.0', timestamp: new Date().toISOString() }));
 

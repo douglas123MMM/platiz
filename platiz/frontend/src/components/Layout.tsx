@@ -23,6 +23,7 @@ const adminItems = [
   { path: '/admin/users', label: 'Usuarios', icon: IconUsers },
   { path: '/admin/content', label: 'Contenido', icon: IconCourses },
   { path: '/admin/streams', label: 'Transmisiones', icon: IconChat },
+  { path: '/admin/media', label: 'Cinema y TV', icon: IconMovies },
   { path: '/admin/partners', label: 'Socios', icon: IconUsers },
   { path: '/admin/contact', label: 'Contactos', icon: IconTelegram },
   { path: '/admin/banners', label: 'Banners', icon: IconPhoto },
