@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import { AIProvider, ChatMessage, Conversation } from '../types';
 import { IconChat, IconSend, IconTrash, IconPlus, IconMenu, IconAi } from '../icons/PremiumIcons';
-
+import { HiChip } from 'react-icons/hi';
 export default function ChatPage() {
   const [providers, setProviders] = useState<AIProvider[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
