@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'platiz_super_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 export interface AuthRequest extends Request {
   user?: { id: string; username: string; email: string; phone?: string; role: string; status: string };

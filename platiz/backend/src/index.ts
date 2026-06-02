@@ -29,15 +29,13 @@ app.get('/api/health', (_req, res) => res.json({ status: 'ok', version: 'v2.0', 
 
 app.post('/api/setup-db', async (_req, res) => {
   try {
+    const pgHost = process.env.PG_HOST;
+    const pgPass = process.env.PG_PASSWORD;
+    if (!pgHost || !pgPass) { res.status(500).json({ ok: false, error: 'DB config not set' }); return; }
     const { Client } = require('pg');
     const client = new Client({
-      host: 'db.vhgxevfrgnzbebffejnz.supabase.co',
-      port: 5432,
-      database: 'postgres',
-      user: 'postgres',
-      password: '1111112233334@#',
-      ssl: { rejectUnauthorized: false },
-      connectionTimeoutMillis: 15000,
+      host: pgHost, port: 5432, database: 'postgres', user: 'postgres',
+      password: pgPass, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 15000,
     });
     await client.connect();
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');

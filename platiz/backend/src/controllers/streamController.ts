@@ -130,26 +130,17 @@ export async function globalSearch(req: AuthRequest, res: Response): Promise<voi
 }
 
 export async function runMigrations(_req: AuthRequest, res: Response): Promise<void> {
+  const pgHost = process.env.PG_HOST;
+  const pgPass = process.env.PG_PASSWORD;
+  if (!pgHost || !pgPass) { res.status(500).json({ ok: false, error: 'DB config not set' }); return; }
   try {
     const { Client } = require('pg');
-    const client = new Client({
-      host: 'db.vhgxevfrgnzbebffejnz.supabase.co',
-      port: 5432,
-      database: 'postgres',
-      user: 'postgres',
-      password: '1111112233334@#',
-      ssl: { rejectUnauthorized: false },
-      connectionTimeoutMillis: 10000,
-    });
-
+    const client = new Client({ host: pgHost, port: 5432, database: 'postgres', user: 'postgres', password: pgPass, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 10000 });
     await client.connect();
-
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_type TEXT;');
-
     await client.end();
-
     res.json({ message: 'Migraciones ejecutadas correctamente' });
   } catch (e: any) {
     res.status(500).json({ error: 'Error ejecutando migraciones', details: e.message });

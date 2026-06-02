@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'platiz_super_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 export async function register(req: AuthRequest, res: Response): Promise<void> {
   try {

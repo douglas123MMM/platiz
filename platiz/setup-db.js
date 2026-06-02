@@ -1,15 +1,17 @@
 const { Client } = require('pg');
 const bcrypt = require('bcryptjs');
+require('dotenv').config({ path: './backend/.env' });
 
 async function main() {
+  const pgHost = process.env.PG_HOST;
+  const pgPass = process.env.PG_PASSWORD;
+  if (!pgHost || !pgPass) {
+    console.log('Set PG_HOST and PG_PASSWORD in backend/.env');
+    process.exit(1);
+  }
   const client = new Client({
-    host: 'db.vhgxevfrgnzbebffejnz.supabase.co',
-    port: 5432,
-    database: 'postgres',
-    user: 'postgres',
-    password: '1111112233334@#',
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10000,
+    host: pgHost, port: 5432, database: 'postgres', user: 'postgres',
+    password: pgPass, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 10000,
   });
 
   try {
