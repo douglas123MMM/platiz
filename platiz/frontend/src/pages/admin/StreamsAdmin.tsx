@@ -10,7 +10,7 @@ export default function StreamsAdmin() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({ title: '', description: '', thumbnail_url: '', video_url: '' });
+  const [form, setForm] = useState({ title: '', description: '', thumbnail_url: '', video_url: '', show_on_landing: false });
   const [saving, setSaving] = useState(false);
 
   const loadStreams = () => {
@@ -20,7 +20,7 @@ export default function StreamsAdmin() {
 
   useEffect(() => { loadStreams(); }, []);
 
-  const resetForm = () => { setForm({ title: '', description: '', thumbnail_url: '', video_url: '' }); setEditId(null); setShowForm(false); };
+  const resetForm = () => { setForm({ title: '', description: '', thumbnail_url: '', video_url: '', show_on_landing: false }); setEditId(null); setShowForm(false); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ export default function StreamsAdmin() {
   };
 
   const editStream = (s: Stream) => {
-    setForm({ title: s.title, description: s.description || '', thumbnail_url: s.thumbnail_url || '', video_url: s.video_url });
+    setForm({ title: s.title, description: s.description || '', thumbnail_url: s.thumbnail_url || '', video_url: s.video_url, show_on_landing: !!s.show_on_landing });
     setEditId(s.id);
     setShowForm(true);
   };
@@ -103,6 +103,10 @@ export default function StreamsAdmin() {
                   </p>
                 )}
               </div>
+              <div className="flex items-center gap-2">
+                <input type="checkbox" id="showLanding" checked={form.show_on_landing} onChange={(e) => setForm({ ...form, show_on_landing: e.target.checked })} className="w-4 h-4 rounded border-[#FFD700]/30 bg-[#0a0a0f] text-[#FFD700] focus:ring-[#FFD700]/20" />
+                <label htmlFor="showLanding" className="text-sm text-gray-300">Mostrar en la Landing Page</label>
+              </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="btn-primary flex-1">{saving ? 'Guardando...' : editId ? 'Actualizar' : 'Crear'}</button>
                 <button type="button" onClick={resetForm} className="btn-secondary flex-1">Cancelar</button>
@@ -120,6 +124,7 @@ export default function StreamsAdmin() {
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Transmisión</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Plataforma</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Tipo</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Landing</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Fecha</th>
                 <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acciones</th>
@@ -127,9 +132,9 @@ export default function StreamsAdmin() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={6} className="p-12 text-center text-gray-500">Cargando...</td></tr>
+                <tr><td colSpan={7} className="p-12 text-center text-gray-500">Cargando...</td></tr>
               ) : streams.length === 0 ? (
-                <tr><td colSpan={6} className="p-12 text-center text-gray-500">
+                <tr><td colSpan={7} className="p-12 text-center text-gray-500">
                   <HiPhotograph className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                   <p>No hay transmisiones registradas</p>
                   <p className="text-xs text-gray-600 mt-1">Agrega enlaces de YouTube, Vimeo, Twitch, Google Drive, M3U8 y más</p>
@@ -155,6 +160,9 @@ export default function StreamsAdmin() {
                     <span className="badge badge-gold text-xs">{s.platform || '—'}</span>
                   </td>
                   <td className="p-4 text-gray-400 text-xs uppercase">{s.video_type || '—'}</td>
+                  <td className="p-4">
+                    {s.show_on_landing ? <span className="badge badge-gold text-xs">Landing</span> : <span className="text-gray-600 text-xs">—</span>}
+                  </td>
                   <td className="p-4">
                     <span className={`badge ${s.active ? 'badge-success' : 'badge-danger'}`}>
                       {s.active ? 'Activo' : 'Inactivo'}

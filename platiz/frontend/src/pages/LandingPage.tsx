@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Logo from '../components/Logo';
 import { HiArrowRight, HiChevronDown } from 'react-icons/hi';
+import { HiPlay } from 'react-icons/hi';
 import { IconLightning, IconStar, IconShield, IconGlobe, IconCheck } from '../icons/PremiumIcons';
 import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat } from '../icons/PremiumIcons';
 
@@ -33,6 +36,15 @@ const arsenalItems = [
 
 export default function LandingPage() {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const [partners, setPartners] = useState<any[]>([]);
+  const [landingVideos, setLandingVideos] = useState<any[]>([]);
+
+  const api = axios.create({ baseURL: 'https://platiz.vercel.app/api' });
+
+  useEffect(() => {
+    api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
+    api.get('/partners/landing-videos').then((r) => setLandingVideos(r.data)).catch(() => {});
+  }, []);
 
   return (
     <div className="bg-[#0a0a0f] text-white overflow-hidden">
@@ -221,6 +233,75 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* LANDING VIDEOS */}
+      {landingVideos.length > 0 && (
+        <section className="relative py-24 md:py-32">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="section-title text-4xl md:text-5xl mb-4">🎥 Contenido Exclusivo</h2>
+              <p className="section-subtitle text-lg">Descubre nuestro contenido en video</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {landingVideos.map((v: any) => (
+                <div key={v.id} className="glass rounded-2xl overflow-hidden border border-[#FFD700]/10 hover:border-[#FFD700]/20 transition-all group">
+                  <div className="relative" style={{ aspectRatio: '16/9' }}>
+                    {v.thumbnail_url ? (
+                      <img src={v.thumbnail_url} alt={v.title} className="absolute inset-0 w-full h-full object-cover" />
+                    ) : (
+                      <div className="absolute inset-0 bg-[#111] flex items-center justify-center">
+                        <HiPlay className="w-16 h-16 text-[#FFD700]/30 group-hover:text-[#FFD700]/60 transition-colors" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-[#FFD700]/20 backdrop-blur flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <HiPlay className="w-8 h-8 text-white ml-1" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      {v.platform && <span className="badge badge-gold text-xs">{v.platform}</span>}
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">{v.title}</h3>
+                    {v.description && <p className="text-gray-400 text-sm">{v.description}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* SOCIOS */}
+      {partners.length > 0 && (
+        <section className="relative py-24 md:py-32">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div className="text-center mb-12">
+              <h2 className="section-title text-4xl md:text-5xl mb-4">👥 Nuestros Socios</h2>
+              <p className="section-subtitle text-lg">Conoce al equipo que transforma el internet en dinero</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {partners.map((p: any) => (
+                <div key={p.id} className="glass rounded-2xl p-6 text-center border border-[#FFD700]/10 hover:border-[#FFD700]/20 transition-all group">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden ring-2 ring-[#FFD700]/20 group-hover:ring-[#FFD700]/40 transition-all">
+                    {p.photo_url ? (
+                      <img src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center text-2xl font-bold text-black">
+                        {p.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-white mb-1">{p.name}</h3>
+                  {p.role && <p className="text-[#FFD700]/70 text-sm">{p.role}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA FINAL */}
       <section className="relative py-24 md:py-32">

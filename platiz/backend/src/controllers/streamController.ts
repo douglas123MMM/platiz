@@ -39,15 +39,15 @@ export async function getStream(req: AuthRequest, res: Response): Promise<void> 
 
 export async function createStream(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { title, description, thumbnail_url, video_url } = req.body;
+    const { title, description, thumbnail_url, video_url, show_on_landing } = req.body;
     if (!title || !video_url) {
       res.status(400).json({ error: 'Title and video URL are required' });
       return;
     }
     const { type, platform } = detectVideoType(video_url);
-    const { data, error } = await supabase.from('streams').insert({
-      title, description, thumbnail_url, video_url, video_type: type, platform,
-    }).select('id').single();
+    const insertData: Record<string, any> = { title, description, thumbnail_url, video_url, video_type: type, platform };
+    if (show_on_landing !== undefined) insertData.show_on_landing = show_on_landing === true || show_on_landing === 'true' || show_on_landing === 1 ? 1 : 0;
+    const { data, error } = await supabase.from('streams').insert(insertData).select('id').single();
     if (error) throw error;
     res.status(201).json({ message: 'Stream created', id: data.id });
   } catch {
@@ -61,11 +61,12 @@ export async function updateStream(req: AuthRequest, res: Response): Promise<voi
     const { data: existing } = await supabase.from('streams').select('id').eq('id', id).maybeSingle();
     if (!existing) { res.status(404).json({ error: 'Stream not found' }); return; }
 
-    const { title, description, thumbnail_url, video_url } = req.body;
+    const { title, description, thumbnail_url, video_url, show_on_landing } = req.body;
     const updates: Record<string, any> = { updated_at: new Date().toISOString() };
     if (title !== undefined) updates.title = title;
     if (description !== undefined) updates.description = description;
     if (thumbnail_url !== undefined) updates.thumbnail_url = thumbnail_url;
+    if (show_on_landing !== undefined) updates.show_on_landing = show_on_landing === true || show_on_landing === 'true' || show_on_landing === 1 ? 1 : 0;
     if (video_url !== undefined) {
       updates.video_url = video_url;
       const { type, platform } = detectVideoType(video_url);

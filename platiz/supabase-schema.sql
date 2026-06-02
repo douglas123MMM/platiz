@@ -52,6 +52,7 @@ CREATE TABLE streams (
   video_url TEXT NOT NULL,
   video_type TEXT,
   platform TEXT,
+  show_on_landing INTEGER DEFAULT 0,
   active INTEGER DEFAULT 1,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -107,6 +108,20 @@ CREATE TABLE chat_messages (
 CREATE INDEX idx_items_category_slug ON items(category_slug);
 CREATE INDEX idx_items_active ON items(active);
 CREATE INDEX idx_streams_active ON streams(active);
+
+-- PARTNERS (Socios)
+CREATE TABLE partners (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  role TEXT,
+  photo_url TEXT,
+  link TEXT,
+  active INTEGER DEFAULT 1,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE INDEX idx_banners_active ON banners(active);
 CREATE INDEX idx_chat_messages_conversation ON chat_messages(conversation_id);
 CREATE INDEX idx_chat_conversations_user ON chat_conversations(user_id);

@@ -61,6 +61,19 @@ export interface Stream {
   video_url: string;
   video_type?: string;
   platform?: string;
+  show_on_landing?: number;
+  active: number;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Partner {
+  id: string;
+  name: string;
+  role?: string;
+  photo_url?: string;
+  link?: string;
   active: number;
   sort_order: number;
   created_at: string;
