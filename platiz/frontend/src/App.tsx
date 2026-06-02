@@ -10,11 +10,14 @@ import Register from './pages/Register';
 import SectionPage from './pages/SectionPage';
 import SearchPage from './pages/SearchPage';
 import ChatPage from './pages/ChatPage';
+import PlayerPage from './pages/PlayerPage';
 import AdminDashboard from './pages/admin/Dashboard';
 import UsersAdmin from './pages/admin/UsersAdmin';
 import ContentAdmin from './pages/admin/ContentAdmin';
 import BannersAdmin from './pages/admin/BannersAdmin';
 import AIAdmin from './pages/admin/AIAdmin';
+import StreamsAdmin from './pages/admin/StreamsAdmin';
+import AdminSearch from './pages/admin/AdminSearch';
 
 function LoadingScreen() {
   return (
@@ -49,8 +52,10 @@ export default function App() {
         <Route path="/telegram" element={<SectionPage />} />
         <Route path="/services" element={<SectionPage />} />
         <Route path="/academy" element={<SectionPage />} />
+        <Route path="/affiliate" element={<SectionPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/player" element={<PlayerPage />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
         <Route path="/admin" element={<AdminDashboard />} />
@@ -58,6 +63,8 @@ export default function App() {
         <Route path="/admin/content" element={<ContentAdmin />} />
         <Route path="/admin/banners" element={<BannersAdmin />} />
         <Route path="/admin/ai" element={<AIAdmin />} />
+        <Route path="/admin/streams" element={<StreamsAdmin />} />
+        <Route path="/admin/search" element={<AdminSearch />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

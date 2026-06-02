@@ -1,23 +1,25 @@
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { HiArrowRight, HiStar, HiLightningBolt, HiShieldCheck, HiGlobe, HiChevronDown, HiFilm, HiBookOpen, HiPaperAirplane, HiAcademicCap, HiChat, HiCheckCircle } from 'react-icons/hi';
-import { FiServer } from 'react-icons/fi';
+import { HiArrowRight, HiChevronDown } from 'react-icons/hi';
+import { IconLightning, IconStar, IconShield, IconGlobe, IconCheck } from '../icons/PremiumIcons';
+import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat } from '../icons/PremiumIcons';
 
 const features = [
-  { title: '80% Comisión Directa', desc: 'Gana el 80% por cada venta del acceso vitalicio al sistema.', icon: HiLightningBolt },
-  { title: 'Acceso Vitalicio', desc: 'Un solo pago para toda la vida. Sin mensualidades ni cuotas ocultas.', icon: HiStar },
-  { title: 'Soporte VIP 24/7', desc: 'Asistencia directa y personalizada cuando la necesites, sin límites.', icon: HiShieldCheck },
-  { title: 'Actualizaciones Perpetuas', desc: 'Acceso gratuito a cada nuevo servicio que se anexe al sistema.', icon: HiGlobe },
+  { title: '80% Comisión Directa', desc: 'Gana el 80% por cada venta del acceso vitalicio al sistema.', icon: IconLightning },
+  { title: 'Acceso Vitalicio', desc: 'Un solo pago para toda la vida. Sin mensualidades ni cuotas ocultas.', icon: IconStar },
+  { title: 'Soporte VIP 24/7', desc: 'Asistencia directa y personalizada cuando la necesites, sin límites.', icon: IconShield },
+  { title: 'Actualizaciones Perpetuas', desc: 'Acceso gratuito a cada nuevo servicio que se anexe al sistema.', icon: IconGlobe },
 ];
 
 const categories = [
-  { icon: HiFilm, title: '🎬 Entretenimiento', desc: 'Netflix, Disney+, Spotify, YouTube Premium, gaming y más' },
-  { icon: HiBookOpen, title: '📚 Capacitación', desc: 'Cursos de viralidad orgánica, estrategias de venta y cierre' },
-  { icon: HiBookOpen, title: '📖 Libros', desc: 'Biblioteca digital con libros de desarrollo personal y negocios' },
-  { icon: HiLightningBolt, title: '📱 Aplicaciones', desc: 'Apps móviles y web para potenciar tu productividad' },
-  { icon: HiPaperAirplane, title: '💬 Comunidad Telegram', desc: 'Canales VIP con soporte 24/7 y contenido exclusivo' },
-  { icon: FiServer, title: '🛠️ Arsenal Digital', desc: 'Office 365, Adobe, Solidworks, AutoCAD, ChatGPT Plus y más' },
-  { icon: HiAcademicCap, title: '🎓 Academia Global', desc: 'El Método: capacitación maestra para tu negocio digital' },
+  { icon: SectionStreaming, title: 'Entretenimiento', desc: 'Netflix, Disney+, Spotify, YouTube Premium, gaming y más' },
+  { icon: IconCourses, title: 'Capacitación', desc: 'Cursos de viralidad orgánica, estrategias de venta y cierre' },
+  { icon: SectionBooks, title: 'Libros', desc: 'Biblioteca digital con libros de desarrollo personal y negocios' },
+  { icon: SectionApps, title: 'Aplicaciones', desc: 'Apps móviles y web para potenciar tu productividad' },
+  { icon: SectionTelegram, title: 'Comunidad Telegram', desc: 'Canales VIP con soporte 24/7 y contenido exclusivo' },
+  { icon: SectionServices, title: 'Arsenal Digital', desc: 'Office 365, Adobe, Solidworks, AutoCAD, ChatGPT Plus y más' },
+  { icon: SectionAcademy, title: 'Academia Global', desc: 'El Método: capacitación maestra para tu negocio digital' },
+  { icon: SectionAffiliate, title: 'Afiliación', desc: 'Instrucciones y enlaces para promover Global Dorado' },
 ];
 
 const arsenalItems = [
@@ -75,9 +77,9 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="mt-16 flex items-center justify-center gap-8 text-sm text-gray-500 animate-fade-in">
-            <span className="flex items-center gap-2"><HiCheckCircle className="w-4 h-4 text-[#FFD700]" /> Acceso Vitalicio</span>
-            <span className="flex items-center gap-2"><HiCheckCircle className="w-4 h-4 text-[#FFD700]" /> 80% Comisión</span>
-            <span className="flex items-center gap-2"><HiCheckCircle className="w-4 h-4 text-[#FFD700]" /> Soporte 24/7</span>
+            <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> Acceso Vitalicio</span>
+            <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> 80% Comisión</span>
+            <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> Soporte 24/7</span>
           </div>
         </div>
       </section>
@@ -118,6 +120,7 @@ export default function LandingPage() {
               return (
                 <div key={f.title} className="glass rounded-2xl p-6 text-center border border-[#FFD700]/5 hover:border-[#FFD700]/20 transition-all duration-300 group">
                   <Icon className="w-8 h-8 text-[#FFD700] mx-auto mb-3 group-hover:scale-110 transition-transform" />
+                  
                   <h4 className="font-bold text-white text-sm mb-1">{f.title}</h4>
                   <p className="text-gray-500 text-xs">{f.desc}</p>
                 </div>
@@ -138,7 +141,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="glass rounded-3xl p-8 md:p-10 border border-[#FFD700]/10 group hover:border-[#FFD700]/20 transition-all">
               <div className="w-14 h-14 bg-gradient-to-br from-[#FFD700]/15 to-[#DAA520]/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                <HiLightningBolt className="w-7 h-7 text-[#FFD700]" />
+                <IconLightning className="w-7 h-7 text-[#FFD700]" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Cursos de Viralidad Orgánica</h3>
               <p className="text-gray-400 leading-relaxed">
@@ -149,7 +152,7 @@ export default function LandingPage() {
             </div>
             <div className="glass rounded-3xl p-8 md:p-10 border border-[#FFD700]/10 group hover:border-[#FFD700]/20 transition-all">
               <div className="w-14 h-14 bg-gradient-to-br from-[#FFD700]/15 to-[#DAA520]/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                <HiStar className="w-7 h-7 text-[#FFD700]" />
+                <IconStar className="w-7 h-7 text-[#FFD700]" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Estrategias de Venta y Cierre</h3>
               <p className="text-gray-400 leading-relaxed">
@@ -186,7 +189,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {arsenalItems.map((item) => (
                 <div key={item} className="flex items-center gap-2 text-sm text-gray-400">
-                  <HiCheckCircle className="w-4 h-4 text-[#FFD700] flex-shrink-0" />
+                  <IconCheck className="w-4 h-4 text-[#FFD700] flex-shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -206,7 +209,7 @@ export default function LandingPage() {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00D4FF]/5 rounded-full blur-3xl" />
             <div className="relative z-10">
               <div className="w-16 h-16 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#FFD700]/20">
-                <HiChat className="w-8 h-8 text-black" />
+                <IconChat className="w-8 h-8 text-white" />
               </div>
               <h2 className="section-title text-3xl md:text-4xl mb-4">🤖 Chat con IA Integrado</h2>
               <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">

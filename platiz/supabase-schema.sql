@@ -9,6 +9,7 @@ CREATE TABLE users (
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
+  phone TEXT,
   role TEXT NOT NULL DEFAULT 'client',
   status TEXT NOT NULL DEFAULT 'pending',
   avatar TEXT,
@@ -34,8 +35,25 @@ CREATE TABLE items (
   description TEXT,
   image_url TEXT,
   link TEXT,
+  video_url TEXT,
+  video_type TEXT,
   sort_order INTEGER DEFAULT 0,
   active INTEGER DEFAULT 1,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- STREAMS (Live & Video Streams)
+CREATE TABLE streams (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  thumbnail_url TEXT,
+  video_url TEXT NOT NULL,
+  video_type TEXT,
+  platform TEXT,
+  active INTEGER DEFAULT 1,
+  sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -88,6 +106,7 @@ CREATE TABLE chat_messages (
 -- INDEXES
 CREATE INDEX idx_items_category_slug ON items(category_slug);
 CREATE INDEX idx_items_active ON items(active);
+CREATE INDEX idx_streams_active ON streams(active);
 CREATE INDEX idx_banners_active ON banners(active);
 CREATE INDEX idx_chat_messages_conversation ON chat_messages(conversation_id);
 CREATE INDEX idx_chat_conversations_user ON chat_conversations(user_id);

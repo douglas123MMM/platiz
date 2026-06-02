@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes';
 import contentRoutes from './routes/contentRoutes';
 import bannerRoutes from './routes/bannerRoutes';
 import aiRoutes from './routes/aiRoutes';
+import streamRoutes from './routes/streamRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/streams', streamRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 

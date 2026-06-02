@@ -2,6 +2,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  phone?: string;
   role: 'admin' | 'client';
   status: 'pending' | 'approved' | 'rejected';
   avatar?: string;
@@ -23,6 +24,8 @@ export interface ContentItem {
   description?: string;
   image_url?: string;
   link?: string;
+  video_url?: string;
+  video_type?: string;
   sort_order: number;
   active: number;
   created_at: string;
@@ -48,6 +51,20 @@ export interface AIProvider {
   model?: string;
   active: number;
   created_at: string;
+}
+
+export interface Stream {
+  id: string;
+  title: string;
+  description?: string;
+  thumbnail_url?: string;
+  video_url: string;
+  video_type?: string;
+  platform?: string;
+  active: number;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ChatMessage {

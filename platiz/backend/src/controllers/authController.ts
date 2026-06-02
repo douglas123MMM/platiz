@@ -8,9 +8,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'platiz_super_secret_key';
 
 export async function register(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, phone } = req.body;
     if (!username || !email || !password) {
       res.status(400).json({ error: 'Username, email and password are required' });
+      return;
+    }
+    if (!phone) {
+      res.status(400).json({ error: 'Phone number is required' });
       return;
     }
 
@@ -22,7 +26,7 @@ export async function register(req: AuthRequest, res: Response): Promise<void> {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     const { data, error } = await supabase.from('users').insert({
-      username, email, password: hashedPassword, role: 'client', status: 'pending',
+      username, email, password: hashedPassword, phone, role: 'client', status: 'pending',
     }).select('id').single();
 
     if (error) throw error;
@@ -50,10 +54,10 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
     if (user.status === 'rejected') { res.status(403).json({ error: 'Account rejected' }); return; }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email, role: user.role, status: user.status },
+      { id: user.id, username: user.username, email: user.email, phone: user.phone, role: user.role, status: user.status },
       JWT_SECRET, { expiresIn: '7d' }
     );
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email, role: user.role, status: user.status, avatar: user.avatar } });
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone, role: user.role, status: user.status, avatar: user.avatar } });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -61,7 +65,7 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 
 export async function getProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: user } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
+    const { data: user } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
     if (!user) { res.status(404).json({ error: 'User not found' }); return; }
     res.json(user);
   } catch {
@@ -69,9 +73,15 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
   }
 }
 
-export async function getUsers(_req: AuthRequest, res: Response): Promise<void> {
+export async function getUsers(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: users } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').order('created_at', { ascending: false });
+    const { search } = req.query;
+    let query = supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').order('created_at', { ascending: false });
+    if (search && String(search).trim()) {
+      const term = `%${String(search).trim()}%`;
+      query = query.or(`username.ilike.${term},email.ilike.${term},phone.ilike.${term}`);
+    }
+    const { data: users } = await query;
     res.json(users || []);
   } catch {
     res.status(500).json({ error: 'Internal server error' });

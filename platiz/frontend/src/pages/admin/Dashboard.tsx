@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import { CrownIcon } from '../../components/Logo';
-import { HiUsers, HiBookOpen, HiPhotograph, HiChip, HiFilm, HiChat, HiLightningBolt, HiStar } from 'react-icons/hi';
+import { IconUsers, IconCourses, IconPhoto, IconAi, IconMovies, IconChat, IconLightning, IconStar } from '../../icons/PremiumIcons';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ users: 0, items: 0, banners: 0, providers: 0, pendingUsers: 0 });
@@ -26,11 +26,11 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = [
-    { label: 'Usuarios', value: stats.users, icon: HiUsers, color: 'from-[#FFD700]/15 to-[#DAA520]/5', textColor: 'text-[#FFD700]', href: '/admin/users' },
-    { label: 'Pendientes', value: stats.pendingUsers, icon: HiStar, color: 'from-[#FFD700]/15 to-[#DAA520]/5', textColor: 'text-[#FFD700]', href: '/admin/users' },
-    { label: 'Contenido', value: stats.items, icon: HiBookOpen, color: 'from-[#00D4FF]/15 to-[#0097A7]/5', textColor: 'text-[#00D4FF]', href: '/admin/content' },
-    { label: 'Banners', value: stats.banners, icon: HiPhotograph, color: 'from-purple-500/15 to-purple-600/5', textColor: 'text-purple-400', href: '/admin/banners' },
-    { label: 'IA Providers', value: stats.providers, icon: HiChip, color: 'from-pink-500/15 to-pink-600/5', textColor: 'text-pink-400', href: '/admin/ai' },
+    { label: 'Usuarios', value: stats.users, icon: IconUsers, color: 'from-[#FFD700]/15 to-[#DAA520]/5', textColor: 'text-[#FFD700]', href: '/admin/users' },
+    { label: 'Pendientes', value: stats.pendingUsers, icon: IconStar, color: 'from-[#FFD700]/15 to-[#DAA520]/5', textColor: 'text-[#FFD700]', href: '/admin/users' },
+    { label: 'Contenido', value: stats.items, icon: IconCourses, color: 'from-[#00D4FF]/15 to-[#0097A7]/5', textColor: 'text-[#00D4FF]', href: '/admin/content' },
+    { label: 'Banners', value: stats.banners, icon: IconPhoto, color: 'from-purple-500/15 to-purple-600/5', textColor: 'text-purple-400', href: '/admin/banners' },
+    { label: 'IA Providers', value: stats.providers, icon: IconAi, color: 'from-pink-500/15 to-pink-600/5', textColor: 'text-pink-400', href: '/admin/ai' },
   ];
 
   return (
@@ -56,13 +56,14 @@ export default function AdminDashboard() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><HiLightningBolt className="text-[#FFD700]" /> Accesos rápidos</h3>
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><IconLightning className="text-[#FFD700]" /> Accesos rápidos</h3>
           <div className="space-y-3">
             {[
               { label: 'Gestionar Usuarios', href: '/admin/users', desc: 'Aprueba o rechaza nuevos socios' },
               { label: 'Gestionar Contenido', href: '/admin/content', desc: 'Añade recursos al arsenal digital' },
               { label: 'Gestionar Banners', href: '/admin/banners', desc: 'Sube imágenes promocionales' },
               { label: 'Configurar IAs', href: '/admin/ai', desc: 'Conecta ChatGPT, Gemini, Claude y más' },
+              { label: 'Gestionar Transmisiones', href: '/admin/streams', desc: 'Transmisiones en vivo y videos de múltiples plataformas' },
             ].map((item) => (
               <Link key={item.href} to={item.href} className="flex items-center justify-between p-3 rounded-xl bg-[#111]/50 hover:bg-[#111] transition-colors group">
                 <div>
@@ -70,7 +71,7 @@ export default function AdminDashboard() {
                   <p className="text-xs text-gray-500">{item.desc}</p>
                 </div>
                 <div className="w-8 h-8 rounded-lg bg-[#111] flex items-center justify-center group-hover:bg-[#FFD700]/10 transition-colors">
-                  <HiChip className="w-4 h-4 text-gray-500 group-hover:text-[#FFD700]" />
+                  <IconAi className="w-4 h-4 text-gray-500 group-hover:text-[#FFD700]" />
                 </div>
               </Link>
             ))}

@@ -2,18 +2,25 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { User } from '../../types';
 import toast from 'react-hot-toast';
-import { HiCheck, HiX, HiRefresh, HiUserGroup } from 'react-icons/hi';
+import { HiCheck, HiX, HiRefresh, HiUserGroup, HiSearch } from 'react-icons/hi';
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
-  const loadUsers = () => {
+  const loadUsers = (searchTerm?: string) => {
     setLoading(true);
-    api.get('/auth/users').then((r) => setUsers(r.data)).catch(() => toast.error('Error al cargar usuarios')).finally(() => setLoading(false));
+    const params = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '';
+    api.get(`/auth/users${params}`).then((r) => setUsers(r.data)).catch(() => toast.error('Error al cargar usuarios')).finally(() => setLoading(false));
   };
 
   useEffect(() => { loadUsers(); }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => loadUsers(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const updateStatus = async (id: string, status: 'approved' | 'rejected') => {
     try {
@@ -25,7 +32,7 @@ export default function UsersAdmin() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <HiUserGroup className="w-8 h-8 text-[#FFD700]" />
           <div>
@@ -33,8 +40,14 @@ export default function UsersAdmin() {
             <p className="section-subtitle">Gestiona los socios de la plataforma</p>
           </div>
         </div>
-        <button onClick={loadUsers} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
+        <button onClick={() => loadUsers(search)} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
       </div>
+
+      <div className="flex items-center gap-3 px-4 py-3 glass rounded-2xl border border-[#FFD700]/10 max-w-md">
+        <HiSearch className="w-5 h-5 text-gray-500 flex-shrink-0" />
+        <input type="text" placeholder="Buscar por nombre, email o teléfono..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
+      </div>
+
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -42,6 +55,7 @@ export default function UsersAdmin() {
               <tr className="border-b border-[#FFD700]/10">
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Socio</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Email</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Teléfono</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Rol</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Registro</th>
@@ -50,9 +64,9 @@ export default function UsersAdmin() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={6} className="p-12 text-center text-gray-500">Cargando...</td></tr>
+                <tr><td colSpan={7} className="p-12 text-center text-gray-500">Cargando...</td></tr>
               ) : users.length === 0 ? (
-                <tr><td colSpan={6} className="p-12 text-center text-gray-500">Sin socios registrados</td></tr>
+                <tr><td colSpan={7} className="p-12 text-center text-gray-500">Sin socios registrados</td></tr>
               ) : users.map((user) => (
                 <tr key={user.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
                   <td className="p-4">
@@ -62,6 +76,7 @@ export default function UsersAdmin() {
                     </div>
                   </td>
                   <td className="p-4 text-gray-400 text-sm">{user.email}</td>
+                  <td className="p-4 text-gray-400 text-sm">{user.phone || '—'}</td>
                   <td className="p-4"><span className={`badge ${user.role === 'admin' ? 'badge-gold' : 'badge-info'}`}>{user.role === 'admin' ? 'Admin' : 'Socio'}</span></td>
                   <td className="p-4">
                     <span className={`badge ${user.status === 'approved' ? 'badge-success' : user.status === 'rejected' ? 'badge-danger' : 'badge-warning'}`}>

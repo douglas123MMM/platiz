@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -16,7 +17,7 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      await register(username, email, password);
+      await register(username, email, password, phone);
       toast.success('Registro exitoso. Espera la aprobación del administrador.');
       navigate('/login');
     } catch (err: any) {
@@ -45,6 +46,10 @@ export default function Register() {
             <div>
               <label className="label">Email</label>
               <input type="email" className="input" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </div>
+            <div>
+              <label className="label">Teléfono</label>
+              <input type="tel" className="input" placeholder="+5491123456789" value={phone} onChange={(e) => setPhone(e.target.value)} required />
             </div>
             <div>
               <label className="label">Contraseña</label>

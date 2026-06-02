@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { ContentItem, Category } from '../../types';
 import toast from 'react-hot-toast';
-import { HiPlus, HiTrash, HiPencil, HiPhotograph, HiExternalLink, HiLightningBolt } from 'react-icons/hi';
+import { IconPlus, IconTrash, IconPencil, IconPhoto, IconExternalLink, IconLightning } from '../../icons/PremiumIcons';
 
 export default function ContentAdmin() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -10,7 +10,7 @@ export default function ContentAdmin() {
   const [selectedCat, setSelectedCat] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({ title: '', description: '', link: '' });
+  const [form, setForm] = useState({ title: '', description: '', link: '', video_url: '' });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [catError, setCatError] = useState('');
@@ -23,7 +23,7 @@ export default function ContentAdmin() {
     if (selectedCat) api.get(`/content/items/${selectedCat}`).then((r) => setItems(r.data)).catch(() => setItems([]));
   }, [selectedCat]);
 
-  const resetForm = () => { setForm({ title: '', description: '', link: '' }); setFile(null); setEditId(null); setShowForm(false); };
+  const resetForm = () => { setForm({ title: '', description: '', link: '', video_url: '' }); setFile(null); setEditId(null); setShowForm(false); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ export default function ContentAdmin() {
     fd.append('title', form.title);
     fd.append('description', form.description);
     fd.append('link', form.link);
+    if (form.video_url) fd.append('video_url', form.video_url);
     if (file) fd.append('image', file);
     try {
       if (editId) {
@@ -59,7 +60,7 @@ export default function ContentAdmin() {
   };
 
   const editItem = (item: ContentItem) => {
-    setForm({ title: item.title, description: item.description || '', link: item.link || '' });
+    setForm({ title: item.title, description: item.description || '', link: item.link || '', video_url: item.video_url || '' });
     setEditId(item.id);
     setShowForm(true);
   };
@@ -68,13 +69,13 @@ export default function ContentAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <HiLightningBolt className="w-8 h-8 text-[#FFD700]" />
+          <IconLightning className="w-8 h-8 text-[#FFD700]" />
           <div>
             <h1 className="section-title text-2xl">Arsenal Digital</h1>
             <p className="section-subtitle">Añade recursos, licencias y contenido al catálogo</p>
           </div>
         </div>
-        <button onClick={() => { resetForm(); setShowForm(true); }} className="btn-primary flex items-center gap-2"><HiPlus className="w-4 h-4" /> Nuevo recurso</button>
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="btn-primary flex items-center gap-2"><IconPlus className="w-4 h-4" /> Nuevo recurso</button>
       </div>
 
       {showForm && (
@@ -99,6 +100,15 @@ export default function ContentAdmin() {
               <div>
                 <label className="label">Enlace de acceso</label>
                 <input className="input" placeholder="https://..." value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} />
+              </div>
+              <div>
+                <label className="label">URL del video (YouTube, Vimeo, Drive, M3U8, etc.)</label>
+                <input className="input" placeholder="https://youtube.com/watch?v=... o https://drive.google.com/..." value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
+              </div>
+              <div>
+                <label className="label">URL de video (YouTube, Vimeo, Drive, etc.)</label>
+                <input className="input" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
+                <p className="text-xs text-gray-600 mt-1">Al agregar un video, los usuarios podrán reproducirlo al hacer clic en la portada</p>
               </div>
               <div>
                 <label className="label">Imagen del recurso</label>
@@ -132,17 +142,17 @@ export default function ContentAdmin() {
               </div>
             )}
             <h3 className="font-semibold text-white mb-1">{item.title}</h3>
-            {item.description && <p className="text-xs text-gray-500 mb-3 line-clamp-2">{item.description}</p>}
-            {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#FFD700] hover:text-[#FFE44D]"><HiExternalLink className="w-3 h-3" /> {item.link.substring(0, 30)}...</a>}
+            {item.description && <p className="text-xs text-gray-500 mb-3 line-clamp-2 whitespace-pre-wrap">{item.description}</p>}
+            {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#FFD700] hover:text-[#FFE44D]"><IconExternalLink className="w-3 h-3" /> {item.link.substring(0, 30)}...</a>}
             <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#FFD700]/10">
-              <button onClick={() => editItem(item)} className="btn-ghost text-xs flex items-center gap-1"><HiPencil className="w-3 h-3" /> Editar</button>
-              <button onClick={() => deleteItem(item.id)} className="btn-ghost text-xs text-red-400 hover:text-red-300 flex items-center gap-1 ml-auto"><HiTrash className="w-3 h-3" /> Eliminar</button>
+              <button onClick={() => editItem(item)} className="btn-ghost text-xs flex items-center gap-1"><IconPencil className="w-3 h-3" /> Editar</button>
+              <button onClick={() => deleteItem(item.id)} className="btn-ghost text-xs text-red-400 hover:text-red-300 flex items-center gap-1 ml-auto"><IconTrash className="w-3 h-3" /> Eliminar</button>
             </div>
           </div>
         ))}
         {items.length === 0 && (
           <div className="col-span-full text-center py-12">
-            <HiPhotograph className="w-16 h-16 text-gray-700 mx-auto mb-4" />
+            <IconPhoto className="w-16 h-16 text-gray-700 mx-auto mb-4" />
             <p className="text-gray-500">No hay recursos en esta categoría</p>
             <p className="text-gray-600 text-xs mt-1">Comienza añadiendo licencias, software o servicios</p>
           </div>
