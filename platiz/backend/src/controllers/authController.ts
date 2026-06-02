@@ -25,11 +25,22 @@ export async function register(req: AuthRequest, res: Response): Promise<void> {
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const { data, error } = await supabase.from('users').insert({
-      username, email, password: hashedPassword, phone, role: 'client', status: 'pending',
-    }).select('id').single();
 
-    if (error) throw error;
+    const userData: Record<string, any> = { username, email, password: hashedPassword, role: 'client', status: 'pending' };
+    if (phone) userData.phone = phone;
+
+    const { data, error } = await supabase.from('users').insert(userData).select('id').single();
+
+    if (error) {
+      if (error.message.includes('phone')) {
+        delete userData.phone;
+        const { data: d2, error: e2 } = await supabase.from('users').insert(userData).select('id').single();
+        if (e2) throw e2;
+        res.status(201).json({ message: 'Registration successful. Wait for admin approval.', id: d2.id });
+        return;
+      }
+      throw error;
+    }
     res.status(201).json({ message: 'Registration successful. Wait for admin approval.', id: data.id });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
@@ -57,7 +68,7 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
       { id: user.id, username: user.username, email: user.email, phone: user.phone, role: user.role, status: user.status },
       JWT_SECRET, { expiresIn: '7d' }
     );
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone, role: user.role, status: user.status, avatar: user.avatar } });
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone || null, role: user.role, status: user.status, avatar: user.avatar } });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -65,7 +76,13 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 
 export async function getProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: user } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
+    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
+    if (error && error.message.includes('phone')) {
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
+      if (!u2) { res.status(404).json({ error: 'User not found' }); return; }
+      res.json({ ...u2, phone: null });
+      return;
+    }
     if (!user) { res.status(404).json({ error: 'User not found' }); return; }
     res.json(user);
   } catch {
@@ -79,9 +96,14 @@ export async function getUsers(req: AuthRequest, res: Response): Promise<void> {
     let query = supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').order('created_at', { ascending: false });
     if (search && String(search).trim()) {
       const term = `%${String(search).trim()}%`;
-      query = query.or(`username.ilike.${term},email.ilike.${term},phone.ilike.${term}`);
+      query = query.or(`username.ilike.${term},email.ilike.${term}`);
     }
-    const { data: users } = await query;
+    const { data: users, error } = await query;
+    if (error && error.message.includes('phone')) {
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').order('created_at', { ascending: false });
+      res.json(u2 || []);
+      return;
+    }
     res.json(users || []);
   } catch {
     res.status(500).json({ error: 'Internal server error' });

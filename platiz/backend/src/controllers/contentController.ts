@@ -77,17 +77,29 @@ export async function createItem(req: AuthRequest, res: Response): Promise<void>
       return;
     }
     const image_url = req.file ? await uploadToSupabase(req.file) : null;
-    let video_type = null;
+
+    const insertData: Record<string, any> = { category_slug, title, description, image_url, link };
     if (video_url) {
       const u = String(video_url).toLowerCase();
-      if (u.includes('youtube.com/watch') || u.includes('youtu.be/')) video_type = 'youtube';
-      else if (u.includes('vimeo.com/')) video_type = 'vimeo';
-      else if (u.includes('twitch.tv/')) video_type = 'twitch';
-      else if (u.includes('drive.google.com/file/d/')) video_type = 'gdrive';
-      else if (u.endsWith('.m3u8') || u.includes('.m3u8')) video_type = 'm3u8';
-      else video_type = 'iframe';
+      if (u.includes('youtube.com/watch') || u.includes('youtu.be/')) insertData.video_type = 'youtube';
+      else if (u.includes('vimeo.com/')) insertData.video_type = 'vimeo';
+      else if (u.includes('twitch.tv/')) insertData.video_type = 'twitch';
+      else if (u.includes('drive.google.com/file/d/')) insertData.video_type = 'gdrive';
+      else if (u.endsWith('.m3u8') || u.includes('.m3u8')) insertData.video_type = 'm3u8';
+      else insertData.video_type = 'iframe';
+      insertData.video_url = video_url;
     }
-    const { data, error } = await supabase.from('items').insert({ category_slug, title, description, image_url, link, video_url, video_type }).select('id').single();
+
+    const { data, error } = await supabase.from('items').insert(insertData).select('id').single();
+
+    if (error && (error.message.includes('video_url') || error.message.includes('video_type'))) {
+      delete insertData.video_url;
+      delete insertData.video_type;
+      const { data: d2, error: e2 } = await supabase.from('items').insert(insertData).select('id').single();
+      if (e2) throw e2;
+      res.status(201).json({ message: 'Item created', id: d2.id });
+      return;
+    }
     if (error) throw error;
     res.status(201).json({ message: 'Item created', id: data.id });
   } catch {
@@ -122,7 +134,12 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
     }
     if (req.file) updates.image_url = await uploadToSupabase(req.file);
 
-    await supabase.from('items').update(updates).eq('id', id);
+    const { error: updateError } = await supabase.from('items').update(updates).eq('id', id);
+    if (updateError && (updateError.message.includes('video_url') || updateError.message.includes('video_type'))) {
+      delete updates.video_url;
+      delete updates.video_type;
+      await supabase.from('items').update(updates).eq('id', id);
+    }
     res.json({ message: 'Item updated' });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
