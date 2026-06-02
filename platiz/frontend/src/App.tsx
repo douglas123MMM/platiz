@@ -19,6 +19,7 @@ import AIAdmin from './pages/admin/AIAdmin';
 import StreamsAdmin from './pages/admin/StreamsAdmin';
 import AdminSearch from './pages/admin/AdminSearch';
 import PartnersAdmin from './pages/admin/PartnersAdmin';
+import ContactSettings from './pages/admin/ContactSettings';
 
 function LoadingScreen() {
   return (
@@ -67,6 +68,7 @@ export default function App() {
         <Route path="/admin/streams" element={<StreamsAdmin />} />
         <Route path="/admin/search" element={<AdminSearch />} />
         <Route path="/admin/partners" element={<PartnersAdmin />} />
+        <Route path="/admin/contact" element={<ContactSettings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

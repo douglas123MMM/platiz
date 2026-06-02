@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
+import FloatingButtons from './FloatingButtons';
 import { IconHome, IconMovies, IconCourses, IconBooks, IconApps, IconTelegram, IconServices, IconAcademy, IconAffiliate, IconChat, IconCog, IconPhoto, IconUsers, IconGrid, IconMenu, IconClose, IconBell, IconSearch, IconChevronDown, IconLogout } from '../icons/PremiumIcons';
 
 const navItems = [
@@ -23,6 +24,7 @@ const adminItems = [
   { path: '/admin/content', label: 'Contenido', icon: IconCourses },
   { path: '/admin/streams', label: 'Transmisiones', icon: IconChat },
   { path: '/admin/partners', label: 'Socios', icon: IconUsers },
+  { path: '/admin/contact', label: 'Contactos', icon: IconTelegram },
   { path: '/admin/banners', label: 'Banners', icon: IconPhoto },
   { path: '/admin/ai', label: 'IA Providers', icon: IconCog },
 ];
@@ -131,6 +133,7 @@ export default function Layout() {
           <Outlet />
         </main>
       </div>
+      <FloatingButtons />
     </div>
   );
 }

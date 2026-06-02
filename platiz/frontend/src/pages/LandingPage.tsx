@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Logo from '../components/Logo';
-import { HiArrowRight, HiChevronDown } from 'react-icons/hi';
-import { HiPlay } from 'react-icons/hi';
+import FloatingButtons from '../components/FloatingButtons';
+import { HiArrowRight, HiChevronDown, HiPlay } from 'react-icons/hi';
 import { IconLightning, IconStar, IconShield, IconGlobe, IconCheck } from '../icons/PremiumIcons';
 import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat } from '../icons/PremiumIcons';
 
@@ -379,6 +379,7 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+      <FloatingButtons />
     </div>
   );
 }
