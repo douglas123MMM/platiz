@@ -3,6 +3,7 @@
   "outputDirectory": "frontend/dist",
   "installCommand": "npm install && cd frontend && npm install",
   "rewrites": [
+    { "source": "/api/migrate", "destination": "/api/migrate.ts" },
     { "source": "/api/(.*)", "destination": "/api/index.ts" },
     { "source": "/(.*)", "destination": "/frontend/dist/$1" }
   ],
