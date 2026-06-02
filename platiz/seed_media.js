@@ -63,13 +63,14 @@ async function seed() {
   ];
 
   const movieChannels = [
-    { title: 'Cine Clásico - Casablanca', video_url: 'https://www.youtube.com/watch?v=BkL9l7qovsE', genre: 'Acción/Aventura', img: 'https://i.imgur.com/casablanca.jpg' },
-    { title: 'Documental: Planeta Tierra', video_url: 'https://www.youtube.com/watch?v=T7rmCZ3FfOw', genre: 'Documentales', img: 'https://i.imgur.com/planettierra.jpg' },
-    { title: 'El Mago de Oz (Clásico)', video_url: 'https://www.youtube.com/watch?v=PSZxmZmBfnU', genre: 'Acción/Aventura', img: 'https://i.imgur.com/magodeoz.jpg' },
-    { title: 'Documental: Universo', video_url: 'https://www.youtube.com/watch?v=H2E2swEsHy4', genre: 'Documentales', img: 'https://i.imgur.com/universo.jpg' },
-    { title: 'Sherlock Holmes Jr (Buster Keaton)', video_url: 'https://www.youtube.com/watch?v=fZuqWxITq38', genre: 'Comedia', img: 'https://i.imgur.com/sherlockjr.jpg' },
-    { title: 'Tiempos Modernos (Chaplin)', video_url: 'https://www.youtube.com/watch?v=GLeDdzGUTq0', genre: 'Comedia', img: 'https://i.imgur.com/modernTimes.jpg' },
-    { title: 'Documental: Historia de Google', video_url: 'https://www.youtube.com/watch?v=Ka5Ohk9Gx6A', genre: 'Documentales', img: 'https://i.imgur.com/googleDoc.jpg' },
+    { title: 'Big Buck Bunny (MP4)', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', genre: 'Acción/Aventura', img: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Big_buck_bunny_poster_big.jpg' },
+    { title: 'Sintel (MP4)', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', genre: 'Acción/Aventura', img: 'https://upload.wikimedia.org/wikipedia/commons/5/54/Sintel_poster.jpg' },
+    { title: 'Elephants Dream (MP4)', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', genre: 'Documentales', img: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Elephants_Dream_poster.jpg' },
+    { title: 'Tears of Steel (MP4)', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', genre: 'Ciencia Ficción', img: 'https://upload.wikimedia.org/wikipedia/commons/4/42/Tears_of_Steel_poster.jpg' },
+    { title: 'For Bigger Blazes (MP4)', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', genre: 'Comedia', img: '' },
+    { title: 'Subaru Outback (MP4)', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', genre: 'Documentales', img: '' },
+    { title: 'Volkswagen GTI Review', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', genre: 'Documentales', img: '' },
+    { title: 'We Are Going On Bullrun', video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', genre: 'Acción/Aventura', img: '' },
   ];
 
   channels.push(...newsChannels.map(c => ({ ...c, category: 'TV en Vivo', type: 'live' })));

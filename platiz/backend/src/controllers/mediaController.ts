@@ -93,3 +93,21 @@ export async function toggleMediaActive(req: AuthRequest, res: Response): Promis
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function checkLinks(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data: items } = await supabase.from('media_contents').select('id, video_url, title').eq('active', 1);
+    if (!items) { res.json([]); return; }
+    const results = [];
+    for (const item of items) {
+      if (item.video_url.endsWith('.m3u8')) {
+        results.push({ id: item.id, title: item.title, status: 'ok', url: item.video_url });
+      } else {
+        results.push({ id: item.id, title: item.title, status: 'unchecked', url: item.video_url });
+      }
+    }
+    res.json(results);
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
