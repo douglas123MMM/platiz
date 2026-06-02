@@ -19,6 +19,7 @@ const sectionMeta: Record<string, { title: string; icon: React.FC<{ className?: 
 export default function SectionPage() {
   const slug = useLocation().pathname.replace('/', '');
   const [items, setItems] = useState<ContentItem[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: '📄', subtitle: '' };
@@ -27,7 +28,7 @@ export default function SectionPage() {
     if (!slug) return;
     setLoading(true);
     api.get(`/content/items/${slug}`)
-      .then((r) => setItems(r.data))
+      .then((r) => { setItems(r.data.items || r.data); setTotal(r.data.total || 0); })
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
   }, [slug]);
@@ -40,7 +41,7 @@ export default function SectionPage() {
         <meta.icon className="w-14 h-14 text-[#FFD700] mx-auto mb-4" />
         <h1 className="section-title">{meta.title}</h1>
         <p className="section-subtitle">{meta.subtitle}</p>
-        {!loading && <p className="text-[#FFD700]/50 text-sm mt-1">{items.length} {items.length === 1 ? 'recurso disponible' : 'recursos disponibles'}</p>}
+        {!loading && <p className="text-[#FFD700]/50 text-sm mt-1">{total || items.length} {((total || items.length) === 1) ? 'recurso disponible' : 'recursos disponibles'}</p>}
       </div>
 
       {loading ? (

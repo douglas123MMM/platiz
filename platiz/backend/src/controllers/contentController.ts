@@ -15,8 +15,8 @@ export async function getCategories(_req: AuthRequest, res: Response): Promise<v
 export async function getItems(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { slug } = req.params;
-    const { data } = await supabase.from('items').select('*').eq('category_slug', slug).eq('active', 1).order('sort_order', { ascending: true }).order('created_at', { ascending: false });
-    res.json(data || []);
+    const { data, count } = await supabase.from('items').select('*', { count: 'exact' }).eq('category_slug', slug).eq('active', 1).order('sort_order', { ascending: true }).order('created_at', { ascending: false }).range(0, 999);
+    res.json({ items: data || [], total: count || 0 });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
