@@ -40,6 +40,7 @@ export default function SectionPage() {
         <meta.icon className="w-14 h-14 text-[#FFD700] mx-auto mb-4" />
         <h1 className="section-title">{meta.title}</h1>
         <p className="section-subtitle">{meta.subtitle}</p>
+        {!loading && <p className="text-[#FFD700]/50 text-sm mt-1">{items.length} {items.length === 1 ? 'recurso disponible' : 'recursos disponibles'}</p>}
       </div>
 
       {loading ? (
