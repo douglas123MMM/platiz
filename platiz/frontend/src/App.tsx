@@ -20,8 +20,6 @@ import StreamsAdmin from './pages/admin/StreamsAdmin';
 import AdminSearch from './pages/admin/AdminSearch';
 import PartnersAdmin from './pages/admin/PartnersAdmin';
 import ContactSettings from './pages/admin/ContactSettings';
-import MediaAdmin from './pages/admin/MediaAdmin';
-import CinemaTV from './pages/CinemaTV';
 
 function LoadingScreen() {
   return (
@@ -49,7 +47,7 @@ export default function App() {
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<DashboardHome />} />
-        <Route path="/movies" element={<CinemaTV />} />
+        <Route path="/movies" element={<SectionPage />} />
         <Route path="/courses" element={<SectionPage />} />
         <Route path="/books" element={<SectionPage />} />
         <Route path="/apps" element={<SectionPage />} />
@@ -71,7 +69,6 @@ export default function App() {
         <Route path="/admin/search" element={<AdminSearch />} />
         <Route path="/admin/partners" element={<PartnersAdmin />} />
         <Route path="/admin/contact" element={<ContactSettings />} />
-        <Route path="/admin/media" element={<MediaAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
