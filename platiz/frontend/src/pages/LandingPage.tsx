@@ -62,7 +62,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center pt-16">
+      <section className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0">
         <div className="absolute inset-0 bg-gold-grid" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700]/5 rounded-full blur-[150px]" />
         <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#0a0a0f] to-transparent" />
@@ -95,8 +95,8 @@ export default function LandingPage() {
           </div>
 
           {landingVideos.length > 0 && (
-            <div className="mt-12 max-w-3xl mx-auto animate-slide-up">
-              <div className="glass rounded-2xl overflow-hidden border border-[#FFD700]/20 shadow-2xl shadow-[#FFD700]/5">
+            <div className="mt-6 md:mt-12 w-full max-w-3xl mx-auto animate-slide-up px-2 md:px-0">
+              <div className="glass rounded-xl md:rounded-2xl overflow-hidden border border-[#FFD700]/20 shadow-2xl shadow-[#FFD700]/5">
                 <div className="relative" style={{ aspectRatio: '16/9' }}>
                   <iframe
                     src={(() => {
@@ -125,7 +125,7 @@ export default function LandingPage() {
                   />
                 </div>
               </div>
-              <p className="text-center text-[#FFD700]/60 text-sm mt-3">{landingVideos[0]?.title}</p>
+              <p className="text-center text-[#FFD700]/60 text-xs md:text-sm mt-2">{landingVideos[0]?.title}</p>
             </div>
           )}
         </div>
