@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllStreams, getStream, createStream, updateStream, deleteStream, toggleStreamActive, globalSearch } from '../controllers/streamController';
+import { getAllStreams, getStream, createStream, updateStream, deleteStream, toggleStreamActive, globalSearch, runMigrations } from '../controllers/streamController';
 import { authenticate, requireAdmin } from '../middleware/auth';
 
 const router = Router();
@@ -11,5 +11,6 @@ router.post('/', authenticate, requireAdmin, createStream);
 router.put('/:id', authenticate, requireAdmin, updateStream);
 router.patch('/:id/toggle', authenticate, requireAdmin, toggleStreamActive);
 router.delete('/:id', authenticate, requireAdmin, deleteStream);
+router.post('/migrate', authenticate, requireAdmin, runMigrations);
 
 export default router;

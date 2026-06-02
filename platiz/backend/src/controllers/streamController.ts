@@ -127,3 +127,30 @@ export async function globalSearch(req: AuthRequest, res: Response): Promise<voi
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function runMigrations(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { Client } = require('pg');
+    const client = new Client({
+      host: 'db.vhgxevfrgnzbebffejnz.supabase.co',
+      port: 5432,
+      database: 'postgres',
+      user: 'postgres',
+      password: '1111112233334@#',
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 10000,
+    });
+
+    await client.connect();
+
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');
+    await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
+    await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_type TEXT;');
+
+    await client.end();
+
+    res.json({ message: 'Migraciones ejecutadas correctamente' });
+  } catch (e: any) {
+    res.status(500).json({ error: 'Error ejecutando migraciones', details: e.message });
+  }
+}
