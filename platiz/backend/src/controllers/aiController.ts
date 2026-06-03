@@ -180,21 +180,28 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
     const { message } = req.body;
     if (!message) { res.status(400).json({ error: 'Message required' }); return; }
     
-    let text = '';
-    let retries = 0;
-    while (retries < 3) {
-      const r = await fetch('https://text.pollinations.ai/' + encodeURIComponent(message) + '?model=openai&seed=' + Date.now());
-      if (r.status === 429) {
-        retries++;
-        await new Promise(r => setTimeout(r, 2000 * retries));
-        continue;
-      }
-      text = await r.text();
-      break;
-    }
+    const { data: provider } = await supabase.from('ai_providers').select('*').eq('name', 'Gemini').eq('active', 1).maybeSingle();
     
-    if (!text) text = 'Lo siento, el servicio de IA esta ocupado ahora. Prueba de nuevo en unos segundos o usa las palabras clave sugeridas en los botones.';
-    res.json({ response: text });
+    if (provider?.api_key) {
+      // Usar Gemini API nativa
+      const r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${provider.api_key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ 
+              text: 'Eres asistente de Global Dorado. Responde en espanol, breve y amable. Streaming: Netflix $3-14, Disney+ $1.7-9.5, HBO $1.5-3, Prime $1.5-3, Crunchyroll $1.5-3, YouTube $3, Paramount $1.5-3, Vix $1.7-3, MagisTV $3-3.5, Apple TV $3. IA: ChatGPT $4.5-10, Gemini $2.5-4.22, Perplexity $2.56-5, Grok $2-3, Jarvis $1.83-3.11, Gamma $4.22-22. Creatividad: Canva Pro $1.5/ano, CapCut $2.5-4. Musica: Spotify $3.5-8, Apple Music $3.11. Educacion: Duolingo $1.72, Scribd $1.85. VPN: Surfshark $2, Nord $2.88, Express $2.39. Pagos: Binance ID 355976674 (jcespinoza2011@gmail.com), PagoMovil 0102/04243057148/28012172. WhatsApp: +584149132366. Licencias: consultar (Office, Windows, Corel, Photoshop, AutoCAD, SketchUp +40 mas).\n\nPregunta del usuario: ' + message
+            })] }],
+          }),
+        }
+      );
+      const data = await r.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude generar respuesta. Intenta con palabras clave.';
+      res.json({ response: text });
+    } else {
+      res.json({ response: 'IA no configurada. Activa Gemini en Admin > IA Providers con tu API Key.' });
+    }
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }

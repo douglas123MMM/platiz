@@ -442,7 +442,7 @@ function findAnswer(msg: string): string {
 
   if (bestMatch) return bestMatch.answer;
 
-  return ''; // Devolver vacio para que intente IA
+  return `No tengo informacion sobre "${msg}".\n\nPrueba preguntando por:\n- Netflix, Disney, HBO, Prime, YouTube\n- ChatGPT, Gemini, Canva, CapCut\n- Spotify, Duolingo, VPN\n- precios, bolivares, binance, licencias\n\nO contacta al admin por WhatsApp.`; // Devolver vacio para que intente IA
 }
 
 function renderText(text: string): React.ReactNode {
@@ -481,7 +481,6 @@ export default function SupportChat() {
         setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
         return;
       }
-      // IA gratis via backend proxy
       try {
         const { data } = await api.post('/ai/support', { message: text });
         setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
