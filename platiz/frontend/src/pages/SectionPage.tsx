@@ -97,7 +97,11 @@ export default function SectionPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
           {filtered.map((item) => (
-            <div key={item.id} className="card-glow group overflow-hidden">
+            <div
+              key={item.id}
+              onClick={item.link ? () => window.open(item.link, '_blank', 'noopener,noreferrer') : undefined}
+              className={`card-glow group overflow-hidden ${item.link ? 'cursor-pointer' : ''}`}
+            >
               <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
                 {item.image_url ? (
                   <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-icon')!.classList.remove('hidden'); }} />
@@ -118,7 +122,9 @@ export default function SectionPage() {
                   <IconPlay className="w-4 h-4" /> Reproducir
                 </Link>
               ) : item.link ? (
-                <button onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')} className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all cursor-pointer">
+                <button
+                  onMouseDown={(e) => { e.stopPropagation(); window.open(item.link, '_blank', 'noopener,noreferrer'); }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all cursor-pointer">
                   <IconExternalLink className="w-4 h-4" /> Ver guia en Canva
                 </button>
               ) : null}
