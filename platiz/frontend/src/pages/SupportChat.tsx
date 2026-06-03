@@ -407,15 +407,15 @@ export default function SupportChat() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const send = () => {
-    const text = input.trim();
+  const send = (msg?: string) => {
+    const text = (msg || input).trim();
     if (!text) return;
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
     setTimeout(() => {
       const answer = findAnswer(text);
       setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
-    }, 500);
+    }, 400);
   };
 
   const quickBtns = ['Precios', 'Netflix', 'ChatGPT', 'Bolivares', 'Binance', 'Licencias', 'Canva', 'Contacto'];
@@ -449,7 +449,7 @@ export default function SupportChat() {
           {quickBtns.map((btn) => (
             <button
               key={btn}
-              onClick={() => { setInput(btn); setTimeout(() => send(), 100); }}
+              onClick={() => send(btn)}
               className="text-xs px-3 py-1.5 rounded-full bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors"
             >
               {btn}
