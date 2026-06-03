@@ -68,13 +68,21 @@ export default function SectionPage() {
                 <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-[#0a0a0f] flex items-center justify-center">
                   {item.video_url ? (
                     <Link to={`/player?type=item&id=${item.id}`} className="w-full h-full block relative cursor-pointer">
-                      <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" />
+                      <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-logo')!.classList.remove('hidden'); }} />
+                      <div className="fallback-logo hidden absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0f] flex items-center justify-center">
+                        <span className="text-4xl font-bold text-[#FFD700]/40">{item.title.charAt(0)}</span>
+                      </div>
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                         <IconPlay className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
                       </div>
                     </Link>
                   ) : (
-                    <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" />
+                    <>
+                      <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-logo')!.classList.remove('hidden'); }} />
+                      <div className="fallback-logo hidden absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0f] flex items-center justify-center">
+                        <span className="text-5xl font-bold text-[#FFD700]/30">{item.title.charAt(0)}</span>
+                      </div>
+                    </>
                   )}
                 </div>
               )}
