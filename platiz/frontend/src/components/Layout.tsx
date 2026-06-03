@@ -44,7 +44,7 @@ export default function Layout() {
   const filteredNav = navItems.filter((item) => item.roles.includes(user?.role || 'client'));
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-[#0a0a0f] overflow-x-hidden">
       <aside className={`fixed top-0 left-0 z-40 h-full w-72 bg-[#050508]/90 lg:bg-[#050508]/90 backdrop-blur-xl border-r border-[#FFD700]/10 transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ WebkitBackdropFilter: 'blur(24px)' }}>
         <div className="flex flex-col items-center px-3 py-3 border-b border-[#FFD700]/10">
           <Logo size={28} />
@@ -87,25 +87,20 @@ export default function Layout() {
         </div>
       </aside>
 
-      <div className={`lg:pl-72 transition-all duration-300 min-h-screen`}>
+      <div className="lg:pl-72 transition-all duration-300 min-h-screen overflow-x-hidden">
         <header className="sticky top-0 z-30 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[#FFD700]/10">
-          <div className="flex items-center justify-between h-12 px-2 md:h-16 md:px-8 gap-1 md:gap-0">
+          <div className="flex items-center justify-between h-11 md:h-16 px-2 md:px-8 gap-0.5">
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-1.5 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0">
               {sidebarOpen ? <IconClose className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
             </button>
-            <div className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1 md:py-2 bg-[#0a0a0f]/50 rounded-lg md:rounded-xl border border-[#FFD700]/10 flex-1 max-w-full md:max-w-md mx-0.5 md:mx-0">
-              <IconSearch className="w-3.5 h-3.5 md:w-5 md:h-5 text-gray-500 flex-shrink-0" />
-              <input type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && searchQuery.trim()) { navigate(isAdmin ? `/admin/search?q=${encodeURIComponent(searchQuery.trim())}` : `/search?q=${encodeURIComponent(searchQuery.trim())}`); setSearchQuery(''); } }} className="bg-transparent border-none outline-none text-xs md:text-sm text-white placeholder-gray-500 w-full min-w-0" />
+            <div className="flex items-center gap-0.5 md:gap-2 px-1.5 md:px-4 py-1 md:py-2 bg-[#0a0a0f]/50 rounded-lg md:rounded-xl border border-[#FFD700]/10 flex-1 max-w-full md:max-w-md">
+              <IconSearch className="w-3 h-3 md:w-5 md:h-5 text-gray-500 flex-shrink-0" />
+              <input type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && searchQuery.trim()) { navigate(isAdmin ? `/admin/search?q=${encodeURIComponent(searchQuery.trim())}` : `/search?q=${encodeURIComponent(searchQuery.trim())}`); setSearchQuery(''); } }} className="bg-transparent border-none outline-none text-[11px] md:text-sm text-white placeholder-gray-500 w-full min-w-0" />
             </div>
-            <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
-              <button className="relative p-1.5 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors hidden sm:block">
-                <IconBell className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#FFD700] rounded-full shadow-[0_0_6px_rgba(255,215,0,0.8)]"></span>
-              </button>
+            <div className="flex items-center gap-0.5 md:gap-2 flex-shrink-0">
               <div className="relative">
-                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-1 md:gap-2 p-1 rounded-lg md:rounded-xl hover:bg-[#FFD700]/5 transition-colors">
-                  <div className="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-lg flex items-center justify-center text-black text-xs md:text-sm font-bold">{user?.username?.charAt(0).toUpperCase()}</div>
-                  <span className="text-xs md:text-sm text-white font-medium truncate max-w-[60px] md:max-w-none">{user?.username}</span>
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-0.5 md:gap-2 p-1 rounded-lg md:rounded-xl hover:bg-[#FFD700]/5 transition-colors">
+                  <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-lg flex items-center justify-center text-black text-[10px] md:text-sm font-bold">{user?.username?.charAt(0).toUpperCase()}</div>
                   <IconChevronDown className="w-3 h-3 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
                 </button>
                 {userMenuOpen && (
@@ -119,7 +114,7 @@ export default function Layout() {
                       <div className="p-2">
                         <button onClick={() => { logout(); navigate('/login'); setUserMenuOpen(false); }} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/5 transition-colors text-sm">
                           <IconLogout className="w-4 h-4" />
-                          <span>Cerrar sesión</span>
+                          <span>Cerrar sesion</span>
                         </button>
                       </div>
                     </div>
