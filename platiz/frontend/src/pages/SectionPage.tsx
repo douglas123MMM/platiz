@@ -67,40 +67,30 @@ export default function SectionPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
           {items.map((item) => (
             <div key={item.id} className="card-glow group overflow-hidden">
-              {item.image_url && (
-                <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-[#0a0a0f] flex items-center justify-center">
-                  {item.video_url ? (
-                    <Link to={`/player?type=item&id=${item.id}`} className="w-full h-full block relative cursor-pointer">
-                      <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-logo')!.classList.remove('hidden'); }} />
-                      <div className="fallback-logo hidden absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0f] flex items-center justify-center">
-                        <span className="text-4xl font-bold text-[#FFD700]/40">{item.title.charAt(0)}</span>
-                      </div>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                        <IconPlay className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
-                      </div>
-                    </Link>
-                  ) : (
-                    <>
-                      <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-logo')!.classList.remove('hidden'); }} />
-                      <div className="fallback-logo hidden absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0f] flex items-center justify-center">
-                        <span className="text-5xl font-bold text-[#FFD700]/30">{item.title.charAt(0)}</span>
-                      </div>
-                    </>
-                  )}
+              <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
+                {item.image_url ? (
+                  <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-icon')!.classList.remove('hidden'); }} />
+                ) : null}
+                <div className={`fallback-icon ${item.image_url ? 'hidden' : ''} absolute inset-0 flex flex-col items-center justify-center`}>
+                  <span className="text-6xl font-black text-[#FFD700]/25">{item.title.trim().charAt(0).toUpperCase()}</span>
                 </div>
-              )}
+                {item.video_url && (
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                    <IconPlay className="w-12 h-12 text-white opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
+                  </div>
+                )}
+              </div>
               <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors">{item.title}</h3>
-              {item.description && <p className={`text-gray-400 text-sm mb-4 whitespace-pre-wrap ${slug !== 'affiliate' ? 'line-clamp-3' : ''}`}>{item.description}</p>}
-              {item.video_url && (
+              {item.description && <p className={`text-gray-400 text-sm mb-4 whitespace-pre-wrap ${slug !== 'affiliate' ? 'line-clamp-2' : ''}`}>{item.description}</p>}
+              {item.video_url ? (
                 <Link to={`/player?type=item&id=${item.id}`} className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
                   <IconPlay className="w-4 h-4" /> Reproducir
                 </Link>
-              )}
-              {item.link && !item.video_url && (
-                <a href={item.link} target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Descargar
+              ) : item.link ? (
+                <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all">
+                  <IconExternalLink className="w-4 h-4" /> Ver guia en Canva
                 </a>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
