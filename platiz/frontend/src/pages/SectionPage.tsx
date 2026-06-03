@@ -96,11 +96,14 @@ export default function SectionPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-          {filtered.map((item) => (
+          {filtered.map((item) => {
+            const isTextOnly = !item.link && !item.video_url;
+            return (
             <div
               key={item.id}
-              className="card-glow group overflow-hidden"
+              className={`${isTextOnly ? 'lg:col-span-3 md:col-span-2' : ''} card-glow group overflow-hidden`}
             >
+              {!isTextOnly && (
               <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
                 {item.image_url ? (
                   <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-icon')!.classList.remove('hidden'); }} />
@@ -114,8 +117,9 @@ export default function SectionPage() {
                   </div>
                 )}
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors">{item.title}</h3>
-              {item.description && <p className={`text-gray-400 text-sm mb-4 whitespace-pre-wrap ${slug !== 'affiliate' ? 'line-clamp-2' : ''}`}>{item.description}</p>}
+              )}
+              <h3 className={`${isTextOnly ? 'text-xl' : 'text-lg'} font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors`}>{item.title}</h3>
+              {item.description && <p className={`text-gray-400 text-sm mb-4 whitespace-pre-wrap ${!isTextOnly && slug !== 'affiliate' ? 'line-clamp-2' : ''}`}>{item.description}</p>}
               {item.video_url ? (
                 <Link to={`/player?type=item&id=${item.id}`} className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
                   <IconPlay className="w-4 h-4" /> Reproducir
@@ -129,7 +133,7 @@ export default function SectionPage() {
                 </a>
               ) : null}
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>
