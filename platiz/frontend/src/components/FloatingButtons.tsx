@@ -30,7 +30,7 @@ export default function FloatingButtons() {
   const guideText = currentGuide ? guias[currentGuide.key] || '' : '';
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+    <div className="fixed bottom-6 md:bottom-8 right-4 md:right-6 z-[100] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       {currentGuide && guideText && (
         <>
           <button
