@@ -25,14 +25,12 @@ export default function SectionPage() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const textGuide = items.find((i) => !i.link && !i.video_url && i.description);
 
   const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: '📄', subtitle: '' };
 
   const filtered = query.trim()
     ? items.filter((i) => i.title.toLowerCase().includes(query.toLowerCase()) || (i.description || '').toLowerCase().includes(query.toLowerCase()))
-    : items.filter((i) => i.link || i.video_url);
+    : items;
 
   useEffect(() => {
     if (!slug) return;
@@ -98,14 +96,11 @@ export default function SectionPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-          {filtered.map((item) => {
-            const isTextOnly = !item.link && !item.video_url;
-            return (
+          {filtered.map((item) => (
             <div
               key={item.id}
-              className={`${isTextOnly ? 'lg:col-span-3 md:col-span-2' : ''} card-glow group overflow-hidden`}
+              className="card-glow group overflow-hidden"
             >
-              {!isTextOnly && (
               <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
                 {item.image_url ? (
                   <img src={item.image_url} alt={item.title} className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.querySelector('.fallback-icon')!.classList.remove('hidden'); }} />
@@ -119,9 +114,8 @@ export default function SectionPage() {
                   </div>
                 )}
               </div>
-              )}
-              <h3 className={`${isTextOnly ? 'text-xl' : 'text-lg'} font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors`}>{item.title}</h3>
-              {item.description && <p className={`text-gray-400 text-sm mb-4 whitespace-pre-wrap ${!isTextOnly && slug !== 'affiliate' ? 'line-clamp-2' : ''}`}>{item.description}</p>}
+              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors">{item.title}</h3>
+              {item.description && <p className={`text-gray-400 text-sm mb-4 whitespace-pre-wrap ${slug !== 'affiliate' ? 'line-clamp-2' : ''}`}>{item.description}</p>}
               {item.video_url ? (
                 <Link to={`/player?type=item&id=${item.id}`} className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
                   <IconPlay className="w-4 h-4" /> Reproducir
@@ -135,44 +129,8 @@ export default function SectionPage() {
                 </a>
               ) : null}
             </div>
-          )})}
+          ))}
         </div>
-      )}
-
-      {textGuide && (
-        <>
-          <button
-            onClick={() => setModalOpen(!modalOpen)}
-            className="fixed bottom-24 right-6 z-40 group w-14 h-14 rounded-full bg-[#FFD700] flex items-center justify-center shadow-lg shadow-[#FFD700]/30 hover:shadow-[#FFD700]/50 hover:scale-110 transition-all duration-300"
-            title="Guia PLR"
-          >
-            <svg viewBox="0 0 24 24" className="w-7 h-7 fill-black"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-            <span className="absolute right-16 bg-[#1a1a2e] text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">Guia</span>
-          </button>
-
-          {modalOpen && (
-            <div className="fixed inset-y-0 right-0 z-[100] w-full max-w-md flex flex-col bg-[#0a0a0f] border-l border-[#FFD700]/20 shadow-2xl animate-slide-in">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[#FFD700]/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-black"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-sm">{textGuide.title}</h3>
-                    <p className="text-[#FFD700]/60 text-xs">Familia Global Dorado</p>
-                  </div>
-                </div>
-                <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-white text-xl">&times;</button>
-              </div>
-              <div className="flex-1 overflow-y-auto px-5 py-4">
-                <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{textGuide.description}</div>
-              </div>
-              <div className="px-5 py-3 border-t border-[#FFD700]/10">
-                <p className="text-[#FFD700]/40 text-xs text-center">Transformamos Internet en Dinero</p>
-              </div>
-            </div>
-          )}
-        </>
       )}
     </div>
   );

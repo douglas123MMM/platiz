@@ -7,6 +7,7 @@ import { IconTelegram } from '../../icons/PremiumIcons';
 export default function ContactSettings() {
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
+  const [plrGuide, setPlrGuide] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -14,6 +15,7 @@ export default function ContactSettings() {
     api.get('/settings').then((r) => {
       setWhatsapp(r.data.whatsapp || '');
       setTelegram(r.data.telegram || '');
+      setPlrGuide(r.data.plr_guide || '');
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -21,7 +23,7 @@ export default function ContactSettings() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/settings', { whatsapp, telegram });
+      await api.put('/settings', { whatsapp, telegram, plr_guide: plrGuide });
       toast.success('Configuración guardada');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Error al guardar');
@@ -48,6 +50,11 @@ export default function ContactSettings() {
             <div><p className="text-white font-medium">Telegram</p><p className="text-gray-400 text-xs">Usuario o enlace</p></div>
           </div>
           <div><label className="label">Usuario de Telegram o enlace</label><input className="input" placeholder="@usuario o https://t.me/usuario" value={telegram} onChange={(e) => setTelegram(e.target.value)} /></div>
+          <div className="p-4 bg-[#FFD700]/10 rounded-xl flex items-center gap-3">
+            <svg viewBox="0 0 24 24" className="w-10 h-10 fill-[#FFD700] flex-shrink-0"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+            <div><p className="text-white font-medium">Guia PLR PRO</p><p className="text-gray-400 text-xs">Texto que se muestra en el panel lateral de la Guia</p></div>
+          </div>
+          <div><label className="label">Texto de la Guia PLR</label><textarea className="textarea min-h-[300px]" value={plrGuide} onChange={(e) => setPlrGuide(e.target.value)} /></div>
           <button type="submit" disabled={saving} className="btn-primary w-full flex items-center justify-center gap-2"><HiSave className="w-4 h-4" /> {saving ? 'Guardando...' : 'Guardar configuración'}</button>
         </form>
       </div>

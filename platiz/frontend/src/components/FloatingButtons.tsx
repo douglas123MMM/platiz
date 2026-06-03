@@ -6,18 +6,54 @@ const api = axios.create({ baseURL: '/api' });
 export default function FloatingButtons() {
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
+  const [guideText, setGuideText] = useState('');
+  const [guideOpen, setGuideOpen] = useState(false);
 
   useEffect(() => {
     api.get('/settings').then((r) => {
       if (r.data.whatsapp) setWhatsapp(r.data.whatsapp);
       if (r.data.telegram) setTelegram(r.data.telegram);
+      if (r.data.plr_guide) setGuideText(r.data.plr_guide);
     }).catch(() => {});
   }, []);
 
-  if (!whatsapp && !telegram) return null;
-
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+      {guideText && (
+        <>
+          <button
+            onClick={() => setGuideOpen(!guideOpen)}
+            className="group relative w-14 h-14 rounded-full bg-[#FFD700] flex items-center justify-center shadow-lg shadow-[#FFD700]/30 hover:shadow-[#FFD700]/50 hover:scale-110 transition-all duration-300"
+            title="Guia PLR"
+          >
+            <svg viewBox="0 0 24 24" className="w-7 h-7 fill-black"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+            <span className="absolute right-16 bg-[#1a1a2e] text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">Guia</span>
+          </button>
+
+          {guideOpen && (
+            <div className="fixed inset-y-0 right-0 z-[90] w-full max-w-md flex flex-col bg-[#0a0a0f] border-l border-[#FFD700]/20 shadow-2xl animate-slide-in">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-[#FFD700]/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-black"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-sm">Guia PLR PRO</h3>
+                    <p className="text-[#FFD700]/60 text-xs">Familia Global Dorado</p>
+                  </div>
+                </div>
+                <button onClick={() => setGuideOpen(false)} className="text-gray-400 hover:text-white text-xl leading-none">&times;</button>
+              </div>
+              <div className="flex-1 overflow-y-auto px-5 py-4">
+                <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{guideText}</div>
+              </div>
+              <div className="px-5 py-3 border-t border-[#FFD700]/10">
+                <p className="text-[#FFD700]/40 text-xs text-center">Transformamos Internet en Dinero</p>
+              </div>
+            </div>
+          )}
+        </>
+      )}
       {whatsapp && (
         <a
           href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`}
