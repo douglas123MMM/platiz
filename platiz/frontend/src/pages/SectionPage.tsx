@@ -122,11 +122,14 @@ export default function SectionPage() {
                   <IconPlay className="w-4 h-4" /> Reproducir
                 </Link>
               ) : item.link ? (
-                <button
-                  onMouseDown={(e) => { e.stopPropagation(); window.open(item.link, '_blank', 'noopener,noreferrer'); }}
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all cursor-pointer">
                   <IconExternalLink className="w-4 h-4" /> Ver guia en Canva
-                </button>
+                </a>
               ) : null}
             </div>
           ))}
