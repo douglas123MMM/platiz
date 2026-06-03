@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { IconSend, IconChat } from '../icons/PremiumIcons';
+import api from '../services/api';
 
 // v2 - Jun 2026 - Catalogo actualizado
 
@@ -441,12 +442,7 @@ function findAnswer(msg: string): string {
 
   if (bestMatch) return bestMatch.answer;
 
-  return `No encontre info especifica sobre "${msg}". Prueba con:
-
-- El nombre del producto (Netflix, ChatGPT, Canva, Office...)
-- "precios" para ver el catalogo general
-- "binance" para metodos de pago
-- "contacto" para hablar con el admin`;
+  return ''; // Devolver vacio para que intente IA
 }
 
 function renderText(text: string): React.ReactNode {
@@ -479,9 +475,21 @@ export default function SupportChat() {
     if (!text) return;
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
-    setTimeout(() => {
+    setTimeout(async () => {
       const answer = findAnswer(text);
-      setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
+      if (answer) {
+        setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
+        return;
+      }
+      // Intentar con IA
+      try {
+        const { data } = await api.post('/ai/chat', { provider_id: 'gemini', message: text, conversation_id: null });
+        if (data?.response) {
+          setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
+          return;
+        }
+      } catch {}
+      setMessages((prev) => [...prev, { role: 'assistant', text: `No encontre info sobre "${text}". Prueba con: Netflix, ChatGPT, Canva, precios, binance, licencias o contacto.` }]);
     }, 400);
   };
 

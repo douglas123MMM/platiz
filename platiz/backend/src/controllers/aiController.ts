@@ -71,7 +71,7 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
     const { provider_id, message, conversation_id } = req.body;
     if (!provider_id || !message) { res.status(400).json({ error: 'Provider ID and message are required' }); return; }
 
-    const { data: provider } = await supabase.from('ai_providers').select('*').eq('id', provider_id).eq('active', 1).maybeSingle();
+    const { data: provider } = await supabase.from('ai_providers').select('*').or(`id.eq.${provider_id},name.eq.${provider_id}`).eq('active', 1).maybeSingle();
     if (!provider) { res.status(404).json({ error: 'AI provider not found or inactive' }); return; }
 
     let convId = conversation_id;
@@ -97,6 +97,8 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
     const messages: any[] = [];
     if (provider.system_prompt) {
       messages.push({ role: 'system', content: provider.system_prompt });
+    } else {
+      messages.push({ role: 'system', content: 'Eres el asistente de Global Dorado. Responde en espanol, breve y amable.' });
     }
     if (history) {
       history.forEach((m: any) => {
