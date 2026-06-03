@@ -27,10 +27,14 @@ export default function FloatingButtons() {
     }).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    setGuideOpen(false);
+  }, [location.pathname]);
+
   const guideText = currentGuide ? guias[currentGuide.key] || '' : '';
 
   return (
-    <div className="fixed bottom-6 md:bottom-8 right-4 md:right-6 z-[100] flex flex-col gap-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <div className="fixed bottom-20 md:bottom-8 right-4 md:right-6 z-[100] flex flex-col gap-3" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)' }}>
       {currentGuide && guideText && (
         <>
           <button
