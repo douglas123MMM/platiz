@@ -481,7 +481,6 @@ export default function SupportChat() {
         setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
         return;
       }
-      // Intentar con IA
       try {
         const { data } = await api.post('/ai/chat', { provider_id: 'gemini', message: text, conversation_id: null });
         if (data?.response) {
@@ -489,8 +488,8 @@ export default function SupportChat() {
           return;
         }
       } catch {}
-      setMessages((prev) => [...prev, { role: 'assistant', text: `No encontre info sobre "${text}". Prueba con: Netflix, ChatGPT, Canva, precios, binance, licencias o contacto.` }]);
-    }, 400);
+      setMessages((prev) => [...prev, { role: 'assistant', text: `No tengo info sobre "${text}". Prueba: Netflix, ChatGPT, precios, binance, licencias.` }]);
+    }, 300);
   };
 
   const quickBtns = ['Precios', 'Netflix', 'ChatGPT', 'Bolivares', 'Binance', 'Licencias', 'Canva', 'Contacto'];

@@ -72,68 +72,59 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
     if (!provider_id || !message) { res.status(400).json({ error: 'Provider ID and message are required' }); return; }
 
     const { data: provider } = await supabase.from('ai_providers').select('*').or(`id.eq.${provider_id},name.eq.${provider_id}`).eq('active', 1).maybeSingle();
-    if (!provider) { res.status(404).json({ error: 'AI provider not found or inactive' }); return; }
 
     let convId = conversation_id;
     if (!convId) {
       const { data: conv } = await supabase.from('chat_conversations').insert({
-        user_id: req.user!.id, title: message.substring(0, 50), provider_id,
+        user_id: req.user!.id, title: message.substring(0, 50), provider_id: provider?.id || provider_id,
       }).select('id').single();
       if (conv) convId = conv.id;
     }
 
     await supabase.from('chat_messages').insert({
-      user_id: req.user!.id, provider_id, role: 'user', content: message, conversation_id: convId,
+      user_id: req.user!.id, provider_id: provider?.id || provider_id, role: 'user', content: message, conversation_id: convId,
     });
 
-    // Get conversation history for context
-    const { data: history } = await supabase
-      .from('chat_messages')
-      .select('role, content')
-      .eq('conversation_id', convId)
-      .order('created_at', { ascending: true })
-      .limit(20);
-
-    const messages: any[] = [];
-    if (provider.system_prompt) {
-      messages.push({ role: 'system', content: provider.system_prompt });
-    } else {
-      messages.push({ role: 'system', content: 'Eres el asistente de Global Dorado. Responde en espanol, breve y amable.' });
-    }
-    if (history) {
-      history.forEach((m: any) => {
-        messages.push({ role: m.role, content: m.content });
-      });
-    }
-
-    // Call AI API
     let responseText: string;
-    try {
-      const aiResponse = await fetch(provider.api_url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${provider.api_key}`,
-        },
-        body: JSON.stringify({
-          model: provider.model || 'gpt-3.5-turbo',
-          messages,
-          temperature: 0.7,
-          max_tokens: 1000,
-        }),
-      });
-      const aiData = await aiResponse.json();
-      if (aiData.error) {
-        responseText = `Error: ${aiData.error.message || JSON.stringify(aiData.error)}`;
-      } else {
-        responseText = aiData.choices?.[0]?.message?.content || JSON.stringify(aiData);
+
+    if (provider?.api_key) {
+      // Usar provider configurado (OpenAI, Gemini, etc)
+      const { data: history } = await supabase.from('chat_messages').select('role, content').eq('conversation_id', convId).order('created_at', { ascending: true }).limit(20);
+      const messages: any[] = [];
+      if (provider.system_prompt) messages.push({ role: 'system', content: provider.system_prompt });
+      if (history) history.forEach((m: any) => messages.push({ role: m.role, content: m.content }));
+
+      try {
+        const aiResp = await fetch(provider.api_url, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${provider.api_key}` },
+          body: JSON.stringify({ model: provider.model || 'gpt-3.5-turbo', messages, temperature: 0.7, max_tokens: 1000 }),
+        });
+        const aiData = await aiResp.json();
+        responseText = aiData.error ? `Error IA: ${aiData.error.message}` : aiData.choices?.[0]?.message?.content || JSON.stringify(aiData);
+      } catch (e: any) {
+        responseText = `Error: ${e.message}`;
       }
-    } catch (fetchErr: any) {
-      responseText = `Error de conexion con IA: ${fetchErr.message}. Verifica que la API key y URL sean correctos.`;
+    } else {
+      // Fallback: usar Pollinations.ai gratis
+      try {
+        const polliResp = await fetch('https://text.pollinations.ai/', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: 'Eres asistente de Global Dorado. Responde en espanol, breve y amable. Habla de precios en USDT, streaming, IA, software. WhatsApp +584149132366. Binance ID 355976674.' },
+              { role: 'user', content: message },
+            ],
+            model: 'openai',
+          }),
+        });
+        responseText = await polliResp.text();
+      } catch (e: any) {
+        responseText = `Error de conexion: ${e.message}`;
+      }
     }
 
     await supabase.from('chat_messages').insert({
-      user_id: req.user!.id, provider_id, role: 'assistant', content: responseText, conversation_id: convId,
+      user_id: req.user!.id, provider_id: provider?.id || provider_id, role: 'assistant', content: responseText, conversation_id: convId,
     });
 
     res.json({ response: responseText, conversation_id: convId });
