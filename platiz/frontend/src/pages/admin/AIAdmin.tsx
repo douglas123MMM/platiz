@@ -8,14 +8,14 @@ export default function AIAdmin() {
   const [providers, setProviders] = useState<AIProvider[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: '', api_url: '', api_key: '', model: '' });
+  const [form, setForm] = useState({ name: '', api_url: '', api_key: '', model: '', system_prompt: '' });
   const [loading, setLoading] = useState(false);
 
   const load = () => api.get('/ai/providers').then((r) => setProviders(r.data)).catch(() => {});
 
   useEffect(() => { load(); }, []);
 
-  const resetForm = () => { setForm({ name: '', api_url: '', api_key: '', model: '' }); setEditId(null); setShowForm(false); };
+  const resetForm = () => { setForm({ name: '', api_url: '', api_key: '', model: '', system_prompt: '' }); setEditId(null); setShowForm(false); };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +73,10 @@ export default function AIAdmin() {
                 <label className="label">Modelo (opcional)</label>
                 <input className="input" placeholder="gpt-4, gemini-pro, claude-3, perplexity..." value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
               </div>
+              <div>
+                <label className="label">System Prompt (instrucciones para la IA)</label>
+                <textarea className="textarea min-h-[150px]" placeholder="Eres un asistente de Global Dorado. Ayudas a clientes con precios, pagos..." value={form.system_prompt} onChange={(e) => setForm({ ...form, system_prompt: e.target.value })} />
+              </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Conectando...' : editId ? 'Actualizar' : 'Conectar'}</button>
                 <button type="button" onClick={resetForm} className="btn-secondary flex-1">Cancelar</button>
@@ -95,7 +99,7 @@ export default function AIAdmin() {
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => toggleActive(p)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-white transition-colors">{p.active ? <HiEyeOff className="w-4 h-4" /> : <HiEye className="w-4 h-4" />}</button>
-                <button onClick={() => { setForm({ name: p.name, api_url: p.api_url, api_key: p.api_key || '', model: p.model || '' }); setEditId(p.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#FFD700]"><HiPencil className="w-4 h-4" /></button>
+                <button onClick={() => { setForm({ name: p.name, api_url: p.api_url, api_key: p.api_key || '', model: p.model || '', system_prompt: (p as any).system_prompt || '' }); setEditId(p.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#FFD700]"><HiPencil className="w-4 h-4" /></button>
                 <button onClick={() => deleteProvider(p.id)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-red-400"><HiTrash className="w-4 h-4" /></button>
               </div>
             </div>

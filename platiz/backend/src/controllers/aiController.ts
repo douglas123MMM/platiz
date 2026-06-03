@@ -38,13 +38,14 @@ export async function updateProvider(req: AuthRequest, res: Response): Promise<v
     const { data: existing } = await supabase.from('ai_providers').select('id').eq('id', id).maybeSingle();
     if (!existing) { res.status(404).json({ error: 'Provider not found' }); return; }
 
-    const { name, api_url, api_key, model, active } = req.body;
+    const { name, api_url, api_key, model, active, system_prompt } = req.body;
     const updates: Record<string, any> = {};
     if (name !== undefined) updates.name = name;
     if (api_url !== undefined) updates.api_url = api_url;
     if (api_key !== undefined) updates.api_key = api_key;
     if (model !== undefined) updates.model = model;
     if (active !== undefined) updates.active = active ? 1 : 0;
+    if (system_prompt !== undefined) updates.system_prompt = system_prompt;
 
     await supabase.from('ai_providers').update(updates).eq('id', id);
     res.json({ message: 'Provider updated' });
@@ -85,7 +86,49 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
       user_id: req.user!.id, provider_id, role: 'user', content: message, conversation_id: convId,
     });
 
-    const responseText = `[${provider.name}] Echo: ${message}`;
+    // Get conversation history for context
+    const { data: history } = await supabase
+      .from('chat_messages')
+      .select('role, content')
+      .eq('conversation_id', convId)
+      .order('created_at', { ascending: true })
+      .limit(20);
+
+    const messages: any[] = [];
+    if (provider.system_prompt) {
+      messages.push({ role: 'system', content: provider.system_prompt });
+    }
+    if (history) {
+      history.forEach((m: any) => {
+        messages.push({ role: m.role, content: m.content });
+      });
+    }
+
+    // Call AI API
+    let responseText: string;
+    try {
+      const aiResponse = await fetch(provider.api_url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${provider.api_key}`,
+        },
+        body: JSON.stringify({
+          model: provider.model || 'gpt-3.5-turbo',
+          messages,
+          temperature: 0.7,
+          max_tokens: 1000,
+        }),
+      });
+      const aiData = await aiResponse.json();
+      if (aiData.error) {
+        responseText = `Error: ${aiData.error.message || JSON.stringify(aiData.error)}`;
+      } else {
+        responseText = aiData.choices?.[0]?.message?.content || JSON.stringify(aiData);
+      }
+    } catch (fetchErr: any) {
+      responseText = `Error de conexion con IA: ${fetchErr.message}. Verifica que la API key y URL sean correctos.`;
+    }
 
     await supabase.from('chat_messages').insert({
       user_id: req.user!.id, provider_id, role: 'assistant', content: responseText, conversation_id: convId,
