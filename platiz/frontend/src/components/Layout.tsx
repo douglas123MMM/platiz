@@ -17,6 +17,7 @@ const navItems = [
   { path: '/affiliate', label: 'Afiliación', icon: IconAffiliate, roles: ['client', 'admin'] },
   { path: '/programas', label: 'Programas', icon: IconGrid, roles: ['client', 'admin'] },
   { path: '/editables', label: 'Editables', icon: IconPhoto, roles: ['client', 'admin'] },
+  { path: '/plr-pro', label: 'PLR PRO', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
 ];
 
