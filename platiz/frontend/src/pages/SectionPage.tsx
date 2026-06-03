@@ -118,9 +118,9 @@ export default function SectionPage() {
                   <IconPlay className="w-4 h-4" /> Reproducir
                 </Link>
               ) : item.link ? (
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all">
+                <button onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')} className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all cursor-pointer">
                   <IconExternalLink className="w-4 h-4" /> Ver guia en Canva
-                </a>
+                </button>
               ) : null}
             </div>
           ))}
