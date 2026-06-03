@@ -15,6 +15,7 @@ const navItems = [
   { path: '/services', label: 'Arsenal Digital', icon: IconServices, roles: ['client', 'admin'] },
   { path: '/academy', label: 'Academia', icon: IconAcademy, roles: ['client', 'admin'] },
   { path: '/affiliate', label: 'Afiliación', icon: IconAffiliate, roles: ['client', 'admin'] },
+  { path: '/programas', label: 'Programas', icon: IconGrid, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
 ];
 
