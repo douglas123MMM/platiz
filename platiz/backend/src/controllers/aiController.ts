@@ -185,7 +185,7 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
     if (provider?.api_key) {
       // Usar Gemini API nativa
       const r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${provider.api_key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${provider.api_key}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
