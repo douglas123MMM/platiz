@@ -338,32 +338,42 @@ Todos los productos son 100% editables en Canva. Tu pones tu precio final.`,
     keywords: ['licencia', 'licencias', 'office', 'windows', 'eset', 'autodesk', 'autocad', 'adobe creative', 'corel', 'coreldraw', 'photoshop', 'illustrator', 'ilustrator', 'programa', 'programas', 'software', 'instalacion'],
     answer: `LICENCIAS E INSTALACION DE PROGRAMAS
 
-Pregunta por el programa que necesitas y te damos el precio exacto.
+Consultar precio del programa que necesites.
 
-Disponible:
-
-OFFICE Y WINDOWS
-Office 365 Premium - Office 365 Personal - Office 2021 - Office 2024 - Windows 10 Pro - Windows 11 Pro
-
-ANTIVIRUS
-Eset NOD32 - Eset Internet Security
-
-AUTODESK (Autocad, Civil 3D, Revit, Inventor, Fusion, Maya, Naviswork, Recap, Robot Structural, Advance) - Panel hasta 250 usuarios
-
-ADOBE CREATIVE (1 PC o 2 PC / 1 ano)
-
-CORELDRAW 2021 al 2025
-PHOTOSHOP 2021 al 2025
-ILLUSTRATOR 2021 al 2025
-CAMTASIA 22 y 25
-FILMORA 10, 12, 14
-SKETCHUP 2021 al 2025
-LUMION 10, 11, 12
-RHINOCEROS v6, v7, v8
-SOLIDWORKS 2016 al 2024
-VIRTUAL DJ v21 y v25
-
-Tambien: Wilcom, Optitex, Audaces, Tajima, Wasatch, Proteus, Pronest, LightBurn, Singmaster, Archicad, CSI Etabs/SAP/Safe, Bartender, Nitro PDF, Adobe Acrobat, S10 Presupuestos
+Office 365 Premium
+Office 365 Personal
+Office 2021
+Office 2024
+Windows 10 Pro
+Windows 11 Pro
+Eset NOD32
+Eset Internet Security
+Autodesk (Autocad, Civil 3D, Revit, Inventor, Fusion, Maya)
+Adobe Creative (1 PC o 2 PC)
+CorelDRAW 2021, 2023, 2025
+Photoshop 2021, 2025
+Illustrator 2021, 2025
+Camtasia 22, 25
+Filmora 10, 12, 14
+SketchUp 2021, 2023, 2025
+Lumion 10, 11, 12
+Rhinoceros v6, v7, v8
+Solidworks 2016, 2018, 2021, 2023, 2024
+Virtual DJ v21, v25
+Wilcom e4.2
+Optitex 21, 23, 24, 25
+Audaces 7
+Tajima 16, 17
+Proteus
+Pronest 2019, 2021
+LightBurn 1.7
+Singmaster v3, v5
+Archicad v26, v27, v28
+CSI Etabs, SAP2000, SAFE, Bridge
+Bartender 2016, 2019, 2022
+Nitro PDF 14 Pro
+Adobe Acrobat 22
+S10 Presupuestos
 
 Instalacion via AnyDesk / UltraViewer.
 Contacto: @GlobalDorado`,
