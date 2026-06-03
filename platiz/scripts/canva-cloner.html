@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canva Cloner - PLR PRO</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #0a0a0f; color: #fff; padding: 20px; }
+  h1 { color: #FFD700; text-align: center; margin-bottom: 20px; }
+  .instructions { background: #111; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #FFD70020; }
+  .instructions ol { margin-left: 20px; color: #ccc; line-height: 2; }
+  .grid { display: grid; gap: 10px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 10px; background: #111; border-radius: 8px; border: 1px solid #222; }
+  .row:hover { border-color: #FFD70040; }
+  .num { color: #FFD700; font-weight: bold; min-width: 30px; text-align: right; }
+  .title { flex: 1; font-size: 14px; color: #ddd; min-width: 200px; }
+  .btn { padding: 8px 16px; border-radius: 6px; border: 1px solid #FFD70030; background: #FFD70010; color: #FFD700; cursor: pointer; font-weight: 600; white-space: nowrap; }
+  .btn:hover { background: #FFD70020; }
+  .input { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #333; background: #0a0a0f; color: #fff; font-size: 13px; min-width: 250px; }
+  .input:focus { border-color: #FFD700; outline: none; }
+  .status { font-size: 12px; min-width: 60px; text-align: center; }
+  .done { color: #4ade80; }
+  .export-btn { display: block; margin: 20px auto; padding: 12px 30px; background: #FFD700; color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+  .counter { text-align: center; color: #FFD700; margin: 10px 0; }
+</style>
+</head>
+<body>
+<h1>PLR PRO - Clonar Guias en Canva</h1>
+<div class="instructions">
+  <strong>Instrucciones:</strong>
+  <ol>
+    <li>Asegurate de haber <strong>iniciado sesion en Canva</strong> en este mismo navegador</li>
+    <li>Haz clic en <strong>"Abrir"</strong> en cada guia (se abre en nueva pestana)</li>
+    <li>En Canva, ve a <strong>Archivo → Hacer una copia</strong> (o busca el boton "Usar plantilla")</li>
+    <li>Copia la URL nueva de la pestana y <strong>pegala en la caja</strong> de abajo</li>
+    <li>Repite para cada guia</li>
+    <li>Al final, haz clic en <strong>EXPORTAR</strong></li>
+  </ol>
+</div>
+<div class="counter">Completadas: <span id="doneCount">0</span> / 36</div>
+<div class="grid" id="grid"></div>
+<button class="export-btn" onclick="exportar()">EXPORTAR JSON</button>
+
+<script>
+const links = [
+  "STAN Y EMAIL MARKETING|https://www.canva.com/design/DAGH8FDJOzk/NSRIdc4jMhJf9-Vb1-YrlQ/view",
+  "DOMINANDO ETSY|https://www.canva.com/design/DAGhzpQu7MM/um7Hj-MzB7jf_4SUDpihrA/view",
+  "EMPEZANDO CON CANVA|https://www.canva.com/design/DAF68NOyOVo/g4ogY-jTg1wiVuu9RcHZjw/view",
+  "Descubriendo Ganancias|https://www.canva.com/design/DAGhzwIq1kA/pg1bFS6VGX2serer4TGn2A/view",
+  "COMO COMENZAR UN NEGOCIO DIGITAL|https://www.canva.com/design/DAGhz-jAVJk/l78yxKKqwPYjf2EoZQF6DQ/view",
+  "GUIA DE AUTOACEPTACION|https://www.canva.com/design/DAGh0Jn53lE/4Ea6TAG7Q_z4ECwg-e8eTQ/view",
+  "CREACION DE CONTENIDO DE VALOR|https://www.canva.com/design/DAGQsiEbR3k/chML978vjLvhYfCyLy1pig/view",
+  "25 IDEAS DE PRODUCTOS DIGITALES|https://www.canva.com/design/DAGQsgpqxIc/R2UBarpx8Ugc7Sei8Bd4Kw/view",
+  "LANZAMIENTO DIGITAL|https://www.canva.com/design/DAGOh2JqDuo/IH8ez0BQKLKJPMUimCkSNg/view",
+  "GUIA DE MARKETING FACELESS|https://www.canva.com/design/DAGdOnntYh8/67gLTHUR29ami0W1WluXEw/view",
+  "5 PASOS PARA HACER CRECER TU INSTAGRAM|https://www.canva.com/design/DAGhztvP92s/59ztU2YdVywIX_vQNuxhXQ/view",
+  "600 IDEAS DE PRODUCTOS DIGITALES PARA ETSY|https://www.canva.com/design/DAGeFeY930c/yv7gGNGKOMQ-AfMhibsZ5g/view",
+  "10K CON PRODUCTOS DIGITALES|https://www.canva.com/design/DAGPIK3HlIE/RdmeieLiWKeYMD0K646lgw/view",
+  "BANDEJA DE ENTRADA IMPACTANTE|https://www.canva.com/design/DAGIxAMhl0Q/tPdgMMBua0K4dWuOKCoyrg/view",
+  "LISTAS DE CORREOS ELECTRONICO|https://www.canva.com/design/DAGIxF1IpPg/ymBdaJpLPSPLjQ0wp0Hf6Q/view",
+  "PLAN HACIA LA PROSPERIDAD ANONIMA|https://www.canva.com/design/DAGIx1v6PBY/zGWDDKT0CzdTWQRqfWkRDQ/view",
+  "DOMINANDO LOS PLRS|https://www.canva.com/design/DAGH8BpRaYI/tQzicAgUDcKxz2-NXbt8yw/view",
+  "GUIA QUE PUBLICAR EN REDES|https://www.canva.com/design/DAGH8N94ymE/qqFtbDjZvd-OooocaFirDQ/view",
+  "IDEAS DE PRODUCTOS DIGITALES|https://www.canva.com/design/DAGh0FpImC0/RrG4yW5WrEla-dDaZPshdg/view",
+  "CURSO INTENSIVO DE CANVA|https://www.canva.com/design/DAGVseeV97U/02vh0I3luj5dM35afco_Jg/view",
+  "CONVERTIRSE EN UN CREADOR DE CONTENIDO|https://www.canva.com/design/DAGhzyZla_M/rL2WYoKUSbh9HWEgzSfz5A/view",
+  "MARKETING FACELESS EN TIK TOK|https://www.canva.com/design/DAGhzz07Fhc/LOudWtxA3A1JUx15qj-6UA/view",
+  "GUIA DE REELS FACELESS|https://www.canva.com/design/DAGhzmS2onQ/7ueVqgvH--3TDJz-AhxDrw/view",
+  "CONSEGUIR LA LIBERTAD ECONOMICA|https://www.canva.com/design/DAGhzi5ksHQ/m82daGE2ytY9jl75k-nfLA/view",
+  "150 GANCHOS|https://www.canva.com/design/DAGhuYSMg2A/ipRvF1DzkG8VBRJZX3GnfQ/view",
+  "RETO 30 DIAS PARA REDES SOCIALES|https://www.canva.com/design/DAGhtQBkxQI/zS37mLPUYXPiIHdOMQlSTA/view",
+  "HOJA DE RUTA FACELESS|https://www.canva.com/design/DAGhtMWrz7M/DuwHfWtPO9-xHl0s_vxTRQ/view",
+  "5 PASOS PARA OPTIMIZAR TU INSTAGRAM|https://www.canva.com/design/DAGbRjzOa7w/zp2tmFLnjPCrcmKniskgwA/view",
+  "GUIA DE MARKETING 2.0|https://www.canva.com/design/DAGhWWKP774/p4qi2itGnOdJnp3WDxiO4Q/view",
+  "ENTENDIENDO LOS DERECHOS DE REVENTA MAESTRA|https://www.canva.com/design/DAGhWIWb22U/qeQtTvBoy7JuBaHGqw_SPA/view",
+  "DISEÑA MAS RAPIDO. GUIA DE CANVA|https://www.canva.com/design/DAGhSwY4fgY/tRJHl87BkNpk5rbjnod6cg/view",
+  "MARKETING DE AFILIADOS|https://www.canva.com/design/DAGh2GXeAHA/I10mZvJTvBz9-Z4pD7xYBA/view",
+  "PILARES DE CONTENIDO|https://www.canva.com/design/DAGhQ97Yr0U/CiOXEQjtEex9pTZoOMb5Eg/view",
+  "CORREOS MAGNETICOS|https://www.canva.com/design/DAGhRBC5Lao/o7pU37wl_FKw6NiMtYWx_w/view",
+  "GUIA VIRALIZA TUS REELS|https://www.canva.com/design/DAGhRI0V4Oo/KOCPIvlli5ITpainosKC_Q/view",
+  "DESCUBRIENDO GANANCIAS|https://www.canva.com/design/DAGhRD2G-zw/Am_4rGAtDkO029ZDL8P3XA/view",
+];
+
+function updateCounter() {
+  const done = document.querySelectorAll('.status.done').length;
+  document.getElementById('doneCount').textContent = done;
+}
+
+const grid = document.getElementById('grid');
+links.forEach((item, i) => {
+  const [title, url] = item.split('|');
+  const cleanUrl = url.split('?')[0];
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.innerHTML = `
+    <span class="num">${i + 1}</span>
+    <span class="title">${title}</span>
+    <a href="${cleanUrl}" target="_blank" class="btn">Abrir</a>
+    <input class="input" placeholder="Pega aqui la URL nueva..." oninput="this.parentElement.querySelector('.status').className='status done';this.parentElement.querySelector('.status').textContent='LISTO';updateCounter()" />
+    <span class="status">-</span>
+  `;
+  grid.appendChild(row);
+});
+</script>
+</body>
+</html>

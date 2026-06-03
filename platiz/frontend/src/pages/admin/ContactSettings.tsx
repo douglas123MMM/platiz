@@ -7,7 +7,7 @@ import { IconTelegram } from '../../icons/PremiumIcons';
 export default function ContactSettings() {
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
-  const [plrGuide, setPlrGuide] = useState('');
+  const [guias, setGuias] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -15,7 +15,7 @@ export default function ContactSettings() {
     api.get('/settings').then((r) => {
       setWhatsapp(r.data.whatsapp || '');
       setTelegram(r.data.telegram || '');
-      setPlrGuide(r.data.plr_guide || '');
+      setGuias(r.data.guias || {});
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
@@ -23,7 +23,7 @@ export default function ContactSettings() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/settings', { whatsapp, telegram, plr_guide: plrGuide });
+      await api.put('/settings', { whatsapp, telegram, guias });
       toast.success('Configuración guardada');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Error al guardar');
@@ -36,7 +36,7 @@ export default function ContactSettings() {
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <div className="flex items-center gap-3">
         <HiPhone className="w-8 h-8 text-[#FFD700]" />
-        <div><h1 className="section-title text-2xl">Contactos</h1><p className="section-subtitle">Configura WhatsApp y Telegram</p></div>
+        <div><h1 className="section-title text-2xl">Contactos</h1><p className="section-subtitle">Configura WhatsApp, Telegram y Guias</p></div>
       </div>
       <div className="glass rounded-2xl p-6 border border-[#FFD700]/10">
         <div className="mb-6 p-4 bg-[#25D366]/10 rounded-xl flex items-center gap-3">
@@ -44,18 +44,44 @@ export default function ContactSettings() {
           <div><p className="text-white font-medium">WhatsApp</p><p className="text-gray-400 text-xs">Los botones aparecen en la esquina inferior derecha</p></div>
         </div>
         <form onSubmit={handleSave} className="space-y-4">
-          <div><label className="label">Número de WhatsApp</label><input className="input" placeholder="+5491123456789" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} /></div>
+          <div><label className="label">Numero de WhatsApp</label><input className="input" placeholder="+5491123456789" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} /></div>
           <div className="p-4 bg-[#0088cc]/10 rounded-xl flex items-center gap-3">
             <IconTelegram className="w-10 h-10 text-[#0088cc]" />
             <div><p className="text-white font-medium">Telegram</p><p className="text-gray-400 text-xs">Usuario o enlace</p></div>
           </div>
           <div><label className="label">Usuario de Telegram o enlace</label><input className="input" placeholder="@usuario o https://t.me/usuario" value={telegram} onChange={(e) => setTelegram(e.target.value)} /></div>
-          <div className="p-4 bg-[#FFD700]/10 rounded-xl flex items-center gap-3">
-            <svg viewBox="0 0 24 24" className="w-10 h-10 fill-[#FFD700] flex-shrink-0"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-            <div><p className="text-white font-medium">Guia PLR PRO</p><p className="text-gray-400 text-xs">Texto que se muestra en el panel lateral de la Guia</p></div>
+
+          <div className="mt-8 pt-6 border-t border-[#FFD700]/10">
+            <div className="flex items-center gap-3 mb-4">
+              <svg viewBox="0 0 24 24" className="w-8 h-8 fill-[#FFD700]"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+              <div><p className="text-white font-medium text-lg">Guias de Precios</p><p className="text-gray-400 text-xs">Aparecen en el boton flotante de cada seccion</p></div>
+            </div>
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="badge-gold text-xs">PLR PRO</span>
+                  <span className="text-xs text-gray-500">Visible en /plr-pro</span>
+                </div>
+                <textarea className="textarea min-h-[200px]" value={guias.guia_plr_pro || ''} onChange={(e) => setGuias({ ...guias, guia_plr_pro: e.target.value })} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="badge-gold text-xs">Arsenal Digital</span>
+                  <span className="text-xs text-gray-500">Visible en /services</span>
+                </div>
+                <textarea className="textarea min-h-[200px]" value={guias.guia_services || ''} onChange={(e) => setGuias({ ...guias, guia_services: e.target.value })} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="badge-gold text-xs">Comunidad</span>
+                  <span className="text-xs text-gray-500">Visible en /telegram</span>
+                </div>
+                <textarea className="textarea min-h-[200px]" value={guias.guia_telegram || ''} onChange={(e) => setGuias({ ...guias, guia_telegram: e.target.value })} />
+              </div>
+            </div>
           </div>
-          <div><label className="label">Texto de la Guia PLR</label><textarea className="textarea min-h-[300px]" value={plrGuide} onChange={(e) => setPlrGuide(e.target.value)} /></div>
-          <button type="submit" disabled={saving} className="btn-primary w-full flex items-center justify-center gap-2"><HiSave className="w-4 h-4" /> {saving ? 'Guardando...' : 'Guardar configuración'}</button>
+
+          <button type="submit" disabled={saving} className="btn-primary w-full flex items-center justify-center gap-2"><HiSave className="w-4 h-4" /> {saving ? 'Guardando...' : 'Guardar configuracion'}</button>
         </form>
       </div>
     </div>
