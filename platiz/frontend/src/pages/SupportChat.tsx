@@ -375,12 +375,55 @@ Instalacion via AnyDesk / UltraViewer. Contacto: @GlobalDorado`,
 
 function findAnswer(msg: string): string {
   const lower = msg.toLowerCase();
-  let bestMatch: { answer: string; score: number } | null = null;
+  
+  // Buscar coincidencia exacta de producto primero
+  const productMatches: string[] = [];
+  for (const entry of KB) {
+    for (const kw of entry.keywords) {
+      if (lower.includes(kw) && kw.length > 3) {
+        productMatches.push(kw);
+      }
+    }
+  }
 
+  // Si la pregunta es muy corta o generica, dar guia
+  if (lower.length < 5 || lower === 'precios' || lower === 'catalogo' || lower === 'lista') {
+    const catalog = KB.find(e => e.keywords.includes('catalogo'));
+    return catalog?.answer || 'Escribe el nombre del producto que buscas. Ej: Netflix, ChatGPT, Canva, Office...';
+  }
+
+  // Si encontro productos especificos, mostrar solo esos
+  if (productMatches.length === 1) {
+    // Producto unico - buscar su entrada exacta
+    for (const entry of KB) {
+      if (entry.keywords.includes(productMatches[0])) {
+        return entry.answer;
+      }
+    }
+  }
+
+  if (productMatches.length >= 2) {
+    // Multiples productos mencionados
+    const answers: string[] = [];
+    const seen = new Set<string>();
+    for (const entry of KB) {
+      for (const kw of entry.keywords) {
+        if (productMatches.includes(kw) && !seen.has(entry.answer)) {
+          seen.add(entry.answer);
+          answers.push(entry.answer);
+        }
+      }
+    }
+    if (answers.length === 1) return answers[0];
+    if (answers.length >= 2) return answers.slice(0, 3).join('\n\n---\n\n');
+  }
+
+  // Si no encontro nada especifico, buscar por mejor coincidencia de keywords
+  let bestMatch: { answer: string; score: number } | null = null;
   for (const entry of KB) {
     let score = 0;
     for (const kw of entry.keywords) {
-      if (lower.includes(kw)) score++;
+      if (lower.includes(kw)) score += kw.length > 4 ? 3 : 1;
     }
     if (score > 0 && (!bestMatch || score > bestMatch.score)) {
       bestMatch = { answer: entry.answer, score };
@@ -389,13 +432,12 @@ function findAnswer(msg: string): string {
 
   if (bestMatch) return bestMatch.answer;
 
-  return `Gracias por tu mensaje. No tengo una respuesta automatica para eso, pero aqui tienes opciones:
+  return `No encontre info especifica sobre "${msg}". Prueba con:
 
-1. Consulta la seccion PLR PRO para ver todos los productos
-2. Revisa la Guia de Precios (boton dorado abajo)
-3. Contacta al admin por WhatsApp o Telegram
-
-Escribe palabras como: precios, bolivares, binance, pago, plr, envio, contacto.`;
+- El nombre del producto (Netflix, ChatGPT, Canva, Office...)
+- "precios" para ver el catalogo general
+- "binance" para metodos de pago
+- "contacto" para hablar con el admin`;
 }
 
 export default function SupportChat() {
