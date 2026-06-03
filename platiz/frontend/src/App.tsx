@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import SectionPage from './pages/SectionPage';
 import SearchPage from './pages/SearchPage';
+import SupportChat from './pages/SupportChat';
 import ChatPage from './pages/ChatPage';
 import PlayerPage from './pages/PlayerPage';
 import AdminDashboard from './pages/admin/Dashboard';
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/plr-pro" element={<SectionPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/soporte" element={<SupportChat />} />
         <Route path="/player" element={<PlayerPage />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>

@@ -19,6 +19,7 @@ const navItems = [
   { path: '/editables', label: 'Editables', icon: IconPhoto, roles: ['client', 'admin'] },
   { path: '/plr-pro', label: 'PLR PRO', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
+  { path: '/soporte', label: 'Soporte', icon: IconChat, roles: ['client', 'admin'] },
 ];
 
 const adminItems = [
