@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import api from '../services/api';
 import { ContentItem } from '../types';
-import { IconExternalLink, IconPhoto, IconPlay } from '../icons/PremiumIcons';
+import { IconExternalLink, IconPhoto, IconPlay, IconSearch } from '../icons/PremiumIcons';
 import { SectionStreaming, IconCourses, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate } from '../icons/PremiumIcons';
 
 const sectionMeta: Record<string, { title: string; icon: React.FC<{ className?: string; size?: number }>; subtitle: string }> = {
@@ -24,8 +24,13 @@ export default function SectionPage() {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState('');
 
   const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: '📄', subtitle: '' };
+
+  const filtered = query.trim()
+    ? items.filter((i) => i.title.toLowerCase().includes(query.toLowerCase()) || (i.description || '').toLowerCase().includes(query.toLowerCase()))
+    : items;
 
   useEffect(() => {
     if (!slug) return;
@@ -47,6 +52,26 @@ export default function SectionPage() {
         {!loading && <p className="text-[#FFD700]/50 text-sm mt-1">{total || items.length} {((total || items.length) === 1) ? 'recurso disponible' : 'recursos disponibles'}</p>}
       </div>
 
+      {!loading && items.length > 0 && (
+        <div className="relative z-10 max-w-md mx-auto w-full">
+          <div className="relative">
+            <IconSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Buscar guías..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 transition-all"
+            />
+            {query && (
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FFD700]/60">
+                {filtered.length} de {items.length}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -63,9 +88,15 @@ export default function SectionPage() {
           <p className="text-gray-500 text-lg">Contenido próximo a cargarse...</p>
           <p className="text-gray-600 text-sm mt-2">El administrador está añadiendo nuevos recursos.</p>
         </div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-20 relative z-10">
+          <IconSearch className="w-20 h-20 text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg">Sin resultados para "{query}"</p>
+          <p className="text-gray-600 text-sm mt-2">Intenta con otro término de búsqueda.</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-          {items.map((item) => (
+          {filtered.map((item) => (
             <div key={item.id} className="card-glow group overflow-hidden">
               <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
                 {item.image_url ? (
