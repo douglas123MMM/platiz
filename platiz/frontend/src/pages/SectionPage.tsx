@@ -99,8 +99,7 @@ export default function SectionPage() {
           {filtered.map((item) => (
             <div
               key={item.id}
-              onClick={item.link ? () => window.open(item.link, '_blank', 'noopener,noreferrer') : undefined}
-              className={`card-glow group overflow-hidden ${item.link ? 'cursor-pointer' : ''}`}
+              className="card-glow group overflow-hidden"
             >
               <div className="relative -mx-6 -mt-6 mb-4 overflow-hidden h-48 bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
                 {item.image_url ? (
@@ -124,9 +123,7 @@ export default function SectionPage() {
               ) : item.link ? (
                 <a
                   href={item.link}
-                  target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all cursor-pointer">
                   <IconExternalLink className="w-4 h-4" /> Ver guia en Canva
                 </a>
