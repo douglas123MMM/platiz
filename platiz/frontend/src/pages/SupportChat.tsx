@@ -293,7 +293,7 @@ Tiempo de entrega: 5-10 minutos`,
     keywords: ['contacto', 'contactar', 'admin', 'whatsapp', 'telegram', 'hablar', 'escribir'],
     answer: `CONTACTO
 
-WhatsApp: https://wa.me/584149132366
+Escribenos por WhatsApp: https://wa.me/584149132366
 
 Disponible en PC y telefono. Atendemos rapido por mensaje directo.
 
@@ -449,6 +449,22 @@ function findAnswer(msg: string): string {
 - "contacto" para hablar con el admin`;
 }
 
+function renderText(text: string): React.ReactNode {
+  // Convertir URLs en enlaces clickeables
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) => {
+    if (urlRegex.test(part)) {
+      return (
+        <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-[#FFD700] underline hover:text-[#FFE44D] break-all">
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 export default function SupportChat() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([
     { role: 'assistant', text: 'Hola! Soy el asistente de Global Dorado. Preguntame sobre precios, metodos de pago, productos PLR o lo que necesites.' },
@@ -487,8 +503,8 @@ export default function SupportChat() {
               msg.role === 'user'
                 ? 'bg-[#FFD700] text-black rounded-br-md'
                 : 'bg-[#111] border border-[#FFD700]/10 text-gray-200 rounded-bl-md'
-            }`}>
-              <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+            }`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
+              <p className="whitespace-pre-wrap leading-relaxed">{msg.role === 'assistant' ? renderText(msg.text) : msg.text}</p>
             </div>
           </div>
         ))}
