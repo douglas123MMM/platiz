@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { IconSend, IconChat } from '../icons/PremiumIcons';
 
+// v2 - Jun 2026 - Catalogo actualizado
+
 const KB: { keywords: string[]; answer: string }[] = [
   // STREAMING
   {
@@ -513,7 +515,7 @@ export default function SupportChat() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && send()}
           />
-          <button onClick={send} className="bg-[#FFD700] text-black rounded-xl px-4 py-2.5 font-bold hover:bg-[#FFE44D] transition-colors">
+          <button onClick={() => send()} className="bg-[#FFD700] text-black rounded-xl px-4 py-2.5 font-bold hover:bg-[#FFE44D] transition-colors">
             <IconSend className="w-4 h-4" />
           </button>
         </div>
