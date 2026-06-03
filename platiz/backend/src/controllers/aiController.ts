@@ -99,7 +99,7 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
           method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${provider.api_key}` },
           body: JSON.stringify({ model: provider.model || 'gpt-3.5-turbo', messages, temperature: 0.7, max_tokens: 1000 }),
         });
-        const aiData = await aiResp.json();
+        const aiData: any = await aiResp.json();
         responseText = aiData.error ? `Error IA: ${aiData.error.message}` : aiData.choices?.[0]?.message?.content || JSON.stringify(aiData);
       } catch (e: any) {
         responseText = `Error: ${e.message}`;
@@ -192,11 +192,11 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
           body: JSON.stringify({
             contents: [{ parts: [{ 
               text: 'Eres asistente de Global Dorado. Responde en espanol, breve y amable. Streaming: Netflix $3-14, Disney+ $1.7-9.5, HBO $1.5-3, Prime $1.5-3, Crunchyroll $1.5-3, YouTube $3, Paramount $1.5-3, Vix $1.7-3, MagisTV $3-3.5, Apple TV $3. IA: ChatGPT $4.5-10, Gemini $2.5-4.22, Perplexity $2.56-5, Grok $2-3, Jarvis $1.83-3.11, Gamma $4.22-22. Creatividad: Canva Pro $1.5/ano, CapCut $2.5-4. Musica: Spotify $3.5-8, Apple Music $3.11. Educacion: Duolingo $1.72, Scribd $1.85. VPN: Surfshark $2, Nord $2.88, Express $2.39. Pagos: Binance ID 355976674 (jcespinoza2011@gmail.com), PagoMovil 0102/04243057148/28012172. WhatsApp: +584149132366. Licencias: consultar (Office, Windows, Corel, Photoshop, AutoCAD, SketchUp +40 mas).\n\nPregunta del usuario: ' + message
-            })] }],
+            }] }],
           }),
         }
       );
-      const data = await r.json();
+      const data: any = await r.json();
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude generar respuesta. Intenta con palabras clave.';
       res.json({ response: text });
     } else {
