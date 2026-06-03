@@ -336,40 +336,37 @@ Todos los productos son 100% editables en Canva. Tu pones tu precio final.`,
   },
   {
     keywords: ['licencia', 'licencias', 'office', 'windows', 'eset', 'autodesk', 'autocad', 'adobe creative', 'corel', 'coreldraw', 'photoshop', 'illustrator', 'ilustrator', 'programa', 'programas', 'software', 'instalacion'],
-    answer: `LICENCIAS ORIGINALES E INSTALACION DE PROGRAMAS
+    answer: `LICENCIAS E INSTALACION DE PROGRAMAS
+
+Pregunta por el programa que necesitas y te damos el precio exacto.
+
+Disponible:
 
 OFFICE Y WINDOWS
-- Office 365 Premium: 11 USDT
-- Office 365 Personal: 25 USDT
-- Office 2021/2024 Phone: 11-20 USDT
-- Windows 10/11 Pro: 11 USDT
+Office 365 Premium - Office 365 Personal - Office 2021 - Office 2024 - Windows 10 Pro - Windows 11 Pro
 
 ANTIVIRUS
-- Eset NOD32: 16 USDT
-- Eset Internet Security: 18 USDT
+Eset NOD32 - Eset Internet Security
 
-AUTODESK
-- Premium (Autocad, Civil 3D, Revit, Inventor, Fusion, Maya): 15 USDT
-- Panel 250 usuarios/1 ano: 100 USDT
+AUTODESK (Autocad, Civil 3D, Revit, Inventor, Fusion, Maya, Naviswork, Recap, Robot Structural, Advance) - Panel hasta 250 usuarios
 
-ADOBE CREATIVE
-- 1 PC/1 ano: 75 USDT
-- 2 PC/1 ano: 100 USDT
+ADOBE CREATIVE (1 PC o 2 PC / 1 ano)
 
-CORELDRAW: 2021=13.5 | 2023=11.5 | 2025=16.5
-PHOTOSHOP: 2021=13 | 2025=18
-ILLUSTRATOR: 2021=13 | 2025=18
-CAMTASIA: 22=12.5 | 25=18
-FILMORA: 10=15 | 12=17 | 14=19
-SKETCHUP: 2021=16 | 2023=19 | 2025=24
-LUMION: 10=21 | 11=26 | 12=36
-RHINOCEROS: v6=12 | v7=20 | v8=30
-SOLIDWORKS: 2018=20 | 2023=40 | 2024=50
-VIRTUAL DJ: v21=17 | v25=22
+CORELDRAW 2021 al 2025
+PHOTOSHOP 2021 al 2025
+ILLUSTRATOR 2021 al 2025
+CAMTASIA 22 y 25
+FILMORA 10, 12, 14
+SKETCHUP 2021 al 2025
+LUMION 10, 11, 12
+RHINOCEROS v6, v7, v8
+SOLIDWORKS 2016 al 2024
+VIRTUAL DJ v21 y v25
 
-Y MAS: Wilcom, Optitex, Audaces, Tajima, Proteus, Archicad, CSI Etabs/SAP/Safe, Bartender, Nitro PDF, Adobe Acrobat, LightBurn, Singmaster.
+Tambien: Wilcom, Optitex, Audaces, Tajima, Wasatch, Proteus, Pronest, LightBurn, Singmaster, Archicad, CSI Etabs/SAP/Safe, Bartender, Nitro PDF, Adobe Acrobat, S10 Presupuestos
 
-Instalacion via AnyDesk / UltraViewer. Contacto: @GlobalDorado`,
+Instalacion via AnyDesk / UltraViewer.
+Contacto: @GlobalDorado`,
   },
 ];
 
