@@ -290,11 +290,15 @@ Tiempo de entrega: 5-10 minutos`,
   {
     keywords: ['contacto', 'contactar', 'admin', 'whatsapp', 'telegram', 'hablar', 'escribir'],
     answer: `CONTACTO
-- WhatsApp: boton verde abajo a la derecha
-- Telegram: boton azul abajo a la derecha
-- Grupo de Revendedores: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
 
-Atendemos rapido por DM.`,
+WhatsApp: https://wa.me/584149132366
+
+Disponible en PC y telefono. Atendemos rapido por mensaje directo.
+
+Grupo de Revendedores: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+Telegram: consulta el boton azul abajo a la derecha
+
+Horario de atencion: todos los dias.`,
   },
   {
     keywords: ['garantia', 'entrega', 'envio', 'recibir', 'acceso', 'tiempo'],
