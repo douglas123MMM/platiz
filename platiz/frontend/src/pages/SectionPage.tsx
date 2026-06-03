@@ -86,8 +86,8 @@ export default function SectionPage() {
                 </Link>
               )}
               {item.link && !item.video_url && (
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
-                  <IconExternalLink className="w-4 h-4" /> Acceder al recurso
+                <a href={item.link} target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Descargar
                 </a>
               )}
             </div>
