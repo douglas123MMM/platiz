@@ -45,11 +45,11 @@ export default function FloatingButtons() {
 
   return (
     <>
-      <div className="fixed bottom-20 md:bottom-8 right-3 md:right-6 z-[100] flex flex-col gap-3" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+      <div className="fixed bottom-20 md:bottom-8 right-3 md:right-6 z-[100] flex flex-col gap-3 sm:gap-3" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {currentGuide && guideText && (
           <button
             onClick={() => setGuideOpen(!guideOpen)}
-            className="group relative w-14 h-14 md:w-14 md:h-14 rounded-full bg-[#FFD700] flex items-center justify-center shadow-lg shadow-[#FFD700]/40 hover:shadow-[#FFD700]/60 active:scale-95 transition-all duration-200"
+            className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FFD700] flex items-center justify-center shadow-lg shadow-[#FFD700]/40 hover:shadow-[#FFD700]/60 active:scale-95 transition-all duration-200"
             title={currentGuide.title}
             aria-label="Abrir guia"
           >
@@ -63,7 +63,7 @@ export default function FloatingButtons() {
             href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg shadow-[#25D366]/40 hover:shadow-[#25D366]/60 active:scale-95 transition-all duration-200"
+            className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg shadow-[#25D366]/40 hover:shadow-[#25D366]/60 active:scale-95 transition-all duration-200"
             title="WhatsApp"
             aria-label="WhatsApp"
           >
@@ -77,7 +77,7 @@ export default function FloatingButtons() {
             href={telegram.startsWith('http') ? telegram : `https://t.me/${telegram.replace('@', '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative w-14 h-14 rounded-full bg-[#0088cc] flex items-center justify-center shadow-lg shadow-[#0088cc]/40 hover:shadow-[#0088cc]/60 active:scale-95 transition-all duration-200"
+            className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#0088cc] flex items-center justify-center shadow-lg shadow-[#0088cc]/40 hover:shadow-[#0088cc]/60 active:scale-95 transition-all duration-200"
             title="Telegram"
             aria-label="Telegram"
           >
