@@ -56,6 +56,7 @@ export default function App() {
         <Route path="/academy" element={<SectionPage />} />
         <Route path="/affiliate" element={<SectionPage />} />
         <Route path="/programas" element={<SectionPage />} />
+        <Route path="/editables" element={<SectionPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/player" element={<PlayerPage />} />
