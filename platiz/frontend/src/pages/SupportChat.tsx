@@ -481,21 +481,10 @@ export default function SupportChat() {
         setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
         return;
       }
-      // IA gratis via Pollinations (directo del navegador)
+      // IA gratis via backend proxy
       try {
-        const r = await fetch('https://text.pollinations.ai/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: [
-              { role: 'system', content: 'Eres asistente de Global Dorado (Venezuela). Responde en espanol breve. Streaming: Netflix $3-14USDT, Disney $1.7-9.5, HBO $1.5-3, Prime $1.5-3. IA: ChatGPT $4.5-10, Gemini $2.5-4.22. Creatividad: Canva Pro $1.5. Pagos: Binance ID 355976674, PagoMovil 0102, WhatsApp +584149132366.' },
-              { role: 'user', content: text },
-            ],
-            model: 'openai',
-          }),
-        });
-        const aiText = await r.text();
-        setMessages((prev) => [...prev, { role: 'assistant', text: aiText }]);
+        const { data } = await api.post('/ai/support', { message: text });
+        setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
       } catch {
         setMessages((prev) => [...prev, { role: 'assistant', text: `No tengo info sobre "${text}". Prueba: Netflix, ChatGPT, precios, binance, licencias.` }]);
       }

@@ -174,3 +174,25 @@ export async function deleteConversation(req: AuthRequest, res: Response): Promi
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function supportChat(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { message } = req.body;
+    if (!message) { res.status(400).json({ error: 'Message required' }); return; }
+    const r = await fetch('https://text.pollinations.ai/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: 'Eres asistente de Global Dorado. Responde en espanol, breve y amable. Streaming: Netflix $3-14USDT, Disney $1.7-9.5, HBO $1.5-3, Prime $1.5-3, Crunchyroll $1.5-3, YouTube $3. IA: ChatGPT $4.5-10, Gemini $2.5-4.22, Perplexity $2.56-5. Creatividad: Canva Pro $1.5/ano, CapCut $2.5-4. Musica: Spotify $3.5-8. Pagos: Binance ID 355976674, PagoMovil 0102. WhatsApp +584149132366.' },
+          { role: 'user', content: message },
+        ],
+        model: 'openai',
+      }),
+    });
+    const text = await r.text();
+    res.json({ response: text });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+}

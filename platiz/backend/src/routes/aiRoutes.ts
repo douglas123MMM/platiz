@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getProviders, getActiveProviders, createProvider, updateProvider, deleteProvider, sendMessage, getConversations, getConversationMessages, deleteConversation } from '../controllers/aiController';
+import { getProviders, getActiveProviders, createProvider, updateProvider, deleteProvider, sendMessage, getConversations, getConversationMessages, deleteConversation, supportChat } from '../controllers/aiController';
 import { authenticate, requireAdmin } from '../middleware/auth';
 
 const router = Router();
@@ -10,6 +10,7 @@ router.post('/providers', authenticate, requireAdmin, createProvider);
 router.put('/providers/:id', authenticate, requireAdmin, updateProvider);
 router.delete('/providers/:id', authenticate, requireAdmin, deleteProvider);
 router.post('/chat', authenticate, sendMessage);
+router.post('/support', authenticate, supportChat);
 router.get('/conversations', authenticate, getConversations);
 router.get('/conversations/:id/messages', authenticate, getConversationMessages);
 router.delete('/conversations/:id', authenticate, deleteConversation);
