@@ -41,3 +41,9 @@
   .bg-gold-grid { background-image: linear-gradient(rgba(255,215,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.03) 1px, transparent 1px); background-size: 60px 60px; }
   .text-gradient-gold { @apply bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#DAA520] bg-clip-text text-transparent; }
 }
+
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in { animation: slide-in 0.3s ease-out; }
