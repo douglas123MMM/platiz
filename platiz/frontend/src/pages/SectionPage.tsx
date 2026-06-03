@@ -14,6 +14,9 @@ const sectionMeta: Record<string, { title: string; icon: React.FC<{ className?: 
   services: { title: 'Arsenal Digital', icon: SectionServices, subtitle: 'Licencias, software profesional e IAs: el catálogo más completo' },
   academy: { title: 'Academia Global', icon: SectionAcademy, subtitle: 'El Método: capacitación maestra para operar tu negocio digital' },
   affiliate: { title: 'Afiliación', icon: SectionAffiliate, subtitle: 'Instrucciones, enlaces y recursos para promover Global Dorado' },
+  'plr-pro': { title: 'PLR PRO', icon: SectionBooks, subtitle: 'Guías con derechos de reventa maestra listas para personalizar y vender' },
+  programas: { title: 'Programas', icon: SectionServices, subtitle: 'Software profesional y herramientas digitales para tu negocio' },
+  editables: { title: 'Editables', icon: SectionBooks, subtitle: 'Plantillas y recursos editables para crear contenido profesional' },
 };
 
 export default function SectionPage() {
