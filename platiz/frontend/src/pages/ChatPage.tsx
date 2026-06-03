@@ -36,20 +36,24 @@ export default function ChatPage() {
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || !selectedProvider) return;
+    if (!input.trim()) return;
     const userMsg = input.trim();
     setInput('');
     setMessages((prev) => [...prev, { id: 'temp', user_id: '', role: 'user', content: userMsg, created_at: new Date().toISOString() }]);
     setLoading(true);
     try {
-      const { data } = await api.post('/ai/chat', { provider_id: selectedProvider, message: userMsg, conversation_id: activeConv });
-      setMessages((prev) => [...prev, { id: 'resp', user_id: '', provider_id: selectedProvider, role: 'assistant', content: data.response, created_at: new Date().toISOString() }]);
+      if (selectedProvider) {
+        const { data } = await api.post('/ai/chat', { provider_id: selectedProvider, message: userMsg, conversation_id: activeConv });
+        setMessages((prev) => [...prev, { id: 'resp', user_id: '', provider_id: selectedProvider, role: 'assistant', content: data.response, created_at: new Date().toISOString() }]);
+      } else {
+        const { data } = await api.post('/ai/support', { message: userMsg });
+        setMessages((prev) => [...prev, { id: 'resp', user_id: '', role: 'assistant', content: data.response, created_at: new Date().toISOString() }]);
+      }
       if (!activeConv) {
-        setActiveConv(data.conversation_id);
         api.get('/ai/conversations').then((r) => setConversations(r.data));
       }
     } catch (err: any) {
-      setMessages((prev) => [...prev, { id: 'err', user_id: '', role: 'assistant', content: `Error: ${err.response?.data?.error || 'Error de conexión'}`, created_at: new Date().toISOString() }]);
+      setMessages((prev) => [...prev, { id: 'err', user_id: '', role: 'assistant', content: `Error: ${err.response?.data?.error || 'Error de conexion'}`, created_at: new Date().toISOString() }]);
     } finally {
       setLoading(false);
     }
@@ -129,7 +133,7 @@ export default function ChatPage() {
         <div className="p-4 border-t border-[#FFD700]/10">
           <div className="flex gap-3">
             <input type="text" className="input flex-1" placeholder="Escribe tu mensaje a la IA..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()} />
-            <button onClick={sendMessage} disabled={loading || !input.trim() || !selectedProvider} className="btn-primary px-5 disabled:opacity-50 disabled:cursor-not-allowed"><IconSend className="w-5 h-5" /></button>
+             <button onClick={sendMessage} disabled={loading || !input.trim()} className="btn-primary px-5 disabled:opacity-50 disabled:cursor-not-allowed"><IconSend className="w-5 h-5" /></button>
           </div>
         </div>
       </div>
