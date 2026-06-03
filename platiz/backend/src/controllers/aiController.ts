@@ -87,8 +87,8 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
 
     let responseText: string;
 
-    if (provider?.api_key) {
-      // Usar provider configurado (OpenAI, Gemini, etc)
+    if (provider?.api_key && provider?.api_url) {
+      // Usar provider configurado (DeepSeek, OpenAI, etc)
       const { data: history } = await supabase.from('chat_messages').select('role, content').eq('conversation_id', convId).order('created_at', { ascending: true }).limit(20);
       const messages: any[] = [];
       if (provider.system_prompt) messages.push({ role: 'system', content: provider.system_prompt });
@@ -97,7 +97,7 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
       try {
         const aiResp = await fetch(provider.api_url, {
           method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${provider.api_key}` },
-          body: JSON.stringify({ model: provider.model || 'gpt-3.5-turbo', messages, temperature: 0.7, max_tokens: 1000 }),
+          body: JSON.stringify({ model: provider.model || 'deepseek-chat', messages, temperature: 0.7, max_tokens: 1000 }),
         });
         const aiData: any = await aiResp.json();
         responseText = aiData.error ? `Error IA: ${aiData.error.message}` : aiData.choices?.[0]?.message?.content || JSON.stringify(aiData);
@@ -105,22 +105,8 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
         responseText = `Error: ${e.message}`;
       }
     } else {
-      // Fallback: usar Pollinations.ai gratis
-      try {
-        const polliResp = await fetch('https://text.pollinations.ai/', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: [
-              { role: 'system', content: 'Eres asistente de Global Dorado. Responde en espanol, breve y amable. Habla de precios en USDT, streaming, IA, software. WhatsApp +584149132366. Binance ID 355976674.' },
-              { role: 'user', content: message },
-            ],
-            model: 'openai',
-          }),
-        });
-        responseText = await polliResp.text();
-      } catch (e: any) {
-        responseText = `Error de conexion: ${e.message}`;
-      }
+      // Sin provider - mensaje amigable
+      responseText = 'No hay IA configurada. Ve a Admin > IA Providers para activar una.';
     }
 
     await supabase.from('chat_messages').insert({
@@ -180,28 +166,31 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
     const { message } = req.body;
     if (!message) { res.status(400).json({ error: 'Message required' }); return; }
     
-    const { data: provider } = await supabase.from('ai_providers').select('*').eq('name', 'Gemini').eq('active', 1).maybeSingle();
+    const { data: provider } = await supabase.from('ai_providers').select('*').eq('active', 1).order('created_at', { ascending: false }).limit(1).maybeSingle();
     
-    if (provider?.api_key) {
-      // Usar Gemini API nativa
-      const r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${provider.api_key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ 
-              text: 'Eres asistente de Global Dorado. Responde en espanol, breve y amable. Streaming: Netflix $3-14, Disney+ $1.7-9.5, HBO $1.5-3, Prime $1.5-3, Crunchyroll $1.5-3, YouTube $3, Paramount $1.5-3, Vix $1.7-3, MagisTV $3-3.5, Apple TV $3. IA: ChatGPT $4.5-10, Gemini $2.5-4.22, Perplexity $2.56-5, Grok $2-3, Jarvis $1.83-3.11, Gamma $4.22-22. Creatividad: Canva Pro $1.5/ano, CapCut $2.5-4. Musica: Spotify $3.5-8, Apple Music $3.11. Educacion: Duolingo $1.72, Scribd $1.85. VPN: Surfshark $2, Nord $2.88, Express $2.39. Pagos: Binance ID 355976674 (jcespinoza2011@gmail.com), PagoMovil 0102/04243057148/28012172. WhatsApp: +584149132366. Licencias: consultar (Office, Windows, Corel, Photoshop, AutoCAD, SketchUp +40 mas).\n\nPregunta del usuario: ' + message
-            }] }],
-          }),
-        }
-      );
-      const data: any = await r.json();
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude generar respuesta. Intenta con palabras clave.';
-      res.json({ response: text });
-    } else {
-      res.json({ response: 'IA no configurada. Activa Gemini en Admin > IA Providers con tu API Key.' });
+    if (!provider?.api_key || !provider?.api_url) {
+      res.json({ response: 'IA no configurada. Contacta al admin.' });
+      return;
     }
+
+    const systemPrompt = 'Eres el asistente virtual de Global Dorado. Conoces todos los productos y precios. Responde en espanol, breve, amable y util. Ayudas con precios en USDT, conversion a bolivares, metodos de pago (Binance, PagoMovil), streaming, IA, software, licencias, PLR, etc.';
+
+    const r = await fetch(provider.api_url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${provider.api_key}` },
+      body: JSON.stringify({
+        model: provider.model || 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message },
+        ],
+        temperature: 0.7,
+        max_tokens: 800,
+      }),
+    });
+    const data: any = await r.json();
+    const text = data?.choices?.[0]?.message?.content || 'No pude generar respuesta. Intenta de nuevo.';
+    res.json({ response: text });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
