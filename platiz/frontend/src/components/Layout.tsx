@@ -89,27 +89,24 @@ export default function Layout() {
 
       <div className={`lg:pl-72 transition-all duration-300 min-h-screen`}>
         <header className="sticky top-0 z-30 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[#FFD700]/10">
-          <div className="flex items-center justify-between h-14 px-3 md:h-16 md:px-8">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0">
-              {sidebarOpen ? <IconClose className="w-6 h-6" /> : <IconMenu className="w-6 h-6" />}
+          <div className="flex items-center justify-between h-12 px-2 md:h-16 md:px-8 gap-1 md:gap-0">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-1.5 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0">
+              {sidebarOpen ? <IconClose className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
             </button>
-            <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-[#0a0a0f]/50 rounded-xl border border-[#FFD700]/10 flex-1 max-w-md ml-1 md:ml-0">
-              <IconSearch className="w-4 h-4 md:w-5 md:h-5 text-gray-500 flex-shrink-0" />
-              <input type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && searchQuery.trim()) { navigate(isAdmin ? `/admin/search?q=${encodeURIComponent(searchQuery.trim())}` : `/search?q=${encodeURIComponent(searchQuery.trim())}`); setSearchQuery(''); } }} className="bg-transparent border-none outline-none text-xs md:text-sm text-white placeholder-gray-500 w-full" />
+            <div className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1 md:py-2 bg-[#0a0a0f]/50 rounded-lg md:rounded-xl border border-[#FFD700]/10 flex-1 max-w-full md:max-w-md mx-0.5 md:mx-0">
+              <IconSearch className="w-3.5 h-3.5 md:w-5 md:h-5 text-gray-500 flex-shrink-0" />
+              <input type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && searchQuery.trim()) { navigate(isAdmin ? `/admin/search?q=${encodeURIComponent(searchQuery.trim())}` : `/search?q=${encodeURIComponent(searchQuery.trim())}`); setSearchQuery(''); } }} className="bg-transparent border-none outline-none text-xs md:text-sm text-white placeholder-gray-500 w-full min-w-0" />
             </div>
-            <div className="flex items-center gap-4">
-              <button className="relative p-2 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors">
-                <IconBell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FFD700] rounded-full shadow-[0_0_6px_rgba(255,215,0,0.8)]"></span>
+            <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+              <button className="relative p-1.5 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors hidden sm:block">
+                <IconBell className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#FFD700] rounded-full shadow-[0_0_6px_rgba(255,215,0,0.8)]"></span>
               </button>
               <div className="relative">
-                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-3 p-1.5 rounded-xl hover:bg-[#FFD700]/5 transition-colors">
-                  <div className="w-8 h-8 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-lg flex items-center justify-center text-black text-sm font-bold">{user?.username?.charAt(0).toUpperCase()}</div>
-                  <div className="hidden md:block text-left">
-                    <p className="text-sm font-medium text-white">{user?.username}</p>
-                    <p className="text-xs text-[#FFD700]/60">{user?.role === 'admin' ? 'Administrador' : 'Socio'}</p>
-                  </div>
-                  <IconChevronDown className="w-4 h-4 text-gray-500" />
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-1 md:gap-2 p-1 rounded-lg md:rounded-xl hover:bg-[#FFD700]/5 transition-colors">
+                  <div className="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-lg flex items-center justify-center text-black text-xs md:text-sm font-bold">{user?.username?.charAt(0).toUpperCase()}</div>
+                  <span className="text-xs md:text-sm text-white font-medium truncate max-w-[60px] md:max-w-none">{user?.username}</span>
+                  <IconChevronDown className="w-3 h-3 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
                 </button>
                 {userMenuOpen && (
                   <>
