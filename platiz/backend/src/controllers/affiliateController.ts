@@ -181,7 +181,7 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
       .from('items')
       .select('id, category_slug, title, description, image_url, link, video_url, sort_order')
       .eq('active', 1)
-      .in('category_slug', ['services', 'movies'])
+      .in('category_slug', ['services', 'movies', 'apps', 'courses'])
       .order('sort_order', { ascending: true });
 
     res.json(data || []);
