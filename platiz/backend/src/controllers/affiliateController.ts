@@ -43,12 +43,13 @@ export async function getDashboard(req: AuthRequest, res: Response): Promise<voi
 export async function updateProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
     const userId = req.user!.id;
-    const { display_name, whatsapp, telegram_link } = req.body;
+    const { display_name, whatsapp, telegram_link, payment_method } = req.body;
 
     const updates: Record<string, any> = {};
     if (display_name !== undefined) updates.display_name = display_name;
     if (whatsapp !== undefined) updates.whatsapp = whatsapp;
     if (telegram_link !== undefined) updates.telegram_link = telegram_link;
+    if (payment_method !== undefined) updates.payment_method = payment_method;
 
     if (Object.keys(updates).length === 0) {
       res.status(400).json({ error: 'No fields to update' });
@@ -112,7 +113,7 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
 
     const { data: user } = await supabase
       .from('users')
-      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link')
+      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link, payment_method')
       .eq('referral_code', code).single();
 
     if (!user) {
@@ -134,6 +135,7 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
         avatar: user.avatar,
         whatsapp: user.whatsapp,
         telegram_link: user.telegram_link,
+        payment_method: user.payment_method,
       },
       page: {
         type,

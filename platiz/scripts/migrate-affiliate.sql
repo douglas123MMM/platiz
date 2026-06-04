@@ -10,6 +10,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS credits INTEGER DEFAULT 0;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS display_name TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_link TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS payment_method TEXT;
 
 -- Generar códigos de referido para usuarios existentes
 UPDATE users SET referral_code = SUBSTRING(REPLACE(id::TEXT, '-', ''), 1, 10) WHERE referral_code IS NULL;

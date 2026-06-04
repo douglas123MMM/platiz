@@ -29,6 +29,7 @@ export default function AffiliateDashboard() {
   const [displayName, setDisplayName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [copied, setCopied] = useState('');
   const [approving, setApproving] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
@@ -45,6 +46,7 @@ export default function AffiliateDashboard() {
       setDisplayName(data.profile?.display_name || '');
       setWhatsapp(data.profile?.whatsapp || '');
       setTelegram(data.profile?.telegram_link || '');
+      setPaymentMethod(data.profile?.payment_method || '');
     } catch {}
   };
 
@@ -74,7 +76,7 @@ export default function AffiliateDashboard() {
 
   const saveProfile = async () => {
     try {
-      await api.put('/affiliate/profile', { display_name: displayName, whatsapp, telegram_link: telegram });
+      await api.put('/affiliate/profile', { display_name: displayName, whatsapp, telegram_link: telegram, payment_method: paymentMethod });
       setMsg('Perfil guardado');
       setTimeout(() => setMsg(''), 2000);
     } catch {
@@ -169,6 +171,12 @@ export default function AffiliateDashboard() {
             placeholder="Link de Telegram (ej: https://t.me/tuusuario)"
             value={telegram}
             onChange={(e) => setTelegram(e.target.value)}
+          />
+          <input
+            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="Metodo de pago (ej: Binance, PagoMovil, Zelle)"
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
           />
           <button onClick={saveProfile} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
             Guardar Perfil
