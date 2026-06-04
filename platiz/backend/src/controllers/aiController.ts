@@ -203,7 +203,7 @@ PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/042430571
 
 CONTACTO: WhatsApp https://wa.me/584149132366. Grupo: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
-REGLAS: NO es necesario mencionar la tasa al saludar. NO uses simbolo $ solo, usa USDT. Si no sabes un precio, di "consultar". Responde en espanol.`;
+REGLAS: NO es necesario mencionar la tasa al saludar. NO uses simbolo $ solo, usa USDT. Si no sabes un precio, di "consultar". Si un usuario quiere unirse al grupo, comparte https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv. Si pregunta como navegar el sitio, dile que use el menu lateral (PLR PRO, Arsenal Digital, Comunidad, Soporte, Chat IA). Responde en espanol.`;
 
     const r = await fetch(provider.api_url, {
       method: 'POST',

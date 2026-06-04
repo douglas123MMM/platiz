@@ -374,6 +374,43 @@ Precio: 60 USDT
 Pedidos: WhatsApp +584149132366`,
   },
 
+  // NAVEGACION
+  {
+    keywords: ['soporte', 'ayuda', 'canal de soporte', 'asistencia', 'atencion'],
+    answer: `CANAL DE SOPORTE
+Ya estas en el! Este chat es nuestro canal de soporte oficial.
+
+Tambien puedes contactarnos por:
+- WhatsApp: https://wa.me/584149132366
+- Grupo de Revendedores: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+- Menu lateral: explora PLR PRO, Arsenal Digital, Comunidad`,
+  },
+  {
+    keywords: ['grupo', 'comunidad', 'aprobaciones', 'grupo de aprobaciones', 'revendedores'],
+    answer: `GRUPO DE REVENDEDORES / APROBACIONES
+Unete al grupo oficial:
+https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+
+Ahi recibes:
+- Aprobaciones de pago
+- Promociones exclusivas
+- Soporte directo
+- Nuevos productos
+
+Tambien visita la seccion "Comunidad" en el menu lateral.`,
+  },
+  {
+    keywords: ['seccion', 'secciones', 'menu', 'navegar', 'donde', 'ubicado', 'encontrar', 'pagina', 'web', 'sitio'],
+    answer: `SECCIONES DEL SITIO
+Usa el menu lateral (icono de 3 rayas arriba a la izquierda):
+
+- PLR PRO: +190 guias y plantillas con derechos de reventa
+- Arsenal Digital: servicios de streaming, IA, VPN y mas
+- Comunidad: enlaces y recursos para revendedores
+- Soporte: este chat para consultas y pedidos
+- Chat IA: asistente inteligente para cotizaciones`,
+  },
+
   // GENERAL
   {
     keywords: ['precio', 'precios', 'cuesta', 'cuanto', 'cuánto', 'catalogo', 'lista'],
