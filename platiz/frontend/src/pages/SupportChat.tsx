@@ -476,7 +476,6 @@ export default function SupportChat() {
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
     setTimeout(async () => {
-      // Intentar IA primero
       try {
         const { data } = await api.post('/ai/support', { message: text });
         if (data?.response && !data.response.includes('IA no configurada')) {
@@ -484,7 +483,6 @@ export default function SupportChat() {
           return;
         }
       } catch {}
-      // Fallback a palabras clave si IA falla
       const answer = findAnswer(text);
       setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
     }, 300);

@@ -173,9 +173,9 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Obtener tasa de settings
-    const { data: settings } = await supabase.from('settings').select('bcv_rate').maybeSingle();
-    const bcvRate = settings?.bcv_rate || '85';
+    // Obtener tasa BCV desde items settings
+    const { data: rateItem } = await supabase.from('items').select('description').eq('category_slug', 'settings').eq('title', 'bcv_rate').maybeSingle();
+    const bcvRate = rateItem?.description || '85';
     const tasaInfo = 'TASA BCV HOY: ' + bcvRate + ' Bs/USDT. Usa esta tasa para TODOS los calculos en bolivares. NO uses otra tasa.';
 
     const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.

@@ -10,10 +10,14 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
       return;
     }
     const settings = data || { whatsapp: '', telegram: '' };
-    const { data: guideItems } = await supabase.from('items').select('title,description').eq('category_slug', 'settings').in('title', ['guia_plr_pro', 'guia_services', 'guia_telegram']);
+    const { data: guideItems } = await supabase.from('items').select('title,description').eq('category_slug', 'settings').in('title', ['guia_plr_pro', 'guia_services', 'guia_telegram', 'bcv_rate']);
     const guias: Record<string, string> = {};
-    if (guideItems) guideItems.forEach((g: any) => { guias[g.title] = g.description || ''; });
-    res.json({ ...settings, guias });
+    let bcv_rate = '';
+    if (guideItems) guideItems.forEach((g: any) => {
+      if (g.title === 'bcv_rate') bcv_rate = g.description || '';
+      else guias[g.title] = g.description || '';
+    });
+    res.json({ ...settings, bcv_rate, guias });
   } catch {
     res.json({ whatsapp: '', telegram: '', guias: {} });
   }
@@ -24,13 +28,20 @@ export async function updateSettings(req: AuthRequest, res: Response): Promise<v
     const { whatsapp, telegram, bcv_rate, guias } = req.body;
     const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
     if (existing) {
-      const updates: Record<string, any> = { updated_at: new Date().toISOString() };
-      if (whatsapp !== undefined) updates.whatsapp = whatsapp;
-      if (telegram !== undefined) updates.telegram = telegram;
-      if (bcv_rate !== undefined) updates.bcv_rate = bcv_rate;
-      await supabase.from('settings').update(updates).eq('id', existing.id);
+      await supabase.from('settings').update({ whatsapp, telegram, updated_at: new Date().toISOString() }).eq('id', existing.id);
     } else {
-      await supabase.from('settings').insert({ id: 1, whatsapp, telegram, bcv_rate }).select('id').single();
+      await supabase.from('settings').insert({ id: 1, whatsapp, telegram }).select('id').single();
+    }
+    if (bcv_rate !== undefined) {
+      const { data: rateItem } = await supabase.from('items').select('id').eq('category_slug', 'settings').eq('title', 'bcv_rate').maybeSingle();
+      if (rateItem) {
+        await supabase.from('items').update({ description: bcv_rate, updated_at: new Date().toISOString() }).eq('id', rateItem.id);
+      } else {
+        await supabase.from('items').insert({
+          category_slug: 'settings', title: 'bcv_rate', description: bcv_rate,
+          sort_order: 0, active: 1, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+        });
+      }
     }
     if (guias && typeof guias === 'object') {
       for (const [key, text] of Object.entries(guias)) {
