@@ -7,6 +7,10 @@ interface Affiliate {
   avatar: string | null;
   whatsapp: string;
   telegram_link: string;
+  instagram?: string;
+  tiktok?: string;
+  facebook?: string;
+  youtube?: string;
 }
 
 interface PageConfig {
@@ -151,7 +155,35 @@ export default function AffiliateLanding() {
           </div>
           <h2 className="text-white font-bold">{affiliate.display_name || 'Global Dorado'}</h2>
           <p className="text-gray-500 text-xs">Tu asesor personal</p>
-          {/* Contact buttons */}
+          {/* Social media links */}
+          {(affiliate.instagram || affiliate.tiktok || affiliate.facebook || affiliate.youtube) && (
+            <div className="flex justify-center gap-2 mt-3 flex-wrap">
+              {affiliate.instagram && (
+                <a href={`https://instagram.com/${affiliate.instagram.replace('@','')}`} target="_blank" rel="noopener noreferrer"
+                  className="text-xs px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-bold">
+                  📷
+                </a>
+              )}
+              {affiliate.tiktok && (
+                <a href={`https://tiktok.com/${affiliate.tiktok.replace('@','')}`} target="_blank" rel="noopener noreferrer"
+                  className="text-xs px-3 py-1 bg-black border border-white/20 text-white rounded-full font-bold">
+                  🎵
+                </a>
+              )}
+              {affiliate.facebook && (
+                <a href={`https://facebook.com/${affiliate.facebook}`} target="_blank" rel="noopener noreferrer"
+                  className="text-xs px-3 py-1 bg-[#1877F2] text-white rounded-full font-bold">
+                  📘
+                </a>
+              )}
+              {affiliate.youtube && (
+                <a href={`https://youtube.com/${affiliate.youtube.replace('@','')}`} target="_blank" rel="noopener noreferrer"
+                  className="text-xs px-3 py-1 bg-[#FF0000] text-white rounded-full font-bold">
+                  ▶️
+                </a>
+              )}
+            </div>
+          )}
           <div className="flex justify-center gap-3 mt-3">
             {affiliate.whatsapp && (
               <a href={`https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer"

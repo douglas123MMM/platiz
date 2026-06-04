@@ -128,7 +128,7 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
 
     const { data: user } = await supabase
       .from('users')
-      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link, payment_methods')
+      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube')
       .eq('referral_code', code).single();
 
     if (!user) {
@@ -151,6 +151,10 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
         whatsapp: user.whatsapp,
         telegram_link: user.telegram_link,
         payment_methods: user.payment_methods,
+        instagram: user.instagram,
+        tiktok: user.tiktok,
+        facebook: user.facebook,
+        youtube: user.youtube,
       },
       page: {
         type,

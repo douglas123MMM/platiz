@@ -16,7 +16,7 @@ interface Item {
 export default function AffiliateCatalog() {
   const { code } = useParams<{ code: string }>();
   const [items, setItems] = useState<Item[]>([]);
-  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_methods: any } | null>(null);
+  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_methods: any; instagram?: string; tiktok?: string; facebook?: string; youtube?: string } | null>(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -118,6 +118,35 @@ export default function AffiliateCatalog() {
         )}
 
         <h1 className="text-xl font-bold text-[#FFD700] mt-3">Catalogo Digital</h1>
+
+        {(affiliate?.instagram || affiliate?.tiktok || affiliate?.facebook || affiliate?.youtube) && (
+          <div className="flex justify-center gap-3 mt-3 flex-wrap">
+            {affiliate.instagram && (
+              <a href={`https://instagram.com/${affiliate.instagram.replace('@','')}`} target="_blank" rel="noopener noreferrer"
+                className="text-xs px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-bold">
+                📷 Instagram
+              </a>
+            )}
+            {affiliate.tiktok && (
+              <a href={`https://tiktok.com/${affiliate.tiktok.replace('@','')}`} target="_blank" rel="noopener noreferrer"
+                className="text-xs px-3 py-1 bg-black border border-white/20 text-white rounded-full font-bold">
+                🎵 TikTok
+              </a>
+            )}
+            {affiliate.facebook && (
+              <a href={`https://facebook.com/${affiliate.facebook}`} target="_blank" rel="noopener noreferrer"
+                className="text-xs px-3 py-1 bg-[#1877F2] text-white rounded-full font-bold">
+                📘 Facebook
+              </a>
+            )}
+            {affiliate.youtube && (
+              <a href={`https://youtube.com/${affiliate.youtube.replace('@','')}`} target="_blank" rel="noopener noreferrer"
+                className="text-xs px-3 py-1 bg-[#FF0000] text-white rounded-full font-bold">
+                ▶️ YouTube
+              </a>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Búsqueda */}
