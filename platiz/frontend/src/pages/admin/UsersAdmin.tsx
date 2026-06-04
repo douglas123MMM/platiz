@@ -8,6 +8,19 @@ export default function UsersAdmin() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [passModal, setPassModal] = useState<string | null>(null);
+  const [newPass, setNewPass] = useState('');
+
+  const resetPassword = async (id: string) => {
+    try {
+      await api.patch(`/auth/users/${id}/password`, { password: newPass });
+      toast.success('Contrasena actualizada');
+      setPassModal(null);
+      setNewPass('');
+    } catch {
+      toast.error('Error al cambiar contrasena');
+    }
+  };
 
   const loadUsers = (searchTerm?: string) => {
     setLoading(true);
@@ -91,6 +104,7 @@ export default function UsersAdmin() {
                         <button onClick={() => updateStatus(user.id, 'rejected')} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors" title="Rechazar"><HiX className="w-4 h-4" /></button>
                       </div>
                     )}
+                    <button onClick={() => { setPassModal(user.id); setNewPass(''); }} className="ml-2 p-2 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors" title="Cambiar contrasena">🔑</button>
                     {user.role === 'admin' && <span className="text-xs text-[#FFD700]/60">—</span>}
                   </td>
                 </tr>
@@ -99,6 +113,20 @@ export default function UsersAdmin() {
           </table>
         </div>
       </div>
+      {passModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setPassModal(null)}>
+          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
+            <h3 className="text-white font-bold mb-4">Cambiar Contrasena</h3>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white mb-4"
+              type="text" placeholder="Nueva contrasena (min 6 caracteres)"
+              value={newPass} onChange={e => setNewPass(e.target.value)} />
+            <div className="flex gap-3">
+              <button onClick={() => resetPassword(passModal)} className="flex-1 py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm">Guardar</button>
+              <button onClick={() => setPassModal(null)} className="flex-1 py-2 bg-white/10 text-white rounded-lg text-sm">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

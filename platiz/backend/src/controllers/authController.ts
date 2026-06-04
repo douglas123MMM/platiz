@@ -118,10 +118,33 @@ export async function approveUser(req: AuthRequest, res: Response): Promise<void
   try {
     const { id } = req.params;
     const { status } = req.body;
-    if (!['approved', 'rejected'].includes(status)) {
-      res.status(400).json({ error: 'Status must be approved or rejected' });
+    if (!status || !['approved', 'rejected'].includes(status)) {
+      res.status(400).json({ error: 'Invalid status' });
       return;
     }
+    await supabase.from('users').update({ status }).eq('id', id);
+    res.json({ message: 'User status updated' });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function adminResetPassword(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+    if (!password || password.length < 6) {
+      res.status(400).json({ error: 'Password must be at least 6 characters' });
+      return;
+    }
+    const bcrypt = require('bcryptjs');
+    const hashed = await bcrypt.hash(password, 10);
+    await supabase.from('users').update({ password: hashed }).eq('id', id);
+    res.json({ message: 'Password updated' });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
     const { data: existing } = await supabase.from('users').select('id').eq('id', id).maybeSingle();
     if (!existing) { res.status(404).json({ error: 'User not found' }); return; }
