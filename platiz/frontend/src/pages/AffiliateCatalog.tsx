@@ -128,16 +128,14 @@ export default function AffiliateCatalog() {
             {item.description && (
               <p className="text-gray-500 text-xs line-clamp-2 mb-2 flex-1">{item.description}</p>
             )}
-            {(item.link || item.video_url) && (
-              <a
-                href={item.link || item.video_url || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-auto text-center py-1.5 bg-[#FFD700]/10 text-[#FFD700] text-xs rounded-lg hover:bg-[#FFD700]/20"
-              >
-                Ver
-              </a>
-            )}
+            <a
+              href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto text-center py-1.5 bg-[#FFD700] text-black text-xs rounded-lg font-bold hover:bg-[#FFE44D]"
+            >
+              Adquirir
+            </a>
           </div>
         ))}
         {filtered.length === 0 && (
