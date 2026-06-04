@@ -1,0 +1,35 @@
+import { Router } from 'express';
+import { authenticate, requireAdmin } from '../middleware/auth';
+import {
+  getDashboard,
+  updateProfile,
+  approveReferral,
+  getLanding,
+  getCatalog,
+  registerWithReferral,
+  adminListAffiliates,
+  adminUpdateCredits,
+  adminReferralHistory,
+  adminUpdateLandingVideo,
+} from '../controllers/affiliateController';
+
+const router = Router();
+
+// Público
+router.get('/landing/:code', getLanding);
+router.get('/catalog', getCatalog);
+router.post('/register', registerWithReferral);
+
+// Afiliado (logueado)
+router.use(authenticate);
+router.get('/dashboard', getDashboard);
+router.put('/profile', updateProfile);
+router.post('/referrals/:referralId/approve', approveReferral);
+
+// Admin
+router.get('/admin/affiliates', requireAdmin, adminListAffiliates);
+router.put('/admin/credits/:userId', requireAdmin, adminUpdateCredits);
+router.get('/admin/history', requireAdmin, adminReferralHistory);
+router.put('/admin/landing-video', requireAdmin, adminUpdateLandingVideo);
+
+export default router;

@@ -19,6 +19,7 @@ const navItems = [
   { path: '/editables', label: 'Editables', icon: IconPhoto, roles: ['client', 'admin'] },
   { path: '/plr-pro', label: 'PLR PRO', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
+  { path: '/afiliado', label: 'Afiliado', icon: IconAffiliate, roles: ['client', 'admin'] },
   { path: '/soporte', label: 'Soporte', icon: IconChat, roles: ['client', 'admin'] },
 ];
 
@@ -29,6 +30,7 @@ const adminItems = [
   { path: '/admin/streams', label: 'Transmisiones', icon: IconChat },
   { path: '/admin/partners', label: 'Socios', icon: IconUsers },
   { path: '/admin/contact', label: 'Contactos', icon: IconTelegram },
+  { path: '/admin/affiliates', label: 'Afiliados', icon: IconAffiliate },
   { path: '/admin/banners', label: 'Banners', icon: IconPhoto },
   { path: '/admin/ai', label: 'IA Providers', icon: IconCog },
 ];

@@ -21,6 +21,10 @@ import StreamsAdmin from './pages/admin/StreamsAdmin';
 import AdminSearch from './pages/admin/AdminSearch';
 import PartnersAdmin from './pages/admin/PartnersAdmin';
 import ContactSettings from './pages/admin/ContactSettings';
+import AffiliateDashboard from './pages/AffiliateDashboard';
+import AffiliateLanding from './pages/AffiliateLanding';
+import AffiliateCatalog from './pages/AffiliateCatalog';
+import AffiliatesAdmin from './pages/admin/AffiliatesAdmin';
 
 function LoadingScreen() {
   return (
@@ -43,6 +47,8 @@ function PublicRoute({ children }: { children: JSX.Element }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/landing/:code" element={<AffiliateLanding />} />
+      <Route path="/catalogo/:code" element={<AffiliateCatalog />} />
       <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
@@ -62,6 +68,7 @@ export default function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/soporte" element={<SupportChat />} />
+        <Route path="/afiliado" element={<AffiliateDashboard />} />
         <Route path="/player" element={<PlayerPage />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
@@ -74,6 +81,7 @@ export default function App() {
         <Route path="/admin/search" element={<AdminSearch />} />
         <Route path="/admin/partners" element={<PartnersAdmin />} />
         <Route path="/admin/contact" element={<ContactSettings />} />
+        <Route path="/admin/affiliates" element={<AffiliatesAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

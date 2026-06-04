@@ -13,6 +13,7 @@ import aiRoutes from './routes/aiRoutes';
 import streamRoutes from './routes/streamRoutes';
 import partnerRoutes from './routes/partnerRoutes';
 import settingsRoutes from './routes/settingsRoutes';
+import affiliateRoutes from './routes/affiliateRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -33,6 +34,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/streams', streamRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/affiliate', affiliateRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', version: 'v2.0', timestamp: new Date().toISOString() }));
 
@@ -50,6 +52,25 @@ app.post('/api/setup-db', async (_req, res) => {
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_type TEXT;');
+    await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code TEXT UNIQUE;');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by UUID REFERENCES users(id);');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS credits INTEGER DEFAULT 0;');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS display_name TEXT;');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp TEXT;');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_link TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS landing_video_url TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS landing_video_type TEXT;');
+    await client.query(`CREATE TABLE IF NOT EXISTS referrals (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      affiliate_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      referred_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      activated_at TIMESTAMPTZ,
+      UNIQUE(referred_user_id)
+    );`);
+    await client.query(`UPDATE users SET referral_code = SUBSTRING(REPLACE(id::TEXT, '-', ''), 1, 10) WHERE referral_code IS NULL;`);
     await client.query('ALTER TABLE streams ADD COLUMN IF NOT EXISTS show_on_landing INTEGER DEFAULT 0;');
     await client.query(`CREATE TABLE IF NOT EXISTS partners (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
