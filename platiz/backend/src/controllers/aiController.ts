@@ -201,7 +201,7 @@ APP PERSONALIZADA: 60 USDT (app streaming tipo Netflix + panel + creditos).
 
 PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172.
 
-CONTACTO: WhatsApp +584149132366. Grupo: chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
+CONTACTO: WhatsApp https://wa.me/584149132366. Grupo: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
 REGLAS: NO es necesario mencionar la tasa al saludar. NO uses simbolo $ solo, usa USDT. Si no sabes un precio, di "consultar". Responde en espanol.`;
 
