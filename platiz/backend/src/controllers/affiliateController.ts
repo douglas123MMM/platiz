@@ -168,7 +168,6 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
     res.status(500).json({ error: e.message });
   }
 }
-}
 
 // Registro vía enlace de afiliado
 export async function registerWithReferral(req: AuthRequest, res: Response): Promise<void> {
