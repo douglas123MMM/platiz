@@ -562,7 +562,33 @@ function findAnswer(msg: string): string {
 }
 
 function renderText(text: string): React.ReactNode {
-  const parts = text.split(/(https?:\/\/[^\s]+)/g);
+  let parts = text.split(/(https?:\/\/[^\s]+)/g);
+  
+  // Auto-detectar dominios conocidos sin https://
+  const domainRegex = /(?:^|\s)((?:chat\.whatsapp\.com|wa\.me|alcambio\.app|dwnapp\.lat|t\.me)\/[^\s]*)/gi;
+  const enriched: string[] = [];
+  for (const part of parts) {
+    if (/^https?:\/\//.test(part)) {
+      enriched.push(part); // ya tiene https://
+    } else {
+      // Buscar dominios sin https:// dentro de texto normal
+      let remaining = part;
+      while (domainRegex.test(remaining)) {
+        domainRegex.lastIndex = 0; // reset para exec
+        const match = domainRegex.exec(remaining);
+        if (!match) break;
+        const before = remaining.slice(0, match.index + (remaining[match.index] === ' ' ? 1 : 0));
+        const domain = match[1];
+        enriched.push(before);
+        enriched.push('https://' + domain);
+        remaining = remaining.slice(match.index + (remaining[match.index] === ' ' ? 1 : 0) + domain.length);
+        domainRegex.lastIndex = 0;
+      }
+      enriched.push(remaining);
+    }
+  }
+  parts = enriched.filter(p => p !== '');
+
   return parts.map((part, i) => {
     if (/^https?:\/\//.test(part)) {
       return (
