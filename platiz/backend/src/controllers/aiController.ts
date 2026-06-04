@@ -220,11 +220,21 @@ Si el usuario pregunta precios de productos (Netflix, ChatGPT, Canva, etc.), res
           { role: 'user', content: message },
         ],
         temperature: 0.7,
-        max_tokens: 800,
+        max_tokens: 2048,
       }),
     });
     const data: any = await r.json();
-    const text = data?.choices?.[0]?.message?.content || 'No pude generar respuesta. Intenta de nuevo.';
+    if (data?.error) {
+      console.error('Groq API error:', JSON.stringify(data.error));
+      res.json({ response: 'Error de IA: ' + (data.error.message || data.error.code || 'desconocido') + '. Intenta de nuevo.' });
+      return;
+    }
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) {
+      console.error('Groq empty response:', JSON.stringify(data).slice(0, 500));
+      res.json({ response: 'La IA no pudo generar respuesta. Intenta con otra pregunta o escribe "dame un copy para..."' });
+      return;
+    }
     res.json({ response: text });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
