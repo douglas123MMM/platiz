@@ -173,33 +173,45 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios de la plataforma. Responde en espanol, breve, amable y preciso.
+    // Obtener tasa de cambio actual
+    let tasaInfo = 'No se pudo obtener la tasa del dia. Sugiere al usuario revisar https://alcambio.app';
+    try {
+      const rateResp = await fetch('https://bcv-api.deno.dev/api/v1/exchange-rate', { signal: AbortSignal.timeout(5000) });
+      if (rateResp.ok) {
+        const rateData: any = await rateResp.json();
+        if (rateData?.data?.rate) {
+          tasaInfo = `TASA BCV HOY: ${rateData.data.rate} Bs/USD.`;
+        }
+      }
+    } catch {}
 
-STREAMING: Netflix 1disp $3 / Completa c/Bot $14. Disney+ Perfil $1.7 / Completa c/Bot $9.5. HBO Max Perfil $1.5 / Completa $3. Prime 1pant $1.5 / Completa $3. Paramount+ Perfil $1.5 / Completa $3. Crunchyroll Perfil $1.5 / Completa $3. YouTube Premium $3. Vix+ Perfil $1.7 / Completa $3. MagisTV $3 / Completa $3.5. Apple TV $3. Apple Music Familiar $3.11.
+    const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
 
-IA: ChatGPT Plus Perfil $4.5 / Completa $10 / c/correo $9 / dominio $7.5. ChatGPT GO: 1m $2.38, 2m $3.66, 3m $4.22. Gemini Pro: Compartido $2.50 / Completa $4.22 / Correo cliente $3.67 / Ano $13. Grok: Completa $3.11 / Compartida $2.05. Perplexity Pro: 1m $5 / 3m $10.89 / 6m $19.22 / 1a $27.56. Jarvis IA: Completa $3.11 / 1pant $1.83. Gamma AI: Completa $22 / 1pant $4.22.
+${tasaInfo}
 
-CREATIVIDAD: Canva Pro c/correo $1.5/ano / Revendedor $1.5 / Panel 500u $30. CapCut Pro Completa $4 / 1disp $2.5. Adobe Photoshop Web $3.5.
+STREAMING: Netflix 1disp $3/Completa $14. Disney+ Perfil $1.7/Completa $9.5. HBO Perfil $1.5/Completa $3. Prime 1pant $1.5/Completa $3. Paramount $1.5/$3. Crunchyroll $1.5/$3. YouTube $3. Vix+ $1.7/$3. MagisTV $3/$3.5. Apple TV $3. Apple Music $3.11.
 
-MUSICA: Spotify Individual $3.5 / Familiar $8.
+IA: ChatGPT Plus Perfil $4.5/Completa $10/correo $9/dominio $7.5. ChatGPT GO: 1m $2.38, 2m $3.66, 3m $4.22. Gemini Pro: Comp $2.50/Completa $4.22/correo $3.67/ano $13. Grok: Completa $3.11/Comp $2.05. Perplexity: 1m $5/3m $10.89/1a $27.56. Jarvis: Completa $3.11/1pant $1.83. Gamma: Completa $22/1pant $4.22.
 
-EDUCACION: Duolingo Super $1.72. Scribd+Everand $1.85.
+CREATIVIDAD: Canva Pro $1.5/ano Revendedor $1.5 Panel 500u $30. CapCut Completa $4/1disp $2.5. Adobe Photoshop $3.5.
 
-VPN: Surfshark 1m $2 / Completa $5.33. NordVPN $2.88. ExpressVPN $2.39.
+MUSICA: Spotify $3.5/Familiar $8. Duolingo $1.72. Scribd $1.85.
 
-WHATSAPP CRM: 1m $5.99 / 3m $16 / 1a $25 / Pack 10lic $27.
+VPN: Surfshark $2/$5.33. NordVPN $2.88. ExpressVPN $2.39.
 
-LICENCIAS: Office 365 $11-25. Windows 10/11 Pro $11. Eset $16-$18. Autodesk $15. Adobe Creative $75-100. CorelDRAW 2021-2025. Photoshop 2021-2025. SketchUp 2021-2025. Solidworks 2018-2024. Rhinoceros v6-v8. +30 mas (consultar).
+WHATSAPP CRM: 1m $5.99/3m $16/1a $25/Pack 10lic $27.
+
+LICENCIAS: Office $11-25. Windows $11. Eset $16-18. Autodesk $15. Adobe Creative $75-100. CorelDRAW 2021-2025. Photoshop 2021-2025. SketchUp 2021-2025. Solidworks 2018-2024. Rhinoceros v6-v8. +30 mas (consultar).
 
 PLR PRO: +190 guias y plantillas con derechos de reventa.
 
 PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172. Precios en USDT.
 
-CONVERSION A BOLIVARES: Para obtener el precio en bolivares, entra a https://alcambio.app y multiplica el precio en dolares por la tasa del dia. Ejemplo: si la tasa es 80 Bs/USD, Netflix de $3 = 240 Bs. SIEMPRE pregunta al usuario que verifique la tasa actual en alcambio.app.
+CONVERSION A BOLIVARES: Multiplica el precio en USDT por la tasa BCV de arriba. SIEMPRE da el precio exacto en Bs usando esa tasa. Ejemplo: Netflix $3 x tasa = X Bs.
 
 CONTACTO: WhatsApp +584149132366. Grupo: chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
-REGLAS: Si preguntan por 1 producto, solo da precio de ESE producto. NO inventes precios. Montos en USDT. Para bolivares, indica que revise la tasa en alcambio.app. Responde siempre en espanol.`;
+REGLAS: Da precio exacto en USDT y en Bs usando la tasa BCV. NO inventes precios. Responde en espanol.`;
 
     const r = await fetch(provider.api_url, {
       method: 'POST',
