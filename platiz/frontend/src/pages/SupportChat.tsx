@@ -400,7 +400,6 @@ Precio: 60 USDT
 Pedidos: WhatsApp +584149132366`,
   },
 
-  // NAVEGACION
   {
     keywords: ['soporte', 'ayuda', 'canal de soporte', 'asistencia', 'atencion'],
     answer: `CANAL DE SOPORTE
