@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
+import { uploadToSupabase } from '../utils/upload';
 
 // Dashboard del afiliado
 export async function getDashboard(req: AuthRequest, res: Response): Promise<void> {
@@ -43,13 +44,22 @@ export async function getDashboard(req: AuthRequest, res: Response): Promise<voi
 export async function updateProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
     const userId = req.user!.id;
-    const { display_name, whatsapp, telegram_link, payment_methods } = req.body;
+    const { display_name, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube } = req.body;
 
     const updates: Record<string, any> = {};
     if (display_name !== undefined) updates.display_name = display_name;
     if (whatsapp !== undefined) updates.whatsapp = whatsapp;
     if (telegram_link !== undefined) updates.telegram_link = telegram_link;
     if (payment_methods !== undefined) updates.payment_methods = payment_methods;
+    if (instagram !== undefined) updates.instagram = instagram;
+    if (tiktok !== undefined) updates.tiktok = tiktok;
+    if (facebook !== undefined) updates.facebook = facebook;
+    if (youtube !== undefined) updates.youtube = youtube;
+
+    // Foto de perfil
+    if (req.file) {
+      updates.avatar = await uploadToSupabase(req.file);
+    }
 
     if (Object.keys(updates).length === 0) {
       res.status(400).json({ error: 'No fields to update' });
@@ -57,7 +67,7 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
     }
 
     await supabase.from('users').update(updates).eq('id', userId);
-    res.json({ message: 'Perfil actualizado' });
+    res.json({ message: 'Perfil actualizado', avatar: updates.avatar });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }

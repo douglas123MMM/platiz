@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 
 const IconCopy = () => <svg viewBox="0 0 24 24" style={{width:16,height:16,fill:'currentColor'}}><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>;
@@ -42,6 +42,13 @@ export default function AffiliateDashboard() {
   const [approving, setApproving] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
   const [editing, setEditing] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState('');
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [instagram, setInstagram] = useState('');
+  const [tiktok, setTiktok] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [youtube, setYoutube] = useState('');
 
   useEffect(() => { fetchDashboard(); }, []);
 
@@ -67,6 +74,11 @@ export default function AffiliateDashboard() {
           otro: pm.otro || '',
         });
       }
+      setInstagram(data.profile?.instagram || '');
+      setTiktok(data.profile?.tiktok || '');
+      setFacebook(data.profile?.facebook || '');
+      setYoutube(data.profile?.youtube || '');
+      setAvatarPreview(data.profile?.avatar || '');
     } catch {}
   };
 
@@ -96,7 +108,20 @@ export default function AffiliateDashboard() {
 
   const saveProfile = async () => {
     try {
-      await api.put('/affiliate/profile', { display_name: displayName, whatsapp, telegram_link: telegram, payment_methods: paymentMethods });
+      const fd = new FormData();
+      fd.append('display_name', displayName);
+      fd.append('whatsapp', whatsapp);
+      fd.append('telegram_link', telegram);
+      fd.append('payment_methods', JSON.stringify(paymentMethods));
+      fd.append('instagram', instagram);
+      fd.append('tiktok', tiktok);
+      fd.append('facebook', facebook);
+      fd.append('youtube', youtube);
+      if (avatarFile) fd.append('avatar', avatarFile);
+
+      const { data } = await api.put('/affiliate/profile', fd);
+      if (data?.avatar) setAvatarPreview(data.avatar);
+      setAvatarFile(null);
       setEditing(false);
       setMsg('Informacion guardada correctamente');
       setTimeout(() => setMsg(''), 3000);
@@ -186,6 +211,30 @@ export default function AffiliateDashboard() {
 
         {editing ? (
           <div className="space-y-3">
+            {/* Foto */}
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 rounded-full bg-[#FFD700]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-2xl">👤</span>
+                )}
+              </div>
+              <div className="flex-1">
+                <p className="text-xs text-gray-400 mb-1">Foto de perfil</p>
+                <input type="file" accept="image/*" ref={fileRef} className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      setAvatarFile(e.target.files[0]);
+                      setAvatarPreview(URL.createObjectURL(e.target.files[0]));
+                    }
+                  }} />
+                <button onClick={() => fileRef.current?.click()} className="text-xs px-3 py-1.5 bg-[#FFD700]/10 text-[#FFD700] rounded-lg hover:bg-[#FFD700]/20">
+                  {avatarPreview ? 'Cambiar foto' : 'Subir foto'}
+                </button>
+              </div>
+            </div>
+
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Nombre de usuario / Marca" value={displayName}
               onChange={(e) => setDisplayName(e.target.value)} />
@@ -195,6 +244,20 @@ export default function AffiliateDashboard() {
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Link de Telegram (ej: https://t.me/tuusuario)" value={telegram}
               onChange={(e) => setTelegram(e.target.value)} />
+
+            <h3 className="text-[#FFD700] text-xs font-bold pt-2">Redes Sociales</h3>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Instagram (ej: @tucuenta)" value={instagram}
+              onChange={(e) => setInstagram(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="TikTok (ej: @tucuenta)" value={tiktok}
+              onChange={(e) => setTiktok(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Facebook (ej: /tuperfil)" value={facebook}
+              onChange={(e) => setFacebook(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="YouTube (ej: @tucanal)" value={youtube}
+              onChange={(e) => setYoutube(e.target.value)} />
 
             <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
             <p className="text-gray-500 text-xs">Binance</p>
@@ -229,11 +292,19 @@ export default function AffiliateDashboard() {
           </div>
         ) : (
           <div className="space-y-2 text-sm">
-            {displayName ? (
-              <p><span className="text-gray-500">Nombre:</span> <span className="text-white">{displayName}</span></p>
-            ) : (
-              <p className="text-gray-500 italic">Sin nombre de marca configurado</p>
-            )}
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-14 h-14 rounded-full bg-[#FFD700]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-2xl">👤</span>
+                )}
+              </div>
+              <div>
+                {displayName && <p className="text-white font-bold">{displayName}</p>}
+                {!displayName && <p className="text-gray-500 italic">Sin nombre de marca</p>}
+              </div>
+            </div>
             {whatsapp ? (
               <p><span className="text-gray-500">WhatsApp:</span> <span className="text-green-400">{whatsapp}</span></p>
             ) : (
@@ -243,6 +314,16 @@ export default function AffiliateDashboard() {
               <p><span className="text-gray-500">Telegram:</span> <span className="text-blue-400">{telegram}</span></p>
             ) : (
               <p className="text-gray-500 italic">Sin Telegram configurado</p>
+            )}
+
+            {(instagram || tiktok || facebook || youtube) && (
+              <div className="pt-1">
+                <p className="text-gray-500 text-xs mb-1">Redes Sociales</p>
+                {instagram && <p className="text-white text-xs">📷 Instagram: {instagram}</p>}
+                {tiktok && <p className="text-white text-xs">🎵 TikTok: {tiktok}</p>}
+                {facebook && <p className="text-white text-xs">📘 Facebook: {facebook}</p>}
+                {youtube && <p className="text-white text-xs">▶️ YouTube: {youtube}</p>}
+              </div>
             )}
             {paymentMethods.binance_id && (
               <div>

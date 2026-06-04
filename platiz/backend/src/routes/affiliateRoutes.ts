@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, requireAdmin } from '../middleware/auth';
+import { upload } from '../utils/upload';
 import {
   getDashboard,
   updateProfile,
@@ -23,7 +24,7 @@ router.post('/register', registerWithReferral);
 // Afiliado (logueado)
 router.use(authenticate);
 router.get('/dashboard', getDashboard);
-router.put('/profile', updateProfile);
+router.put('/profile', upload.single('avatar'), updateProfile);
 router.post('/referrals/:referralId/approve', approveReferral);
 
 // Admin
