@@ -24,7 +24,8 @@ router.post('/register', registerWithReferral);
 // Afiliado (logueado)
 router.use(authenticate);
 router.get('/dashboard', getDashboard);
-router.put('/profile', upload.single('avatar'), updateProfile);
+router.put('/profile', updateProfile);
+router.put('/profile/avatar', upload.single('avatar'), updateProfile);
 router.post('/referrals/:referralId/approve', approveReferral);
 
 // Admin

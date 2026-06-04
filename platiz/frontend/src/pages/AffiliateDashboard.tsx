@@ -108,20 +108,27 @@ export default function AffiliateDashboard() {
 
   const saveProfile = async () => {
     try {
-      const fd = new FormData();
-      fd.append('display_name', displayName);
-      fd.append('whatsapp', whatsapp);
-      fd.append('telegram_link', telegram);
-      fd.append('payment_methods', JSON.stringify(paymentMethods));
-      fd.append('instagram', instagram);
-      fd.append('tiktok', tiktok);
-      fd.append('facebook', facebook);
-      fd.append('youtube', youtube);
-      if (avatarFile) fd.append('avatar', avatarFile);
+      // Guardar datos de texto como JSON (siempre funciona)
+      await api.put('/affiliate/profile', {
+        display_name: displayName,
+        whatsapp,
+        telegram_link: telegram,
+        payment_methods: paymentMethods,
+        instagram,
+        tiktok,
+        facebook,
+        youtube,
+      });
 
-      const { data } = await api.put('/affiliate/profile', fd);
-      if (data?.avatar) setAvatarPreview(data.avatar);
-      setAvatarFile(null);
+      // Si hay foto, subirla por separado
+      if (avatarFile) {
+        const fd = new FormData();
+        fd.append('avatar', avatarFile);
+        const { data } = await api.put('/affiliate/profile/avatar', fd);
+        if (data?.avatar) setAvatarPreview(data.avatar);
+        setAvatarFile(null);
+      }
+
       setEditing(false);
       setMsg('Informacion guardada correctamente');
       setTimeout(() => setMsg(''), 3000);
