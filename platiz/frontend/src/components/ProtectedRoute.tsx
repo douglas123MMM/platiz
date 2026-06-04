@@ -20,18 +20,5 @@ export function ProtectedRoute({ children, requireAdmin = false }: { children: J
 
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
   if (requireAdmin && user.role !== 'admin') return <Navigate to="/" replace />;
-  if (user.role !== 'admin' && user.status !== 'approved') {
-    return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-        <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#FFD700]/10">
-          <div className="w-16 h-16 bg-[#FFD700]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <span className="text-3xl">{user.status === 'rejected' ? '❌' : '👑'}</span>
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">{user.status === 'rejected' ? 'Acceso denegado' : 'Cuenta pendiente'}</h2>
-          <p className="text-gray-400">{user.status === 'rejected' ? 'Tu solicitud ha sido rechazada.' : 'Tu solicitud esta siendo revisada.'}</p>
-        </div>
-      </div>
-    );
-  }
   return children;
 }
