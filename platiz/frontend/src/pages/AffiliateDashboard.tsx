@@ -41,6 +41,7 @@ export default function AffiliateDashboard() {
   const [copied, setCopied] = useState('');
   const [approving, setApproving] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => { fetchDashboard(); }, []);
 
@@ -96,8 +97,10 @@ export default function AffiliateDashboard() {
   const saveProfile = async () => {
     try {
       await api.put('/affiliate/profile', { display_name: displayName, whatsapp, telegram_link: telegram, payment_methods: paymentMethods });
-      setMsg('Perfil guardado');
-      setTimeout(() => setMsg(''), 2000);
+      setEditing(false);
+      setMsg('Informacion guardada correctamente');
+      setTimeout(() => setMsg(''), 3000);
+      fetchDashboard();
     } catch {
       setMsg('Error al guardar');
     }
@@ -171,66 +174,106 @@ export default function AffiliateDashboard() {
 
       {/* Profile Section */}
       <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 mb-6">
-        <h2 className="text-white font-bold mb-3 text-sm">Mi Perfil (visible en Catalogo)</h2>
-        <div className="space-y-3">
-          <input
-            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Nombre de usuario / Marca"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-          />
-          <input
-            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="WhatsApp (ej: 584149132366)"
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-          />
-          <input
-            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Link de Telegram (ej: https://t.me/tuusuario)"
-            value={telegram}
-            onChange={(e) => setTelegram(e.target.value)}
-          />
-
-          <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
-
-          <p className="text-gray-500 text-xs">Binance</p>
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="ID Binance (ej: 355976674)"
-            value={paymentMethods.binance_id}
-            onChange={(e) => setPaymentMethods({...paymentMethods, binance_id: e.target.value})} />
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Correo Binance"
-            value={paymentMethods.binance_email}
-            onChange={(e) => setPaymentMethods({...paymentMethods, binance_email: e.target.value})} />
-
-          <p className="text-gray-500 text-xs">Pago Movil</p>
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Banco (ej: 0102 - Venezuela)"
-            value={paymentMethods.pago_movil_bank}
-            onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_bank: e.target.value})} />
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Telefono (ej: 04243057148)"
-            value={paymentMethods.pago_movil_phone}
-            onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_phone: e.target.value})} />
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="CI / ID (ej: 28012172)"
-            value={paymentMethods.pago_movil_id}
-            onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_id: e.target.value})} />
-
-          <p className="text-gray-500 text-xs">Zelle / Otro</p>
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Zelle (correo o telefono)"
-            value={paymentMethods.zelle}
-            onChange={(e) => setPaymentMethods({...paymentMethods, zelle: e.target.value})} />
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Otro metodo"
-            value={paymentMethods.otro}
-            onChange={(e) => setPaymentMethods({...paymentMethods, otro: e.target.value})} />
-          <button onClick={saveProfile} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
-            Guardar Perfil
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-white font-bold text-sm">Mi Perfil (visible en Catalogo)</h2>
+          <button
+            onClick={() => setEditing(!editing)}
+            className="text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20"
+          >
+            {editing ? 'Cancelar' : (displayName || whatsapp || telegram ? 'Editar' : 'Completar Perfil')}
           </button>
         </div>
+
+        {editing ? (
+          <div className="space-y-3">
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Nombre de usuario / Marca" value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="WhatsApp (ej: 584149132366)" value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Link de Telegram (ej: https://t.me/tuusuario)" value={telegram}
+              onChange={(e) => setTelegram(e.target.value)} />
+
+            <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
+            <p className="text-gray-500 text-xs">Binance</p>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="ID Binance" value={paymentMethods.binance_id}
+              onChange={(e) => setPaymentMethods({...paymentMethods, binance_id: e.target.value})} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Correo Binance" value={paymentMethods.binance_email}
+              onChange={(e) => setPaymentMethods({...paymentMethods, binance_email: e.target.value})} />
+
+            <p className="text-gray-500 text-xs">Pago Movil</p>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Banco" value={paymentMethods.pago_movil_bank}
+              onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_bank: e.target.value})} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Telefono" value={paymentMethods.pago_movil_phone}
+              onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_phone: e.target.value})} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="CI / ID" value={paymentMethods.pago_movil_id}
+              onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_id: e.target.value})} />
+
+            <p className="text-gray-500 text-xs">Zelle / Otro</p>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Zelle" value={paymentMethods.zelle}
+              onChange={(e) => setPaymentMethods({...paymentMethods, zelle: e.target.value})} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+              placeholder="Otro metodo" value={paymentMethods.otro}
+              onChange={(e) => setPaymentMethods({...paymentMethods, otro: e.target.value})} />
+            <button onClick={saveProfile} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
+              Guardar Informacion
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2 text-sm">
+            {displayName ? (
+              <p><span className="text-gray-500">Nombre:</span> <span className="text-white">{displayName}</span></p>
+            ) : (
+              <p className="text-gray-500 italic">Sin nombre de marca configurado</p>
+            )}
+            {whatsapp ? (
+              <p><span className="text-gray-500">WhatsApp:</span> <span className="text-green-400">{whatsapp}</span></p>
+            ) : (
+              <p className="text-gray-500 italic">Sin WhatsApp configurado</p>
+            )}
+            {telegram ? (
+              <p><span className="text-gray-500">Telegram:</span> <span className="text-blue-400">{telegram}</span></p>
+            ) : (
+              <p className="text-gray-500 italic">Sin Telegram configurado</p>
+            )}
+            {paymentMethods.binance_id && (
+              <div>
+                <p className="text-gray-500 text-xs mt-2">Binance</p>
+                <p className="text-white text-xs">ID: {paymentMethods.binance_id}</p>
+                {paymentMethods.binance_email && <p className="text-white text-xs">{paymentMethods.binance_email}</p>}
+              </div>
+            )}
+            {paymentMethods.pago_movil_phone && (
+              <div>
+                <p className="text-gray-500 text-xs mt-2">Pago Movil</p>
+                <p className="text-white text-xs">{paymentMethods.pago_movil_bank} / {paymentMethods.pago_movil_phone} / {paymentMethods.pago_movil_id}</p>
+              </div>
+            )}
+            {paymentMethods.zelle && (
+              <div>
+                <p className="text-gray-500 text-xs mt-2">Zelle</p>
+                <p className="text-white text-xs">{paymentMethods.zelle}</p>
+              </div>
+            )}
+            {paymentMethods.otro && (
+              <div>
+                <p className="text-gray-500 text-xs mt-2">Otro</p>
+                <p className="text-white text-xs">{paymentMethods.otro}</p>
+              </div>
+            )}
+            {!displayName && !whatsapp && !telegram && !paymentMethods.binance_id && !paymentMethods.pago_movil_phone && !paymentMethods.zelle && !paymentMethods.otro && (
+              <p className="text-gray-500 text-center py-4">Completa tu perfil para que tus clientes vean tus datos en el catalogo.</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Referrals Table */}
