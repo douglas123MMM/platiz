@@ -163,7 +163,7 @@ export async function deleteConversation(req: AuthRequest, res: Response): Promi
 
 export async function supportChat(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { message } = req.body;
+    const { message, rate } = req.body;
     if (!message) { res.status(400).json({ error: 'Message required' }); return; }
     
     const { data: provider } = await supabase.from('ai_providers').select('*').eq('active', 1).order('created_at', { ascending: false }).limit(1).maybeSingle();
@@ -173,10 +173,13 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Obtener tasa BCV desde items settings
-    const { data: rateItem } = await supabase.from('items').select('description').eq('category_slug', 'settings').eq('title', 'bcv_rate').maybeSingle();
-    const bcvRate = rateItem?.description || '85';
-    const tasaInfo = 'TASA BCV HOY: ' + bcvRate + ' Bs/USDT. Usa esta tasa para TODOS los calculos en bolivares. NO uses otra tasa.';
+    // Usar tasa del cliente, o tasa guardada, o 85 default
+    let bcvRate = rate || '85';
+    if (!rate) {
+      const { data: rateItem } = await supabase.from('items').select('description').eq('category_slug', 'settings').eq('title', 'bcv_rate').maybeSingle();
+      if (rateItem?.description) bcvRate = rateItem.description;
+    }
+    const tasaInfo = 'TASA BCV HOY: ' + bcvRate + ' Bs/USDT. Usa esta tasa exacta para TODOS los calculos.';
 
     const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
 

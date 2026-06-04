@@ -470,14 +470,25 @@ export default function SupportChat() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const send = (msg?: string) => {
+  const send = async (msg?: string) => {
     const text = (msg || input).trim();
     if (!text) return;
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
+    
+    // Obtener tasa actual desde el navegador
+    let rate = '';
+    try {
+      const r = await fetch('https://bcv-api.deno.dev/api/v1/exchange-rate');
+      if (r.ok) {
+        const d = await r.json();
+        if (d?.data?.rate) rate = d.data.rate;
+      }
+    } catch {}
+
     setTimeout(async () => {
       try {
-        const { data } = await api.post('/ai/support', { message: text });
+        const { data } = await api.post('/ai/support', { message: text, rate });
         if (data?.response && !data.response.includes('IA no configurada')) {
           setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
           return;
