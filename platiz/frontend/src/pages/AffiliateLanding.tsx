@@ -121,13 +121,33 @@ export default function AffiliateLanding() {
 
       {/* Video */}
       {page?.video_url && (
-        <div className="max-w-2xl mx-auto px-4 mb-8">
+        <div className="max-w-2xl mx-auto px-0 md:px-4 mb-8">
           {(() => {
             const vs = getVideoSrc(page.video_url);
+            const isDrive = page.video_url.includes('drive.google.com');
+
             if (vs.type === 'video') {
-              return <video controls className="w-full rounded-xl bg-black" playsInline><source src={vs.src} /></video>;
+              return (
+                <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                  <video controls playsInline className="absolute inset-0 w-full h-full rounded-xl bg-black object-contain"
+                    controlsList="nodownload nofullscreen" disablePictureInPicture>
+                    <source src={vs.src} />
+                  </video>
+                </div>
+              );
             }
-            return <div className="aspect-video rounded-xl overflow-hidden bg-black"><iframe src={vs.src} className="w-full h-full" allowFullScreen allow="autoplay; encrypted-media" title="Video" /></div>;
+
+            return (
+              <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                <iframe
+                  src={isDrive ? `${vs.src}?rm=minimal` : vs.src}
+                  className="absolute inset-0 w-full h-full rounded-xl border-0"
+                  allowFullScreen={!isDrive}
+                  allow="autoplay; encrypted-media"
+                  title="Video"
+                />
+              </div>
+            );
           })()}
         </div>
       )}
