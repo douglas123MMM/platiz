@@ -246,7 +246,7 @@ export default function AffiliateDashboard() {
               placeholder="Nombre de usuario / Marca" value={displayName}
               onChange={(e) => setDisplayName(e.target.value)} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-              placeholder="WhatsApp (ej: 584149132366)" value={whatsapp}
+              placeholder="WhatsApp (ej: 584149132366 o https://wa.me/584149132366)" value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Link de Telegram (ej: https://t.me/tuusuario)" value={telegram}
@@ -313,7 +313,7 @@ export default function AffiliateDashboard() {
               </div>
             </div>
             {whatsapp ? (
-              <p><span className="text-gray-500">WhatsApp:</span> <span className="text-green-400">{whatsapp}</span></p>
+              <p><span className="text-gray-500">WhatsApp:</span> <a href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-400 underline hover:text-green-300">{whatsapp}</a></p>
             ) : (
               <p className="text-gray-500 italic">Sin WhatsApp configurado</p>
             )}
