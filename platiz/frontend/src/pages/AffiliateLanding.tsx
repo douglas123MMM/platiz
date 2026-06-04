@@ -128,22 +128,20 @@ export default function AffiliateLanding() {
 
             if (vs.type === 'video') {
               return (
-                <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-                  <video controls playsInline className="absolute inset-0 w-full h-full rounded-xl bg-black object-contain"
-                    controlsList="nodownload nofullscreen" disablePictureInPicture>
-                    <source src={vs.src} />
-                  </video>
-                </div>
+                <video controls playsInline className="w-full aspect-video rounded-xl bg-black object-contain"
+                  controlsList="nodownload nofullscreen" disablePictureInPicture>
+                  <source src={vs.src} />
+                </video>
               );
             }
 
             return (
-              <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+              <div className="w-full aspect-video rounded-xl overflow-hidden bg-black relative">
                 <iframe
-                  src={isDrive ? `${vs.src}?rm=minimal` : vs.src}
-                  className="absolute inset-0 w-full h-full rounded-xl border-0"
-                  allowFullScreen={!isDrive}
-                  allow="autoplay; encrypted-media"
+                  src={vs.src}
+                  className="absolute inset-0 w-full h-full border-0"
+                  allow={isDrive ? 'autoplay' : 'autoplay; encrypted-media; fullscreen'}
+                  sandbox={isDrive ? 'allow-scripts allow-same-origin allow-presentation' : undefined}
                   title="Video"
                 />
               </div>
