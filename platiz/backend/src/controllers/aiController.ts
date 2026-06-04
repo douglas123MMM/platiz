@@ -174,16 +174,24 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
     }
 
     // Obtener tasa de cambio actual
-    let tasaInfo = 'No se pudo obtener la tasa del dia. Sugiere al usuario revisar https://alcambio.app';
-    try {
-      const rateResp = await fetch('https://bcv-api.deno.dev/api/v1/exchange-rate', { signal: AbortSignal.timeout(5000) });
-      if (rateResp.ok) {
-        const rateData: any = await rateResp.json();
-        if (rateData?.data?.rate) {
-          tasaInfo = `TASA BCV HOY: ${rateData.data.rate} Bs/USD.`;
+    let tasaInfo = 'TASA REFERENCIAL: ~85 Bs/USDT. Verifica la tasa exacta en https://alcambio.app';
+    const rateApis = [
+      'https://bcv-api.deno.dev/api/v1/exchange-rate',
+      'https://api.exchangemonitor.net/data',
+    ];
+    for (const api of rateApis) {
+      try {
+        const rateResp = await fetch(api, { signal: AbortSignal.timeout(4000) });
+        if (rateResp.ok) {
+          const rateData: any = await rateResp.json();
+          const rate = rateData?.data?.rate || rateData?.BCV?.price || rateData?.USD?.bcv;
+          if (rate) {
+            tasaInfo = `TASA BCV HOY: ${rate} Bs/USDT. Usa esta tasa para todos los calculos.`;
+            break;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
     const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
 
