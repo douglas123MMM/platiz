@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
@@ -45,10 +45,29 @@ export default function Layout() {
 
   const isAdmin = user?.role === 'admin';
   const filteredNav = navItems.filter((item) => item.roles.includes(user?.role || 'client'));
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    // Solo cerrar si es swipe horizontal hacia la izquierda (no vertical)
+    if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+      setSidebarOpen(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] overflow-x-hidden">
-      <aside className={`fixed top-0 left-0 z-40 h-full w-72 bg-[#050508]/90 lg:bg-[#050508]/90 backdrop-blur-xl border-r border-[#FFD700]/10 transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ WebkitBackdropFilter: 'blur(24px)' }}>
+      <aside className={`fixed top-0 left-0 z-40 h-full w-72 bg-[#050508]/90 lg:bg-[#050508]/90 backdrop-blur-xl border-r border-[#FFD700]/10 transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ WebkitBackdropFilter: 'blur(24px)' }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className="flex flex-col items-center px-3 py-3 border-b border-[#FFD700]/10">
           <Logo size={28} />
           <span className="text-[8px] text-[#FFD700]/50 uppercase tracking-[3px] mt-1">Transforma el Internet en Dinero</span>
