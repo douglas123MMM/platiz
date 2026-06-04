@@ -16,7 +16,7 @@ interface Item {
 export default function AffiliateCatalog() {
   const { code } = useParams<{ code: string }>();
   const [items, setItems] = useState<Item[]>([]);
-  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_method: string } | null>(null);
+  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_methods: any } | null>(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -86,10 +86,34 @@ export default function AffiliateCatalog() {
           )}
         </div>
 
-        {affiliate?.payment_method && (
-          <div className="mt-3 px-4 py-2 bg-[#111] border border-[#FFD700]/10 rounded-xl inline-block mx-auto">
-            <p className="text-xs text-gray-400">Metodo de pago:</p>
-            <p className="text-[#FFD700] text-sm font-bold">{affiliate.payment_method}</p>
+        {affiliate?.payment_methods && (affiliate.payment_methods.binance_id || affiliate.payment_methods.binance_email || affiliate.payment_methods.pago_movil_phone || affiliate.payment_methods.zelle || affiliate.payment_methods.otro) && (
+          <div className="mt-4 px-4 py-3 bg-[#111] border border-[#FFD700]/10 rounded-xl max-w-xs mx-auto text-left">
+            <p className="text-[#FFD700] text-xs font-bold mb-2">Metodos de Pago</p>
+            {affiliate.payment_methods.binance_id && (
+              <div className="mb-2">
+                <p className="text-gray-400 text-xs">Binance</p>
+                <p className="text-white text-xs">ID: {affiliate.payment_methods.binance_id}</p>
+                {affiliate.payment_methods.binance_email && <p className="text-white text-xs">{affiliate.payment_methods.binance_email}</p>}
+              </div>
+            )}
+            {affiliate.payment_methods.pago_movil_phone && (
+              <div className="mb-2">
+                <p className="text-gray-400 text-xs">Pago Movil</p>
+                <p className="text-white text-xs">{affiliate.payment_methods.pago_movil_bank} / {affiliate.payment_methods.pago_movil_phone} / {affiliate.payment_methods.pago_movil_id}</p>
+              </div>
+            )}
+            {affiliate.payment_methods.zelle && (
+              <div className="mb-2">
+                <p className="text-gray-400 text-xs">Zelle</p>
+                <p className="text-white text-xs">{affiliate.payment_methods.zelle}</p>
+              </div>
+            )}
+            {affiliate.payment_methods.otro && (
+              <div>
+                <p className="text-gray-400 text-xs">Otro</p>
+                <p className="text-white text-xs">{affiliate.payment_methods.otro}</p>
+              </div>
+            )}
           </div>
         )}
 

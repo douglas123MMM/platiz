@@ -29,7 +29,15 @@ export default function AffiliateDashboard() {
   const [displayName, setDisplayName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethods, setPaymentMethods] = useState({
+    binance_id: '',
+    binance_email: '',
+    pago_movil_bank: '',
+    pago_movil_phone: '',
+    pago_movil_id: '',
+    zelle: '',
+    otro: '',
+  });
   const [copied, setCopied] = useState('');
   const [approving, setApproving] = useState<string | null>(null);
   const [msg, setMsg] = useState('');
@@ -46,7 +54,18 @@ export default function AffiliateDashboard() {
       setDisplayName(data.profile?.display_name || '');
       setWhatsapp(data.profile?.whatsapp || '');
       setTelegram(data.profile?.telegram_link || '');
-      setPaymentMethod(data.profile?.payment_method || '');
+      if (data.profile?.payment_methods) {
+        const pm = typeof data.profile.payment_methods === 'string' ? JSON.parse(data.profile.payment_methods) : data.profile.payment_methods;
+        setPaymentMethods({
+          binance_id: pm.binance_id || '',
+          binance_email: pm.binance_email || '',
+          pago_movil_bank: pm.pago_movil_bank || '',
+          pago_movil_phone: pm.pago_movil_phone || '',
+          pago_movil_id: pm.pago_movil_id || '',
+          zelle: pm.zelle || '',
+          otro: pm.otro || '',
+        });
+      }
     } catch {}
   };
 
@@ -76,7 +95,7 @@ export default function AffiliateDashboard() {
 
   const saveProfile = async () => {
     try {
-      await api.put('/affiliate/profile', { display_name: displayName, whatsapp, telegram_link: telegram, payment_method: paymentMethod });
+      await api.put('/affiliate/profile', { display_name: displayName, whatsapp, telegram_link: telegram, payment_methods: paymentMethods });
       setMsg('Perfil guardado');
       setTimeout(() => setMsg(''), 2000);
     } catch {
@@ -172,12 +191,42 @@ export default function AffiliateDashboard() {
             value={telegram}
             onChange={(e) => setTelegram(e.target.value)}
           />
-          <input
-            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
-            placeholder="Metodo de pago (ej: Binance, PagoMovil, Zelle)"
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
+
+          <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
+
+          <p className="text-gray-500 text-xs">Binance</p>
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="ID Binance (ej: 355976674)"
+            value={paymentMethods.binance_id}
+            onChange={(e) => setPaymentMethods({...paymentMethods, binance_id: e.target.value})} />
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="Correo Binance"
+            value={paymentMethods.binance_email}
+            onChange={(e) => setPaymentMethods({...paymentMethods, binance_email: e.target.value})} />
+
+          <p className="text-gray-500 text-xs">Pago Movil</p>
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="Banco (ej: 0102 - Venezuela)"
+            value={paymentMethods.pago_movil_bank}
+            onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_bank: e.target.value})} />
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="Telefono (ej: 04243057148)"
+            value={paymentMethods.pago_movil_phone}
+            onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_phone: e.target.value})} />
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="CI / ID (ej: 28012172)"
+            value={paymentMethods.pago_movil_id}
+            onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_id: e.target.value})} />
+
+          <p className="text-gray-500 text-xs">Zelle / Otro</p>
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="Zelle (correo o telefono)"
+            value={paymentMethods.zelle}
+            onChange={(e) => setPaymentMethods({...paymentMethods, zelle: e.target.value})} />
+          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            placeholder="Otro metodo"
+            value={paymentMethods.otro}
+            onChange={(e) => setPaymentMethods({...paymentMethods, otro: e.target.value})} />
           <button onClick={saveProfile} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
             Guardar Perfil
           </button>
