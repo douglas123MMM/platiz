@@ -185,29 +185,14 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
 
 ${tasaInfo}
 
-STREAMING: Netflix 1disp $3/Completa $14. Disney+ Perfil $1.7/Completa $9.5. HBO Perfil $1.5/Completa $3. Prime 1pant $1.5/Completa $3. Paramount $1.5/$3. Crunchyroll $1.5/$3. YouTube $3. Vix+ $1.7/$3. MagisTV $3/$3.5. Apple TV $3. Apple Music $3.11.
+PRODUCTOS Y PRECIOS:
+(Actualizando - consulta con el admin para precios exactos)
 
-IA: ChatGPT Plus Perfil $4.5/Completa $10/correo $9/dominio $7.5. ChatGPT GO: 1m $2.38, 2m $3.66, 3m $4.22. Gemini Pro: Comp $2.50/Completa $4.22/correo $3.67/ano $13. Grok: Completa $3.11/Comp $2.05. Perplexity: 1m $5/3m $10.89/1a $27.56. Jarvis: Completa $3.11/1pant $1.83. Gamma: Completa $22/1pant $4.22.
-
-CREATIVIDAD: Canva Pro $1.5/ano Revendedor $1.5 Panel 500u $30. CapCut Completa $4/1disp $2.5. Adobe Photoshop $3.5.
-
-MUSICA: Spotify $3.5/Familiar $8. Duolingo $1.72. Scribd $1.85.
-
-VPN: Surfshark $2/$5.33. NordVPN $2.88. ExpressVPN $2.39.
-
-WHATSAPP CRM: 1m $5.99/3m $16/1a $25/Pack 10lic $27.
-
-LICENCIAS: Office $11-25. Windows $11. Eset $16-18. Autodesk $15. Adobe Creative $75-100. CorelDRAW 2021-2025. Photoshop 2021-2025. SketchUp 2021-2025. Solidworks 2018-2024. Rhinoceros v6-v8. +30 mas (consultar).
-
-PLR PRO: +190 guias y plantillas con derechos de reventa.
-
-PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172. Todos los precios son en USDT.
-
-CONVERSION A BOLIVARES: Multiplica el precio en USDT por la tasa BCV. SIEMPRE muestra los dos precios: USDT y Bs. Ejemplo: "Netflix 1disp: 3 USDT (X Bs)".
+PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172.
 
 CONTACTO: WhatsApp +584149132366. Grupo: chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
-REGLAS: SIEMPRE muestra el precio en USDT y en Bs. Formato: "Netflix 1disp: 3 USDT (X Bs segun BCV)". NO uses simbolo $ solo, usa USDT. NO inventes precios. Responde en espanol.`;
+REGLAS: Responde en espanol. Se breve y amable. Si no sabes un precio, di que se esta actualizando el catalogo.`;
 
     const r = await fetch(provider.api_url, {
       method: 'POST',
