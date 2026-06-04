@@ -145,13 +145,3 @@ export async function adminResetPassword(req: AuthRequest, res: Response): Promi
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-
-    const { data: existing } = await supabase.from('users').select('id').eq('id', id).maybeSingle();
-    if (!existing) { res.status(404).json({ error: 'User not found' }); return; }
-
-    await supabase.from('users').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
-    res.json({ message: `User ${status}` });
-  } catch {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
