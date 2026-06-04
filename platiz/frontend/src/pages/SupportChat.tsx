@@ -476,17 +476,17 @@ export default function SupportChat() {
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
     setTimeout(async () => {
-      const answer = findAnswer(text);
-      if (answer) {
-        setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
-        return;
-      }
+      // Intentar IA primero
       try {
         const { data } = await api.post('/ai/support', { message: text });
-        setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
-      } catch {
-        setMessages((prev) => [...prev, { role: 'assistant', text: `No tengo info sobre "${text}". Prueba: Netflix, ChatGPT, precios, binance, licencias.` }]);
-      }
+        if (data?.response && !data.response.includes('IA no configurada')) {
+          setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
+          return;
+        }
+      } catch {}
+      // Fallback a palabras clave si IA falla
+      const answer = findAnswer(text);
+      setMessages((prev) => [...prev, { role: 'assistant', text: answer }]);
     }, 300);
   };
 
