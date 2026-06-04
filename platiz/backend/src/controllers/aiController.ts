@@ -173,25 +173,18 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Obtener tasa de cambio actual
-    let tasaInfo = 'TASA REFERENCIAL: ~85 Bs/USDT. Verifica la tasa exacta en https://alcambio.app';
-    const rateApis = [
-      'https://bcv-api.deno.dev/api/v1/exchange-rate',
-      'https://api.exchangemonitor.net/data',
-    ];
-    for (const api of rateApis) {
-      try {
-        const rateResp = await fetch(api, { signal: AbortSignal.timeout(4000) });
-        if (rateResp.ok) {
-          const rateData: any = await rateResp.json();
-          const rate = rateData?.data?.rate || rateData?.BCV?.price || rateData?.USD?.bcv;
-          if (rate) {
-            tasaInfo = `TASA BCV HOY: ${rate} Bs/USDT. Usa esta tasa para todos los calculos.`;
-            break;
-          }
-        }
-      } catch {}
-    }
+    // Obtener tasa BCV
+    let tasaInfo = 'TASA REFERENCIAL: ~85 Bs/USDT. Verifica en https://alcambio.app';
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    try {
+      const resp = await fetch('https://bcv-api.deno.dev/api/v1/exchange-rate', { signal: controller.signal });
+      clearTimeout(timeout);
+      if (resp.ok) {
+        const data: any = await resp.json();
+        if (data?.data?.rate) tasaInfo = 'TASA BCV HOY: ' + data.data.rate + ' Bs/USDT. Usa esta tasa para todos los calculos.';
+      }
+    } catch { clearTimeout(timeout); }
 
     const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
 
