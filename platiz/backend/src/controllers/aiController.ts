@@ -205,13 +205,13 @@ LICENCIAS: Office $11-25. Windows $11. Eset $16-18. Autodesk $15. Adobe Creative
 
 PLR PRO: +190 guias y plantillas con derechos de reventa.
 
-PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172. Precios en USDT.
+PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172. Todos los precios son en USDT.
 
-CONVERSION A BOLIVARES: Multiplica el precio en USDT por la tasa BCV de arriba. SIEMPRE da el precio exacto en Bs usando esa tasa. Ejemplo: Netflix $3 x tasa = X Bs.
+CONVERSION A BOLIVARES: Multiplica el precio en USDT por la tasa BCV. SIEMPRE muestra los dos precios: USDT y Bs. Ejemplo: "Netflix 1disp: 3 USDT (X Bs)".
 
 CONTACTO: WhatsApp +584149132366. Grupo: chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
-REGLAS: Da precio exacto en USDT y en Bs usando la tasa BCV. NO inventes precios. Responde en espanol.`;
+REGLAS: SIEMPRE muestra el precio en USDT y en Bs. Formato: "Netflix 1disp: 3 USDT (X Bs segun BCV)". NO uses simbolo $ solo, usa USDT. NO inventes precios. Responde en espanol.`;
 
     const r = await fetch(provider.api_url, {
       method: 'POST',
