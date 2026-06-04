@@ -19,31 +19,33 @@ export function ProtectedRoute({ children, requireAdmin = false }: { children: J
   }
 
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
-  if (user.status === 'pending') {
-    return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-        <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#FFD700]/10">
-          <div className="w-16 h-16 bg-[#FFD700]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <span className="text-3xl">👑</span>
+  if (user.role !== 'admin') {
+    if (user.status === 'pending') {
+      return (
+        <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
+          <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#FFD700]/10">
+            <div className="w-16 h-16 bg-[#FFD700]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">👑</span>
+            </div>
+            <h2 className="text-2xl font-display font-bold gold-text mb-2">Cuenta pendiente</h2>
+            <p className="text-gray-400">Tu solicitud de acceso a Global Dorado está siendo revisada. Recibirás acceso cuando sea aprobada por el administrador.</p>
           </div>
-          <h2 className="text-2xl font-display font-bold gold-text mb-2">Cuenta pendiente</h2>
-          <p className="text-gray-400">Tu solicitud de acceso a Global Dorado está siendo revisada. Recibirás acceso cuando sea aprobada por el administrador.</p>
         </div>
-      </div>
-    );
-  }
-  if (user.status === 'rejected') {
-    return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-        <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#FFD700]/10">
-          <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <span className="text-3xl">❌</span>
+      );
+    }
+    if (user.status === 'rejected') {
+      return (
+        <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
+          <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#FFD700]/10">
+            <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">❌</span>
+            </div>
+            <h2 className="text-2xl font-display font-bold text-white mb-2">Acceso denegado</h2>
+            <p className="text-gray-400">Tu solicitud de acceso ha sido rechazada. Contacta al administrador para más información.</p>
           </div>
-          <h2 className="text-2xl font-display font-bold text-white mb-2">Acceso denegado</h2>
-          <p className="text-gray-400">Tu solicitud de acceso ha sido rechazada. Contacta al administrador para más información.</p>
         </div>
-      </div>
-    );
+      );
+    }
   }
   if (requireAdmin && user.role !== 'admin') return <Navigate to="/" replace />;
   return children;
