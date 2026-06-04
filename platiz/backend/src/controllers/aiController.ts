@@ -173,13 +173,9 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Usar tasa del cliente, o tasa guardada, o 85 default
-    let bcvRate = rate || '85';
-    if (!rate) {
-      const { data: rateItem } = await supabase.from('items').select('description').eq('category_slug', 'settings').eq('title', 'bcv_rate').maybeSingle();
-      if (rateItem?.description) bcvRate = rateItem.description;
-    }
-    const tasaInfo = 'TASA BCV HOY: ' + bcvRate + ' Bs/USDT. Usa esta tasa exacta para TODOS los calculos.';
+    // Usar tasa del cliente (obtenida desde su navegador)
+    const bcvRate = rate || '100';
+    const tasaInfo = 'TASA BCV HOY: ' + bcvRate + ' Bs/USDT. Usa esta tasa exacta para TODOS los calculos en bolivares.';
 
     const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
 
