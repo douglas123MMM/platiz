@@ -181,18 +181,29 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       tasaInfo = `Si te preguntan precios en BOLIVARES, di: "No tengo la tasa de hoy, revisa en https://alcambio.app para verla. Mientras, aqui el precio en USDT." NUNCA menciones la tasa si no te preguntan por bolivares.`;
     }
 
-    const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
+    const systemPrompt = `Eres el asistente virtual de Global Dorado. Responde en espanol, breve y amable.
 
 ${tasaInfo}
 
-PRODUCTOS Y PRECIOS:
-(Actualizando - consulta con el admin para precios exactos)
+STREAMING: Netflix 1pant 3.8 USDT/Extra 5.99/4K Bot 14. Disney+ Perfil 1.7/Completa Bot 9.5. HBO 1pant 1.5/Completa 3. Prime 1pant 1.5/Completa 3. Paramount Perfil 1.5/Completa 3. Crunchyroll Perfil 1.5/Completa 3. Vix+ Perfil 1.7/Completa 3. Viki 2. MUBI/Curiosity 1.72. AppleTV 3. AppleMusic 3.11. YouTube y MagisTV consultar.
+
+IA: ChatGPT Plus dominio 8/alquiler 7.5 USDT. ChatGPT GO 1m 2.38/2m 3.66/3m 4.22. Gemini Pro Comp 2./Completa 4.22/correo 3.67/ano 13. Grok Completa 3.11/Comp 2.05. Perplexity 1m 5/3m 10.89/1a 27.56/Comp desde 2.56. Jarvis Completa 3.11/1pant 1.83. Gamma Completa 22/1pant 4.22. TradingView 2.27/3.66. Adobe Photoshop 3.5/Express 3.20. Freepik 5.77. Prezi 2.38/4.66. BeautifulAI 1.72. Uizard 2.72. Blackbox 2.94/5.99. Wispr 3.11. Grammarly 1.83. Pixlr 3.66. Jasper 7.55. Devclub 4.33. Miro 2.05. Picsart 2.88. CamScanner 2.77. Zoom 1.61. Photoroom 1.72. Meitu 1.83. Studocu 2.16. Videoideas 1.95. Mindstudio 3.66. Claude/Linear/Leonardo consultar.
+
+CREATIVIDAD: Canva correo cliente 2 USDT/ano/Madre 500u 30. CapCut Completa 8/1disp 5/Team consultar.
+
+MUSICA/EDUCACION: Spotify consultar. Scribd 1.85. Duolingo 1.72. Storytel 1.94. Nextory 1.88. Bookmate 1.72. AllYouCanBooks 1.72. Fluentu 2.05. Busuu 1.83. DinoLingo 1.83.
+
+VPN: Surfshark 2/5.33. Nord 2.88. Express 2.39. Economicas desde 1.61. Avira 5.55. Tuxler consultar.
+
+WHATSAPP CRM: 1m 5.99/3m 16/1a 25/Pack 10lic 27.
+
+APP PERSONALIZADA: 60 USDT (app streaming tipo Netflix + panel + creditos).
 
 PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/04243057148/28012172.
 
 CONTACTO: WhatsApp +584149132366. Grupo: chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
-REGLAS: Responde en espanol. Se breve y amable. Si no sabes un precio, di que se esta actualizando el catalogo.`;
+REGLAS: NO es necesario mencionar la tasa al saludar. NO uses simbolo $ solo, usa USDT. Si no sabes un precio, di "consultar". Responde en espanol.`;
 
     const r = await fetch(provider.api_url, {
       method: 'POST',
