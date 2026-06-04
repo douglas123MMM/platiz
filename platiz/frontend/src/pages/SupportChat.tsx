@@ -55,6 +55,31 @@ const KB: { keywords: string[]; answer: string }[] = [
 - Consultar precio actualizado. Contacta al admin.`,
   },
   {
+    keywords: ['flujo+', 'flujo plus', 'flujo+ plus', 'flujo mas'],
+    answer: `FLUJO+ | Entretenimiento Sin Limites
+
+Links de Descarga:
+- Link directo (APK): https://dwnapp.lat/flujo.apk
+- Codigo Downloader: 3930005
+
+Que ofrece:
+- +3,000 canales en vivo de alta estabilidad
+- +22,000 peliculas en todas las calidades
+- +3,000 series con actualizaciones diarias
+- Netflix, HBO, Disney, Apple TV y Amazon Prime en una sola app
+- Todos los eventos y campeonatos deportivos en vivo
+
+Compatibilidad:
+- Dispositivos moviles Android y Smart TV
+
+Planes y Precios:
+- 1 Dispositivo: 1.5 USDT
+- 3 Dispositivos: 2.5 USDT
+- 5 Dispositivos: 4 USDT
+
+Para contratar escribe al WhatsApp: https://wa.me/584149132366`,
+  },
+  {
     keywords: ['youtube', 'youtube premium'],
     answer: `YOUTUBE PREMIUM
 - Consultar precio actualizado. Contacta al admin.`,

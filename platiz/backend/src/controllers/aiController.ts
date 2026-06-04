@@ -185,7 +185,7 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
 
 ${tasaInfo}
 
-STREAMING: Netflix 1pant 3.8 USDT/Extra 5.99/4K Bot 14. Disney+ Perfil 1.7/Completa Bot 9.5. HBO 1pant 1.5/Completa 3. Prime 1pant 1.5/Completa 3. Paramount Perfil 1.5/Completa 3. Crunchyroll Perfil 1.5/Completa 3. Vix+ Perfil 1.7/Completa 3. Viki 2. MUBI/Curiosity 1.72. AppleTV 3. AppleMusic 3.11. YouTube y MagisTV consultar.
+STREAMING: Flujo+ 1disp 1.5/3disp 2.5/5disp 4 USDT (+3000 canales, +22000 peliculas, +3000 series, deportes en vivo, Android/SmartTV, APK: dwnapp.lat/flujo.apk Codigo Downloader: 3930005). Netflix 1pant 3.8 USDT/Extra 5.99/4K Bot 14. Disney+ Perfil 1.7/Completa Bot 9.5. HBO 1pant 1.5/Completa 3. Prime 1pant 1.5/Completa 3. Paramount Perfil 1.5/Completa 3. Crunchyroll Perfil 1.5/Completa 3. Vix+ Perfil 1.7/Completa 3. Viki 2. MUBI/Curiosity 1.72. AppleTV 3. AppleMusic 3.11. YouTube y MagisTV consultar.
 
 IA: ChatGPT Plus dominio 8/alquiler 7.5 USDT. ChatGPT GO 1m 2.38/2m 3.66/3m 4.22. Gemini Pro Comp 2./Completa 4.22/correo 3.67/ano 13. Grok Completa 3.11/Comp 2.05. Perplexity 1m 5/3m 10.89/1a 27.56/Comp desde 2.56. Jarvis Completa 3.11/1pant 1.83. Gamma Completa 22/1pant 4.22. TradingView 2.27/3.66. Adobe Photoshop 3.5/Express 3.20. Freepik 5.77. Prezi 2.38/4.66. BeautifulAI 1.72. Uizard 2.72. Blackbox 2.94/5.99. Wispr 3.11. Grammarly 1.83. Pixlr 3.66. Jasper 7.55. Devclub 4.33. Miro 2.05. Picsart 2.88. CamScanner 2.77. Zoom 1.61. Photoroom 1.72. Meitu 1.83. Studocu 2.16. Videoideas 1.95. Mindstudio 3.66. Claude/Linear/Leonardo consultar.
 
