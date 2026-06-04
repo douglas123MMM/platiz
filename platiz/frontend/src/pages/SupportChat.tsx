@@ -500,11 +500,9 @@ function findAnswer(msg: string): string {
 }
 
 function renderText(text: string): React.ReactNode {
-  // Convertir URLs en enlaces clickeables
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const parts = text.split(urlRegex);
+  const parts = text.split(/(https?:\/\/[^\s]+)/g);
   return parts.map((part, i) => {
-    if (urlRegex.test(part)) {
+    if (/^https?:\/\//.test(part)) {
       return (
         <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-[#FFD700] underline hover:text-[#FFE44D] break-all">
           {part}
