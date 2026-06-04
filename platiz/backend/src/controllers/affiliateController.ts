@@ -153,19 +153,21 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
   }
 }
 
-// Catálogo público - items + perfil del afiliado
+// Catálogo público - solo servicios digitales
 export async function getCatalog(_req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: items } = await supabase
+    const { data } = await supabase
       .from('items')
       .select('id, category_slug, title, description, image_url, link, video_url, sort_order')
       .eq('active', 1)
+      .in('category_slug', ['services', 'apps', 'movies', 'courses'])
       .order('sort_order', { ascending: true });
 
-    res.json(items || []);
+    res.json(data || []);
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
+}
 }
 
 // Registro vía enlace de afiliado

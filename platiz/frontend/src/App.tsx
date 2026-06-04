@@ -47,12 +47,12 @@ function PublicRoute({ children }: { children: JSX.Element }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/catalogo/:code" element={<AffiliateCatalog />} />
       <Route path="/landing/:code" element={<AffiliateLanding />} />
       <Route path="/presentacion/:code" element={<AffiliateLanding />} />
       <Route path="/franquicia/:code" element={<AffiliateLanding />} />
       <Route path="/vsl/:code" element={<AffiliateLanding />} />
       <Route path="/asesoria/:code" element={<AffiliateLanding />} />
-      <Route path="/catalogo/:code" element={<AffiliateCatalog />} />
       <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />

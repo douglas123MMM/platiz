@@ -13,47 +13,25 @@ interface Item {
   sort_order: number;
 }
 
-interface AffiliateProfile {
-  display_name: string;
-  avatar: string | null;
-  whatsapp: string;
-  telegram_link: string;
-}
-
 export default function AffiliateCatalog() {
   const { code } = useParams<{ code: string }>();
   const [items, setItems] = useState<Item[]>([]);
-  const [profile, setProfile] = useState<AffiliateProfile | null>(null);
+  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string } | null>(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    // Cargar catalogo
+    // Cargar catalogo publico (solo streaming e IA)
     api.get('/affiliate/catalog').then(({ data }) => setItems(data)).catch(() => {});
 
-    // Cargar perfil del afiliado
+    // Cargar perfil del afiliado (endpoint publico)
     if (code) {
-      api.get(`/affiliate/landing/${code}`).then(({ data }) => {
-        if (data.affiliate) {
-          setProfile({
-            display_name: data.affiliate.display_name,
-            avatar: data.affiliate.avatar,
-            whatsapp: '',
-            telegram_link: '',
-          });
-        }
-        // Buscar info completa del afiliado
-        return api.get('/affiliate/dashboard');
-      }).then(({ data }: any) => {
-        if (data?.profile) {
-          setProfile({
-            display_name: data.profile.display_name || data.profile.username,
-            avatar: data.profile.avatar,
-            whatsapp: data.profile.whatsapp,
-            telegram_link: data.profile.telegram_link,
-          });
-        }
-      }).catch(() => {});
+      api.get(`/affiliate/landing/${code}/landing`).then(({ data }: any) => {
+        if (data.affiliate) setAffiliate(data.affiliate);
+      }).catch(() => {
+        // Si no hay afiliado, mostrar generico
+        setAffiliate(null);
+      });
     }
   }, [code]);
 
@@ -68,28 +46,27 @@ export default function AffiliateCatalog() {
     <div className="min-h-screen bg-[#0a0a0f] animate-fade-in">
       {/* Header del afiliado */}
       <div className="bg-gradient-to-b from-black to-transparent py-6 text-center px-4">
-        {profile && (
+        {affiliate && (
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="w-12 h-12 rounded-full bg-[#FFD700]/20 flex items-center justify-center">
-              {profile.avatar ? (
-                <img src={profile.avatar} alt="" className="w-12 h-12 rounded-full object-cover" />
+              {affiliate.avatar ? (
+                <img src={affiliate.avatar} alt="" className="w-12 h-12 rounded-full object-cover" />
               ) : (
                 <span className="text-2xl">👤</span>
               )}
             </div>
             <div className="text-left">
-              <p className="text-white font-bold text-sm">{profile.display_name || 'Global Dorado'}</p>
+              <p className="text-white font-bold text-sm">{affiliate.display_name || 'Global Dorado'}</p>
               <p className="text-[#FFD700] text-xs">Catalogo de Servicios</p>
             </div>
           </div>
         )}
-        <h1 className="text-xl font-bold text-[#FFD700]">Catalogo Digital</h1>
 
         {/* Botones de contacto */}
         <div className="flex justify-center gap-2 mt-3">
-          {profile?.whatsapp && (
+          {affiliate?.whatsapp && (
             <a
-              href={`https://wa.me/${profile.whatsapp.replace(/\D/g, '')}`}
+              href={`https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-1.5 bg-[#25D366] text-white text-xs rounded-full font-bold hover:bg-[#1ebc5a]"
@@ -97,9 +74,9 @@ export default function AffiliateCatalog() {
               WhatsApp
             </a>
           )}
-          {profile?.telegram_link && (
+          {affiliate?.telegram_link && (
             <a
-              href={profile.telegram_link.startsWith('http') ? profile.telegram_link : `https://t.me/${profile.telegram_link}`}
+              href={affiliate.telegram_link.startsWith('http') ? affiliate.telegram_link : `https://t.me/${affiliate.telegram_link}`}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-1.5 bg-[#0088cc] text-white text-xs rounded-full font-bold hover:bg-[#0077b3]"
@@ -108,6 +85,7 @@ export default function AffiliateCatalog() {
             </a>
           )}
         </div>
+        <h1 className="text-xl font-bold text-[#FFD700]">Catalogo Digital</h1>
       </div>
 
       {/* Búsqueda */}
