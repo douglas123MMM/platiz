@@ -44,17 +44,22 @@ export async function getDashboard(req: AuthRequest, res: Response): Promise<voi
 export async function updateProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
     const userId = req.user!.id;
-    const { display_name, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube } = req.body;
+    const body = req.body;
+    const { display_name, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube } = body;
 
     const updates: Record<string, any> = {};
     if (display_name !== undefined) updates.display_name = display_name;
     if (whatsapp !== undefined) updates.whatsapp = whatsapp;
     if (telegram_link !== undefined) updates.telegram_link = telegram_link;
-    if (payment_methods !== undefined) updates.payment_methods = payment_methods;
     if (instagram !== undefined) updates.instagram = instagram;
     if (tiktok !== undefined) updates.tiktok = tiktok;
     if (facebook !== undefined) updates.facebook = facebook;
     if (youtube !== undefined) updates.youtube = youtube;
+
+    // payment_methods: puede venir como string (FormData) u objeto (JSON)
+    if (payment_methods !== undefined) {
+      updates.payment_methods = typeof payment_methods === 'string' ? JSON.parse(payment_methods) : payment_methods;
+    }
 
     // Foto de perfil
     if (req.file) {
