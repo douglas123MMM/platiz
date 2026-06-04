@@ -97,7 +97,7 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
       try {
         const aiResp = await fetch(provider.api_url, {
           method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${provider.api_key}` },
-          body: JSON.stringify({ model: provider.model || 'deepseek-chat', messages, temperature: 0.7, max_tokens: 1000 }),
+          body: JSON.stringify({ model: provider.model || (provider.api_url.includes('groq') ? 'llama-3.3-70b-versatile' : 'deepseek-chat'), messages, temperature: 0.7, max_tokens: 1000 }),
         });
         const aiData: any = await aiResp.json();
         responseText = aiData.error ? `Error IA: ${aiData.error.message}` : aiData.choices?.[0]?.message?.content || JSON.stringify(aiData);
@@ -214,7 +214,7 @@ Si el usuario pregunta precios de productos (Netflix, ChatGPT, Canva, etc.), res
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${provider.api_key}` },
       body: JSON.stringify({
-        model: provider.model || 'deepseek-chat',
+        model: provider.model || (provider.api_url.includes('groq') ? 'llama-3.3-70b-versatile' : 'deepseek-chat'),
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message },

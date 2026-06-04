@@ -608,7 +608,7 @@ function renderText(text: string): React.ReactNode {
 
 export default function SupportChat() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>([
-    { role: 'assistant', text: 'Hola! Soy el asistente de Global Dorado. Preguntame sobre precios, metodos de pago, productos PLR o lo que necesites.' },
+    { role: 'assistant', text: 'Hola! Soy tu coach de Global Dorado. Te enseño a vender por WhatsApp, manejar tu Oficina Virtual, y generar ingresos diarios. Dime en que necesitas ayuda.' },
   ]);
   const [input, setInput] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
