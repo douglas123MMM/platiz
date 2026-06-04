@@ -58,26 +58,27 @@ const KB: { keywords: string[]; answer: string }[] = [
     keywords: ['flujo+', 'flujo plus', 'flujo+ plus', 'flujo mas'],
     answer: `FLUJO+ | Entretenimiento Sin Limites
 
-Links de Descarga:
-- Link directo (APK): https://dwnapp.lat/flujo.apk
-- Codigo Downloader: 3930005
+PLANES:
+• 1 Dispositivo: 1.5 USDT
+• 3 Dispositivos: 2.5 USDT
+• 5 Dispositivos: 4 USDT
 
-Que ofrece:
-- +3,000 canales en vivo de alta estabilidad
-- +22,000 peliculas en todas las calidades
-- +3,000 series con actualizaciones diarias
-- Netflix, HBO, Disney, Apple TV y Amazon Prime en una sola app
-- Todos los eventos y campeonatos deportivos en vivo
+INCLUYE:
+• +3,000 canales en vivo de alta estabilidad
+• +22,000 peliculas en todas las calidades
+• +3,000 series con actualizaciones diarias
+• Netflix, HBO, Disney, Apple TV y Amazon Prime en una sola app
+• Todos los eventos deportivos en vivo
 
-Compatibilidad:
-- Dispositivos moviles Android y Smart TV
+COMPATIBILIDAD:
+• Android y Smart TV
 
-Planes y Precios:
-- 1 Dispositivo: 1.5 USDT
-- 3 Dispositivos: 2.5 USDT
-- 5 Dispositivos: 4 USDT
+DESCARGA:
+https://dwnapp.lat/flujo.apk
+Codigo Downloader: 3930005
 
-Para contratar escribe al WhatsApp: https://wa.me/584149132366`,
+CONTRATAR:
+https://wa.me/584149132366`,
   },
   {
     keywords: ['youtube', 'youtube premium'],
@@ -469,8 +470,13 @@ Tiempo de entrega: 5-10 minutos`,
   {
     keywords: ['contacto', 'contactar', 'admin', 'whatsapp', 'telegram', 'hablar', 'escribir'],
     answer: `CONTACTO
-WhatsApp: https://wa.me/584149132366
-Grupo de Revendedores: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+
+• WhatsApp:
+https://wa.me/584149132366
+
+• Grupo de Revendedores:
+https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+
 Atendemos rapido.`,
   },
   {

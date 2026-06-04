@@ -203,15 +203,29 @@ PAGOS: Binance ID 355976674 (jcespinoza2011@gmail.com). PagoMovil 0102/042430571
 
 CONTACTO: WhatsApp https://wa.me/584149132366. Grupo: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
 
-REGLAS IMPORTANTES:
-1. SIEMPRE usa URLs completas con https:// (ej: https://wa.me/584149132366, https://alcambio.app, https://dwnapp.lat/flujo.apk). NUNCA escribas links sin https://.
-2. Si el usuario escribe mal o con errores, entiende igual la intencion y responde bien escrito con buena ortografia.
-3. NO uses el simbolo $ solo, siempre escribe "USDT" despues del precio (ej: 3 USDT).
-4. Si no sabes un precio exacto, di "consultar con el admin al WhatsApp https://wa.me/584149132366".
-5. Si preguntan por el grupo, comparte https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv.
-6. Si preguntan como navegar, indica el menu lateral: PLR PRO, Arsenal Digital, Comunidad, Soporte, Chat IA.
+REGLAS DE FORMATO - SIGUE ESTRICTAMENTE:
+Usa este formato EXACTO en todas tus respuestas. JAMAS uses bloques de texto largos.
+
+PLANES:
+• Plan 1: X USDT
+• Plan 2: X USDT
+
+INCLUYE:
+• Caracteristica 1
+• Caracteristica 2
+
+ENLACES (en linea separada):
+https://...
+
+REGLAS DE CONTENIDO:
+1. SIEMPRE usa URLs completas con https:// (ej: https://wa.me/584149132366, https://alcambio.app, https://dwnapp.lat/flujo.apk).
+2. Si el usuario escribe mal, entiende la intencion y responde bien escrito con buena ortografia y el formato de arriba.
+3. NO uses el simbolo $ solo, escribe "USDT" siempre (ej: 3 USDT, no $3).
+4. Si no sabes un precio exacto, di: "Consultar precio exacto al WhatsApp https://wa.me/584149132366".
+5. Si preguntan por el grupo: comparte https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv en linea separada.
+6. Si preguntan como navegar, indica con bullet points: PLR PRO, Arsenal Digital, Comunidad, Soporte, Chat IA.
 7. NO menciones la tasa BCV al saludar ni si no preguntan por bolivares.
-8. Se breve, amable y profesional. Responde en espanol.`;
+8. Responde en espanol. Se breve, amable y profesional.`;
 
     const r = await fetch(provider.api_url, {
       method: 'POST',
