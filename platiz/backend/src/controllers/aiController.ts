@@ -173,9 +173,13 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Usar tasa del cliente (obtenida desde su navegador)
-    const bcvRate = rate || '100';
-    const tasaInfo = 'TASA BCV HOY: ' + bcvRate + ' Bs/USDT. Usa esta tasa exacta para TODOS los calculos en bolivares.';
+    // Tasa desde el navegador del usuario
+    let tasaInfo = '';
+    if (rate && rate !== '100' && parseFloat(rate) > 1) {
+      tasaInfo = `TASA BCV HOY: ${rate} Bs/USDT. Usa esta tasa exacta para TODOS los calculos en bolivares.`;
+    } else {
+      tasaInfo = `NO tengo la tasa BCV de hoy. MUESTRA SOLO precios en USDT. SIEMPRE dile al usuario: "No tengo la tasa del dia, visita alcambio.app para verla. Precio: X USDT."`;
+    }
 
     const systemPrompt = `Eres el asistente virtual de Global Dorado. Conoces TODOS los productos y precios. Responde en espanol, breve y amable.
 
