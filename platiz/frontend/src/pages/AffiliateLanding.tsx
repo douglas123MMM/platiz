@@ -77,14 +77,10 @@ export default function AffiliateLanding() {
       const id = url.split('vimeo.com/')[1]?.split('?')[0];
       return { type: 'iframe', src: `https://player.vimeo.com/video/${id}` };
     }
-    // Google Drive - iframe con /preview (unico modo fiable)
-    if (url.includes('drive.google.com/file/d/')) {
-      const id = url.match(/\/d\/([^/]+)/)?.[1];
-      return { type: 'iframe', src: `https://drive.google.com/file/d/${id}/preview` };
-    }
-    if (url.includes('drive.google.com/open?id=')) {
-      const id = url.split('id=')[1]?.split('&')[0];
-      return { type: 'iframe', src: `https://drive.google.com/file/d/${id}/preview` };
+    // Google Drive - usar proxy de stream para video tag limpio
+    if (url.includes('drive.google.com')) {
+      const encoded = encodeURIComponent(url);
+      return { type: 'video', src: `/api/video/stream?url=${encoded}` };
     }
     // MP4 o M3U8 directo
     if (url.endsWith('.mp4') || url.endsWith('.m3u8') || url.endsWith('.webm')) {
@@ -124,7 +120,6 @@ export default function AffiliateLanding() {
         <div className="max-w-2xl mx-auto px-0 md:px-4 mb-8">
           {(() => {
             const vs = getVideoSrc(page.video_url);
-            const isDrive = page.video_url.includes('drive.google.com');
 
             if (vs.type === 'video') {
               return (
@@ -136,14 +131,8 @@ export default function AffiliateLanding() {
             }
 
             return (
-              <div className="w-full aspect-video rounded-xl overflow-hidden bg-black relative">
-                <iframe
-                  src={vs.src}
-                  className="absolute inset-0 w-full h-full border-0"
-                  allow={isDrive ? 'autoplay' : 'autoplay; encrypted-media; fullscreen'}
-                  sandbox={isDrive ? 'allow-scripts allow-same-origin allow-presentation' : undefined}
-                  title="Video"
-                />
+              <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+                <iframe src={vs.src} className="w-full h-full border-0" allow="autoplay; encrypted-media; fullscreen" allowFullScreen title="Video" />
               </div>
             );
           })()}
