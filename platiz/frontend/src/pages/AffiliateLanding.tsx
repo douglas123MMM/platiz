@@ -186,8 +186,8 @@ export default function AffiliateLanding() {
                   placeholder="Contrasena" value={form.password} autoComplete="new-password"
                   onChange={(e) => setForm({ ...form, password: e.target.value })} required />
                 <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700]/30"
-                  placeholder="Telefono (opcional)" value={form.phone} autoComplete="off"
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                  placeholder="Telefono" value={form.phone} autoComplete="off"
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })} required />
                 <button type="submit" disabled={loading}
                   className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] transition-colors disabled:opacity-50">
                   {loading ? 'Registrando...' : 'Registrarme'}
