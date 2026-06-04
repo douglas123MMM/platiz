@@ -2,198 +2,186 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { IconSearch } from '../../icons/PremiumIcons';
 
-interface Affiliate {
-  id: string;
-  username: string;
-  email: string;
-  phone: string;
-  credits: number;
-  referral_code: string;
-  display_name: string;
-  created_at: string;
-}
+type Tab = 'affiliates' | 'history' | 'landings';
 
-interface ReferralHistory {
-  id: string;
-  status: string;
-  created_at: string;
-  activated_at: string;
-  affiliate: { username: string; email: string };
-  referred_user: { username: string; email: string };
-}
+const PAGE_TYPES = [
+  { key: 'landing', label: 'Landing Principal' },
+  { key: 'presentacion', label: 'Presentacion' },
+  { key: 'franquicia', label: 'Franquicia' },
+  { key: 'vsl', label: 'VSL' },
+  { key: 'asesoria', label: 'Asesoria' },
+];
 
 export default function AffiliatesAdmin() {
-  const [tab, setTab] = useState<'affiliates' | 'history' | 'video'>(localStorage.getItem('adminAffiliateTab') as any || 'affiliates');
-  const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
-  const [history, setHistory] = useState<ReferralHistory[]>([]);
-  const [videoUrl, setVideoUrl] = useState('');
-  const [videoType, setVideoType] = useState('');
+  const [tab, setTab] = useState<Tab>((localStorage.getItem('adminAffiliateTab') as Tab) || 'affiliates');
+  const [affiliates, setAffiliates] = useState<any[]>([]);
+  const [history, setHistory] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [editingCredits, setEditingCredits] = useState<string | null>(null);
   const [creditValue, setCreditValue] = useState(0);
   const [msg, setMsg] = useState('');
 
+  // Landing config
+  const [lcTab, setLcTab] = useState('landing');
+  const [lcTitle, setLcTitle] = useState('');
+  const [lcSubtitle, setLcSubtitle] = useState('');
+  const [lcVideoUrl, setLcVideoUrl] = useState('');
+  const [lcText, setLcText] = useState('');
+  const [lcBullets, setLcBullets] = useState('');
+  const [lcPrice, setLcPrice] = useState('');
+  const [lcCta, setLcCta] = useState('');
+  const [lcShowForm, setLcShowForm] = useState(true);
+
   useEffect(() => {
     if (tab === 'affiliates') {
-      api.get('/affiliate/admin/affiliates').then(({ data }) => setAffiliates(data)).catch(() => {});
+      api.get('/affiliate/admin/affiliates').then(r => setAffiliates(r.data)).catch(() => {});
     } else if (tab === 'history') {
-      api.get('/affiliate/admin/history').then(({ data }) => setHistory(data)).catch(() => {});
-    } else if (tab === 'video') {
-      api.get('/settings').then(({ data }: any) => {
-        if (data?.landing_video_url) setVideoUrl(data.landing_video_url);
-        if (data?.landing_video_type) setVideoType(data.landing_video_type);
-      }).catch(() => {});
+      api.get('/affiliate/admin/history').then(r => setHistory(r.data)).catch(() => {});
     }
   }, [tab]);
+
+  const loadLandingConfig = async (type: string) => {
+    try {
+      const { data } = await api.get('/settings');
+      const config = data?.landing_config;
+      if (typeof config === 'string') data.landing_config = JSON.parse(config);
+      const pc = data?.landing_config?.[type] || {};
+      setLcTitle(pc.title || '');
+      setLcSubtitle(pc.subtitle || '');
+      setLcVideoUrl(pc.video_url || '');
+      setLcText(pc.text || '');
+      setLcBullets((pc.bullets || []).join('\n'));
+      setLcPrice(pc.price || '');
+      setLcCta(pc.cta_text || '');
+      setLcShowForm(pc.show_form !== false);
+    } catch {}
+  };
+
+  useEffect(() => {
+    if (tab === 'landings') loadLandingConfig(lcTab);
+  }, [tab, lcTab]);
+
+  const saveLandingConfig = async () => {
+    try {
+      await api.put('/affiliate/admin/landing-config', {
+        pageType: lcTab,
+        config: {
+          title: lcTitle,
+          subtitle: lcSubtitle,
+          video_url: lcVideoUrl,
+          text: lcText,
+          bullets: lcBullets.split('\n').filter((b: string) => b.trim()),
+          price: lcPrice,
+          cta_text: lcCta,
+          show_form: lcShowForm,
+        },
+      });
+      setMsg('Pagina guardada');
+      setTimeout(() => setMsg(''), 2000);
+    } catch { setMsg('Error al guardar'); }
+  };
 
   const updateCredits = async (userId: string) => {
     try {
       await api.put(`/affiliate/admin/credits/${userId}`, { credits: creditValue });
       setAffiliates(prev => prev.map(a => a.id === userId ? { ...a, credits: creditValue } : a));
       setEditingCredits(null);
-      setMsg('Creditos actualizados');
-      setTimeout(() => setMsg(''), 2000);
-    } catch { setMsg('Error'); }
+    } catch {}
   };
 
-  const saveVideo = async () => {
-    try {
-      await api.put('/affiliate/admin/landing-video', { landing_video_url: videoUrl, landing_video_type: videoType });
-      setMsg('Video guardado');
-      setTimeout(() => setMsg(''), 2000);
-    } catch { setMsg('Error'); }
-  };
+  const switchTab = (t: Tab) => { setTab(t); localStorage.setItem('adminAffiliateTab', t); };
 
-  const filtered = affiliates.filter(a =>
+  const filtered = affiliates.filter((a: any) =>
     a.username?.toLowerCase().includes(search.toLowerCase()) ||
     a.email?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const switchTab = (t: typeof tab) => {
-    setTab(t);
-    localStorage.setItem('adminAffiliateTab', t);
-  };
-
   return (
     <div className="p-4 md:p-6 max-w-5xl mx-auto animate-fade-in">
       <h1 className="text-xl font-bold text-white mb-4">Gestion de Afiliados</h1>
+      {msg && <div className="mb-3 p-2 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-lg text-[#FFD700] text-xs text-center">{msg}</div>}
 
-      {msg && (
-        <div className="mb-3 p-2 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-lg text-[#FFD700] text-xs text-center">{msg}</div>
-      )}
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6">
-        {(['affiliates', 'history', 'video'] as const).map(t => (
-          <button
-            key={t}
-            onClick={() => switchTab(t)}
+      {/* Top Tabs */}
+      <div className="flex gap-2 mb-6 flex-wrap">
+        {[
+          { key: 'affiliates' as Tab, label: 'Afiliados' },
+          { key: 'history' as Tab, label: 'Historial' },
+          { key: 'landings' as Tab, label: 'Paginas Landing' },
+        ].map(t => (
+          <button key={t.key} onClick={() => switchTab(t.key)}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
-              tab === t ? 'bg-[#FFD700] text-black' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'
-            }`}
-          >
-            {t === 'affiliates' ? 'Afiliados' : t === 'history' ? 'Historial' : 'Video Landing'}
+              tab === t.key ? 'bg-[#FFD700] text-black' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}>
+            {t.label}
           </button>
         ))}
       </div>
 
-      {/* Tab: Afiliados */}
+      {/* TAB: Afiliados */}
       {tab === 'affiliates' && (
         <>
           <div className="relative mb-4">
-            <input
-              className="w-full bg-[#111] border border-[#FFD700]/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-600"
-              placeholder="Buscar afiliado..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
             <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
+            <input className="w-full bg-[#111] border border-[#FFD700]/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-600"
+              placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
-                    <th className="text-left py-3 px-3">Usuario</th>
-                    <th className="text-left py-3 px-3 hidden md:table-cell">Contacto</th>
-                    <th className="text-center py-3 px-3">Creditos</th>
-                    <th className="text-left py-3 px-3 hidden md:table-cell">Codigo</th>
-                    <th className="text-right py-3 px-3">Accion</th>
-                  </tr>
-                </thead>
+                <thead><tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+                  <th className="text-left py-3 px-3">Usuario</th>
+                  <th className="text-left py-3 px-3 hidden md:table-cell">Contacto</th>
+                  <th className="text-center py-3 px-3">Creditos</th>
+                  <th className="text-left py-3 px-3 hidden md:table-cell">Codigo</th>
+                  <th className="text-right py-3 px-3">Accion</th>
+                </tr></thead>
                 <tbody>
-                  {filtered.map(a => (
+                  {filtered.map((a: any) => (
                     <tr key={a.id} className="border-b border-[#FFD700]/5 hover:bg-white/5">
-                      <td className="py-2 px-3">
-                        <p className="text-white text-sm">{a.username}</p>
-                        {a.display_name && <p className="text-gray-500 text-xs">{a.display_name}</p>}
-                      </td>
-                      <td className="py-2 px-3 hidden md:table-cell text-gray-400 text-xs">
-                        {a.email}<br />{a.phone}
-                      </td>
+                      <td className="py-2 px-3"><p className="text-white text-sm">{a.username}</p>{a.display_name && <p className="text-gray-500 text-xs">{a.display_name}</p>}</td>
+                      <td className="py-2 px-3 hidden md:table-cell text-gray-400 text-xs">{a.email}<br />{a.phone}</td>
                       <td className="py-2 px-3 text-center">
                         {editingCredits === a.id ? (
                           <div className="flex items-center justify-center gap-1">
-                            <input
-                              type="number"
-                              min="0"
-                              className="w-16 bg-black border border-[#FFD700]/20 rounded px-2 py-1 text-white text-xs text-center"
-                              value={creditValue}
-                              onChange={(e) => setCreditValue(parseInt(e.target.value) || 0)}
-                            />
+                            <input type="number" min="0" className="w-16 bg-black border border-[#FFD700]/20 rounded px-2 py-1 text-white text-xs text-center"
+                              value={creditValue} onChange={e => setCreditValue(parseInt(e.target.value) || 0)} />
                             <button onClick={() => updateCredits(a.id)} className="text-[#FFD700] text-xs px-2">OK</button>
                             <button onClick={() => setEditingCredits(null)} className="text-gray-500 text-xs">X</button>
                           </div>
-                        ) : (
-                          <span className="text-[#FFD700] font-bold">{a.credits}</span>
-                        )}
+                        ) : <span className="text-[#FFD700] font-bold">{a.credits}</span>}
                       </td>
                       <td className="py-2 px-3 hidden md:table-cell text-gray-400 text-xs font-mono">{a.referral_code}</td>
                       <td className="py-2 px-3 text-right">
-                        <button
-                          onClick={() => { setEditingCredits(a.id); setCreditValue(a.credits); }}
-                          className="text-xs px-3 py-1 bg-[#FFD700] text-black rounded-lg font-bold hover:bg-[#FFE44D]"
-                        >
-                          Creditos
-                        </button>
+                        <button onClick={() => { setEditingCredits(a.id); setCreditValue(a.credits); }}
+                          className="text-xs px-3 py-1 bg-[#FFD700] text-black rounded-lg font-bold hover:bg-[#FFE44D]">Creditos</button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            {filtered.length === 0 && (
-              <p className="text-gray-500 text-sm text-center py-8">No hay afiliados</p>
-            )}
           </div>
         </>
       )}
 
-      {/* Tab: Historial */}
+      {/* TAB: Historial */}
       {tab === 'history' && (
         <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead>
-                <tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
-                  <th className="text-left py-3 px-3">Afiliado</th>
-                  <th className="text-left py-3 px-3">Referido</th>
-                  <th className="text-left py-3 px-3 hidden md:table-cell">Fecha</th>
-                  <th className="text-left py-3 px-3">Estado</th>
-                </tr>
-              </thead>
+              <thead><tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+                <th className="text-left py-3 px-3">Afiliado</th>
+                <th className="text-left py-3 px-3">Referido</th>
+                <th className="text-left py-3 px-3 hidden md:table-cell">Fecha</th>
+                <th className="text-left py-3 px-3">Estado</th>
+              </tr></thead>
               <tbody>
-                {history.map(h => (
+                {history.map((h: any) => (
                   <tr key={h.id} className="border-b border-[#FFD700]/5">
                     <td className="py-2 px-3 text-white text-sm">{h.affiliate?.username}</td>
                     <td className="py-2 px-3 text-gray-400 text-sm">{h.referred_user?.username}</td>
-                    <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">
-                      {new Date(h.created_at).toLocaleDateString()}
-                    </td>
+                    <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{new Date(h.created_at).toLocaleDateString()}</td>
                     <td className="py-2 px-3">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        h.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
-                      }`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${h.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                         {h.status === 'active' ? 'Activo' : 'Pendiente'}
                       </span>
                     </td>
@@ -202,38 +190,49 @@ export default function AffiliatesAdmin() {
               </tbody>
             </table>
           </div>
-          {history.length === 0 && (
-            <p className="text-gray-500 text-sm text-center py-8">No hay historial aun</p>
-          )}
         </div>
       )}
 
-      {/* Tab: Video Global */}
-      {tab === 'video' && (
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 space-y-4">
-          <h2 className="text-white font-bold text-sm mb-2">Video de Landing para Afiliados</h2>
-          <p className="text-gray-500 text-xs">Este video aparecera en todas las paginas de ventas de los afiliados.</p>
-          <input
-            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600"
-            placeholder="URL del video (YouTube, Vimeo, Google Drive, M3U8, mp4)"
-            value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
-          />
-          <select
-            className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white"
-            value={videoType}
-            onChange={(e) => setVideoType(e.target.value)}
-          >
-            <option value="">Auto-detectar</option>
-            <option value="youtube">YouTube</option>
-            <option value="vimeo">Vimeo</option>
-            <option value="gdrive">Google Drive</option>
-            <option value="m3u8">M3U8</option>
-            <option value="mp4">MP4 Directo</option>
-          </select>
-          <button onClick={saveVideo} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
-            Guardar Video
-          </button>
+      {/* TAB: Landings Config */}
+      {tab === 'landings' && (
+        <div className="space-y-4">
+          {/* Sub-tabs de tipos de pagina */}
+          <div className="flex gap-2 flex-wrap">
+            {PAGE_TYPES.map(pt => (
+              <button key={pt.key} onClick={() => setLcTab(pt.key)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                  lcTab === pt.key ? 'bg-[#FFD700] text-black' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}>
+                {pt.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Formulario de config */}
+          <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 space-y-3">
+            <h3 className="text-white font-bold text-sm">Editar: {PAGE_TYPES.find(p => p.key === lcTab)?.label}</h3>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+              placeholder="Titulo" value={lcTitle} onChange={e => setLcTitle(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+              placeholder="Subtitulo" value={lcSubtitle} onChange={e => setLcSubtitle(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+              placeholder="URL del video (YouTube, Vimeo, Drive)" value={lcVideoUrl} onChange={e => setLcVideoUrl(e.target.value)} />
+            <textarea className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[100px]"
+              placeholder="Texto principal" value={lcText} onChange={e => setLcText(e.target.value)} />
+            <textarea className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[80px]"
+              placeholder="Beneficios (uno por linea)" value={lcBullets} onChange={e => setLcBullets(e.target.value)} />
+            <p className="text-xs text-gray-500">Cada linea se convierte en un bullet point</p>
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+              placeholder="Precio (ej: $25 USDT)" value={lcPrice} onChange={e => setLcPrice(e.target.value)} />
+            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+              placeholder="Texto del boton (ej: Quiero Registrarme)" value={lcCta} onChange={e => setLcCta(e.target.value)} />
+            <label className="flex items-center gap-2 text-sm text-gray-400">
+              <input type="checkbox" checked={lcShowForm} onChange={e => setLcShowForm(e.target.checked)} />
+              Mostrar formulario de registro
+            </label>
+            <button onClick={saveLandingConfig} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
+              Guardar Configuracion
+            </button>
+          </div>
         </div>
       )}
     </div>

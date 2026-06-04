@@ -10,13 +10,13 @@ import {
   adminListAffiliates,
   adminUpdateCredits,
   adminReferralHistory,
-  adminUpdateLandingVideo,
+  adminUpdateLandingConfig,
 } from '../controllers/affiliateController';
 
 const router = Router();
 
 // Público
-router.get('/landing/:code', getLanding);
+router.get('/landing/:code/:pageType?', getLanding);
 router.get('/catalog', getCatalog);
 router.post('/register', registerWithReferral);
 
@@ -30,6 +30,6 @@ router.post('/referrals/:referralId/approve', approveReferral);
 router.get('/admin/affiliates', requireAdmin, adminListAffiliates);
 router.put('/admin/credits/:userId', requireAdmin, adminUpdateCredits);
 router.get('/admin/history', requireAdmin, adminReferralHistory);
-router.put('/admin/landing-video', requireAdmin, adminUpdateLandingVideo);
+router.put('/admin/landing-config', requireAdmin, adminUpdateLandingConfig);
 
 export default router;

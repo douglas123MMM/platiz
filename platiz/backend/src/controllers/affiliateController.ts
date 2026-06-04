@@ -104,14 +104,15 @@ export async function approveReferral(req: AuthRequest, res: Response): Promise<
   }
 }
 
-// Landing pública - info del afiliado + video global
+// Landing pública - info del afiliado + contenido global editable
 export async function getLanding(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { code } = req.params;
+    const { code, pageType } = req.params;
+    const type = pageType || 'landing';
 
     const { data: user } = await supabase
       .from('users')
-      .select('display_name, avatar, referral_code')
+      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link')
       .eq('referral_code', code).single();
 
     if (!user) {
@@ -119,15 +120,33 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    // Video global de landing
     const { data: settings } = await supabase
       .from('settings')
-      .select('landing_video_url, landing_video_type')
+      .select('landing_config')
       .maybeSingle();
 
+    const config = settings?.landing_config || {};
+    const pageConfig = config[type] || {};
+
     res.json({
-      affiliate: user,
-      video: settings,
+      affiliate: {
+        display_name: user.display_name || 'Global Dorado',
+        avatar: user.avatar,
+        whatsapp: user.whatsapp,
+        telegram_link: user.telegram_link,
+      },
+      page: {
+        type,
+        title: pageConfig.title || 'Global Dorado',
+        subtitle: pageConfig.subtitle || 'Transformamos Internet en Dinero',
+        video_url: pageConfig.video_url || '',
+        video_type: pageConfig.video_type || '',
+        text: pageConfig.text || '',
+        bullets: pageConfig.bullets || [],
+        price: pageConfig.price || '',
+        cta_text: pageConfig.cta_text || 'Quiero Registrarme',
+        show_form: pageConfig.show_form !== false,
+      },
     });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
@@ -276,19 +295,31 @@ export async function adminReferralHistory(_req: AuthRequest, res: Response): Pr
   }
 }
 
-// ADMIN: Configurar video global de landing
-export async function adminUpdateLandingVideo(req: AuthRequest, res: Response): Promise<void> {
+// ADMIN: Configurar landing pages (contenido global)
+export async function adminUpdateLandingConfig(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { landing_video_url, landing_video_type } = req.body;
-
-    const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
-    if (existing) {
-      await supabase.from('settings').update({ landing_video_url, landing_video_type }).eq('id', existing.id);
-    } else {
-      await supabase.from('settings').insert({ landing_video_url, landing_video_type });
+    const { pageType, config } = req.body;
+    if (!pageType || !config) {
+      res.status(400).json({ error: 'pageType y config requeridos' });
+      return;
     }
 
-    res.json({ message: 'Video de landing actualizado' });
+    const { data: existing } = await supabase.from('settings').select('id, landing_config').maybeSingle();
+
+    let currentConfig: Record<string, any> = {};
+    if (existing?.landing_config) {
+      currentConfig = typeof existing.landing_config === 'string' ? JSON.parse(existing.landing_config) : existing.landing_config;
+    }
+
+    currentConfig[pageType] = config;
+
+    if (existing) {
+      await supabase.from('settings').update({ landing_config: currentConfig }).eq('id', existing.id);
+    } else {
+      await supabase.from('settings').insert({ landing_config: currentConfig });
+    }
+
+    res.json({ message: `Config de pagina "${pageType}" actualizada` });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
