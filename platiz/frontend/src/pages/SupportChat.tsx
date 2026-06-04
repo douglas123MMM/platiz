@@ -476,19 +476,29 @@ export default function SupportChat() {
     setMessages((prev) => [...prev, { role: 'user', text }]);
     setInput('');
     
-    // Obtener tasa actual desde el navegador
+    // Obtener tasa desde el navegador (múltiples fuentes)
     let rate = '';
-    try {
-      const r = await fetch('https://bcv-api.deno.dev/api/v1/exchange-rate');
-      if (r.ok) {
-        const d = await r.json();
-        if (d?.data?.rate) rate = d.data.rate;
-      }
-    } catch {}
+    const apis = [
+      'https://bcv-api.deno.dev/api/v1/exchange-rate',
+      'https://api.exchangemonitor.net/data',
+      'https://pydolarve.org/api/v1/dollar?page=bcv',
+    ];
+    for (const url of apis) {
+      try {
+        const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
+        if (r.ok) {
+          const d = await r.json();
+          const found = d?.data?.rate || d?.BCV?.price || d?.monitors?.bcv?.price;
+          if (found) { rate = String(found); break; }
+        }
+      } catch {}
+    }
 
     setTimeout(async () => {
       try {
-        const { data } = await api.post('/ai/support', { message: text, rate });
+        const body: any = { message: text };
+        if (rate) body.rate = rate;
+        const { data } = await api.post('/ai/support', body);
         if (data?.response && !data.response.includes('IA no configurada')) {
           setMessages((prev) => [...prev, { role: 'assistant', text: data.response }]);
           return;
