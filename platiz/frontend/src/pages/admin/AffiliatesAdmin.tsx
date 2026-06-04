@@ -5,7 +5,7 @@ import { IconSearch } from '../../icons/PremiumIcons';
 type Tab = 'affiliates' | 'history' | 'landings';
 
 const PAGE_TYPES = [
-  { key: 'landing', label: 'Landing Principal' },
+  { key: 'landing', label: 'Captacion de Prospecto' },
   { key: 'presentacion', label: 'Presentacion' },
   { key: 'franquicia', label: 'Franquicia' },
   { key: 'vsl', label: 'VSL' },
@@ -106,7 +106,7 @@ export default function AffiliatesAdmin() {
         {[
           { key: 'affiliates' as Tab, label: 'Afiliados' },
           { key: 'history' as Tab, label: 'Historial' },
-          { key: 'landings' as Tab, label: 'Paginas Landing' },
+          { key: 'landings' as Tab, label: 'Captacion de Prospecto' },
         ].map(t => (
           <button key={t.key} onClick={() => switchTab(t.key)}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${

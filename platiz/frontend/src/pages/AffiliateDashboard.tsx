@@ -147,7 +147,7 @@ export default function AffiliateDashboard() {
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 mb-0.5">Link de Ventas (Landing)</p>
+              <p className="text-xs text-gray-500 mb-0.5">Link de Captacion de Prospecto</p>
               <p className="text-sm text-[#FFD700] truncate">{window.location.origin}{links.landing}</p>
             </div>
             <button
