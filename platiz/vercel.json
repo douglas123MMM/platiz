@@ -4,7 +4,8 @@
   "installCommand": "npm install && cd frontend && npm install",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.ts" },
-    { "source": "/(.*)", "destination": "/frontend/dist/$1" }
+    { "source": "/assets/(.*)", "destination": "/frontend/dist/assets/$1" },
+    { "source": "/(.*)", "destination": "/frontend/dist/index.html" }
   ],
   "functions": {
     "api/index.ts": {
