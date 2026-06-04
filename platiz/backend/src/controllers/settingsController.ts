@@ -21,12 +21,16 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
 
 export async function updateSettings(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { whatsapp, telegram, guias } = req.body;
+    const { whatsapp, telegram, bcv_rate, guias } = req.body;
     const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
     if (existing) {
-      await supabase.from('settings').update({ whatsapp, telegram, updated_at: new Date().toISOString() }).eq('id', existing.id);
+      const updates: Record<string, any> = { updated_at: new Date().toISOString() };
+      if (whatsapp !== undefined) updates.whatsapp = whatsapp;
+      if (telegram !== undefined) updates.telegram = telegram;
+      if (bcv_rate !== undefined) updates.bcv_rate = bcv_rate;
+      await supabase.from('settings').update(updates).eq('id', existing.id);
     } else {
-      await supabase.from('settings').insert({ id: 1, whatsapp, telegram }).select('id').single();
+      await supabase.from('settings').insert({ id: 1, whatsapp, telegram, bcv_rate }).select('id').single();
     }
     if (guias && typeof guias === 'object') {
       for (const [key, text] of Object.entries(guias)) {

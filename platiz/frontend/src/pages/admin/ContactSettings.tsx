@@ -7,6 +7,7 @@ import { IconTelegram } from '../../icons/PremiumIcons';
 export default function ContactSettings() {
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
+  const [bcvRate, setBcvRate] = useState('');
   const [guias, setGuias] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -15,6 +16,7 @@ export default function ContactSettings() {
     api.get('/settings').then((r) => {
       setWhatsapp(r.data.whatsapp || '');
       setTelegram(r.data.telegram || '');
+      setBcvRate(r.data.bcv_rate || '');
       setGuias(r.data.guias || {});
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
@@ -23,7 +25,7 @@ export default function ContactSettings() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/settings', { whatsapp, telegram, guias });
+      await api.put('/settings', { whatsapp, telegram, bcv_rate: bcvRate, guias });
       toast.success('Configuración guardada');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Error al guardar');
@@ -50,6 +52,12 @@ export default function ContactSettings() {
             <div><p className="text-white font-medium">Telegram</p><p className="text-gray-400 text-xs">Usuario o enlace</p></div>
           </div>
           <div><label className="label">Usuario de Telegram o enlace</label><input className="input" placeholder="@usuario o https://t.me/usuario" value={telegram} onChange={(e) => setTelegram(e.target.value)} /></div>
+
+          <div className="p-4 bg-[#FFD700]/10 rounded-xl flex items-center gap-3">
+            <span className="text-2xl">Bs</span>
+            <div><p className="text-white font-medium">Tasa BCV</p><p className="text-gray-400 text-xs">Usada por la IA para calcular precios en bolivares</p></div>
+          </div>
+          <div><label className="label">Tasa BCV (Bs por USDT)</label><input className="input" type="text" placeholder="85.50" value={bcvRate} onChange={(e) => setBcvRate(e.target.value)} /></div>
 
           <div className="mt-8 pt-6 border-t border-[#FFD700]/10">
             <div className="flex items-center gap-3 mb-4">
