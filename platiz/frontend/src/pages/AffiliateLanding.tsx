@@ -62,21 +62,32 @@ export default function AffiliateLanding() {
     }
   };
 
-  const getVideoEmbed = (url: string) => {
-    if (!url) return null;
-    if (url.includes('youtube.com/watch?v=') || url.includes('youtu.be/')) {
-      const id = url.includes('youtu.be/') ? url.split('youtu.be/')[1]?.split('?')[0] : url.split('v=')[1]?.split('&')[0];
-      return `https://www.youtube.com/embed/${id}`;
+  const getVideoSrc = (url: string) => {
+    // YouTube
+    if (url.includes('youtube.com/watch?v=')) {
+      const id = url.split('v=')[1]?.split('&')[0];
+      return { type: 'youtube', src: `https://www.youtube.com/embed/${id}` };
     }
+    if (url.includes('youtu.be/')) {
+      const id = url.split('youtu.be/')[1]?.split('?')[0];
+      return { type: 'youtube', src: `https://www.youtube.com/embed/${id}` };
+    }
+    // Vimeo
     if (url.includes('vimeo.com/')) {
       const id = url.split('vimeo.com/')[1]?.split('?')[0];
-      return `https://player.vimeo.com/video/${id}`;
+      return { type: 'youtube', src: `https://player.vimeo.com/video/${id}` };
     }
-    if (url.includes('drive.google.com')) {
+    // Google Drive - usar enlace directo para video tag
+    if (url.includes('drive.google.com/file/d/')) {
       const id = url.match(/\/d\/([^/]+)/)?.[1];
-      return `https://drive.google.com/file/d/${id}/preview`;
+      return { type: 'direct', src: `https://drive.google.com/uc?export=download&id=${id}` };
     }
-    return url;
+    if (url.includes('drive.google.com/open?id=')) {
+      const id = url.split('id=')[1]?.split('&')[0];
+      return { type: 'direct', src: `https://drive.google.com/uc?export=download&id=${id}` };
+    }
+    // Direct MP4, M3U8
+    return { type: 'direct', src: url };
   };
 
   if (registered) {
@@ -107,9 +118,13 @@ export default function AffiliateLanding() {
       {/* Video */}
       {page?.video_url && (
         <div className="max-w-2xl mx-auto px-4 mb-8">
-          <div className="aspect-video rounded-xl overflow-hidden bg-black">
-            <iframe src={getVideoEmbed(page.video_url) || ''} className="w-full h-full" allowFullScreen allow="autoplay; encrypted-media" title="Video" />
-          </div>
+          {(() => {
+            const vs = getVideoSrc(page.video_url);
+            if (vs.type === 'youtube') {
+              return <div className="aspect-video rounded-xl overflow-hidden bg-black"><iframe src={vs.src} className="w-full h-full" allowFullScreen allow="autoplay; encrypted-media" title="Video" /></div>;
+            }
+            return <video controls className="w-full rounded-xl bg-black" playsInline><source src={vs.src} /></video>;
+          })()}
         </div>
       )}
 
