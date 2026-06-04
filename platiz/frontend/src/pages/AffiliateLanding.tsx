@@ -172,21 +172,21 @@ export default function AffiliateLanding() {
                 {page?.cta_text || 'Quiero Registrarme'}
               </button>
             ) : (
-              <form onSubmit={handleRegister} className="space-y-3">
+              <form onSubmit={handleRegister} className="space-y-3" autoComplete="off">
                 {msg && (
                   <p className={`text-sm text-center p-2 rounded-lg ${msg.includes('Error') || msg.includes('existe') ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>{msg}</p>
                 )}
                 <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700]/30"
-                  placeholder="Nombre de usuario" value={form.username}
+                  placeholder="Nombre de usuario" value={form.username} autoComplete="off"
                   onChange={(e) => setForm({ ...form, username: e.target.value })} required />
                 <input type="email" className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700]/30"
-                  placeholder="Correo electronico" value={form.email}
+                  placeholder="Correo electronico" value={form.email} autoComplete="off"
                   onChange={(e) => setForm({ ...form, email: e.target.value })} required />
                 <input type="password" className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700]/30"
-                  placeholder="Contrasena" value={form.password}
+                  placeholder="Contrasena" value={form.password} autoComplete="new-password"
                   onChange={(e) => setForm({ ...form, password: e.target.value })} required />
                 <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700]/30"
-                  placeholder="Telefono (opcional)" value={form.phone}
+                  placeholder="Telefono (opcional)" value={form.phone} autoComplete="off"
                   onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                 <button type="submit" disabled={loading}
                   className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] transition-colors disabled:opacity-50">

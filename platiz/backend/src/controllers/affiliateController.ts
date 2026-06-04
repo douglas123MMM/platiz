@@ -10,7 +10,7 @@ export async function getDashboard(req: AuthRequest, res: Response): Promise<voi
     // Perfil del usuario
     const { data: user } = await supabase
       .from('users')
-      .select('id, username, email, phone, display_name, whatsapp, telegram_link, avatar, credits, referral_code, created_at')
+      .select('id, username, email, phone, display_name, whatsapp, telegram_link, avatar, credits, referral_code, payment_methods, created_at')
       .eq('id', userId).single();
 
     // Referidos
