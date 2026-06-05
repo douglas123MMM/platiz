@@ -30,7 +30,7 @@ export async function register(req: AuthRequest, res: Response): Promise<void> {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    const userData: Record<string, any> = { username, email, password: hashedPassword, role: 'client', status: 'pending' };
+    const userData: Record<string, any> = { username, email, password: hashedPassword, role: 'client', status: 'pending', referral_code: Math.random().toString(36).substring(2, 12) };
     if (phone) userData.phone = phone;
 
     const { data, error } = await supabase.from('users').insert(userData).select('id').single();
