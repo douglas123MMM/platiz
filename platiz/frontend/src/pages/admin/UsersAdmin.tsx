@@ -104,7 +104,7 @@ export default function UsersAdmin() {
                         <button onClick={() => updateStatus(user.id, 'rejected')} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors" title="Rechazar"><HiX className="w-4 h-4" /></button>
                       </div>
                     )}
-                    <button onClick={() => { setPassModal(user.id); setNewPass(''); }} className="ml-2 p-2 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors" title="Cambiar contrasena">🔑</button>
+                    <button onClick={() => { setPassModal(user.id); setNewPass(''); }} className="ml-2 px-3 py-1.5 rounded-lg bg-[#FFD700] text-black text-xs font-bold hover:bg-[#FFE44D] transition-colors" title="Cambiar contrasena">🔑 Clave</button>
                     {user.role === 'admin' && <span className="text-xs text-[#FFD700]/60">—</span>}
                   </td>
                 </tr>
