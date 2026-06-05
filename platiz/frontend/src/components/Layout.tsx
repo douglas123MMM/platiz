@@ -96,7 +96,7 @@ export default function Layout() {
                   const isActive = location.pathname === item.path;
                   const Icon = item.icon;
                   return (
-                    <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive ? 'bg-gradient-to-r from-[#FFD700]/15 to-transparent text-[#FFD700] border border-[#FFD700]/15' : 'text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/5 border border-transparent'}`}>
+                <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive ? 'bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/15 shadow-[0_2px_8px_rgba(255,215,0,0.06)]' : 'text-gray-400 hover:text-[#FFD700] hover:bg-white/[0.03] border border-transparent'}`}>
                       <Icon className={`w-5 h-5 ${isActive ? 'text-[#FFD700]' : 'group-hover:text-[#FFD700] transition-colors'}`} />
                       <span className="font-medium">{item.label}</span>
                       {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#FFD700] shadow-[0_0_6px_rgba(255,215,0,0.8)]" />}

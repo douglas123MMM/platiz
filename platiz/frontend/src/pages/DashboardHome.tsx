@@ -40,37 +40,33 @@ export default function DashboardHome() {
 
   return (
     <div className="space-y-16 animate-fade-in">
-
+      {/* Hero Dashboard */}
       <section className="relative text-center py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-cyber-grid pointer-events-none" />
-        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[500px] h-[500px] bg-[#00D4FF]/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-0 right-1/4 translate-x-1/2 w-[500px] h-[500px] bg-[#A855F7]/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.06),transparent_60%)]" />
+        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[500px] h-[500px] bg-[#00D4FF]/[0.04] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-0 right-1/4 translate-x-1/2 w-[500px] h-[500px] bg-[#A855F7]/[0.04] rounded-full blur-[100px] pointer-events-none" />
         <div className="relative z-10">
-          <Logo size={56} className="mx-auto mb-6 drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]" />
-          <p className="text-2xl md:text-3xl font-light text-[#FFD700]/80 tracking-wide mb-4">
-            TRANSFORMA EL INTERNET EN DINERO
-          </p>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            Ecosistema digital de alta gama con acceso vitalicio. Capacitación en viralidad, 
-            arsenal de software premium y oportunidades reales de ingresos.
-          </p>
+          <Logo size={56} className="mx-auto mb-6 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]" />
+          <p className="text-2xl md:text-3xl font-light text-[#FFD700]/80 tracking-wide mb-4">TRANSFORMA EL INTERNET EN DINERO</p>
+          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg">Ecosistema digital de alta gama con acceso vitalicio. Capacitación en viralidad, arsenal de software premium y oportunidades reales de ingresos.</p>
           <div className="flex items-center justify-center gap-4 mt-8">
-            <Link to="/courses" className="btn-primary text-lg px-8 py-4 inline-flex items-center gap-2">
+            <Link to="/courses" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FFD700] text-black font-bold rounded-2xl text-base hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_20px_rgba(255,215,0,0.2)] hover:shadow-[0_6px_28px_rgba(255,215,0,0.3)] min-h-[52px]">
               Comenzar ahora <HiArrowRight className="w-5 h-5" />
             </Link>
-            <Link to="/services" className="btn-secondary text-lg px-8 py-4 inline-flex items-center gap-2">
+            <Link to="/services" className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/10 text-gray-300 font-semibold rounded-2xl text-base hover:bg-white/[0.04] hover:border-white/20 hover:text-white active:scale-[0.98] transition-all duration-200 min-h-[52px]">
               Ver catálogo
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      {/* Features */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
         {featureItems.map((item) => {
           const Icon = item.icon;
           return (
-            <div key={item.title} className="card text-center group">
-              <Icon className="w-8 h-8 text-[#FFD700] mx-auto mb-3 group-hover:scale-110 transition-transform" />
+            <div key={item.title} className="group rounded-2xl p-5 text-center bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-[#FFD700]/15 transition-all duration-300 shadow-[0_1px_6px_rgba(0,0,0,0.1)]">
+              <Icon className="w-8 h-8 text-[#FFD700] mx-auto mb-3 group-hover:scale-110 transition-transform duration-300" />
               <h3 className="font-bold text-white text-sm mb-1">{item.title}</h3>
               <p className="text-gray-500 text-xs">{item.desc}</p>
             </div>
@@ -189,28 +185,25 @@ export default function DashboardHome() {
         </section>
       )}
 
+      {/* Categorías */}
       <section>
         <div className="text-center mb-10">
-          <h2 className="section-title">Explora el Ecosistema</h2>
-          <p className="section-subtitle">TODO LO QUE NECESITAS PARA TRANSFORMAR EL INTERNET EN DINERO</p>
+          <h2 className="text-3xl md:text-4xl font-extrabold gold-text mb-2">Explora el Ecosistema</h2>
+          <p className="text-gray-500 text-sm tracking-wide uppercase">TODO LO QUE NECESITAS PARA TRANSFORMAR EL INTERNET EN DINERO</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {categories.map((cat) => {
-            const Icon = iconMap[cat.icon] || HiFilm;
+            const Icon = iconMap[cat.icon] || IconApps;
             const link = sectionLinks[cat.slug] || '/';
             return (
-              <Link key={cat.id} to={link} className="card-glow group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative z-10">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#FFD700]/15 to-[#DAA520]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="w-7 h-7 text-[#FFD700]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">{cat.name}</h3>
-                  <p className="text-gray-400 text-sm">{cat.description}</p>
-                  <div className="flex items-center gap-1 mt-4 text-[#FFD700] text-sm font-medium group-hover:gap-2 transition-all">
-                    <span>Explorar</span>
-                    <HiArrowRight className="w-4 h-4" />
-                  </div>
+              <Link key={cat.id} to={link} className="group relative rounded-2xl p-6 bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-[#FFD700]/15 transition-all duration-300 shadow-[0_1px_6px_rgba(0,0,0,0.1)]">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#FFD700]/[0.1] to-[#DAA520]/[0.05] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Icon className="w-6 h-6 text-[#FFD700]" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-1">{cat.name}</h3>
+                <p className="text-gray-400 text-sm">{cat.description}</p>
+                <div className="flex items-center gap-1 mt-3 text-[#FFD700] text-sm font-medium group-hover:gap-2 transition-all">
+                  Explorar <HiArrowRight className="w-4 h-4" />
                 </div>
               </Link>
             );
@@ -218,19 +211,17 @@ export default function DashboardHome() {
         </div>
       </section>
 
-      <section className="glass rounded-3xl p-8 md:p-12 border border-[#FFD700]/10 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00D4FF]/5 rounded-full blur-3xl" />
+      {/* Chat IA CTA */}
+      <section className="rounded-3xl p-8 md:p-12 bg-white/[0.02] border border-white/[0.04] relative overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.02)]">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#FFD700]/[0.04] rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00D4FF]/[0.03] rounded-full blur-3xl" />
         <div className="relative z-10 text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-2xl flex items-center justify-center text-black text-2xl font-bold mx-auto mb-6 shadow-lg shadow-[#FFD700]/20">
-            <IconChat className="w-8 h-8" />
+          <div className="w-14 h-14 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-2xl flex items-center justify-center text-black text-2xl font-bold mx-auto mb-5 shadow-[0_6px_20px_rgba(218,165,32,0.25)]">
+            <IconChat className="w-7 h-7" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold gold-text mb-4">Chat con IA Integrado</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
-            Conecta con múltiples proveedores de IA: ChatGPT Plus, Gemini, Perplexity, Claude y más. 
-            Todo desde un solo lugar, incluido en tu acceso vitalicio.
-          </p>
-          <Link to="/chat" className="btn-primary inline-flex items-center gap-2 text-lg px-8 py-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold gold-text mb-3">Chat con IA Integrado</h2>
+          <p className="text-gray-400 max-w-xl mx-auto mb-8 text-base">Conecta con múltiples proveedores de IA: ChatGPT Plus, Gemini, Perplexity, Claude y más. Todo desde un solo lugar, incluido en tu acceso vitalicio.</p>
+          <Link to="/chat" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FFD700] text-black font-bold rounded-2xl text-base hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_20px_rgba(255,215,0,0.2)] min-h-[52px]">
             Ir al chat <HiArrowRight className="w-5 h-5" />
           </Link>
         </div>
