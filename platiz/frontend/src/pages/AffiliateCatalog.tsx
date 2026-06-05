@@ -18,6 +18,8 @@ export default function AffiliateCatalog() {
   const [items, setItems] = useState<Item[]>([]);
   const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_methods: any; instagram?: string; tiktok?: string; facebook?: string; youtube?: string; catalog_theme?: string } | null>(null);
   const [theme, setTheme] = useState('dark');
+  const [showPayment, setShowPayment] = useState(false);
+  const [copied, setCopied] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -117,40 +119,73 @@ export default function AffiliateCatalog() {
           </div>
         )}
 
-        <h1 className="text-xl font-bold text-[#FFD700] mt-3">Catalogo Digital</h1>
-
-        {/* Metodos de pago */}
+        {/* Boton Ver Metodos de Pago */}
         {affiliate?.payment_methods && (affiliate.payment_methods.binance_id || affiliate.payment_methods.pago_movil_phone || affiliate.payment_methods.zelle || affiliate.payment_methods.otro) && (
-          <div className={`mt-3 px-4 py-3 rounded-xl max-w-xs mx-auto text-left ${theme === 'light' ? 'bg-white border border-gray-200' : 'bg-[#111] border border-[#FFD700]/10'}`}>
-            <p className="text-[#FFD700] text-xs font-bold mb-2">Metodos de Pago</p>
-            {affiliate.payment_methods.binance_id && (
-              <div className={`mb-2 ${theme === 'light' ? '' : ''}`}>
-                <p className="text-gray-400 text-xs">Binance</p>
-                <p className={`text-xs ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>ID: {affiliate.payment_methods.binance_id}</p>
-                {affiliate.payment_methods.binance_email && <p className={`text-xs ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{affiliate.payment_methods.binance_email}</p>}
-              </div>
-            )}
-            {affiliate.payment_methods.pago_movil_phone && (
-              <div className="mb-2">
-                <p className="text-gray-400 text-xs">Pago Movil</p>
-                <p className={`text-xs ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{affiliate.payment_methods.pago_movil_bank} / {affiliate.payment_methods.pago_movil_phone} / {affiliate.payment_methods.pago_movil_id}</p>
-              </div>
-            )}
-            {affiliate.payment_methods.zelle && (
-              <div className="mb-2">
-                <p className="text-gray-400 text-xs">Zelle</p>
-                <p className={`text-xs ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{affiliate.payment_methods.zelle}</p>
-              </div>
-            )}
-            {affiliate.payment_methods.otro && (
-              <div>
-                <p className="text-gray-400 text-xs">Otro</p>
-                <p className={`text-xs ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{affiliate.payment_methods.otro}</p>
-              </div>
-            )}
-          </div>
+          <button onClick={() => setShowPayment(true)}
+            className="mt-3 px-4 py-2 bg-[#FFD700] text-black text-xs rounded-full font-bold hover:bg-[#FFE44D] transition-colors">
+            💳 Ver Metodos de Pago
+          </button>
         )}
+
+        <h1 className="text-xl font-bold text-[#FFD700] mt-2">Catalogo Digital</h1>
       </div>
+
+      {/* Modal Metodos de Pago */}
+      {showPayment && affiliate?.payment_methods && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setShowPayment(false)}>
+          <div className={`rounded-2xl p-6 w-full max-w-sm border ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-[#111] border-[#FFD700]/20'}`} onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Metodos de Pago</h3>
+              <button onClick={() => setShowPayment(false)} className={`text-lg ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>&times;</button>
+            </div>
+            <div className="space-y-3 mb-4">
+              {affiliate.payment_methods.binance_id && (
+                <div className={`p-3 rounded-xl ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
+                  <p className="text-gray-400 text-xs mb-1">Binance</p>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>ID: {affiliate.payment_methods.binance_id}</p>
+                  {affiliate.payment_methods.binance_email && <p className={`text-sm ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>{affiliate.payment_methods.binance_email}</p>}
+                  <button onClick={() => { navigator.clipboard.writeText(`ID: ${affiliate.payment_methods.binance_id}${affiliate.payment_methods.binance_email ? ' - ' + affiliate.payment_methods.binance_email : ''}`); setCopied('binance'); setTimeout(() => setCopied(''), 2000); }}
+                    className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
+                    {copied === 'binance' ? '✓ Copiado' : '📋 Copiar'}
+                  </button>
+                </div>
+              )}
+              {affiliate.payment_methods.pago_movil_phone && (
+                <div className={`p-3 rounded-xl ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
+                  <p className="text-gray-400 text-xs mb-1">Pago Movil</p>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.payment_methods.pago_movil_bank} / {affiliate.payment_methods.pago_movil_phone} / {affiliate.payment_methods.pago_movil_id}</p>
+                  <button onClick={() => { navigator.clipboard.writeText(`${affiliate.payment_methods.pago_movil_bank} ${affiliate.payment_methods.pago_movil_phone} ${affiliate.payment_methods.pago_movil_id}`); setCopied('pm'); setTimeout(() => setCopied(''), 2000); }}
+                    className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
+                    {copied === 'pm' ? '✓ Copiado' : '📋 Copiar'}
+                  </button>
+                </div>
+              )}
+              {affiliate.payment_methods.zelle && (
+                <div className={`p-3 rounded-xl ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
+                  <p className="text-gray-400 text-xs mb-1">Zelle</p>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.payment_methods.zelle}</p>
+                  <button onClick={() => { navigator.clipboard.writeText(affiliate.payment_methods.zelle); setCopied('zelle'); setTimeout(() => setCopied(''), 2000); }}
+                    className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
+                    {copied === 'zelle' ? '✓ Copiado' : '📋 Copiar'}
+                  </button>
+                </div>
+              )}
+              {affiliate.payment_methods.otro && (
+                <div className={`p-3 rounded-xl ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
+                  <p className="text-gray-400 text-xs mb-1">Otro</p>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.payment_methods.otro}</p>
+                  <button onClick={() => { navigator.clipboard.writeText(affiliate.payment_methods.otro); setCopied('otro'); setTimeout(() => setCopied(''), 2000); }}
+                    className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
+                    {copied === 'otro' ? '✓ Copiado' : '📋 Copiar'}
+                  </button>
+                </div>
+              )}
+            </div>
+            <button onClick={() => setShowPayment(false)}
+              className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm">Cerrar</button>
+          </div>
+        </div>
+      )}
 
       {/* Búsqueda */}
       <div className="max-w-4xl mx-auto px-4 mb-4">
