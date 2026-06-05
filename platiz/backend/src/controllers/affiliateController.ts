@@ -47,10 +47,10 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
     const body = req.body;
     const updates: Record<string, any> = {};
 
-    // Campos permitidos
+    // Campos permitidos - solo actualizar si tienen valor (no vacios)
     const allowedFields = ['display_name','whatsapp','telegram_link','instagram','tiktok','facebook','youtube','catalog_theme'];
     for (const field of allowedFields) {
-      if (body[field] !== undefined) updates[field] = body[field];
+      if (body[field] !== undefined && body[field] !== null && body[field] !== '') updates[field] = body[field];
     }
 
     // payment_methods: puede venir como string (FormData) u objeto (JSON)
