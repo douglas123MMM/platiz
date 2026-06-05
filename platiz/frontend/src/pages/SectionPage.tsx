@@ -153,7 +153,7 @@ export default function SectionPage() {
                   href={item.link}
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFD700]/10 hover:bg-[#FFD700]/20 border border-[#FFD700]/20 rounded-lg text-[#FFD700] hover:text-[#FFE44D] text-sm font-semibold transition-all cursor-pointer">
-                  <IconExternalLink className="w-4 h-4" /> Ver guia en Canva
+                  <IconExternalLink className="w-4 h-4" /> {slug === 'books' ? 'Leer' : 'Ver'}
                 </a>
               ) : null}
             </div>
