@@ -51,12 +51,12 @@ export default function AffiliateCatalog() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 animate-fade-in">
+    <div className="min-h-screen bg-[#0a0a0f] animate-fade-in">
       {/* Header del afiliado */}
-      <div className="bg-white border-b border-gray-100 py-5 text-center px-4 shadow-sm">
+      <div className="bg-[#111] border-b border-[#FFD700]/10 py-5 text-center px-4">
         {affiliate && (
           <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-[#FFD700]/20 flex items-center justify-center">
               {affiliate.avatar ? (
                 <img src={affiliate.avatar} alt="" className="w-12 h-12 rounded-full object-cover" />
               ) : (
@@ -64,8 +64,8 @@ export default function AffiliateCatalog() {
               )}
             </div>
             <div className="text-left">
-              <p className="text-gray-900 font-bold text-sm">{affiliate.display_name || 'Global Dorado'}</p>
-              <p className="text-green-600 text-xs font-medium">Catalogo de Servicios</p>
+              <p className="text-white font-bold text-sm">{affiliate.display_name || 'Global Dorado'}</p>
+              <p className="text-[#FFD700] text-xs font-medium">Catalogo de Servicios</p>
             </div>
           </div>
         )}
@@ -94,7 +94,7 @@ export default function AffiliateCatalog() {
           )}
         </div>
 
-        <h1 className="text-2xl font-extrabold text-gray-900 mt-3">Catalogo Digital</h1>
+        <h1 className="text-xl font-bold text-[#FFD700] mt-3">Catalogo Digital</h1>
 
         {(affiliate?.instagram || affiliate?.tiktok || affiliate?.facebook || affiliate?.youtube) && (
           <div className="flex justify-center gap-2 mt-2">
@@ -129,7 +129,7 @@ export default function AffiliateCatalog() {
       {/* Búsqueda */}
       <div className="max-w-4xl mx-auto px-4 mb-4">
         <input
-          className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
+          className="w-full bg-[#111] border border-[#FFD700]/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
           placeholder="Buscar servicio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -140,7 +140,7 @@ export default function AffiliateCatalog() {
       <div className="max-w-4xl mx-auto px-4 mb-6 flex gap-2 flex-wrap">
         <button
           onClick={() => setActiveCategory('all')}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === 'all' ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === 'all' ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10 hover:bg-[#1a1a1a]'}`}
         >
           Todo
         </button>
@@ -148,7 +148,7 @@ export default function AffiliateCatalog() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === cat ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === cat ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10 hover:bg-[#1a1a1a]'}`}
           >
             {cat === 'movies' ? 'Streaming' : cat === 'services' ? 'Servicios' : cat}
           </button>
@@ -158,18 +158,18 @@ export default function AffiliateCatalog() {
       {/* Items Grid */}
       <div className="max-w-4xl mx-auto px-4 pb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filtered.map(item => (
-          <div key={item.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:border-[#FFD700]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col">
-            <div className="bg-gray-50 p-4 flex items-center justify-center h-24">
+          <div key={item.id} className="bg-[#111] rounded-2xl border border-[#FFD700]/10 overflow-hidden hover:border-[#FFD700]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col">
+            <div className="bg-[#1a1a1a] p-4 flex items-center justify-center h-24">
               {item.image_url ? (
                 <img src={item.image_url} alt={item.title} className="max-h-16 max-w-full object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
-                <span className="text-3xl opacity-30">{item.title.charAt(0)}</span>
+                <span className="text-3xl text-gray-700">{item.title.charAt(0)}</span>
               )}
             </div>
             <div className="p-3 flex flex-col flex-1">
-              <p className="text-gray-900 text-xs font-semibold line-clamp-2 mb-2 leading-tight">{item.title}</p>
+              <p className="text-white text-xs font-semibold line-clamp-2 mb-2 leading-tight">{item.title}</p>
               {item.description && (
-                <p className="text-gray-400 text-xs line-clamp-1 mb-3 flex-1">{item.description}</p>
+                <p className="text-gray-500 text-xs line-clamp-1 mb-3 flex-1">{item.description}</p>
               )}
               <a
                 href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
