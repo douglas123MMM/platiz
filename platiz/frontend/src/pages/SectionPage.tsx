@@ -25,21 +25,54 @@ export default function SectionPage() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: '📄', subtitle: '' };
 
-  const filtered = query.trim()
-    ? items.filter((i) => i.title.toLowerCase().includes(query.toLowerCase()) || (i.description || '').toLowerCase().includes(query.toLowerCase()))
-    : items;
+  // Buscar usa el endpoint de busqueda global (server-side)
+  const searchItems = async (q: string) => {
+    if (!q.trim()) {
+      loadPage(1, true);
+      return;
+    }
+    setLoading(true);
+    try {
+      const { data } = await api.get(`/content/search?q=${encodeURIComponent(q)}`);
+      const filtered = (data || []).filter((i: any) => i.category_slug === slug);
+      setItems(filtered);
+      setTotal(filtered.length);
+      setHasMore(false);
+    } catch { setItems([]); }
+    setLoading(false);
+  };
+
+  const loadPage = async (p: number, reset: boolean = false) => {
+    if (reset) { setLoading(true); setPage(1); } else { setLoadingMore(true); }
+    try {
+      const { data } = await api.get(`/content/items/${slug}?page=${p}&limit=50`);
+      const newItems = data.items || data || [];
+      if (reset) { setItems(newItems); } else { setItems(prev => [...prev, ...newItems]); }
+      setTotal(data.total || 0);
+      setHasMore(data.hasMore || false);
+      setPage(p);
+    } catch { setItems([]); }
+    setLoading(false);
+    setLoadingMore(false);
+  };
 
   useEffect(() => {
     if (!slug) return;
-    setLoading(true);
-    api.get(`/content/items/${slug}`)
-      .then((r) => { setItems(r.data.items || r.data); setTotal(r.data.total || 0); })
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
+    loadPage(1, true);
   }, [slug]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => searchItems(query), 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  const loadMore = () => loadPage(page + 1);
 
   return (
     <div className="space-y-8 animate-fade-in relative">
@@ -65,7 +98,7 @@ export default function SectionPage() {
             />
             {query && (
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FFD700]/60">
-                {filtered.length} de {items.length}
+                {items.length} de {total}
               </span>
             )}
           </div>
@@ -85,18 +118,13 @@ export default function SectionPage() {
       ) : items.length === 0 ? (
         <div className="text-center py-20 relative z-10">
           <IconPhoto className="w-20 h-20 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">Contenido próximo a cargarse...</p>
-          <p className="text-gray-600 text-sm mt-2">El administrador está añadiendo nuevos recursos.</p>
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="text-center py-20 relative z-10">
-          <IconSearch className="w-20 h-20 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">Sin resultados para "{query}"</p>
-          <p className="text-gray-600 text-sm mt-2">Intenta con otro término de búsqueda.</p>
+          <p className="text-gray-500 text-lg">{query ? `Sin resultados para "${query}"` : 'Contenido próximo a cargarse...'}</p>
+          <p className="text-gray-600 text-sm mt-2">{query ? 'Intenta con otro término de búsqueda.' : 'El administrador está añadiendo nuevos recursos.'}</p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-          {filtered.map((item) => (
+          {items.map((item) => (
             <div
               key={item.id}
               className="card-glow group overflow-hidden"
@@ -131,6 +159,15 @@ export default function SectionPage() {
             </div>
           ))}
         </div>
+        {hasMore && (
+          <div className="text-center mt-8">
+            <button onClick={loadMore} disabled={loadingMore}
+              className="px-8 py-3 bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] rounded-xl font-bold hover:bg-[#FFD700]/20 transition-colors disabled:opacity-50 min-h-[48px]">
+              {loadingMore ? 'Cargando...' : `Cargar más (${total - items.length} restantes)`}
+            </button>
+          </div>
+        )}
+        </>
       )}
     </div>
   );

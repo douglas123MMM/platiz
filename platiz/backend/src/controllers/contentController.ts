@@ -15,18 +15,14 @@ export async function getCategories(_req: AuthRequest, res: Response): Promise<v
 export async function getItems(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { slug } = req.params;
-    // Paginacion para cargar TODOS los items (18k+ libros)
-    let allItems: any[] = [];
-    let from = 0;
-    const batchSize = 1000;
-    while (true) {
-      const { data } = await supabase.from('items').select('*', { count: 'exact' }).eq('category_slug', slug).eq('active', 1).order('sort_order', { ascending: true }).order('created_at', { ascending: false }).range(from, from + batchSize - 1);
-      if (!data || data.length === 0) break;
-      allItems = allItems.concat(data);
-      from += batchSize;
-      if (data.length < batchSize) break;
-    }
-    res.json({ items: allItems, total: allItems.length });
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = Math.min(parseInt(req.query.limit as string) || 50, 200);
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, count } = await supabase.from('items').select('*', { count: 'exact' }).eq('category_slug', slug).eq('active', 1).order('sort_order', { ascending: true }).order('created_at', { ascending: false }).range(from, to);
+
+    res.json({ items: data || [], total: count || 0, page, limit, hasMore: (count || 0) > to + 1 });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
