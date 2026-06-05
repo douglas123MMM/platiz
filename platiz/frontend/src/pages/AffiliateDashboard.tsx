@@ -49,6 +49,7 @@ export default function AffiliateDashboard() {
   const [tiktok, setTiktok] = useState('');
   const [facebook, setFacebook] = useState('');
   const [youtube, setYoutube] = useState('');
+  const [catalogTheme, setCatalogTheme] = useState('dark');
 
   useEffect(() => { fetchDashboard(); }, []);
 
@@ -79,6 +80,7 @@ export default function AffiliateDashboard() {
       setFacebook(data.profile?.facebook || '');
       setYoutube(data.profile?.youtube || '');
       setAvatarPreview(data.profile?.avatar || '');
+      setCatalogTheme(data.profile?.catalog_theme || 'dark');
     } catch {}
   };
 
@@ -118,6 +120,7 @@ export default function AffiliateDashboard() {
         tiktok,
         facebook,
         youtube,
+        catalog_theme: catalogTheme,
       });
 
       // Si hay foto, subirla por separado
@@ -265,6 +268,18 @@ export default function AffiliateDashboard() {
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="YouTube (ej: @tucanal)" value={youtube}
               onChange={(e) => setYoutube(e.target.value)} />
+
+            <h3 className="text-[#FFD700] text-xs font-bold pt-2">Tema del Catalogo</h3>
+            <div className="flex gap-2">
+              <button type="button" onClick={() => setCatalogTheme('dark')}
+                className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'dark' ? 'bg-[#FFD700] text-black' : 'bg-black/30 text-gray-400 border border-[#FFD700]/10'}`}>
+                🌙 Oscuro
+              </button>
+              <button type="button" onClick={() => setCatalogTheme('light')}
+                className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'light' ? 'bg-[#FFD700] text-black' : 'bg-black/30 text-gray-400 border border-[#FFD700]/10'}`}>
+                ☀️ Claro
+              </button>
+            </div>
 
             <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
             <p className="text-gray-500 text-xs">Binance</p>

@@ -128,7 +128,7 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
 
     const { data: user } = await supabase
       .from('users')
-      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube')
+      .select('id, display_name, avatar, referral_code, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube, catalog_theme')
       .eq('referral_code', code).single();
 
     if (!user) {
@@ -155,6 +155,7 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
         tiktok: user.tiktok,
         facebook: user.facebook,
         youtube: user.youtube,
+        catalog_theme: user.catalog_theme,
       },
       page: {
         type,

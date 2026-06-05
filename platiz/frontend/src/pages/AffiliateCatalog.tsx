@@ -16,7 +16,8 @@ interface Item {
 export default function AffiliateCatalog() {
   const { code } = useParams<{ code: string }>();
   const [items, setItems] = useState<Item[]>([]);
-  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_methods: any; instagram?: string; tiktok?: string; facebook?: string; youtube?: string } | null>(null);
+  const [affiliate, setAffiliate] = useState<{ display_name: string; avatar: string | null; whatsapp: string; telegram_link: string; payment_methods: any; instagram?: string; tiktok?: string; facebook?: string; youtube?: string; catalog_theme?: string } | null>(null);
+  const [theme, setTheme] = useState('dark');
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -35,11 +36,8 @@ export default function AffiliateCatalog() {
     // Cargar perfil del afiliado (endpoint publico)
     if (code) {
       api.get(`/affiliate/landing/${code}/landing`).then(({ data }: any) => {
-        if (data.affiliate) setAffiliate(data.affiliate);
-      }).catch(() => {
-        // Si no hay afiliado, mostrar generico
-        setAffiliate(null);
-      });
+        if (data.affiliate) { setAffiliate(data.affiliate); setTheme(data.affiliate.catalog_theme || 'dark'); }
+      }).catch(() => { setAffiliate(null); });
     }
   }, [code]);
 
@@ -51,7 +49,7 @@ export default function AffiliateCatalog() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] animate-fade-in">
+    <div className={`min-h-screen animate-fade-in ${theme === 'light' ? 'bg-gray-50' : 'bg-[#0a0a0f]'}`}>
       {/* Header del afiliado */}
       <div className="bg-[#111] border-b border-[#FFD700]/10 py-5 text-center px-4">
         {affiliate && (
@@ -129,7 +127,7 @@ export default function AffiliateCatalog() {
       {/* Búsqueda */}
       <div className="max-w-4xl mx-auto px-4 mb-4">
         <input
-          className="w-full bg-[#111] border border-[#FFD700]/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
+          className={`w-full border rounded-xl px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 ${theme === 'light' ? 'bg-white border-gray-200 text-gray-900' : 'bg-[#111] border-[#FFD700]/10 text-white'}`}
           placeholder="Buscar servicio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -140,7 +138,7 @@ export default function AffiliateCatalog() {
       <div className="max-w-4xl mx-auto px-4 mb-6 flex gap-2 flex-wrap">
         <button
           onClick={() => setActiveCategory('all')}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === 'all' ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10 hover:bg-[#1a1a1a]'}`}
+          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === 'all' ? 'bg-[#FFD700] text-black font-bold' : theme === 'light' ? 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10 hover:bg-[#1a1a1a]'}`}
         >
           Todo
         </button>
@@ -148,7 +146,7 @@ export default function AffiliateCatalog() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === cat ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10 hover:bg-[#1a1a1a]'}`}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === cat ? 'bg-[#FFD700] text-black font-bold' : theme === 'light' ? 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10 hover:bg-[#1a1a1a]'}`}
           >
             {cat === 'movies' ? 'Streaming' : cat === 'services' ? 'Servicios' : cat}
           </button>
@@ -158,16 +156,16 @@ export default function AffiliateCatalog() {
       {/* Items Grid */}
       <div className="max-w-4xl mx-auto px-4 pb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filtered.map(item => (
-          <div key={item.id} className="bg-[#111] rounded-2xl border border-[#FFD700]/10 overflow-hidden hover:border-[#FFD700]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col">
-            <div className="bg-[#1a1a1a] p-4 flex items-center justify-center h-24">
+          <div key={item.id} className={`rounded-2xl border overflow-hidden hover:border-[#FFD700]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col ${theme === 'light' ? 'bg-white border-gray-100' : 'bg-[#111] border-[#FFD700]/10'}`}>
+            <div className={`p-4 flex items-center justify-center h-24 ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
               {item.image_url ? (
                 <img src={item.image_url} alt={item.title} className="max-h-16 max-w-full object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
-                <span className="text-3xl text-gray-700">{item.title.charAt(0)}</span>
+                <span className={`text-3xl ${theme === 'light' ? 'text-gray-300' : 'text-gray-700'}`}>{item.title.charAt(0)}</span>
               )}
             </div>
             <div className="p-3 flex flex-col flex-1">
-              <p className="text-white text-xs font-semibold line-clamp-2 mb-2 leading-tight">{item.title}</p>
+              <p className={`text-xs font-semibold line-clamp-2 mb-2 leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{item.title}</p>
               {item.description && (
                 <p className="text-gray-500 text-xs line-clamp-1 mb-3 flex-1">{item.description}</p>
               )}
