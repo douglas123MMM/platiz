@@ -127,9 +127,9 @@ export default function AffiliateCatalog() {
       </div>
 
       {/* Búsqueda */}
-      <div className="max-w-3xl mx-auto px-4 mb-4">
+      <div className="max-w-4xl mx-auto px-4 mb-4">
         <input
-          className="w-full bg-[#111] border border-[#FFD700]/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FFD700]/30"
+          className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
           placeholder="Buscar servicio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -137,10 +137,10 @@ export default function AffiliateCatalog() {
       </div>
 
       {/* Categorías */}
-      <div className="max-w-3xl mx-auto px-4 mb-6 flex gap-2 flex-wrap">
+      <div className="max-w-4xl mx-auto px-4 mb-6 flex gap-2 flex-wrap">
         <button
           onClick={() => setActiveCategory('all')}
-          className={`px-3 py-1.5 rounded-full text-xs ${activeCategory === 'all' ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}
+          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === 'all' ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
         >
           Todo
         </button>
@@ -148,9 +148,9 @@ export default function AffiliateCatalog() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs ${activeCategory === cat ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === cat ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}
           >
-            {cat}
+            {cat === 'movies' ? 'Streaming' : cat === 'services' ? 'Servicios' : cat}
           </button>
         ))}
       </div>
