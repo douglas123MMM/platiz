@@ -45,26 +45,21 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
   try {
     const userId = req.user!.id;
     const body = req.body;
-    const { display_name, whatsapp, telegram_link, payment_methods, instagram, tiktok, facebook, youtube } = body;
-
     const updates: Record<string, any> = {};
-    if (display_name !== undefined) updates.display_name = display_name;
-    if (whatsapp !== undefined) updates.whatsapp = whatsapp;
-    if (telegram_link !== undefined) updates.telegram_link = telegram_link;
-    if (instagram !== undefined) updates.instagram = instagram;
-    if (tiktok !== undefined) updates.tiktok = tiktok;
-    if (facebook !== undefined) updates.facebook = facebook;
-    if (youtube !== undefined) updates.youtube = youtube;
+
+    // Campos permitidos
+    const allowedFields = ['display_name','whatsapp','telegram_link','instagram','tiktok','facebook','youtube','catalog_theme'];
+    for (const field of allowedFields) {
+      if (body[field] !== undefined) updates[field] = body[field];
+    }
 
     // payment_methods: puede venir como string (FormData) u objeto (JSON)
-    if (payment_methods !== undefined) {
-      updates.payment_methods = typeof payment_methods === 'string' ? JSON.parse(payment_methods) : payment_methods;
+    if (body.payment_methods !== undefined) {
+      updates.payment_methods = typeof body.payment_methods === 'string' ? JSON.parse(body.payment_methods) : body.payment_methods;
     }
 
-    // Foto de perfil
-    if (req.file) {
-      updates.avatar = await uploadToSupabase(req.file);
-    }
+    // Foto
+    if (req.file) updates.avatar = await uploadToSupabase(req.file);
 
     if (Object.keys(updates).length === 0) {
       res.status(400).json({ error: 'No fields to update' });
