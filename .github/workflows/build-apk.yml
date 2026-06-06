@@ -20,28 +20,22 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli
-
       - name: Generate keystore
         run: |
           keytool -genkey -v -keystore release.keystore -alias gd -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=GD, OU=GD, O=GD, L=CA, ST=DC, C=VE" -noprompt
 
-      - name: Init Bubblewrap project
-        run: |
-          echo "n" | bubblewrap init --manifest="https://platiz.vercel.app/manifest.json" --directory="./app"
+      - name: Install pwabuilder CLI
+        run: npm install -g @pwabuilder/cli
 
-      - name: Build APK
-        working-directory: ./app
+      - name: Generate Android package
         run: |
-          echo "android.useAndroidX=true" >> gradle.properties
-          ./gradlew assembleRelease --no-daemon
+          pwabuilder https://platiz.vercel.app -p android -o ./apk -l debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GlobalDorado
-          path: app/app/build/outputs/apk/release/*.apk
+          path: apk/*.apk
 
       - name: Create Release
         if: success()
@@ -49,6 +43,6 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           name: Global Dorado v${{ github.run_number }}
-          files: app/app/build/outputs/apk/release/*.apk
+          files: apk/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
