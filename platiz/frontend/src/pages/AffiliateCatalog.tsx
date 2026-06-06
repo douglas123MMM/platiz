@@ -130,11 +130,6 @@ export default function AffiliateCatalog() {
           </button>
         )}
 
-        <button onClick={() => { setShowProofForm(true); setProofSent(false); setProofForm({ service: '', amount: '', payment_method: '', proof_message: '' }); }}
-          className="mt-3 px-4 py-2 bg-green-600 text-white text-xs rounded-full font-bold hover:bg-green-700 transition-colors">
-          ✅ Ya pagué - Enviar comprobante
-        </button>
-
         <h1 className="text-xl font-bold text-[#FFD700] mt-2">Catalogo Digital</h1>
       </div>
 

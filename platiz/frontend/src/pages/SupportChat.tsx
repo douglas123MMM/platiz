@@ -612,6 +612,10 @@ export default function SupportChat() {
   ]);
   const [input, setInput] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
+  const [showProofForm, setShowProofForm] = useState(false);
+  const [proofForm, setProofForm] = useState({ service: '', amount: '', payment_method: '', proof_message: '' });
+  const [proofSent, setProofSent] = useState(false);
+  const [proofMsg, setProofMsg] = useState('');
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
@@ -656,6 +660,15 @@ export default function SupportChat() {
 
   const quickBtns = ['Precios', 'Netflix', 'ChatGPT', 'Bolivares', 'Binance', 'Licencias', 'Canva', 'Contacto'];
 
+  const submitProof = async () => {
+    if (!proofForm.service) { setProofMsg('Indica el servicio'); return; }
+    try {
+      await api.post('/affiliate/proof', proofForm);
+      setProofSent(true);
+      setProofMsg('');
+    } catch { setProofMsg('Error al enviar'); }
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-6rem)] animate-fade-in max-w-2xl mx-auto">
       <div className="text-center py-4">
@@ -691,6 +704,12 @@ export default function SupportChat() {
               {btn}
             </button>
           ))}
+          <button
+            onClick={() => { setShowProofForm(true); setProofSent(false); setProofMsg(''); setProofForm({ service: '', amount: '', payment_method: '', proof_message: '' }); }}
+            className="text-xs px-3 py-1.5 rounded-full bg-green-600 border border-green-500 text-white font-bold hover:bg-green-700 transition-colors"
+          >
+            ✅ Pagar
+          </button>
         </div>
         <div className="flex gap-2">
           <input
@@ -705,6 +724,41 @@ export default function SupportChat() {
           </button>
         </div>
       </div>
+
+      {showProofForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setShowProofForm(false)}>
+          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-bold">Enviar Comprobante de Pago</h3>
+              <button onClick={() => setShowProofForm(false)} className="text-gray-400 text-lg">&times;</button>
+            </div>
+            {proofSent ? (
+              <div className="text-center py-4">
+                <p className="text-green-400 text-lg mb-2">✅ Comprobante enviado</p>
+                <p className="text-gray-400 text-sm">El admin lo revisara y te enviara tus credenciales.</p>
+                <button onClick={() => setShowProofForm(false)} className="mt-4 w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm">Cerrar</button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {proofMsg && <p className="text-red-400 text-xs text-center">{proofMsg}</p>}
+                <input className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                  placeholder="Servicio (ej: Netflix 1 pantalla)" value={proofForm.service}
+                  onChange={e => setProofForm({...proofForm, service: e.target.value})} />
+                <input className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                  placeholder="Monto (ej: 3 USDT)" value={proofForm.amount}
+                  onChange={e => setProofForm({...proofForm, amount: e.target.value})} />
+                <input className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                  placeholder="Metodo de pago (ej: Binance, PagoMovil)" value={proofForm.payment_method}
+                  onChange={e => setProofForm({...proofForm, payment_method: e.target.value})} />
+                <textarea className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                  placeholder="Detalles del comprobante (opcional)" rows={2} value={proofForm.proof_message}
+                  onChange={e => setProofForm({...proofForm, proof_message: e.target.value})} />
+                <button onClick={submitProof} className="w-full py-2 bg-green-600 text-white rounded-lg font-bold text-sm">Enviar Comprobante</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
