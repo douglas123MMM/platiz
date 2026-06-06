@@ -1,7 +1,9 @@
-const CACHE = 'gdorado-v1';
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/','/login','/soporte'])));
-});
+// Service Worker - Network first, no agressive caching
+const VERSION = 'v' + Date.now();
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
+  );
 });
