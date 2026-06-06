@@ -126,7 +126,7 @@ export default function AffiliateCatalog() {
         {affiliate?.payment_methods && (affiliate.payment_methods.binance_id || affiliate.payment_methods.pago_movil_phone || affiliate.payment_methods.zelle || affiliate.payment_methods.otro) && (
           <button onClick={() => setShowPayment(true)}
             className="mt-3 px-4 py-2 bg-[#FFD700] text-black text-xs rounded-full font-bold hover:bg-[#FFE44D] transition-colors">
-            💳 Ver Metodos de Pago
+            Ver Metodos de Pago
           </button>
         )}
 
@@ -149,7 +149,7 @@ export default function AffiliateCatalog() {
                   {affiliate.payment_methods.binance_email && <p className={`text-sm ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>{affiliate.payment_methods.binance_email}</p>}
                   <button onClick={() => { navigator.clipboard.writeText(`ID: ${affiliate.payment_methods.binance_id}${affiliate.payment_methods.binance_email ? ' - ' + affiliate.payment_methods.binance_email : ''}`); setCopied('binance'); setTimeout(() => setCopied(''), 2000); }}
                     className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
-                    {copied === 'binance' ? '✓ Copiado' : '📋 Copiar'}
+                    {copied === 'binance' ? 'Copiado' : 'Copiar'}
                   </button>
                 </div>
               )}
@@ -159,27 +159,13 @@ export default function AffiliateCatalog() {
                   <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.payment_methods.pago_movil_bank} / {affiliate.payment_methods.pago_movil_phone} / {affiliate.payment_methods.pago_movil_id}</p>
                   <button onClick={() => { navigator.clipboard.writeText(`${affiliate.payment_methods.pago_movil_bank} ${affiliate.payment_methods.pago_movil_phone} ${affiliate.payment_methods.pago_movil_id}`); setCopied('pm'); setTimeout(() => setCopied(''), 2000); }}
                     className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
-                    {copied === 'pm' ? '✓ Copiado' : '📋 Copiar'}
-                  </button>
-                </div>
-              )}
-              {affiliate.payment_methods.zelle && (
-                <div className={`p-3 rounded-xl ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
-                  <p className="text-gray-400 text-xs mb-1">Zelle</p>
-                  <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.payment_methods.zelle}</p>
-                  <button onClick={() => { navigator.clipboard.writeText(affiliate.payment_methods.zelle); setCopied('zelle'); setTimeout(() => setCopied(''), 2000); }}
-                    className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
-                    {copied === 'zelle' ? '✓ Copiado' : '📋 Copiar'}
-                  </button>
-                </div>
-              )}
-              {affiliate.payment_methods.otro && (
-                <div className={`p-3 rounded-xl ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
-                  <p className="text-gray-400 text-xs mb-1">Otro</p>
-                  <p className={`text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.payment_methods.otro}</p>
-                  <button onClick={() => { navigator.clipboard.writeText(affiliate.payment_methods.otro); setCopied('otro'); setTimeout(() => setCopied(''), 2000); }}
-                    className="mt-2 text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">
-                    {copied === 'otro' ? '✓ Copiado' : '📋 Copiar'}
+                    {copied === 'pm' ? 'Copiado' : 'Copiar'}
+...
+
+                    {copied === 'zelle' ? 'Copiado' : 'Copiar'}
+...
+
+                    {copied === 'otro' ? 'Copiado' : 'Copiar'}
                   </button>
                 </div>
               )}

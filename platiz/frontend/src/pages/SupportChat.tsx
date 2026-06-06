@@ -715,7 +715,7 @@ export default function SupportChat() {
             onClick={() => { setShowProofForm(true); setProofSent(false); setProofMsg(''); setProofForm({ service: '', amount: '', payment_method: '', proof_message: '' }); }}
             className="text-xs px-3 py-1.5 rounded-full bg-green-600 border border-green-500 text-white font-bold hover:bg-green-700 transition-colors"
           >
-            ✅ Pagar
+            Pagar
           </button>
         </div>
         <div className="flex gap-2">
@@ -741,7 +741,7 @@ export default function SupportChat() {
             </div>
             {proofSent ? (
               <div className="text-center py-4">
-                <p className="text-green-400 text-lg mb-2">✅ Comprobante enviado</p>
+                <p className="text-green-400 text-lg mb-2">Comprobante enviado</p>
                 <p className="text-gray-400 text-sm">El admin lo revisara y te enviara tus credenciales.</p>
                 <button onClick={() => setShowProofForm(false)} className="mt-4 w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm">Cerrar</button>
               </div>

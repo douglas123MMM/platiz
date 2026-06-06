@@ -229,7 +229,7 @@ export default function DashboardHome() {
 
       {/* Descargar App */}
       <section className="rounded-2xl p-6 md:p-8 bg-gradient-to-r from-green-900/30 to-emerald-900/20 border border-green-500/10 text-center">
-        <h3 className="text-lg font-bold text-white mb-2">📲 Descarga nuestra App</h3>
+        <h3 className="text-lg font-bold text-white mb-2">Descarga nuestra App</h3>
         <p className="text-gray-400 text-sm mb-3">Usa Global Dorado como una app en tu telefono, sin abrir el navegador.</p>
         <div className="flex justify-center gap-3 flex-wrap">
           <span className="text-xs px-4 py-2 bg-green-600/20 text-green-400 rounded-xl font-medium">
