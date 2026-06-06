@@ -1,0 +1,23 @@
+{
+  "packageId": "com.globaldorado.app",
+  "host": "platiz.vercel.app",
+  "name": "Global Dorado",
+  "launcherName": "GDorado",
+  "display": "standalone",
+  "themeColor": "#0a0a0f",
+  "backgroundColor": "#0a0a0f",
+  "startUrl": "/",
+  "iconUrl": "https://platiz.vercel.app/favicon.svg",
+  "maskableIconUrl": "https://platiz.vercel.app/favicon.svg",
+  "splashScreenFadeOutDuration": 300,
+  "enableNotifications": false,
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": false,
+    "locationDelegation": false
+  },
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "globaldorado"
+  }
+}

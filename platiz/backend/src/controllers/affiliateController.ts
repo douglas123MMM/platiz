@@ -343,14 +343,16 @@ export async function adminUpdateLandingConfig(req: AuthRequest, res: Response):
   }
 }
 
-// Cliente envia comprobante de pago
+// Cliente envia comprobante de pago (con foto opcional)
 export async function submitPaymentProof(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { service, amount, payment_method, proof_message } = req.body;
     if (!service) { res.status(400).json({ error: 'Servicio requerido' }); return; }
-    await supabase.from('payment_proofs').insert({
+    const insert: Record<string,any> = {
       user_id: req.user!.id, service, amount: amount || '', payment_method: payment_method || '', proof_message: proof_message || '', status: 'pending',
-    });
+    };
+    if (req.file) insert.proof_image = await uploadToSupabase(req.file);
+    await supabase.from('payment_proofs').insert(insert);
     res.json({ message: 'Comprobante enviado. El admin lo revisara pronto.' });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 }

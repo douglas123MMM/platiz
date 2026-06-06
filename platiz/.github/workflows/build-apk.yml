@@ -1,0 +1,45 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Generate keystore
+        run: |
+          keytool -genkey -v -keystore android.keystore -alias globaldorado -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Global Dorado, OU=GD, O=GD, L=Caracas, ST=DC, C=VE"
+
+      - name: Init TWA project
+        run: |
+          bubblewrap init --manifest https://platiz.vercel.app/manifest.json --directory twa-project
+        continue-on-error: true
+
+      - name: Build APK
+        run: |
+          cd twa-project 2>/dev/null || bubblewrap init --manifest https://platiz.vercel.app/manifest.json
+          ./gradlew assembleRelease
+        continue-on-error: true
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GlobalDorado-APK
+          path: twa-project/app/build/outputs/apk/release/*.apk

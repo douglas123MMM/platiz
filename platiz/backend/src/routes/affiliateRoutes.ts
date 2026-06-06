@@ -40,6 +40,6 @@ router.get('/admin/proofs', requireAdmin, adminListProofs);
 router.patch('/admin/proofs/:id', requireAdmin, adminUpdateProof);
 
 // Cliente envia comprobante
-router.post('/proof', authenticate, submitPaymentProof);
+router.post('/proof', authenticate, upload.single('proof_image'), submitPaymentProof);
 
 export default router;
