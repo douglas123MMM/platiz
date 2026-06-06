@@ -240,14 +240,6 @@ export default function AffiliateCatalog() {
               >
                 Adquirir
               </a>
-              <a
-                href={`https://wa.me/584149132366?text=Hola%20Admin!%20Quiero%20confirmar%20mi%20pago%20por%20${encodeURIComponent(item.title)}.%20Mi%20nombre%20es:%20`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full text-center py-1.5 bg-[#FFD700]/10 text-[#FFD700] text-xs rounded-lg font-medium hover:bg-[#FFD700]/20 transition-colors mt-1"
-              >
-                Enviar comprobante al Admin
-              </a>
             </div>
           </div>
         ))}
