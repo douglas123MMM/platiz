@@ -28,10 +28,6 @@ export default function SectionPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [iptvUrl, setIptvUrl] = useState('');
-  const [iptvChannels, setIptvChannels] = useState<any[]>([]);
-  const [currentChannel, setCurrentChannel] = useState('');
-  const [iptvGroup, setIptvGroup] = useState('all');
 
   const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: '📄', subtitle: '' };
 
@@ -69,31 +65,6 @@ export default function SectionPage() {
   useEffect(() => {
     if (!slug) return;
     loadPage(1, true);
-    // Cargar IPTV si es Entretenimiento
-    if (slug === 'movies') {
-      api.get('/settings').then(r => {
-        if (r.data?.iptv_m3u_url) {
-          setIptvUrl(r.data.iptv_m3u_url);
-          fetch(r.data.iptv_m3u_url).then(res => res.text()).then(txt => {
-            const lines = txt.split('\n');
-            const chs: any[] = [];
-            let cur: any = {};
-            for (const line of lines) {
-              if (line.startsWith('#EXTINF:')) {
-                const nm = line.match(/,(.+)$/);
-                const grp = line.match(/group-title="([^"]+)"/);
-                const logo = line.match(/tvg-logo="([^"]+)"/);
-                cur = { name: nm?.[1]?.trim() || 'Sin nombre', group: grp?.[1] || 'General', logo: logo?.[1] };
-              } else if (line.startsWith('http') && cur.name) {
-                chs.push({ ...cur, url: line.trim() });
-                cur = {};
-              }
-            }
-            setIptvChannels(chs);
-          }).catch(() => {});
-        }
-      }).catch(() => {});
-    }
   }, [slug]);
 
   useEffect(() => {
@@ -130,32 +101,6 @@ export default function SectionPage() {
                 {items.length} de {total}
               </span>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* IPTV Player - solo en Entretenimiento */}
-      {slug === 'movies' && iptvChannels.length > 0 && (
-        <div className="mb-8 space-y-4">
-          {currentChannel && (
-            <div className="bg-black rounded-xl overflow-hidden">
-              <video controls autoPlay className="w-full aspect-video bg-black" src={currentChannel} key={currentChannel} />
-            </div>
-          )}
-          <div className="flex gap-2 flex-wrap">
-            <button onClick={() => setIptvGroup('all')} className={`text-xs px-3 py-1.5 rounded-full ${iptvGroup === 'all' ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}>Todos</button>
-            {[...new Set(iptvChannels.map(c => c.group))].map(g => (
-              <button key={g} onClick={() => setIptvGroup(g)} className={`text-xs px-3 py-1.5 rounded-full ${iptvGroup === g ? 'bg-[#FFD700] text-black font-bold' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}>{g}</button>
-            ))}
-          </div>
-          <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-2">
-            {iptvChannels.filter(c => iptvGroup === 'all' || c.group === iptvGroup).slice(0, 60).map((ch: any, i: number) => (
-              <button key={i} onClick={() => setCurrentChannel(ch.url)}
-                className={`p-2 rounded-lg border text-xs text-left transition-all ${currentChannel === ch.url ? 'bg-[#FFD700]/10 border-[#FFD700]/30' : 'bg-[#111] border-[#FFD700]/5 hover:border-[#FFD700]/20'}`}>
-                {ch.logo ? <img src={ch.logo} alt="" className="w-full h-8 object-contain mb-1 rounded" onError={e => { e.currentTarget.style.display = 'none'; }} /> : <div className="w-full h-8 mb-1 flex items-center justify-center text-gray-600">📺</div>}
-                <p className="text-white line-clamp-1 leading-tight">{ch.name}</p>
-              </button>
-            ))}
           </div>
         </div>
       )}
