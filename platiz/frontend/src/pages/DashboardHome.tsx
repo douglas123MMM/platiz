@@ -231,18 +231,6 @@ export default function DashboardHome() {
       <section className="rounded-2xl p-6 md:p-8 bg-gradient-to-r from-green-900/30 to-emerald-900/20 border border-green-500/10 text-center">
         <h3 className="text-lg font-bold text-white mb-2">Descarga nuestra App</h3>
         <p className="text-gray-400 text-sm mb-3">Usa Global Dorado como una app en tu telefono, sin abrir el navegador.</p>
-        <div className="flex justify-center gap-3 flex-wrap mb-4">
-          <span className="text-xs px-4 py-2 bg-green-600/20 text-green-400 rounded-xl font-medium">
-            Android: 3 puntos &rarr; Instalar aplicacion
-          </span>
-          <span className="text-xs px-4 py-2 bg-blue-600/20 text-blue-400 rounded-xl font-medium">
-            iPhone: Compartir &rarr; Pantalla de inicio
-          </span>
-        </div>
-        <a href="https://github.com/douglas123MMM/platiz/releases/latest" target="_blank" rel="noopener noreferrer"
-          className="inline-block px-6 py-2.5 bg-green-600 text-white text-sm rounded-xl font-bold hover:bg-green-700 transition-colors">
-          Descargar APK (Android)
-        </a>
       </section>
 
       <section className="text-center py-8 border-t border-[#FFD700]/10">
