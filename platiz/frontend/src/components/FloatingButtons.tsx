@@ -17,10 +17,6 @@ export default function FloatingButtons() {
   const [guideOpen, setGuideOpen] = useState(false);
   const location = useLocation();
 
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e: any) => { e.preventDefault(); setInstallPrompt(e); });
-  }, []);
-
   const currentGuide = SECTION_GUIDES[location.pathname];
 
   useEffect(() => {
