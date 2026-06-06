@@ -23,35 +23,36 @@ jobs:
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Generate keystore
+      - name: Init TWA
         run: |
-          keytool -genkey -v -keystore android.keystore -alias globaldorado -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Global Dorado, OU=GD, O=GD, L=Caracas, ST=DC, C=VE"
+          bubblewrap init --manifest="https://platiz.vercel.app/manifest.json" --directory="./twa"
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME }}
 
-      - name: Init TWA project
+      - name: Update keystore
         run: |
-          bubblewrap init --manifest https://platiz.vercel.app/manifest.json --directory twa-project
-        continue-on-error: true
+          keytool -genkey -v -keystore ./twa/android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=GD, OU=GD, O=GD, L=CA, ST=DC, C=VE" -noprompt
+          echo "storeFile=android.keystore" >> ./twa/gradle.properties
+          echo "storePassword=android" >> ./twa/gradle.properties
+          echo "keyAlias=android" >> ./twa/gradle.properties
+          echo "keyPassword=android" >> ./twa/gradle.properties
 
       - name: Build APK
-        run: |
-          cd twa-project 2>/dev/null || bubblewrap init --manifest https://platiz.vercel.app/manifest.json
-          ./gradlew assembleRelease
-        continue-on-error: true
+        working-directory: ./twa
+        run: ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GlobalDorado-APK
-          path: twa-project/app/build/outputs/apk/release/*.apk
+          path: twa/app/build/outputs/apk/release/*.apk
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Create Release
         if: success()
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
           name: Global Dorado v${{ github.run_number }}
-          files: twa-project/app/build/outputs/apk/release/*.apk
-          draft: false
-          prerelease: false
+          files: twa/app/build/outputs/apk/release/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
