@@ -61,13 +61,13 @@ export default function ZonaVIP() {
 
   useEffect(() => { if (logged) loadCats(); }, [logged]);
 
-  const getStreamUrl = (id: number, type = 'live') => `${server}/live/${username}/${password}/${id}.m3u8`;
-  const getVodUrl = (id: number) => `${server}/movie/${username}/${password}/${id}.m3u8`;
-  const getSeriesUrl = (id: number) => `${server}/series/${username}/${password}/${id}.m3u8`;
+  const getStreamUrl = (id: number, type = 'live') => {
+    const params = `server=${encodeURIComponent(server)}&username=${username}&password=${password}&stream=${id}&type=${type}`;
+    return `/api/xtream/stream?${params}`;
+  };
 
   const play = (id: number, name: string, type = 'live') => {
-    const url = type === 'vod' ? getVodUrl(id) : type === 'series' ? getSeriesUrl(id) : getStreamUrl(id);
-    setCurrent({ url, name });
+    setCurrent({ url: getStreamUrl(id, type), name });
   };
 
   const filtered = () => {
