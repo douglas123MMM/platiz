@@ -8,6 +8,7 @@ export default function ContactSettings() {
   const [whatsapp, setWhatsapp] = useState('');
   const [telegram, setTelegram] = useState('');
   const [bcvRate, setBcvRate] = useState('');
+  const [iptvUrl, setIptvUrl] = useState('');
   const [guias, setGuias] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -17,6 +18,7 @@ export default function ContactSettings() {
       setWhatsapp(r.data.whatsapp || '');
       setTelegram(r.data.telegram || '');
       setBcvRate(r.data.bcv_rate || '');
+      setIptvUrl(r.data.iptv_m3u_url || '');
       setGuias(r.data.guias || {});
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
@@ -25,7 +27,7 @@ export default function ContactSettings() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/settings', { whatsapp, telegram, bcv_rate: bcvRate, guias });
+      await api.put('/settings', { whatsapp, telegram, bcv_rate: bcvRate, iptv_m3u_url: iptvUrl, guias });
       toast.success('Configuración guardada');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Error al guardar');
@@ -58,6 +60,12 @@ export default function ContactSettings() {
             <div><p className="text-white font-medium">Tasa BCV</p><p className="text-gray-400 text-xs">Usada por la IA para calcular precios en bolivares</p></div>
           </div>
           <div><label className="label">Tasa BCV (Bs por USDT)</label><input className="input" type="text" placeholder="85.50" value={bcvRate} onChange={(e) => setBcvRate(e.target.value)} /></div>
+
+          <div className="p-4 bg-purple-500/10 rounded-xl flex items-center gap-3">
+            <span className="text-2xl">📺</span>
+            <div><p className="text-white font-medium">IPTV M3U URL</p><p className="text-gray-400 text-xs">Lista de canales que aparecera en Entretenimiento</p></div>
+          </div>
+          <div><label className="label">URL de lista M3U</label><input className="input" placeholder="https://servidor.com/lista.m3u" value={iptvUrl} onChange={(e) => setIptvUrl(e.target.value)} /></div>
 
           <div className="mt-8 pt-6 border-t border-[#FFD700]/10">
             <div className="flex items-center gap-3 mb-4">
