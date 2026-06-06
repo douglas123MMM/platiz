@@ -149,7 +149,6 @@ export default function Entertainment() {
               <Carousel title="Proximamente" items={upcoming} />
           </>
         )}
-      </div>
 
       {/* Trailer Modal */}
       {trailer && (
