@@ -260,10 +260,10 @@ export default function AffiliatesAdmin() {
                     <td className="py-2 px-3 text-gray-300 text-xs">{p.service}</td>
                     <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{p.amount || '-'}</td>
                     <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{p.payment_method || '-'}</td>
-                    <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">
+                    <td className="py-2 px-3 text-gray-400 text-xs">
                       {p.proof_message || '-'}
-                      {p.proof_image && <br />}
-                      {p.proof_image && <a href={p.proof_image} target="_blank" rel="noopener noreferrer" className="text-[#FFD700] underline text-xs">Ver foto</a>}
+                      {p.proof_image && ' '}
+                      {p.proof_image && <a href={p.proof_image} target="_blank" rel="noopener noreferrer" className="text-[#FFD700] underline text-xs">📷 Ver foto</a>}
                     </td>
                     <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{new Date(p.created_at).toLocaleString()}</td>
                     <td className="py-2 px-3">
