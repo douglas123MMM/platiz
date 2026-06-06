@@ -41,6 +41,8 @@ export default function LandingPage() {
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [showInstallBtn, setShowInstallBtn] = useState(false);
 
+  const api = axios.create({ baseURL: 'https://platiz.vercel.app/api' });
+
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
     api.get('/partners/landing-videos').then((r) => setLandingVideos(r.data)).catch(() => {});
