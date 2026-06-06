@@ -39,13 +39,14 @@ export default function LandingPage() {
   const [partners, setPartners] = useState<any[]>([]);
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
   const [installPrompt, setInstallPrompt] = useState<any>(null);
-
-  const api = axios.create({ baseURL: 'https://platiz.vercel.app/api' });
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
     api.get('/partners/landing-videos').then((r) => setLandingVideos(r.data)).catch(() => {});
     window.addEventListener('beforeinstallprompt', (e: any) => { e.preventDefault(); setInstallPrompt(e); });
+    // Mostrar boton en Android siempre
+    if (/Android/i.test(navigator.userAgent)) setShowInstallBtn(true);
   }, []);
 
   return (
@@ -81,8 +82,8 @@ export default function LandingPage() {
               Conocer más
               <HiChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
             </button>
-            {installPrompt && (
-              <button onClick={async () => { installPrompt.prompt(); const r = await installPrompt.userChoice; if (r.outcome === 'accepted') setInstallPrompt(null); }}
+            {(installPrompt || showInstallBtn) && (
+              <button onClick={async () => { if (installPrompt) { installPrompt.prompt(); const r = await installPrompt.userChoice; if (r.outcome === 'accepted') setInstallPrompt(null); } else { alert('Toca los 3 puntos del navegador y selecciona Instalar aplicacion o Agregar a pantalla principal'); } }}
                 className="inline-flex items-center gap-2 px-6 py-4 bg-green-600 text-white font-bold rounded-2xl text-base hover:bg-green-700 active:scale-[0.98] transition-all duration-200 shadow-[0_4px_20px_rgba(34,197,94,0.2)] min-h-[56px]">
                 📲 Descargar App
               </button>
