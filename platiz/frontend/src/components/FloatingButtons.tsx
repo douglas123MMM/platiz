@@ -51,15 +51,25 @@ export default function FloatingButtons() {
   return (
     <>
       <div className="fixed bottom-20 md:bottom-8 right-3 md:right-6 z-[100] flex flex-col gap-3 sm:gap-3" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
-        {installPrompt && (
+        {installPrompt ? (
           <button
             onClick={async () => { installPrompt.prompt(); const r = await installPrompt.userChoice; if (r.outcome === 'accepted') setInstallPrompt(null); }}
             className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-green-600 flex items-center justify-center shadow-lg shadow-green-600/40 hover:shadow-green-600/60 active:scale-95 transition-all duration-200"
-            title="Descargar App"
-            aria-label="Descargar App"
+            title="Instalar App"
+            aria-label="Instalar App"
           >
             <svg viewBox="0 0 24 24" className="w-7 h-7 fill-white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-            <span className="absolute right-16 bg-[#1a1a2e] text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg hidden md:block">Descargar App</span>
+            <span className="absolute right-16 bg-[#1a1a2e] text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg hidden md:block">Instalar App</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => { if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) alert('Toca Compartir (cuadro con flecha) y luego Agregar a pantalla de inicio'); else alert('Toca los 3 puntos del navegador y selecciona Instalar aplicacion'); }}
+            className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-green-600 flex items-center justify-center shadow-lg shadow-green-600/40 hover:shadow-green-600/60 active:scale-95 transition-all duration-200"
+            title="Como instalar"
+            aria-label="Como instalar"
+          >
+            <svg viewBox="0 0 24 24" className="w-7 h-7 fill-white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <span className="absolute right-16 bg-[#1a1a2e] text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg hidden md:block">Como instalar</span>
           </button>
         )}
 
