@@ -49,6 +49,9 @@ export default function Entertainment() {
   useEffect(() => {
     api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!key) return;
     fetchTMDB(key, '/trending/all/week').then(d => {
       setTrending(d.results || []);
       if (d.results?.[0]) setHero(d.results[0]);
