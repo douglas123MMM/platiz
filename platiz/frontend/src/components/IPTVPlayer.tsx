@@ -16,7 +16,8 @@ export default function IPTVPlayer() {
     api.get('/settings').then(r => {
       const url = r.data?.iptv_m3u_url;
       if (!url) { setLoading(false); return; }
-      fetch(url).then(res => res.text()).then(txt => {
+      // Usar proxy para evitar bloqueo HTTP/HTTPS
+      fetch('/api/affiliate/iptv-proxy').then(res => res.text()).then(txt => {
         const lines = txt.split('\n');
         const chs: Channel[] = [];
         let cur: any = {};
