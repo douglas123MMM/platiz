@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
@@ -47,11 +47,6 @@ export default function Layout() {
   const filteredNav = navItems.filter((item) => item.roles.includes(user?.role || 'client'));
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
-  const [installPrompt, setInstallPrompt] = useState<any>(null);
-
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e: any) => { e.preventDefault(); setInstallPrompt(e); });
-  }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -91,15 +86,6 @@ export default function Layout() {
               );
             })}
           </nav>
-
-          {installPrompt && (
-            <div className="px-4 pb-3">
-              <button onClick={async () => { installPrompt.prompt(); const r = await installPrompt.userChoice; if (r.outcome === 'accepted') setInstallPrompt(null); }}
-                className="w-full py-2.5 bg-green-600 text-white text-xs rounded-xl font-bold hover:bg-green-700 transition-colors">
-                📲 Instalar App
-              </button>
-            </div>
-          )}
 
           {isAdmin && (
             <div className="px-4 pb-4">
