@@ -30,7 +30,7 @@ async function fetchTMDB(key: string, path: string, params = '') {
 }
 
 export default function Entertainment() {
-  const key = TmdbApi();
+  const [key, setKey] = useState('');
   const [hero, setHero] = useState<Movie | null>(null);
   const [trending, setTrending] = useState<Movie[]>([]);
   const [popular, setPopular] = useState<Movie[]>([]);
@@ -47,7 +47,8 @@ export default function Entertainment() {
   const searchTimer = useRef<any>(null);
 
   useEffect(() => {
-    if (!key) return;
+    api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
+  }, []);
     fetchTMDB(key, '/trending/all/week').then(d => {
       setTrending(d.results || []);
       if (d.results?.[0]) setHero(d.results[0]);
