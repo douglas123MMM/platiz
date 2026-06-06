@@ -10,36 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: android-actions/setup-android@v3
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+      - name: Install pwabuilder
+        run: npm i -g pwabuilder
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Build APK
+        run: pwabuilder https://platiz.vercel.app -p android -o apk
 
-      - name: Generate keystore
-        run: |
-          keytool -genkey -v -keystore release.keystore -alias gd -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=GD, OU=GD, O=GD, L=CA, ST=DC, C=VE" -noprompt
+      - uses: actions/upload-artifact@v4
+        with: { name: GlobalDorado, path: apk/*.apk }
 
-      - name: Install pwabuilder CLI
-        run: npm install -g @pwabuilder/cli
-
-      - name: Generate Android package
-        run: |
-          pwabuilder https://platiz.vercel.app -p android -o ./apk -l debug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: GlobalDorado
-          path: apk/*.apk
-
-      - name: Create Release
+      - uses: softprops/action-gh-release@v1
         if: success()
-        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
           name: Global Dorado v${{ github.run_number }}
