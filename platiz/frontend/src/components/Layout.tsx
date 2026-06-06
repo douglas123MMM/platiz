@@ -104,13 +104,6 @@ export default function Layout() {
             })}
           </nav>
 
-          <div className="px-4 pb-3">
-            <button onClick={installApp}
-              className="w-full py-2.5 bg-green-600 text-white text-xs rounded-xl font-bold hover:bg-green-700 transition-colors">
-              📲 Descargar App
-            </button>
-          </div>
-
           {isAdmin && (
             <div className="px-4 pb-4">
               <div className="h-px bg-gradient-to-r from-transparent via-[#FFD700]/15 to-transparent mb-4" />
