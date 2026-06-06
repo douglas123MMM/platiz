@@ -1,9 +1,3 @@
-// Service Worker - Network first, no agressive caching
-const VERSION = 'v' + Date.now();
+// No-op service worker - remove to clear cache
 self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    fetch(e.request).catch(() => caches.match(e.request))
-  );
-});
+self.addEventListener('activate', () => self.registration.unregister());
