@@ -25,6 +25,7 @@ import AffiliateDashboard from './pages/AffiliateDashboard';
 import AffiliateLanding from './pages/AffiliateLanding';
 import AffiliateCatalog from './pages/AffiliateCatalog';
 import AffiliatesAdmin from './pages/admin/AffiliatesAdmin';
+import Entertainment from './pages/Entertainment';
 
 function LoadingScreen() {
   return (
@@ -58,7 +59,7 @@ export default function App() {
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<DashboardHome />} />
-        <Route path="/movies" element={<SectionPage />} />
+        <Route path="/movies" element={<Entertainment />} />
         <Route path="/courses" element={<SectionPage />} />
         <Route path="/books" element={<SectionPage />} />
         <Route path="/apps" element={<SectionPage />} />
