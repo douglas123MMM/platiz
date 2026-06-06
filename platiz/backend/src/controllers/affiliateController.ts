@@ -342,3 +342,32 @@ export async function adminUpdateLandingConfig(req: AuthRequest, res: Response):
     res.status(500).json({ error: e.message });
   }
 }
+
+// Cliente envia comprobante de pago
+export async function submitPaymentProof(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { service, amount, payment_method, proof_message } = req.body;
+    if (!service) { res.status(400).json({ error: 'Servicio requerido' }); return; }
+    await supabase.from('payment_proofs').insert({
+      user_id: req.user!.id, service, amount: amount || '', payment_method: payment_method || '', proof_message: proof_message || '', status: 'pending',
+    });
+    res.json({ message: 'Comprobante enviado. El admin lo revisara pronto.' });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}
+
+// Admin: listar comprobantes
+export async function adminListProofs(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data } = await supabase.from('payment_proofs').select('*, user:user_id(username, email)').order('created_at', { ascending: false }).limit(200);
+    res.json(data || []);
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}
+
+// Admin: cambiar estado
+export async function adminUpdateProof(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    await supabase.from('payment_proofs').update({ status: req.body.status }).eq('id', id);
+    res.json({ message: 'Actualizado' });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}

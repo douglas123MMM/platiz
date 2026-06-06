@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { IconSearch } from '../../icons/PremiumIcons';
 
-type Tab = 'affiliates' | 'history' | 'landings';
+type Tab = 'affiliates' | 'history' | 'landings' | 'proofs';
 
 const PAGE_TYPES = [
   { key: 'landing', label: 'Captacion de Prospecto' },
@@ -31,12 +31,15 @@ export default function AffiliatesAdmin() {
   const [lcPrice, setLcPrice] = useState('');
   const [lcCta, setLcCta] = useState('');
   const [lcShowForm, setLcShowForm] = useState(true);
+  const [proofs, setProofs] = useState<any[]>([]);
 
   useEffect(() => {
     if (tab === 'affiliates') {
       api.get('/affiliate/admin/affiliates').then(r => setAffiliates(r.data)).catch(() => {});
     } else if (tab === 'history') {
       api.get('/affiliate/admin/history').then(r => setHistory(r.data)).catch(() => {});
+    } else if (tab === 'proofs') {
+      api.get('/affiliate/admin/proofs').then(r => setProofs(r.data)).catch(() => {});
     }
   }, [tab]);
 
@@ -107,6 +110,7 @@ export default function AffiliatesAdmin() {
           { key: 'affiliates' as Tab, label: 'Afiliados' },
           { key: 'history' as Tab, label: 'Historial' },
           { key: 'landings' as Tab, label: 'Captacion de Prospecto' },
+          { key: 'proofs' as Tab, label: 'Comprobantes' },
         ].map(t => (
           <button key={t.key} onClick={() => switchTab(t.key)}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
@@ -233,6 +237,46 @@ export default function AffiliatesAdmin() {
               Guardar Configuracion
             </button>
           </div>
+        </div>
+      )}
+
+      {/* TAB: Comprobantes */}
+      {tab === 'proofs' && (
+        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead><tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+                <th className="text-left py-3 px-3">Usuario</th>
+                <th className="text-left py-3 px-3">Servicio</th>
+                <th className="text-left py-3 px-3 hidden md:table-cell">Monto</th>
+                <th className="text-left py-3 px-3 hidden md:table-cell">Metodo</th>
+                <th className="text-left py-3 px-3 hidden md:table-cell">Fecha</th>
+                <th className="text-left py-3 px-3">Estado</th>
+              </tr></thead>
+              <tbody>
+                {proofs.map((p: any) => (
+                  <tr key={p.id} className="border-b border-[#FFD700]/5 hover:bg-white/5">
+                    <td className="py-2 px-3 text-white text-sm">{p.user?.username} <span className="text-gray-500 text-xs">{p.user?.email}</span></td>
+                    <td className="py-2 px-3 text-gray-300 text-xs">{p.service}</td>
+                    <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{p.amount || '-'}</td>
+                    <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{p.payment_method || '-'}</td>
+                    <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{new Date(p.created_at).toLocaleString()}</td>
+                    <td className="py-2 px-3">
+                      <select value={p.status} onChange={async (e) => {
+                        await api.patch(`/affiliate/admin/proofs/${p.id}`, { status: e.target.value });
+                        setProofs(prev => prev.map(x => x.id === p.id ? {...x, status: e.target.value} : x));
+                      }} className={`text-xs px-2 py-1 rounded-lg border-0 ${p.status === 'approved' ? 'bg-green-500/20 text-green-400' : p.status === 'rejected' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                        <option value="pending">Pendiente</option>
+                        <option value="approved">Aprobado</option>
+                        <option value="rejected">Rechazado</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {proofs.length === 0 && <p className="text-gray-500 text-sm text-center py-8">No hay comprobantes aun</p>}
         </div>
       )}
     </div>

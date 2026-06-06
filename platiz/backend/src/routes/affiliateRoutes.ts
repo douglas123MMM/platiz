@@ -12,6 +12,9 @@ import {
   adminUpdateCredits,
   adminReferralHistory,
   adminUpdateLandingConfig,
+  submitPaymentProof,
+  adminListProofs,
+  adminUpdateProof,
 } from '../controllers/affiliateController';
 
 const router = Router();
@@ -33,5 +36,10 @@ router.get('/admin/affiliates', requireAdmin, adminListAffiliates);
 router.put('/admin/credits/:userId', requireAdmin, adminUpdateCredits);
 router.get('/admin/history', requireAdmin, adminReferralHistory);
 router.put('/admin/landing-config', requireAdmin, adminUpdateLandingConfig);
+router.get('/admin/proofs', requireAdmin, adminListProofs);
+router.patch('/admin/proofs/:id', requireAdmin, adminUpdateProof);
+
+// Cliente envia comprobante
+router.post('/proof', authenticate, submitPaymentProof);
 
 export default router;

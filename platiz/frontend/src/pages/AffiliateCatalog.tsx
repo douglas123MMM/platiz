@@ -20,6 +20,9 @@ export default function AffiliateCatalog() {
   const [theme, setTheme] = useState('dark');
   const [showPayment, setShowPayment] = useState(false);
   const [copied, setCopied] = useState('');
+  const [showProofForm, setShowProofForm] = useState(false);
+  const [proofForm, setProofForm] = useState({ service: '', amount: '', payment_method: '', proof_message: '' });
+  const [proofSent, setProofSent] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -126,6 +129,11 @@ export default function AffiliateCatalog() {
             💳 Ver Metodos de Pago
           </button>
         )}
+
+        <button onClick={() => { setShowProofForm(true); setProofSent(false); setProofForm({ service: '', amount: '', payment_method: '', proof_message: '' }); }}
+          className="mt-3 px-4 py-2 bg-green-600 text-white text-xs rounded-full font-bold hover:bg-green-700 transition-colors">
+          ✅ Ya pagué - Enviar comprobante
+        </button>
 
         <h1 className="text-xl font-bold text-[#FFD700] mt-2">Catalogo Digital</h1>
       </div>
