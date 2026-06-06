@@ -25,12 +25,14 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
 
 export async function updateSettings(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { whatsapp, telegram, bcv_rate, guias } = req.body;
+    const { whatsapp, telegram, bcv_rate, iptv_m3u_url, guias } = req.body;
     const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
+    const updateData: any = { whatsapp, telegram, updated_at: new Date().toISOString() };
+    if (iptv_m3u_url !== undefined) updateData.iptv_m3u_url = iptv_m3u_url;
     if (existing) {
-      await supabase.from('settings').update({ whatsapp, telegram, updated_at: new Date().toISOString() }).eq('id', existing.id);
+      await supabase.from('settings').update(updateData).eq('id', existing.id);
     } else {
-      await supabase.from('settings').insert({ id: 1, whatsapp, telegram }).select('id').single();
+      await supabase.from('settings').insert({ id: 1, ...updateData }).select('id').single();
     }
     if (bcv_rate !== undefined) {
       const { data: rateItem } = await supabase.from('items').select('id').eq('category_slug', 'settings').eq('title', 'bcv_rate').maybeSingle();

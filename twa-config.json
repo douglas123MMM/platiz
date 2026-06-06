@@ -1,0 +1,11 @@
+{
+  "packageId": "com.globaldorado.app",
+  "host": "platiz.vercel.app",
+  "name": "Global Dorado",
+  "launcherName": "GDorado",
+  "themeColor": "#0a0a0f",
+  "backgroundColor": "#0a0a0f",
+  "startUrl": "/",
+  "display": "standalone",
+  "iconUrl": "https://platiz.vercel.app/favicon.svg"
+}
