@@ -9,6 +9,7 @@ const navItems = [
   { path: '/dashboard', label: 'Inicio', icon: IconHome, roles: ['client', 'admin'] },
   { path: '/afiliado', label: 'Mi Oficina', icon: IconAffiliate, roles: ['client', 'admin'] },
   { path: '/soporte', label: 'Soporte', icon: IconChat, roles: ['client', 'admin'] },
+  { path: '/iptv', label: 'IPTV', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/movies', label: 'Entretenimiento', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/courses', label: 'Capacitación', icon: IconCourses, roles: ['client', 'admin'] },
   { path: '/books', label: 'Libros', icon: IconBooks, roles: ['client', 'admin'] },
