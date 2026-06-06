@@ -4,6 +4,7 @@ import api from '../services/api';
 import { ContentItem } from '../types';
 import { IconExternalLink, IconPhoto, IconPlay, IconSearch } from '../icons/PremiumIcons';
 import { SectionStreaming, IconCourses, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate } from '../icons/PremiumIcons';
+import IPTVPlayer from '../components/IPTVPlayer';
 
 const sectionMeta: Record<string, { title: string; icon: React.FC<{ className?: string; size?: number }>; subtitle: string }> = {
   movies: { title: 'Entretenimiento', icon: SectionStreaming, subtitle: 'Streaming, música, gaming y bienestar con descuentos exclusivos' },
@@ -82,8 +83,11 @@ export default function SectionPage() {
         <meta.icon className="w-14 h-14 text-[#FFD700] mx-auto mb-4" />
         <h1 className="section-title">{meta.title}</h1>
         <p className="section-subtitle">{meta.subtitle}</p>
-        {!loading && <p className="text-[#FFD700]/50 text-sm mt-1">{total || items.length} {((total || items.length) === 1) ? 'recurso disponible' : 'recursos disponibles'}</p>}
+        {!loading && <p className="text-[#FFD700]/50 text-sm mt-1">{total || items.length} {(total || items.length) === 1 ? 'recurso disponible' : 'recursos disponibles'}</p>}
       </div>
+
+      {/* IPTV Player - solo en Entretenimiento */}
+      {slug === 'movies' && <IPTVPlayer />}
 
       {!loading && items.length > 0 && (
         <div className="relative z-10 max-w-md mx-auto w-full">
