@@ -47,23 +47,6 @@ export default function Layout() {
   const filteredNav = navItems.filter((item) => item.roles.includes(user?.role || 'client'));
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
-  const [installPrompt, setInstallPrompt] = useState<any>(null);
-
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e: any) => { e.preventDefault(); setInstallPrompt(e); });
-  }, []);
-
-  const installApp = async () => {
-    if (installPrompt) {
-      installPrompt.prompt();
-      const r = await installPrompt.userChoice;
-      if (r.outcome === 'accepted') setInstallPrompt(null);
-    } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      alert('Toca el boton Compartir (cuadro con flecha arriba) y selecciona "Agregar a pantalla de inicio"');
-    } else {
-      alert('Toca los 3 puntos del navegador y selecciona "Instalar aplicacion"');
-    }
-  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
