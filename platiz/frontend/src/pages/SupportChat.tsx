@@ -616,6 +616,7 @@ export default function SupportChat() {
   const [proofForm, setProofForm] = useState({ service: '', amount: '', payment_method: '', proof_message: '' });
   const [proofSent, setProofSent] = useState(false);
   const [proofMsg, setProofMsg] = useState('');
+  const [proofFile, setProofFile] = useState<File | null>(null);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
@@ -663,7 +664,13 @@ export default function SupportChat() {
   const submitProof = async () => {
     if (!proofForm.service) { setProofMsg('Indica el servicio'); return; }
     try {
-      await api.post('/affiliate/proof', proofForm);
+      const fd = new FormData();
+      fd.append('service', proofForm.service);
+      fd.append('amount', proofForm.amount);
+      fd.append('payment_method', proofForm.payment_method);
+      fd.append('proof_message', proofForm.proof_message);
+      if (proofFile) fd.append('proof_image', proofFile);
+      await api.post('/affiliate/proof', fd);
       setProofSent(true);
       setProofMsg('');
     } catch { setProofMsg('Error al enviar'); }
@@ -753,6 +760,13 @@ export default function SupportChat() {
                 <textarea className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
                   placeholder="Detalles del comprobante (opcional)" rows={2} value={proofForm.proof_message}
                   onChange={e => setProofForm({...proofForm, proof_message: e.target.value})} />
+                <div className="flex items-center gap-2">
+                  <input type="file" accept="image/*" id="proofFile" className="hidden"
+                    onChange={e => setProofFile(e.target.files?.[0] || null)} />
+                  <label htmlFor="proofFile" className={`text-xs px-3 py-1.5 rounded-lg cursor-pointer font-medium ${proofFile ? 'bg-green-600 text-white' : 'bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20'}`}>
+                    {proofFile ? '✅ Foto lista' : '📷 Subir foto del pago'}
+                  </label>
+                </div>
                 <button onClick={submitProof} className="w-full py-2 bg-green-600 text-white rounded-lg font-bold text-sm">Enviar Comprobante</button>
               </div>
             )}
