@@ -24,6 +24,7 @@ const router = Router();
 router.get('/landing/:code/:pageType?', getLanding);
 router.get('/catalog', getCatalog);
 router.post('/register', registerWithReferral);
+router.get('/iptv-proxy', iptvProxy);
 
 // Afiliado (logueado)
 router.use(authenticate);
@@ -42,6 +43,5 @@ router.patch('/admin/proofs/:id', requireAdmin, adminUpdateProof);
 
 // Cliente envia comprobante
 router.post('/proof', authenticate, upload.single('proof_image'), submitPaymentProof);
-router.get('/iptv-proxy', iptvProxy);
 
 export default router;
