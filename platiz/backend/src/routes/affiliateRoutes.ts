@@ -15,6 +15,7 @@ import {
   submitPaymentProof,
   adminListProofs,
   adminUpdateProof,
+  iptvProxy,
 } from '../controllers/affiliateController';
 
 const router = Router();
@@ -41,5 +42,6 @@ router.patch('/admin/proofs/:id', requireAdmin, adminUpdateProof);
 
 // Cliente envia comprobante
 router.post('/proof', authenticate, upload.single('proof_image'), submitPaymentProof);
+router.get('/iptv-proxy', iptvProxy);
 
 export default router;

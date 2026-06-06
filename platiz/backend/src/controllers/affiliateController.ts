@@ -373,3 +373,14 @@ export async function adminUpdateProof(req: AuthRequest, res: Response): Promise
     res.json({ message: 'Actualizado' });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 }
+
+// Proxy IPTV - evita bloqueo HTTP en paginas HTTPS
+export async function iptvProxy(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data: s } = await supabase.from('settings').select('iptv_m3u_url').maybeSingle();
+    if (!s?.iptv_m3u_url) { res.status(404).json({ error: 'No configurado' }); return; }
+    const r = await fetch(s.iptv_m3u_url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.send(await r.text());
+  } catch (e: any) { res.status(500).send(e.message); }
+}
