@@ -26,6 +26,7 @@ import AffiliateLanding from './pages/AffiliateLanding';
 import AffiliateCatalog from './pages/AffiliateCatalog';
 import AffiliatesAdmin from './pages/admin/AffiliatesAdmin';
 import Entertainment from './pages/Entertainment';
+import ZonaVIP from './pages/ZonaVIP';
 
 function LoadingScreen() {
   return (
@@ -74,6 +75,7 @@ export default function App() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/soporte" element={<SupportChat />} />
         <Route path="/afiliado" element={<AffiliateDashboard />} />
+        <Route path="/zonavip" element={<ZonaVIP />} />
         <Route path="/player" element={<PlayerPage />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
