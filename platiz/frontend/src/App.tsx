@@ -25,7 +25,6 @@ import AffiliateDashboard from './pages/AffiliateDashboard';
 import AffiliateLanding from './pages/AffiliateLanding';
 import AffiliateCatalog from './pages/AffiliateCatalog';
 import AffiliatesAdmin from './pages/admin/AffiliatesAdmin';
-import IPTVPage from './pages/IPTVPage';
 
 function LoadingScreen() {
   return (
