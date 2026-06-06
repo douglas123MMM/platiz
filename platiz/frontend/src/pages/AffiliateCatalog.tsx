@@ -208,15 +208,15 @@ export default function AffiliateCatalog() {
       {/* Items Grid */}
       <div className="max-w-4xl mx-auto px-4 pb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filtered.map(item => (
-          <div key={item.id} className={`rounded-2xl border overflow-hidden hover:border-[#FFD700]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col ${theme === 'light' ? 'bg-white border-gray-100' : 'bg-[#111] border-[#FFD700]/10'}`}>
-            <div className={`p-4 flex items-center justify-center h-24 ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
+          <div key={item.id} className={`rounded-2xl border overflow-hidden hover:border-[#FFD700]/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group ${theme === 'light' ? 'bg-white border-gray-100 shadow-sm' : 'bg-[#111] border-[#FFD700]/10'}`}>
+            <div className={`p-5 flex items-center justify-center h-32 ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
               {item.image_url ? (
-                <img src={item.image_url} alt={item.title} className="max-h-16 max-w-full object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <img src={item.image_url} alt={item.title} className="max-h-20 max-w-[80%] object-contain group-hover:scale-110 transition-transform duration-300" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
-                <span className={`text-3xl ${theme === 'light' ? 'text-gray-300' : 'text-gray-700'}`}>{item.title.charAt(0)}</span>
+                <span className={`text-4xl font-bold ${theme === 'light' ? 'text-gray-300' : 'text-gray-700'}`}>{item.title.charAt(0)}</span>
               )}
             </div>
-            <div className="p-3 flex flex-col flex-1">
+            <div className="p-4 flex flex-col flex-1">
               <p className={`text-xs font-semibold line-clamp-2 mb-2 leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{item.title}</p>
               {item.description && (
                 <p className="text-gray-500 text-xs line-clamp-1 mb-3 flex-1">{item.description}</p>
