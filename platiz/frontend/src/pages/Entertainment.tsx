@@ -43,7 +43,6 @@ export default function Entertainment() {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [trailer, setTrailer] = useState<{ id: number; title: string } | null>(null);
   const [trailerKey, setTrailerKey] = useState('');
-  const [activeTab, setActiveTab] = useState<'movies' | 'iptv'>('movies');
   const searchTimer = useRef<any>(null);
 
   useEffect(() => {
@@ -103,27 +102,7 @@ export default function Entertainment() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] pb-12 animate-fade-in">
-      {/* Tabs */}
-      <div className="flex justify-center gap-4 py-4 border-b border-white/5">
-        <button onClick={() => setActiveTab('movies')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-colors ${activeTab === 'movies' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400'}`}>
-          Peliculas y Series
-        </button>
-        <button onClick={() => setActiveTab('iptv')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-colors ${activeTab === 'iptv' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400'}`}>
-          TV en Vivo
-        </button>
-      </div>
-
-      {/* IPTV Tab */}
-      {activeTab === 'iptv' && (
-        <div className="p-4">
-          <iframe src="/movies?iptv=1" className="w-full h-[80vh] rounded-xl" title="IPTV" />
-        </div>
-      )}
-
-      {/* Movies Tab */}
-      {activeTab === 'movies' && (
-        <>
-          {/* Hero */}
+      {/* Hero */}
           {hero && (
             <div className="relative h-[50vh] md:h-[70vh] mb-8">
               <img src={IMG_ORIG + hero.backdrop_path} alt="" className="w-full h-full object-cover" />
@@ -168,10 +147,9 @@ export default function Entertainment() {
               <Carousel title="Comedia" items={comedy} />
               <Carousel title="Terror" items={horror} />
               <Carousel title="Proximamente" items={upcoming} />
-            </>
-          )}
-        </>
-      )}
+          </>
+        )}
+      </div>
 
       {/* Trailer Modal */}
       {trailer && (
