@@ -98,12 +98,12 @@ export default function SectionPage() {
               placeholder="Buscar guías..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-[#0a0a0f] border border-[#FFD700]/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 transition-all"
+              className="w-full pl-12 pr-12 py-3 bg-[#0a0a0f] border border-[#FFD700]/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 transition-all"
             />
             {query && (
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#FFD700]/60">
-                {items.length} de {total}
-              </span>
+              <button onClick={() => setQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 text-xs">
+                ✕
+              </button>
             )}
           </div>
         </div>
