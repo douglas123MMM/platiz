@@ -206,29 +206,52 @@ export default function AffiliateCatalog() {
       </div>
 
       {/* Items Grid */}
-      <div className="max-w-4xl mx-auto px-4 pb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filtered.map(item => (
-          <div key={item.id} className={`rounded-2xl border overflow-hidden hover:border-[#FFD700]/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group ${theme === 'light' ? 'bg-white border-gray-100 shadow-sm' : 'bg-[#111] border-[#FFD700]/10'}`}>
-            <div className={`p-5 flex items-center justify-center h-32 ${theme === 'light' ? 'bg-gray-50' : 'bg-[#1a1a1a]'}`}>
-              {item.image_url ? (
-                <img src={item.image_url} alt={item.title} className="max-h-20 max-w-[80%] object-contain group-hover:scale-110 transition-transform duration-300" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-              ) : (
-                <span className={`text-4xl font-bold ${theme === 'light' ? 'text-gray-300' : 'text-gray-700'}`}>{item.title.charAt(0)}</span>
-              )}
-            </div>
-            <div className="p-4 flex flex-col flex-1">
-              <p className={`text-xs font-semibold line-clamp-2 mb-2 leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{item.title}</p>
-              {item.description && (
-                <p className="text-gray-500 text-xs line-clamp-1 mb-3 flex-1">{item.description}</p>
-              )}
-              <a
-                href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full text-center py-2 bg-green-600 text-white text-xs rounded-xl font-bold hover:bg-green-700 transition-colors"
-              >
-                Adquirir
-              </a>
+      <div className="max-w-5xl mx-auto px-4 pb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {filtered.map((item, idx) => (
+          <div key={item.id} className="animate-slide-up group" style={{ animationDelay: `${idx * 30}ms` }}>
+            <div className={`rounded-2xl border overflow-hidden hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full ${
+              theme === 'light' 
+                ? 'bg-white border-gray-100 shadow-sm hover:border-[#FFD700]/40' 
+                : 'bg-gradient-to-b from-[#1a1a1a] to-[#111] border-[#FFD700]/5 hover:border-[#FFD700]/20 shadow-lg shadow-black/20'
+            }`}>
+              {/* Logo Area */}
+              <div className={`relative p-6 flex items-center justify-center h-36 ${
+                theme === 'light' 
+                  ? 'bg-gradient-to-br from-gray-50 to-white' 
+                  : 'bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d]'
+              }`}>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.03),transparent_70%)]" />
+                {item.image_url ? (
+                  <img src={item.image_url} alt={item.title} className="relative z-10 max-h-24 max-w-[75%] object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-lg" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                ) : (
+                  <div className={`relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-extrabold ${
+                    theme === 'light' 
+                      ? 'bg-gray-100 text-gray-400' 
+                      : 'bg-white/5 text-gray-600'
+                  }`}>
+                    {item.title.charAt(0)}
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="p-4 flex flex-col flex-1">
+                <h3 className={`text-sm font-bold mb-1.5 line-clamp-2 leading-snug ${
+                  theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'
+                }`}>{item.title}</h3>
+                {item.description && (
+                  <p className={`text-xs line-clamp-2 mb-4 flex-1 ${
+                    theme === 'light' ? 'text-gray-500' : 'text-gray-400'
+                  }`}>{item.description}</p>
+                )}
+                <a
+                  href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
+                >
+                  Adquirir
+                </a>
+              </div>
             </div>
           </div>
         ))}
