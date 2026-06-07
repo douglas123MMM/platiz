@@ -678,55 +678,56 @@ export default function SupportChat() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-6rem)] animate-fade-in max-w-2xl mx-auto">
-      <div className="text-center py-4">
-        <h2 className="text-lg font-bold text-white flex items-center justify-center gap-2">
-          <IconChat className="w-5 h-5 text-[#FFD700]" /> Soporte Global Dorado
-        </h2>
+      {/* Header */}
+      <div className="text-center py-4 px-4 border-b border-white/5">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#DAA520] flex items-center justify-center mx-auto mb-2 shadow-lg shadow-[#FFD700]/10">
+          <IconChat className="w-6 h-6 text-black" />
+        </div>
+        <h2 className="text-base font-bold text-white">Soporte Global Dorado</h2>
         <p className="text-gray-500 text-xs">Respuestas automaticas sobre precios, pagos y productos</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 space-y-3 pb-2">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 space-y-4 py-4">
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
+          <div key={i} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            {msg.role === 'assistant' && (
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#FFD700] to-[#DAA520] flex items-center justify-center flex-shrink-0 mb-1">
+                <IconChat className="w-3.5 h-3.5 text-black" />
+              </div>
+            )}
+            <div className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed ${
               msg.role === 'user'
-                ? 'bg-[#FFD700] text-black rounded-br-md'
-                : 'bg-[#111] border border-[#FFD700]/10 text-gray-200 rounded-bl-md'
+                ? 'bg-[#FFD700] text-black rounded-2xl rounded-br-md shadow-md'
+                : 'bg-white/5 border border-white/5 text-gray-200 rounded-2xl rounded-bl-md'
             }`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
-              <p className="whitespace-pre-wrap leading-relaxed">{msg.role === 'assistant' ? renderText(msg.text) : msg.text}</p>
+              <p className="whitespace-pre-wrap">{msg.role === 'assistant' ? renderText(msg.text) : msg.text}</p>
             </div>
           </div>
         ))}
         <div ref={endRef} />
       </div>
 
-      <div className="px-4 pb-3">
+      {/* Input Area */}
+      <div className="px-4 pb-3 pt-2 border-t border-white/5">
         <div className="flex gap-2 mb-3 flex-wrap">
           {quickBtns.map((btn) => (
-            <button
-              key={btn}
-              onClick={() => send(btn)}
-              className="text-xs px-3 py-1.5 rounded-full bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors"
-            >
+            <button key={btn} onClick={() => send(btn)}
+              className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-gray-300 hover:bg-white/10 hover:border-white/10 transition-all">
               {btn}
             </button>
           ))}
-          <button
-            onClick={() => { setShowProofForm(true); setProofSent(false); setProofMsg(''); setProofForm({ service: '', amount: '', payment_method: '', proof_message: '' }); }}
-            className="text-xs px-3 py-1.5 rounded-full bg-green-600 border border-green-500 text-white font-bold hover:bg-green-700 transition-colors"
-          >
+          <button onClick={() => { setShowProofForm(true); setProofSent(false); setProofMsg(''); setProofForm({ service: '', amount: '', payment_method: '', proof_message: '' }); }}
+            className="text-xs px-3 py-1.5 rounded-full bg-green-600/20 border border-green-500/30 text-green-400 font-medium hover:bg-green-600/30 transition-all">
             Pagar
           </button>
         </div>
         <div className="flex gap-2">
-          <input
-            className="flex-1 bg-[#111] border border-[#FFD700]/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
-            placeholder="Escribe tu pregunta..."
-            value={input}
+          <input className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 focus:bg-white/[0.07] transition-all"
+            placeholder="Escribe tu pregunta..." value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && send()}
-          />
-          <button onClick={() => send()} className="bg-[#FFD700] text-black rounded-xl px-4 py-2.5 font-bold hover:bg-[#FFE44D] transition-colors">
+            onKeyDown={(e) => e.key === 'Enter' && send()} />
+          <button onClick={() => send()} className="w-11 h-11 rounded-full bg-[#FFD700] flex items-center justify-center text-black font-bold hover:bg-[#FFE44D] active:scale-95 transition-all shadow-lg shadow-[#FFD700]/20">
             <IconSend className="w-4 h-4" />
           </button>
         </div>
