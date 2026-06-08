@@ -56,9 +56,6 @@ export default function Entertainment() {
   const [catalogTotal, setCatalogTotal] = useState(0);
   const [catalogLoading, setCatalogLoading] = useState(false);
 
-  // Player
-  const [player, setPlayer] = useState<{ title: string; previewUrl: string } | null>(null);
-
   useEffect(() => {
     api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
   }, []);
@@ -85,26 +82,24 @@ export default function Entertainment() {
     if (catalogSearch) params.set('q', catalogSearch);
     params.set('page', String(catalogPage));
     params.set('limit', '50');
-    api.get(`/movies?${params.toString()}`).then(async r => {
+    api.get(`/movies?${params.toString()}`).then(r => {
       const items: CatalogMovie[] = r.data.items || [];
       setCatalogTotal(r.data.total || 0);
       setCatalogCategories(r.data.categories || []);
+      setCatalogMovies(items);
+      setCatalogLoading(false);
 
-      // Bulk fetch TMDB posters for generic images
+      // Fetch TMDB posters in background (don't block page load)
       const needPoster = items.filter(m => !m.image || GENERIC_IDS_PREFIX.some(id => m.image.includes(id)));
       if (needPoster.length > 0) {
         const names = needPoster.map(m => m.name).join('|');
-        try {
-          const bulk = await api.get(`/movies/posters?names=${encodeURIComponent(names)}`);
+        api.get(`/movies/posters?names=${encodeURIComponent(names)}`).then(bulk => {
           if (bulk.data) {
-            for (const m of items) {
-              if (bulk.data[m.name]) m.image = bulk.data[m.name];
-            }
+            setCatalogMovies(prev => prev.map(m => bulk.data[m.name] ? { ...m, image: bulk.data[m.name] } : m));
           }
-        } catch {}
+        }).catch(() => {});
       }
-      setCatalogMovies(items);
-    }).catch(() => {}).finally(() => setCatalogLoading(false));
+    }).catch(() => setCatalogLoading(false));
   }, [tab, catalogCat, catalogSearch, catalogPage]);
 
   const GENERIC_IDS_PREFIX = [
@@ -138,9 +133,7 @@ export default function Entertainment() {
   };
 
   const openPlayer = (m: CatalogMovie) => {
-    if (m.previewUrl) {
-      setPlayer({ title: m.name, previewUrl: m.previewUrl });
-    } else if (m.link) {
+    if (m.link) {
       window.open(m.link, '_blank', 'noopener');
     }
   };
@@ -302,21 +295,6 @@ export default function Entertainment() {
       )}
 
       {/* Player Modal */}
-      {player && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-2 md:p-4" onClick={() => setPlayer(null)}>
-          <div className="bg-[#111] rounded-2xl overflow-hidden w-full max-w-4xl h-[70vh] md:h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-3 md:p-4 border-b border-white/10 flex-shrink-0">
-              <h3 className="text-white font-bold text-sm md:text-base truncate">{player.title}</h3>
-              <div className="flex gap-2">
-                <button onClick={() => setPlayer(null)} className="text-gray-400 text-xl md:text-2xl leading-none px-1">&times;</button>
-              </div>
-            </div>
-            <div className="flex-1 bg-black">
-              <iframe src={player.previewUrl} className="w-full h-full" allowFullScreen allow="autoplay" />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
