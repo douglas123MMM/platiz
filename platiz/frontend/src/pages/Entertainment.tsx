@@ -55,6 +55,7 @@ export default function Entertainment() {
   const [catalogPage, setCatalogPage] = useState(1);
   const [catalogTotal, setCatalogTotal] = useState(0);
   const [catalogLoading, setCatalogLoading] = useState(false);
+  const [player, setPlayer] = useState<{ title: string; url: string } | null>(null);
 
   useEffect(() => {
     api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
@@ -133,7 +134,10 @@ export default function Entertainment() {
   };
 
   const openPlayer = (m: CatalogMovie) => {
-    if (m.link) {
+    const id = m.link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (id) {
+      setPlayer({ title: m.name, url: `https://drive.google.com/file/d/${id[1]}/preview` });
+    } else if (m.link) {
       window.open(m.link, '_blank', 'noopener');
     }
   };
@@ -295,19 +299,55 @@ export default function Entertainment() {
       )}
 
       {/* Player Modal */}
+      {player && (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col" onClick={() => setPlayer(null)}>
+          <div className="flex items-center justify-between p-3 flex-shrink-0" onClick={e => e.stopPropagation()}>
+            <h3 className="text-white text-sm font-bold truncate flex-1">{player.title}</h3>
+            <button onClick={() => setPlayer(null)} className="text-gray-400 text-2xl px-2">&times;</button>
+          </div>
+          <div className="flex-1">
+            <iframe src={player.url} className="w-full h-full border-0" allowFullScreen allow="autoplay" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 function CatalogImage({ src, alt }: { src: string; alt: string }) {
+  const [imgSrc, setImgSrc] = useState('');
   const [loaded, setLoaded] = useState(false);
 
-  if (!src) {
-    return <div className="w-full h-full flex items-center justify-center text-gray-700 text-5xl font-bold bg-white/5">{alt.charAt(0).toUpperCase()}</div>;
+  const GENERIC_IDS = [
+    '1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy',
+    '1ETN5F41MADzYUkqiQWlNa6xpBHC48lgY',
+    '1BDNyinrLQe7PoTBVR9exO8IWuxQZgx8L',
+    '1ETN5F41MADzYUkqiQWlNa6xpBH5kjWdY',
+    '1BDNyinrLQe7PoTBVR9exO8IWuxM95u2w',
+    '1MZaKyWqs8IY9DHplK8KBNl8-a6zaSiXp',
+  ];
+  const isGeneric = !src || GENERIC_IDS.some(id => src.includes(id));
+
+  useEffect(() => {
+    setLoaded(false);
+    if (isGeneric || !src) {
+      setImgSrc('');
+    } else {
+      setImgSrc(src);
+    }
+  }, [src]);
+
+  if (!imgSrc) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-white/[0.03] gap-2">
+        <div className="w-7 h-7 border-2 border-[#FFD700]/20 border-t-[#FFD700] rounded-full animate-spin" />
+        {isGeneric && <span className="text-[9px] text-gray-600">TMDB</span>}
+      </div>
+    );
   }
 
   return (
-    <img src={src} alt={alt} className="w-full h-full object-cover"
+    <img src={imgSrc} alt={alt} className="w-full h-full object-cover"
       loading="lazy" onLoad={() => setLoaded(true)}
       style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.3s' }} />
   );
