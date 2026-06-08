@@ -162,13 +162,22 @@ async function fetchMovies(): Promise<Movie[]> {
       });
     }
 
-    // Fetch TMDB posters for movies without valid images (limit 20 per refresh to avoid rate limits)
-    const needPoster = movies.filter(m => !m.image || m.image.includes('google.com'));
-    const batchSize = 15;
+    // Fetch TMDB posters for movies without valid images or with generic placeholders
+    const genericId = '1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy';
+    const needPoster = movies.filter(m => {
+      if (!m.image) return true;
+      if (m.image.includes('google.com')) return true;
+      if (m.image.includes(genericId)) return true;
+      return false;
+    });
+    const batchSize = 20;
     for (let b = 0; b < Math.min(batchSize, needPoster.length); b++) {
       const m = needPoster[b];
       const poster = await fetchTMDBPoster(m.name);
-      if (poster) m.posterFallback = poster;
+      if (poster) {
+        m.image = poster;
+        m.posterFallback = poster;
+      }
     }
 
     cachedMovies = movies;
