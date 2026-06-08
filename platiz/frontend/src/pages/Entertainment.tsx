@@ -298,21 +298,19 @@ export default function Entertainment() {
 }
 
 function CatalogImage({ src, alt }: { src: string; alt: string }) {
-  const [imgSrc, setImgSrc] = useState(src);
-  const [error, setError] = useState(false);
+  const [imgSrc, setImgSrc] = useState('');
+  const [loaded, setLoaded] = useState(false);
   const [triedTMDB, setTriedTMDB] = useState(false);
 
-  const isGeneric = src.includes('1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy')
-    || src.includes('1ETN5F41MADzYUkqiQWlNa6xpBHC48lgY')
-    || src.includes('1BDNyinrLQe7PoTBVR9exO8IWuxQZgx8L')
-    || !src;
-
-  useEffect(() => {
-    setImgSrc(src);
-    setError(false);
-    setTriedTMDB(false);
-    if (isGeneric && alt) fetchPoster();
-  }, [src]);
+  const GENERIC_IDS = [
+    '1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy',
+    '1ETN5F41MADzYUkqiQWlNa6xpBHC48lgY',
+    '1BDNyinrLQe7PoTBVR9exO8IWuxQZgx8L',
+    '1ETN5F41MADzYUkqiQWlNa6xpBH5kjWdY',
+    '1BDNyinrLQe7PoTBVR9exO8IWuxM95u2w',
+    '1MZaKyWqs8IY9DHplK8KBNl8-a6zaSiXp',
+  ];
+  const isGeneric = !src || GENERIC_IDS.some(id => src.includes(id));
 
   const fetchPoster = async () => {
     if (triedTMDB || !alt) return;
@@ -320,23 +318,31 @@ function CatalogImage({ src, alt }: { src: string; alt: string }) {
     try {
       const r = await api.get(`/movies/poster?name=${encodeURIComponent(alt)}`);
       if (r.data?.poster) setImgSrc(r.data.poster);
-      else setError(true);
-    } catch { setError(true); }
+    } catch {}
   };
 
-  if (!imgSrc || error || (isGeneric && !imgSrc)) {
-    if (!triedTMDB && alt) {
-      return <div className="w-full h-full flex items-center justify-center bg-white/5"><div className="w-6 h-6 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" /></div>;
+  useEffect(() => {
+    setImgSrc('');
+    setLoaded(false);
+    setTriedTMDB(false);
+    if (isGeneric) {
+      fetchPoster();
+    } else if (src) {
+      setImgSrc(src);
     }
+  }, [src]);
+
+  if (!imgSrc) {
     return (
-      <div className="w-full h-full flex items-center justify-center text-gray-700 text-5xl font-bold bg-white/5">
-        {alt.charAt(0).toUpperCase()}
+      <div className="w-full h-full flex items-center justify-center bg-white/5">
+        <div className="w-6 h-6 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <img src={imgSrc} alt={alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      loading="lazy" onError={() => { if (!triedTMDB) fetchPoster(); else setError(true); }} />
+    <img src={imgSrc} alt={alt} className="w-full h-full object-cover"
+      loading="lazy" onLoad={() => setLoaded(true)}
+      style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.3s' }} />
   );
 }
