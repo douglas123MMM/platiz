@@ -131,6 +131,7 @@ export default function AffiliateCatalog() {
         )}
 
         <h1 className="text-xl font-bold text-[#FFD700] mt-2">Catalogo Digital</h1>
+        <p className="text-red-400 text-sm font-bold mt-1 bg-red-500/10 inline-block px-3 py-1 rounded-full">HOLA</p>
       </div>
 
       {/* Modal Metodos de Pago */}
