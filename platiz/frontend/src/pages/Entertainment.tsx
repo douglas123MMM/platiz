@@ -18,6 +18,7 @@ interface CatalogMovie {
   name: string;
   image: string;
   link: string;
+  previewUrl: string;
 }
 
 const IMG = 'https://image.tmdb.org/t/p/w500';
@@ -45,7 +46,7 @@ export default function Entertainment() {
   const [trailerKey, setTrailerKey] = useState('');
   const searchTimer = useRef<any>(null);
 
-  // Catalog state
+  // Catalog
   const [tab, setTab] = useState<'tmdb' | 'catalog'>('tmdb');
   const [catalogMovies, setCatalogMovies] = useState<CatalogMovie[]>([]);
   const [catalogCategories, setCatalogCategories] = useState<string[]>([]);
@@ -54,6 +55,9 @@ export default function Entertainment() {
   const [catalogPage, setCatalogPage] = useState(1);
   const [catalogTotal, setCatalogTotal] = useState(0);
   const [catalogLoading, setCatalogLoading] = useState(false);
+
+  // Player
+  const [player, setPlayer] = useState<{ title: string; previewUrl: string } | null>(null);
 
   useEffect(() => {
     api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
@@ -109,6 +113,14 @@ export default function Entertainment() {
     setTrailerKey(yt?.key || '');
   };
 
+  const openPlayer = (m: CatalogMovie) => {
+    if (m.previewUrl) {
+      setPlayer({ title: m.name, previewUrl: m.previewUrl });
+    } else if (m.link) {
+      window.open(m.link, '_blank', 'noopener');
+    }
+  };
+
   const Carousel = ({ title, items }: { title: string; items: TmdbMovie[] }) => (
     <div className="mb-8">
       <h2 className="text-white text-lg font-bold mb-3 px-4">{title}</h2>
@@ -138,13 +150,12 @@ export default function Entertainment() {
           Cartelera TMDB
         </button>
         <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${tab === 'catalog' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
-Cat&aacute;logo
+          Cat&aacute;logo
         </button>
       </div>
 
       {tab === 'tmdb' && (
         <>
-          {/* Hero */}
           {hero && (
             <div className="relative h-[50vh] md:h-[70vh] mb-8">
               <img src={IMG_ORIG + hero.backdrop_path} alt="" className="w-full h-full object-cover" />
@@ -162,13 +173,11 @@ Cat&aacute;logo
             </div>
           )}
 
-          {/* Search */}
           <div className="px-4 mb-6">
             <input className="w-full max-w-md bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
               placeholder="Buscar peliculas..." value={search} onChange={e => handleSearch(e.target.value)} />
           </div>
 
-          {/* Search Results or Categories */}
           {search ? (
             <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-3 px-4">
               {searchResults.filter(m => m.poster_path).map(m => (
@@ -194,19 +203,19 @@ Cat&aacute;logo
         </>
       )}
 
-      {/* Catálogo MaxziMedia */}
+      {/* Catalog */}
       {tab === 'catalog' && (
         <div className="px-4">
           <div className="flex flex-col md:flex-row gap-3 mb-4">
             <input className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
-              placeholder="Buscar pelicula..." value={catalogSearch} onChange={e => handleCatalogSearch(e.target.value)} />
+              placeholder="Buscar..." value={catalogSearch} onChange={e => handleCatalogSearch(e.target.value)} />
             <select value={catalogCat} onChange={e => { setCatalogCat(e.target.value); setCatalogPage(1); }}
               className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-[#FFD700]/30">
-              <option value="">Todas las categorias</option>
+              <option value="">Todas</option>
               {catalogCategories.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
-          <p className="text-gray-400 text-xs mb-4">{catalogTotal} peliculas disponibles</p>
+          <p className="text-gray-400 text-xs mb-4">{catalogTotal} pel&iacute;culas</p>
 
           {catalogLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -220,22 +229,19 @@ Cat&aacute;logo
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {catalogMovies.map(m => (
-                <a key={m.id} href={m.link || '#'} target="_blank" rel="noopener noreferrer"
-                  className="block group">
+                <div key={m.id} className="block group cursor-pointer" onClick={() => openPlayer(m)}>
                   <div className="relative overflow-hidden rounded-xl bg-white/5 aspect-[2/3] mb-2">
-                    {m.image ? (
-                      <img src={m.image} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy"
-                        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-700 text-6xl font-bold">{m.name.charAt(0)}</div>
-                    )}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                      <span className="text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
+                    <CatalogImage src={m.image} alt={m.name} />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                      <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-3xl block">▶</span>
+                        <span className="text-xs mt-1 font-bold">Ver</span>
+                      </div>
                     </div>
                   </div>
                   <p className="text-white text-xs leading-tight line-clamp-2 group-hover:text-[#FFD700] transition-colors">{m.name}</p>
                   {m.category && <p className="text-gray-500 text-[10px] mt-0.5">{m.category}</p>}
-                </a>
+                </div>
               ))}
             </div>
           )}
@@ -270,6 +276,43 @@ Cat&aacute;logo
           </div>
         </div>
       )}
+
+      {/* Player Modal */}
+      {player && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setPlayer(null)}>
+          <div className="bg-[#111] rounded-2xl overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-white/10 flex-shrink-0">
+              <h3 className="text-white font-bold truncate">{player.title}</h3>
+              <div className="flex gap-2">
+                <button onClick={() => setPlayer(null)} className="text-gray-400 text-2xl leading-none">&times;</button>
+              </div>
+            </div>
+            <div className="flex-1 bg-black">
+              <iframe src={player.previewUrl} className="w-full h-full min-h-[50vh]" allowFullScreen allow="autoplay" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function CatalogImage({ src, alt }: { src: string; alt: string }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [error, setError] = useState(false);
+
+  useEffect(() => { setImgSrc(src); setError(false); }, [src]);
+
+  if (!imgSrc || error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-gray-700 text-5xl font-bold bg-white/5">
+        {alt.charAt(0).toUpperCase()}
+      </div>
+    );
+  }
+
+  return (
+    <img src={imgSrc} alt={alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      loading="lazy" onError={() => setError(true)} />
   );
 }
