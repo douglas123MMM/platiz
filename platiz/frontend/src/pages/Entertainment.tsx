@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 
-interface Movie {
+interface TmdbMovie {
   id: number;
   title?: string;
   name?: string;
@@ -12,16 +12,16 @@ interface Movie {
   media_type?: string;
 }
 
+interface CatalogMovie {
+  id: number;
+  category: string;
+  name: string;
+  image: string;
+  link: string;
+}
+
 const IMG = 'https://image.tmdb.org/t/p/w500';
 const IMG_ORIG = 'https://image.tmdb.org/t/p/original';
-
-function TmdbApi() {
-  const [key, setKey] = useState('');
-  useEffect(() => {
-    api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
-  }, []);
-  return key;
-}
 
 async function fetchTMDB(key: string, path: string, params = '') {
   const sep = path.includes('?') ? '&' : '?';
@@ -31,19 +31,29 @@ async function fetchTMDB(key: string, path: string, params = '') {
 
 export default function Entertainment() {
   const [key, setKey] = useState('');
-  const [hero, setHero] = useState<Movie | null>(null);
-  const [trending, setTrending] = useState<Movie[]>([]);
-  const [popular, setPopular] = useState<Movie[]>([]);
-  const [topRated, setTopRated] = useState<Movie[]>([]);
-  const [upcoming, setUpcoming] = useState<Movie[]>([]);
-  const [action, setAction] = useState<Movie[]>([]);
-  const [comedy, setComedy] = useState<Movie[]>([]);
-  const [horror, setHorror] = useState<Movie[]>([]);
+  const [hero, setHero] = useState<TmdbMovie | null>(null);
+  const [trending, setTrending] = useState<TmdbMovie[]>([]);
+  const [popular, setPopular] = useState<TmdbMovie[]>([]);
+  const [topRated, setTopRated] = useState<TmdbMovie[]>([]);
+  const [upcoming, setUpcoming] = useState<TmdbMovie[]>([]);
+  const [action, setAction] = useState<TmdbMovie[]>([]);
+  const [comedy, setComedy] = useState<TmdbMovie[]>([]);
+  const [horror, setHorror] = useState<TmdbMovie[]>([]);
   const [search, setSearch] = useState('');
-  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [searchResults, setSearchResults] = useState<TmdbMovie[]>([]);
   const [trailer, setTrailer] = useState<{ id: number; title: string } | null>(null);
   const [trailerKey, setTrailerKey] = useState('');
   const searchTimer = useRef<any>(null);
+
+  // Catalog state
+  const [tab, setTab] = useState<'tmdb' | 'catalog'>('tmdb');
+  const [catalogMovies, setCatalogMovies] = useState<CatalogMovie[]>([]);
+  const [catalogCategories, setCatalogCategories] = useState<string[]>([]);
+  const [catalogCat, setCatalogCat] = useState('');
+  const [catalogSearch, setCatalogSearch] = useState('');
+  const [catalogPage, setCatalogPage] = useState(1);
+  const [catalogTotal, setCatalogTotal] = useState(0);
+  const [catalogLoading, setCatalogLoading] = useState(false);
 
   useEffect(() => {
     api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
@@ -63,6 +73,21 @@ export default function Entertainment() {
     fetchTMDB(key, '/discover/movie', '&with_genres=27').then(d => setHorror(d.results || []));
   }, [key]);
 
+  useEffect(() => {
+    if (tab !== 'catalog') return;
+    setCatalogLoading(true);
+    const params = new URLSearchParams();
+    if (catalogCat) params.set('cat', catalogCat);
+    if (catalogSearch) params.set('q', catalogSearch);
+    params.set('page', String(catalogPage));
+    params.set('limit', '50');
+    api.get(`/movies?${params.toString()}`).then(r => {
+      setCatalogMovies(r.data.items || []);
+      setCatalogTotal(r.data.total || 0);
+      setCatalogCategories(r.data.categories || []);
+    }).catch(() => {}).finally(() => setCatalogLoading(false));
+  }, [tab, catalogCat, catalogSearch, catalogPage]);
+
   const handleSearch = (q: string) => {
     setSearch(q);
     clearTimeout(searchTimer.current);
@@ -72,14 +97,19 @@ export default function Entertainment() {
     }, 400);
   };
 
-  const openTrailer = async (movie: Movie) => {
+  const handleCatalogSearch = (q: string) => {
+    setCatalogSearch(q);
+    setCatalogPage(1);
+  };
+
+  const openTrailer = async (movie: TmdbMovie) => {
     setTrailer({ id: movie.id, title: movie.title || movie.name || '' });
     const d = await fetchTMDB(key, `/movie/${movie.id}/videos`);
     const yt = (d.results || []).find((v: any) => v.site === 'YouTube');
     setTrailerKey(yt?.key || '');
   };
 
-  const Carousel = ({ title, items }: { title: string; items: Movie[] }) => (
+  const Carousel = ({ title, items }: { title: string; items: TmdbMovie[] }) => (
     <div className="mb-8">
       <h2 className="text-white text-lg font-bold mb-3 px-4">{title}</h2>
       <div className="flex gap-2 overflow-x-auto px-4 pb-2 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
@@ -102,7 +132,19 @@ export default function Entertainment() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] pb-12 animate-fade-in">
-      {/* Hero */}
+      {/* Tabs */}
+      <div className="flex justify-center gap-2 mb-6 px-4 pt-4">
+        <button onClick={() => setTab('tmdb')} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${tab === 'tmdb' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+          Cartelera TMDB
+        </button>
+        <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${tab === 'catalog' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+          Catálogo MaxziMedia
+        </button>
+      </div>
+
+      {tab === 'tmdb' && (
+        <>
+          {/* Hero */}
           {hero && (
             <div className="relative h-[50vh] md:h-[70vh] mb-8">
               <img src={IMG_ORIG + hero.backdrop_path} alt="" className="w-full h-full object-cover" />
@@ -147,8 +189,68 @@ export default function Entertainment() {
               <Carousel title="Comedia" items={comedy} />
               <Carousel title="Terror" items={horror} />
               <Carousel title="Proximamente" items={upcoming} />
-          </>
-        )}
+            </>
+          )}
+        </>
+      )}
+
+      {/* Catálogo MaxziMedia */}
+      {tab === 'catalog' && (
+        <div className="px-4">
+          <div className="flex flex-col md:flex-row gap-3 mb-4">
+            <input className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
+              placeholder="Buscar pelicula..." value={catalogSearch} onChange={e => handleCatalogSearch(e.target.value)} />
+            <select value={catalogCat} onChange={e => { setCatalogCat(e.target.value); setCatalogPage(1); }}
+              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-[#FFD700]/30">
+              <option value="">Todas las categorias</option>
+              {catalogCategories.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <p className="text-gray-400 text-xs mb-4">{catalogTotal} peliculas disponibles</p>
+
+          {catalogLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[1,2,3,4,5,6,7,8].map(i => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-white/5 rounded-xl aspect-[2/3] mb-2" />
+                  <div className="h-3 bg-white/5 rounded w-3/4" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {catalogMovies.map(m => (
+                <a key={m.id} href={m.link || '#'} target="_blank" rel="noopener noreferrer"
+                  className="block group">
+                  <div className="relative overflow-hidden rounded-xl bg-white/5 aspect-[2/3] mb-2">
+                    {m.image ? (
+                      <img src={m.image} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy"
+                        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-700 text-6xl font-bold">{m.name.charAt(0)}</div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                      <span className="text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
+                    </div>
+                  </div>
+                  <p className="text-white text-xs leading-tight line-clamp-2 group-hover:text-[#FFD700] transition-colors">{m.name}</p>
+                  {m.category && <p className="text-gray-500 text-[10px] mt-0.5">{m.category}</p>}
+                </a>
+              ))}
+            </div>
+          )}
+
+          {catalogTotal > 50 && (
+            <div className="flex justify-center gap-2 mt-8">
+              <button onClick={() => setCatalogPage(p => Math.max(1, p - 1))} disabled={catalogPage === 1}
+                className="px-4 py-2 bg-white/5 border border-white/10 text-white text-sm rounded-xl disabled:opacity-30">Anterior</button>
+              <span className="px-4 py-2 text-gray-400 text-sm">{catalogPage} / {Math.ceil(catalogTotal / 50)}</span>
+              <button onClick={() => setCatalogPage(p => p + 1)} disabled={catalogPage >= Math.ceil(catalogTotal / 50)}
+                className="px-4 py-2 bg-white/5 border border-white/10 text-white text-sm rounded-xl">Siguiente</button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Trailer Modal */}
       {trailer && (

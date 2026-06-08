@@ -14,6 +14,7 @@ import streamRoutes from './routes/streamRoutes';
 import partnerRoutes from './routes/partnerRoutes';
 import settingsRoutes from './routes/settingsRoutes';
 import affiliateRoutes from './routes/affiliateRoutes';
+import movieRoutes from './routes/movieRoutes';
 import { streamVideo } from './controllers/videoController';
 import { xtreamProxy, xtreamStream } from './controllers/xtreamController';
 
@@ -37,6 +38,7 @@ app.use('/api/streams', streamRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/affiliate', affiliateRoutes);
+app.use('/api/movies', movieRoutes);
 app.get('/api/video/stream', streamVideo);
 app.get('/api/xtream/proxy', xtreamProxy);
 app.get('/api/xtream/stream', xtreamStream);
