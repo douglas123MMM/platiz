@@ -85,12 +85,36 @@ export default function Entertainment() {
     if (catalogSearch) params.set('q', catalogSearch);
     params.set('page', String(catalogPage));
     params.set('limit', '50');
-    api.get(`/movies?${params.toString()}`).then(r => {
-      setCatalogMovies(r.data.items || []);
+    api.get(`/movies?${params.toString()}`).then(async r => {
+      const items: CatalogMovie[] = r.data.items || [];
       setCatalogTotal(r.data.total || 0);
       setCatalogCategories(r.data.categories || []);
+
+      // Bulk fetch TMDB posters for generic images
+      const needPoster = items.filter(m => !m.image || GENERIC_IDS_PREFIX.some(id => m.image.includes(id)));
+      if (needPoster.length > 0) {
+        const names = needPoster.map(m => m.name).join('|');
+        try {
+          const bulk = await api.get(`/movies/posters?names=${encodeURIComponent(names)}`);
+          if (bulk.data) {
+            for (const m of items) {
+              if (bulk.data[m.name]) m.image = bulk.data[m.name];
+            }
+          }
+        } catch {}
+      }
+      setCatalogMovies(items);
     }).catch(() => {}).finally(() => setCatalogLoading(false));
   }, [tab, catalogCat, catalogSearch, catalogPage]);
+
+  const GENERIC_IDS_PREFIX = [
+    '1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy',
+    '1ETN5F41MADzYUkqiQWlNa6xpBHC48lgY',
+    '1BDNyinrLQe7PoTBVR9exO8IWuxQZgx8L',
+    '1ETN5F41MADzYUkqiQWlNa6xpBH5kjWdY',
+    '1BDNyinrLQe7PoTBVR9exO8IWuxM95u2w',
+    '1MZaKyWqs8IY9DHplK8KBNl8-a6zaSiXp',
+  ];
 
   const handleSearch = (q: string) => {
     setSearch(q);
@@ -279,16 +303,16 @@ export default function Entertainment() {
 
       {/* Player Modal */}
       {player && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setPlayer(null)}>
-          <div className="bg-[#111] rounded-2xl overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-4 border-b border-white/10 flex-shrink-0">
-              <h3 className="text-white font-bold truncate">{player.title}</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-2 md:p-4" onClick={() => setPlayer(null)}>
+          <div className="bg-[#111] rounded-2xl overflow-hidden w-full max-w-4xl h-[70vh] md:h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-3 md:p-4 border-b border-white/10 flex-shrink-0">
+              <h3 className="text-white font-bold text-sm md:text-base truncate">{player.title}</h3>
               <div className="flex gap-2">
-                <button onClick={() => setPlayer(null)} className="text-gray-400 text-2xl leading-none">&times;</button>
+                <button onClick={() => setPlayer(null)} className="text-gray-400 text-xl md:text-2xl leading-none px-1">&times;</button>
               </div>
             </div>
             <div className="flex-1 bg-black">
-              <iframe src={player.previewUrl} className="w-full h-full min-h-[50vh]" allowFullScreen allow="autoplay" />
+              <iframe src={player.previewUrl} className="w-full h-full" allowFullScreen allow="autoplay" />
             </div>
           </div>
         </div>
@@ -298,50 +322,14 @@ export default function Entertainment() {
 }
 
 function CatalogImage({ src, alt }: { src: string; alt: string }) {
-  const [imgSrc, setImgSrc] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [triedTMDB, setTriedTMDB] = useState(false);
 
-  const GENERIC_IDS = [
-    '1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy',
-    '1ETN5F41MADzYUkqiQWlNa6xpBHC48lgY',
-    '1BDNyinrLQe7PoTBVR9exO8IWuxQZgx8L',
-    '1ETN5F41MADzYUkqiQWlNa6xpBH5kjWdY',
-    '1BDNyinrLQe7PoTBVR9exO8IWuxM95u2w',
-    '1MZaKyWqs8IY9DHplK8KBNl8-a6zaSiXp',
-  ];
-  const isGeneric = !src || GENERIC_IDS.some(id => src.includes(id));
-
-  const fetchPoster = async () => {
-    if (triedTMDB || !alt) return;
-    setTriedTMDB(true);
-    try {
-      const r = await api.get(`/movies/poster?name=${encodeURIComponent(alt)}`);
-      if (r.data?.poster) setImgSrc(r.data.poster);
-    } catch {}
-  };
-
-  useEffect(() => {
-    setImgSrc('');
-    setLoaded(false);
-    setTriedTMDB(false);
-    if (isGeneric) {
-      fetchPoster();
-    } else if (src) {
-      setImgSrc(src);
-    }
-  }, [src]);
-
-  if (!imgSrc) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-white/5">
-        <div className="w-6 h-6 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
-      </div>
-    );
+  if (!src) {
+    return <div className="w-full h-full flex items-center justify-center text-gray-700 text-5xl font-bold bg-white/5">{alt.charAt(0).toUpperCase()}</div>;
   }
 
   return (
-    <img src={imgSrc} alt={alt} className="w-full h-full object-cover"
+    <img src={src} alt={alt} className="w-full h-full object-cover"
       loading="lazy" onLoad={() => setLoaded(true)}
       style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.3s' }} />
   );

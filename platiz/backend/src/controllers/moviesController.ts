@@ -249,3 +249,16 @@ export async function getTMDBPoster(req: Request, res: Response): Promise<void> 
   const poster = await fetchTMDBPoster(name);
   res.json({ poster });
 }
+
+export async function getTMDBPostersBulk(req: Request, res: Response): Promise<void> {
+  const raw = String(req.query.names || '');
+  if (!raw) { res.status(400).json({ error: 'names required' }); return; }
+  const names = raw.split('|').map(n => n.trim()).filter(Boolean).slice(0, 50);
+  const results: Record<string, string> = {};
+  for (let i = 0; i < names.length; i++) {
+    const poster = await fetchTMDBPoster(names[i]);
+    if (poster) results[names[i]] = poster;
+    if (i % 5 === 4) await new Promise(r => setTimeout(r, 200));
+  }
+  res.json(results);
+}
