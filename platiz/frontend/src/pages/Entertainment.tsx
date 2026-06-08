@@ -300,10 +300,25 @@ export default function Entertainment() {
 function CatalogImage({ src, alt }: { src: string; alt: string }) {
   const [imgSrc, setImgSrc] = useState(src);
   const [error, setError] = useState(false);
+  const [triedTMDB, setTriedTMDB] = useState(false);
 
-  useEffect(() => { setImgSrc(src); setError(false); }, [src]);
+  useEffect(() => { setImgSrc(src); setError(false); setTriedTMDB(false); }, [src]);
+
+  const tryTMDB = async () => {
+    if (triedTMDB || !alt) return;
+    setTriedTMDB(true);
+    try {
+      const r = await api.get(`/movies/poster?name=${encodeURIComponent(alt)}`);
+      if (r.data?.poster) setImgSrc(r.data.poster);
+      else setError(true);
+    } catch { setError(true); }
+  };
 
   if (!imgSrc || error) {
+    if (!triedTMDB && alt) {
+      tryTMDB();
+      return <div className="w-full h-full flex items-center justify-center bg-white/5"><div className="w-6 h-6 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" /></div>;
+    }
     return (
       <div className="w-full h-full flex items-center justify-center text-gray-700 text-5xl font-bold bg-white/5">
         {alt.charAt(0).toUpperCase()}
@@ -313,6 +328,6 @@ function CatalogImage({ src, alt }: { src: string; alt: string }) {
 
   return (
     <img src={imgSrc} alt={alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      loading="lazy" onError={() => setError(true)} />
+      loading="lazy" onError={() => { if (!triedTMDB) tryTMDB(); else setError(true); }} />
   );
 }

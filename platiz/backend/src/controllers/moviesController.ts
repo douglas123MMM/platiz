@@ -170,7 +170,7 @@ async function fetchMovies(): Promise<Movie[]> {
       if (m.image.includes(genericId)) return true;
       return false;
     });
-    const batchSize = 20;
+    const batchSize = 50;
     for (let b = 0; b < Math.min(batchSize, needPoster.length); b++) {
       const m = needPoster[b];
       const poster = await fetchTMDBPoster(m.name);
@@ -178,6 +178,7 @@ async function fetchMovies(): Promise<Movie[]> {
         m.image = poster;
         m.posterFallback = poster;
       }
+      if (b % 10 === 9) await new Promise(r => setTimeout(r, 1200));
     }
 
     cachedMovies = movies;
@@ -229,4 +230,11 @@ export async function refreshCache(_req: Request, res: Response): Promise<void> 
   lastFetch = 0;
   const movies = await fetchMovies();
   res.json({ count: movies.length, message: 'Cache refrescada' });
+}
+
+export async function getTMDBPoster(req: Request, res: Response): Promise<void> {
+  const name = String(req.query.name || '').trim();
+  if (!name) { res.status(400).json({ error: 'name required' }); return; }
+  const poster = await fetchTMDBPoster(name);
+  res.json({ poster });
 }
