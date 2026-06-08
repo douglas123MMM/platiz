@@ -269,10 +269,10 @@ export default function Entertainment() {
 
           {catalogTotal > 50 && (
             <div className="flex justify-center gap-2 mt-8">
-              <button onClick={() => setCatalogPage(p => Math.max(1, p - 1))} disabled={catalogPage === 1}
+              <button type="button" onClick={(e) => { e.preventDefault(); setCatalogPage(p => Math.max(1, p - 1)); }} disabled={catalogPage === 1}
                 className="px-4 py-2 bg-white/5 border border-white/10 text-white text-sm rounded-xl disabled:opacity-30">Anterior</button>
               <span className="px-4 py-2 text-gray-400 text-sm">{catalogPage} / {Math.ceil(catalogTotal / 50)}</span>
-              <button onClick={() => setCatalogPage(p => p + 1)} disabled={catalogPage >= Math.ceil(catalogTotal / 50)}
+              <button type="button" onClick={(e) => { e.preventDefault(); setCatalogPage(p => p + 1); }} disabled={catalogPage >= Math.ceil(catalogTotal / 50)}
                 className="px-4 py-2 bg-white/5 border border-white/10 text-white text-sm rounded-xl">Siguiente</button>
             </div>
           )}
