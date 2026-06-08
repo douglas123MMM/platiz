@@ -138,7 +138,7 @@ export default function Entertainment() {
           Cartelera TMDB
         </button>
         <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${tab === 'catalog' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
-          Catálogo MaxziMedia
+Cat&aacute;logo
         </button>
       </div>
 
