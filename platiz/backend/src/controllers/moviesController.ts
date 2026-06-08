@@ -162,15 +162,26 @@ async function fetchMovies(): Promise<Movie[]> {
       });
     }
 
-    // Fetch TMDB posters for movies without valid images or with generic placeholders
-    const genericId = '1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy';
+    // Detect generic placeholder IDs (appear many times)
+    const idCount = new Map<string, number>();
+    for (const m of movies) {
+      if (m.image) {
+        const mid = m.image.match(/id%3D([a-zA-Z0-9_-]+)/);
+        if (mid) idCount.set(mid[1], (idCount.get(mid[1]) || 0) + 1);
+      }
+    }
+    const genericIds = new Set<string>();
+    for (const [id, count] of idCount) {
+      if (count > 5) genericIds.add(id);
+    }
     const needPoster = movies.filter(m => {
       if (!m.image) return true;
       if (m.image.includes('google.com')) return true;
-      if (m.image.includes(genericId)) return true;
+      const mid = m.image.match(/id%3D([a-zA-Z0-9_-]+)/);
+      if (mid && genericIds.has(mid[1])) return true;
       return false;
     });
-    const batchSize = 50;
+    const batchSize = 40;
     for (let b = 0; b < Math.min(batchSize, needPoster.length); b++) {
       const m = needPoster[b];
       const poster = await fetchTMDBPoster(m.name);

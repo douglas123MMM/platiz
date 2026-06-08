@@ -302,9 +302,19 @@ function CatalogImage({ src, alt }: { src: string; alt: string }) {
   const [error, setError] = useState(false);
   const [triedTMDB, setTriedTMDB] = useState(false);
 
-  useEffect(() => { setImgSrc(src); setError(false); setTriedTMDB(false); }, [src]);
+  const isGeneric = src.includes('1b2mnLMdoipM2hnstIxlLf0Ne_1U0IwQy')
+    || src.includes('1ETN5F41MADzYUkqiQWlNa6xpBHC48lgY')
+    || src.includes('1BDNyinrLQe7PoTBVR9exO8IWuxQZgx8L')
+    || !src;
 
-  const tryTMDB = async () => {
+  useEffect(() => {
+    setImgSrc(src);
+    setError(false);
+    setTriedTMDB(false);
+    if (isGeneric && alt) fetchPoster();
+  }, [src]);
+
+  const fetchPoster = async () => {
     if (triedTMDB || !alt) return;
     setTriedTMDB(true);
     try {
@@ -314,9 +324,8 @@ function CatalogImage({ src, alt }: { src: string; alt: string }) {
     } catch { setError(true); }
   };
 
-  if (!imgSrc || error) {
+  if (!imgSrc || error || (isGeneric && !imgSrc)) {
     if (!triedTMDB && alt) {
-      tryTMDB();
       return <div className="w-full h-full flex items-center justify-center bg-white/5"><div className="w-6 h-6 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" /></div>;
     }
     return (
@@ -328,6 +337,6 @@ function CatalogImage({ src, alt }: { src: string; alt: string }) {
 
   return (
     <img src={imgSrc} alt={alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      loading="lazy" onError={() => { if (!triedTMDB) tryTMDB(); else setError(true); }} />
+      loading="lazy" onError={() => { if (!triedTMDB) fetchPoster(); else setError(true); }} />
   );
 }
