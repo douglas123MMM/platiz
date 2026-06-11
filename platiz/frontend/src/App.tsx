@@ -76,6 +76,7 @@ export default function App() {
         <Route path="/soporte" element={<SupportChat />} />
         <Route path="/afiliado" element={<AffiliateDashboard />} />
         <Route path="/player" element={<PlayerPage />} />
+        <Route path="/membresias" element={<MembershipsAdmin />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
         <Route path="/admin" element={<AdminDashboard />} />
