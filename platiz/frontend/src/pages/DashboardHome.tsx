@@ -47,6 +47,7 @@ export default function DashboardHome() {
         <div className="absolute top-0 right-1/4 translate-x-1/2 w-[500px] h-[500px] bg-[#A855F7]/[0.04] rounded-full blur-[100px] pointer-events-none" />
         <div className="relative z-10">
           <Logo size={56} className="mx-auto mb-6 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]" />
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 animate-pulse drop-shadow-[0_0_30px_rgba(255,215,0,0.6)]">HOLA</h1>
           <p className="text-2xl md:text-3xl font-light text-[#FFD700]/80 tracking-wide mb-4">TRANSFORMA EL INTERNET EN DINERO</p>
           <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg">Ecosistema digital de alta gama con acceso vitalicio. Capacitación en viralidad, arsenal de software premium y oportunidades reales de ingresos.</p>
           <div className="flex items-center justify-center gap-4 mt-8">
