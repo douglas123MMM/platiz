@@ -33,6 +33,7 @@ const adminItems = [
   { path: '/admin/affiliates', label: 'Afiliados', icon: IconAffiliate },
   { path: '/admin/banners', label: 'Banners', icon: IconPhoto },
   { path: '/admin/ai', label: 'IA Providers', icon: IconCog },
+  { path: '/admin/memberships', label: 'Membresias', icon: IconMovies },
 ];
 
 export default function Layout() {

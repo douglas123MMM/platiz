@@ -104,3 +104,18 @@ export interface AuthResponse {
   token: string;
   user: User;
 }
+
+export interface Membership {
+  id: string;
+  service: string;
+  account_email: string;
+  account_password: string;
+  profile: string;
+  client_name: string;
+  client_phone: string;
+  purchase_date: string;
+  expiry_date: string;
+  status: 'active' | 'inactive';
+  created_at: string;
+  updated_at: string;
+}

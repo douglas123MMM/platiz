@@ -15,6 +15,7 @@ import partnerRoutes from './routes/partnerRoutes';
 import settingsRoutes from './routes/settingsRoutes';
 import affiliateRoutes from './routes/affiliateRoutes';
 import movieRoutes from './routes/movieRoutes';
+import membershipRoutes from './routes/membershipRoutes';
 import { streamVideo } from './controllers/videoController';
 import { xtreamProxy, xtreamStream } from './controllers/xtreamController';
 
@@ -39,6 +40,7 @@ app.use('/api/partners', partnerRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/affiliate', affiliateRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api/memberships', membershipRoutes);
 app.get('/api/video/stream', streamVideo);
 app.get('/api/xtream/proxy', xtreamProxy);
 app.get('/api/xtream/stream', xtreamStream);
@@ -60,6 +62,20 @@ app.post('/api/setup-db', async (_req, res) => {
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_type TEXT;');
     await client.query('ALTER TABLE items ADD COLUMN IF NOT EXISTS video_url TEXT;');
+    await client.query(`CREATE TABLE IF NOT EXISTS memberships (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      service TEXT NOT NULL,
+      account_email TEXT NOT NULL,
+      account_password TEXT NOT NULL,
+      profile TEXT NOT NULL DEFAULT 'Perfil 1',
+      client_name TEXT NOT NULL,
+      client_phone TEXT NOT NULL,
+      purchase_date DATE NOT NULL DEFAULT CURRENT_DATE,
+      expiry_date DATE NOT NULL,
+      status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );`);
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code TEXT UNIQUE;');
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by UUID REFERENCES users(id);');
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS credits INTEGER DEFAULT 0;');

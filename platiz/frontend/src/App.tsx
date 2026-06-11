@@ -25,6 +25,7 @@ import AffiliateDashboard from './pages/AffiliateDashboard';
 import AffiliateLanding from './pages/AffiliateLanding';
 import AffiliateCatalog from './pages/AffiliateCatalog';
 import AffiliatesAdmin from './pages/admin/AffiliatesAdmin';
+import MembershipsAdmin from './pages/admin/MembershipsAdmin';
 import Entertainment from './pages/Entertainment';
 
 function LoadingScreen() {
@@ -87,6 +88,7 @@ export default function App() {
         <Route path="/admin/partners" element={<PartnersAdmin />} />
         <Route path="/admin/contact" element={<ContactSettings />} />
         <Route path="/admin/affiliates" element={<AffiliatesAdmin />} />
+        <Route path="/admin/memberships" element={<MembershipsAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
