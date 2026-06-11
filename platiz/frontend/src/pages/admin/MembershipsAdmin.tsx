@@ -6,7 +6,16 @@ import { HiPlus, HiTrash, HiPencil, HiSearch, HiPhone, HiShieldCheck, HiRefresh 
 import { HiOutlineDevicePhoneMobile } from 'react-icons/hi2';
 import MiniCalendar from '../../components/MiniCalendar';
 
-const SERVICES = ['Netflix', 'Prime Video', 'Disney+', 'HBO Max', 'Star+', 'Apple TV+', 'Paramount+', 'Crunchyroll', 'Spotify', 'YouTube Premium', 'Otro'];
+const SERVICES = [
+  'Netflix', 'Prime Video', 'Disney+', 'HBO Max', 'Star+', 'Apple TV+', 'Paramount+', 'Crunchyroll', 'Spotify', 'YouTube Premium',
+  'Canva Pro', 'Adobe CC', 'Figma Pro', 'Photoshop', 'Illustrator',
+  'ChatGPT Plus', 'Gemini Advanced', 'Claude Pro', 'Midjourney', 'Perplexity Pro',
+  'Google Drive', 'OneDrive', 'Dropbox', 'Mega',
+  'NordVPN', 'ExpressVPN', 'Surfshark',
+  'OnlyFans', 'Patreon',
+  'Hosting', 'Dominio', 'VPS',
+  'Otro'
+];
 const PROFILES = ['Perfil 1', 'Perfil 2', 'Perfil 3', 'Perfil 4', 'Perfil 5'];
 
 const emptyForm = { service: '', account_email: '', account_password: '', profile: 'Perfil 1', client_name: '', client_phone: '', purchase_date: new Date().toISOString().split('T')[0], expiry_date: '', status: 'active' as 'active' | 'inactive', cost: '' };
@@ -96,7 +105,7 @@ export default function MembershipsAdmin() {
         <div className="flex items-center gap-3">
           <HiOutlineDevicePhoneMobile className="w-8 h-8 text-[#FFD700]" />
           <div>
-            <h1 className="text-2xl font-bold text-white">Membresias Streaming</h1>
+            <h1 className="text-2xl font-bold text-white">Membresias</h1>
             <p className="text-sm text-gray-500">{memberships.length} registros &middot; Total ganado: <span className="text-green-400 font-bold">${totalEarnings.toFixed(2)}</span></p>
           </div>
         </div>
@@ -110,10 +119,8 @@ export default function MembershipsAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Servicio *</label>
-              <select value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" required>
-                <option value="" disabled>Seleccionar servicio</option>
-                {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
+              <input type="text" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Ej: Netflix, Canva Pro, ChatGPT Plus..." list="service-list" required />
+              <datalist id="service-list">{SERVICES.map((s) => <option key={s} value={s} />)}</datalist>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Correo de la cuenta *</label>
