@@ -18,6 +18,7 @@ export default function MembershipsAdmin() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Membership | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [reminder, setReminder] = useState<{ show: boolean; membership: Membership | null; message: string }>({ show: false, membership: null, message: '' });
 
   const load = (term?: string) => {
     setLoading(true);
@@ -59,15 +60,19 @@ export default function MembershipsAdmin() {
     } catch { toast.error('Error al eliminar'); }
   };
 
-  const handleReminder = async (m: Membership) => {
-    try {
-      const { data } = await api.get(`/memberships/${m.id}/reminder`);
-      window.open(data.url, '_blank');
-    } catch { toast.error('Error al generar enlace'); }
+  const openReminder = (m: Membership) => {
+    const defaultMsg = `Hola ${m.client_name}, te saludamos de tu proveedor de streaming. Te notificamos que tu membresia del servicio de ${m.service} ha vencido. Te gustaria renovarla para seguir disfrutando de tus pantallas? Quedamos atentos!`;
+    setReminder({ show: true, membership: m, message: defaultMsg });
+  };
+
+  const sendWhatsApp = () => {
+    if (!reminder.membership) return;
+    const encoded = encodeURIComponent(reminder.message);
+    window.open(`https://wa.me/${reminder.membership.client_phone}?text=${encoded}`, '_blank');
+    setReminder({ show: false, membership: null, message: '' });
   };
 
   const handleEdit = (m: Membership) => {
-    setEditing(m);
     setForm({
       service: m.service, account_email: m.account_email, account_password: m.account_password,
       profile: m.profile, client_name: m.client_name, client_phone: m.client_phone,
@@ -213,7 +218,7 @@ export default function MembershipsAdmin() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center justify-end gap-1.5">
-                        <button onClick={() => handleReminder(m)} title="Enviar Recordatorio de Vencimiento" className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-all duration-200" type="button"><HiPhone className="w-4 h-4" /></button>
+                        <button onClick={() => openReminder(m)} title="Enviar Recordatorio de Vencimiento" className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-all duration-200" type="button"><HiPhone className="w-4 h-4" /></button>
                         <button onClick={() => handleEdit(m)} className="p-2 rounded-lg bg-white/[0.03] text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10 transition-all duration-200 opacity-0 group-hover:opacity-100" type="button"><HiPencil className="w-4 h-4" /></button>
                         <button onClick={() => handleDelete(m.id)} className="p-2 rounded-lg bg-white/[0.03] text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 opacity-0 group-hover:opacity-100" type="button"><HiTrash className="w-4 h-4" /></button>
                       </div>
@@ -224,6 +229,61 @@ export default function MembershipsAdmin() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {reminder.show && reminder.membership && (
+        <>
+          <div className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm" onClick={() => setReminder({ show: false, membership: null, message: '' })} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6 animate-slide-down">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-lg font-bold text-white">Enviar Recordatorio</h3>
+                <button onClick={() => setReminder({ show: false, membership: null, message: '' })} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
+                <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Cliente</p>
+                  <p className="text-white font-medium">{reminder.membership.client_name}</p>
+                </div>
+                <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Servicio</p>
+                  <p className="text-white font-medium">{reminder.membership.service}</p>
+                </div>
+                <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Telefono</p>
+                  <p className="text-white font-medium">{reminder.membership.client_phone}</p>
+                </div>
+                <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Vencimiento</p>
+                  <p className="text-white font-medium">{new Date(reminder.membership.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                </div>
+              </div>
+
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Mensaje (puedes editarlo)</label>
+              <textarea
+                value={reminder.message}
+                onChange={(e) => setReminder({ ...reminder, message: e.target.value })}
+                className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors resize-none"
+                rows={4}
+              />
+
+              <div className="flex gap-3 mt-5">
+                <button onClick={() => setReminder({ show: false, membership: null, message: '' })}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.04] transition-all duration-200">
+                  Cancelar
+                </button>
+                <button onClick={sendWhatsApp}
+                  className="flex-1 py-3 rounded-xl text-sm font-bold bg-green-500 text-white hover:bg-green-600 shadow-[0_4px_16px_rgba(34,197,94,0.2)] transition-all duration-200 flex items-center justify-center gap-2">
+                  <HiPhone className="w-4 h-4" />
+                  Enviar por WhatsApp
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
