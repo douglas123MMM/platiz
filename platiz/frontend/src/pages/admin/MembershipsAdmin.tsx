@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Membership } from '../../types';
 import toast from 'react-hot-toast';
-import { HiPlus, HiTrash, HiPencil, HiSearch, HiCalendar, HiPhone, HiShieldCheck, HiRefresh } from 'react-icons/hi';
+import { HiPlus, HiTrash, HiPencil, HiSearch, HiPhone, HiShieldCheck, HiRefresh } from 'react-icons/hi';
 import { HiOutlineDevicePhoneMobile } from 'react-icons/hi2';
+import MiniCalendar from '../../components/MiniCalendar';
 
 const SERVICES = ['Netflix', 'Prime Video', 'Disney+', 'HBO Max', 'Star+', 'Apple TV+', 'Paramount+', 'Crunchyroll', 'Spotify', 'YouTube Premium', 'Otro'];
 const PROFILES = ['Perfil 1', 'Perfil 2', 'Perfil 3', 'Perfil 4', 'Perfil 5'];
@@ -131,11 +132,11 @@ export default function MembershipsAdmin() {
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Fecha de Compra</label>
-              <input type="date" value={form.purchase_date} onChange={(e) => setForm({ ...form, purchase_date: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" />
+              <MiniCalendar value={form.purchase_date} onChange={(d) => setForm({ ...form, purchase_date: d })} min="2020-01-01" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Fecha de Vencimiento *</label>
-              <input type="date" value={form.expiry_date} onChange={(e) => setForm({ ...form, expiry_date: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" required />
+              <MiniCalendar value={form.expiry_date} onChange={(d) => setForm({ ...form, expiry_date: d })} min={form.purchase_date || undefined} />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Estatus</label>
@@ -175,7 +176,7 @@ export default function MembershipsAdmin() {
                 <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Perfil</th>
                 <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Cliente</th>
                 <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell"><HiPhone className="w-4 h-4 inline mr-1" />Telefono</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell"><HiCalendar className="w-4 h-4 inline mr-1" />Vence</th>
+                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell"><svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" strokeWidth="2"/><path d="M16 2v4M8 2v4M3 10h18" strokeWidth="2"/></svg>Vence</th>
                 <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
                 <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Accion</th>
               </tr>
