@@ -30,7 +30,7 @@ export async function getMembershipById(req: AuthRequest, res: Response): Promis
 
 export async function createMembership(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { service, account_email, account_password, profile, client_name, client_phone, purchase_date, expiry_date, status } = req.body;
+    const { service, account_email, account_password, profile, client_name, client_phone, purchase_date, expiry_date, status, cost } = req.body;
     if (!service || !account_email || !account_password || !client_name || !client_phone || !expiry_date) {
       res.status(400).json({ error: 'Todos los campos marcados son obligatorios' });
       return;
@@ -40,7 +40,7 @@ export async function createMembership(req: AuthRequest, res: Response): Promise
     const { data, error } = await supabase.from('memberships').insert([{
       service, account_email, account_password, profile: profile || 'Perfil 1',
       client_name, client_phone: phone, purchase_date: purchase_date || new Date().toISOString().split('T')[0],
-      expiry_date, status: status || 'active'
+      expiry_date, status: status || 'active', cost: parseFloat(cost) || 0
     }]).select().single();
     if (error) throw error;
     res.status(201).json(data);
@@ -52,9 +52,10 @@ export async function createMembership(req: AuthRequest, res: Response): Promise
 export async function updateMembership(req: AuthRequest, res: Response): Promise<void> {
   try {
     const updates: Record<string, unknown> = {};
-    const fields = ['service', 'account_email', 'account_password', 'profile', 'client_name', 'client_phone', 'purchase_date', 'expiry_date', 'status'];
+    const fields = ['service', 'account_email', 'account_password', 'profile', 'client_name', 'client_phone', 'purchase_date', 'expiry_date', 'status', 'cost'];
     fields.forEach((f) => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
     if (updates.client_phone) updates.client_phone = String(updates.client_phone).replace(/[^\d+]/g, '').replace(/^0+/, '');
+    if (updates.cost !== undefined) updates.cost = parseFloat(updates.cost as string) || 0;
     updates.updated_at = new Date().toISOString();
     const { data, error } = await supabase.from('memberships').update(updates).eq('id', req.params.id).select().single();
     if (error) throw error;

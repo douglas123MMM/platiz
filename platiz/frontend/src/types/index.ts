@@ -116,6 +116,7 @@ export interface Membership {
   purchase_date: string;
   expiry_date: string;
   status: 'active' | 'inactive';
+  cost: number;
   created_at: string;
   updated_at: string;
 }

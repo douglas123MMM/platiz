@@ -9,7 +9,7 @@ import MiniCalendar from '../../components/MiniCalendar';
 const SERVICES = ['Netflix', 'Prime Video', 'Disney+', 'HBO Max', 'Star+', 'Apple TV+', 'Paramount+', 'Crunchyroll', 'Spotify', 'YouTube Premium', 'Otro'];
 const PROFILES = ['Perfil 1', 'Perfil 2', 'Perfil 3', 'Perfil 4', 'Perfil 5'];
 
-const emptyForm = { service: '', account_email: '', account_password: '', profile: 'Perfil 1', client_name: '', client_phone: '', purchase_date: new Date().toISOString().split('T')[0], expiry_date: '', status: 'active' as 'active' | 'inactive' };
+const emptyForm = { service: '', account_email: '', account_password: '', profile: 'Perfil 1', client_name: '', client_phone: '', purchase_date: new Date().toISOString().split('T')[0], expiry_date: '', status: 'active' as 'active' | 'inactive', cost: '' };
 
 export default function MembershipsAdmin() {
   const [memberships, setMemberships] = useState<Membership[]>([]);
@@ -28,6 +28,8 @@ export default function MembershipsAdmin() {
 
   useEffect(() => { load(); }, []);
   useEffect(() => { const t = setTimeout(() => load(search), 350); return () => clearTimeout(t); }, [search]);
+
+  const totalEarnings = memberships.reduce((sum, m) => sum + (m.cost || 0), 0);
 
   const resetForm = () => { setForm(emptyForm); setEditing(null); setShowForm(false); };
 
@@ -76,7 +78,7 @@ export default function MembershipsAdmin() {
     setForm({
       service: m.service, account_email: m.account_email, account_password: m.account_password,
       profile: m.profile, client_name: m.client_name, client_phone: m.client_phone,
-      purchase_date: m.purchase_date, expiry_date: m.expiry_date, status: m.status
+      purchase_date: m.purchase_date, expiry_date: m.expiry_date, status: m.status, cost: String(m.cost || '')
     });
     setShowForm(true);
   };
@@ -95,7 +97,7 @@ export default function MembershipsAdmin() {
           <HiOutlineDevicePhoneMobile className="w-8 h-8 text-[#FFD700]" />
           <div>
             <h1 className="text-2xl font-bold text-white">Membresias Streaming</h1>
-            <p className="text-sm text-gray-500">{memberships.length} registros</p>
+            <p className="text-sm text-gray-500">{memberships.length} registros &middot; Total ganado: <span className="text-green-400 font-bold">${totalEarnings.toFixed(2)}</span></p>
           </div>
         </div>
         <button onClick={() => { setShowForm(!showForm); if (editing) resetForm(); }} className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 ${showForm ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20' : 'bg-[#FFD700] text-black hover:bg-[#FFE44D] shadow-[0_4px_16px_rgba(255,215,0,0.15)]'}`}>
@@ -134,6 +136,10 @@ export default function MembershipsAdmin() {
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Telefono *</label>
               <input type="tel" value={formatPhone(form.client_phone)} onChange={(e) => setForm({ ...form, client_phone: e.target.value.replace(/[^\d+]/g, '') })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="+58 414 1234567" maxLength={15} required />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Costo ($)</label>
+              <input type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Fecha de Compra</label>
@@ -190,6 +196,7 @@ export default function MembershipsAdmin() {
                     </div>
                     <div className="flex items-center gap-3 mt-1.5 text-xs">
                       <span className={`${isExpired ? 'text-red-400 font-semibold' : 'text-gray-500'}`}>Vence: {new Date(m.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                      <span className="text-[#FFD700] font-bold">${(m.cost || 0).toFixed(2)}</span>
                       <button onClick={() => { const newStatus = m.status === 'active' ? 'inactive' : 'active'; api.put(`/memberships/${m.id}`, { status: newStatus }).then(() => setMemberships((p) => p.map((x) => x.id === m.id ? { ...x, status: newStatus } : x))).catch(() => toast.error('Error')); }} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all duration-200 ${m.status === 'active' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-red-500/15 text-red-400 border border-red-500/25'}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${m.status === 'active' ? 'bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.8)]'}`} />
                         {m.status === 'active' ? 'Activo' : 'Inactivo'}
@@ -242,6 +249,10 @@ export default function MembershipsAdmin() {
                 <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
                   <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Vencimiento</p>
                   <p className="text-white font-medium">{new Date(reminder.membership.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                </div>
+                <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Costo</p>
+                  <p className="text-[#FFD700] font-bold">${(reminder.membership.cost || 0).toFixed(2)}</p>
                 </div>
               </div>
 
