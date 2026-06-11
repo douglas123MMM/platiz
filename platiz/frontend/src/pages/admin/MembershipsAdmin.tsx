@@ -172,62 +172,45 @@ export default function MembershipsAdmin() {
           <p className="text-sm">Registra tu primera membresia de streaming</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-white/[0.04]">
-          <table className="w-full text-sm text-left">
-            <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.04]">
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Servicio</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Correo</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Perfil</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Cliente</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell"><HiPhone className="w-4 h-4 inline mr-1" />Telefono</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell"><svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" strokeWidth="2"/><path d="M16 2v4M8 2v4M3 10h18" strokeWidth="2"/></svg>Vence</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Estado</th>
-                <th className="px-5 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Accion</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/[0.03]">
-              {memberships.map((m) => {
-                const isExpired = new Date(m.expiry_date) < new Date();
-                return (
-                  <tr key={m.id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="px-5 py-4">
-                      <p className="text-white font-medium text-sm">{m.service}</p>
-                      <p className="text-xs text-gray-500 md:hidden">{m.account_email}</p>
-                    </td>
-                    <td className="px-5 py-4 hidden md:table-cell">
-                      <p className="text-gray-300 text-sm truncate max-w-[180px]">{m.account_email}</p>
-                    </td>
-                    <td className="px-5 py-4 hidden lg:table-cell">
-                      <span className="px-2.5 py-1 rounded-lg bg-white/[0.03] text-gray-400 text-xs border border-white/[0.06]">{m.profile}</span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <p className="text-white text-sm font-medium">{m.client_name}</p>
-                    </td>
-                    <td className="px-5 py-4 hidden md:table-cell">
-                      <span className="text-gray-400 text-sm">{m.client_phone}</span>
-                    </td>
-                    <td className="px-5 py-4 hidden lg:table-cell">
-                      <span className={`text-sm ${isExpired ? 'text-red-400 font-semibold' : 'text-gray-400'}`}>{new Date(m.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <button onClick={() => { const newStatus = m.status === 'active' ? 'inactive' : 'active'; api.put(`/memberships/${m.id}`, { status: newStatus }).then(() => setMemberships((p) => p.map((x) => x.id === m.id ? { ...x, status: newStatus } : x))).catch(() => toast.error('Error')); }} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${m.status === 'active' ? 'bg-green-500/15 text-green-400 border border-green-500/25 hover:bg-green-500/25 shadow-[0_0_10px_rgba(34,197,94,0.15)]' : 'bg-red-500/15 text-red-400 border border-red-500/25 hover:bg-red-500/25 shadow-[0_0_10px_rgba(239,68,68,0.15)]'}`}>
-                        <span className={`w-2 h-2 rounded-full ${m.status === 'active' ? 'bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.8)]'}`} />
+        <div className="space-y-3">
+          {memberships.map((m) => {
+            const isExpired = new Date(m.expiry_date + 'T12:00:00') < new Date();
+            return (
+              <div key={m.id} className="rounded-2xl bg-white/[0.02] border border-white/[0.04] p-4 sm:p-5 hover:border-[#FFD700]/10 transition-all duration-200 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-white font-semibold text-sm">{m.service}</p>
+                      <span className="px-2 py-0.5 rounded-lg bg-white/[0.03] text-gray-500 text-[10px] border border-white/[0.06]">{m.profile}</span>
+                    </div>
+                    <p className="text-gray-300 text-sm font-medium">{m.client_name}</p>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-gray-500">
+                      <span className="truncate max-w-[180px]">{m.account_email}</span>
+                      <span className="flex items-center gap-1"><HiPhone className="w-3 h-3" />{m.client_phone}</span>
+                    </div>
+                    <div className="flex items-center gap-3 mt-1.5 text-xs">
+                      <span className={`${isExpired ? 'text-red-400 font-semibold' : 'text-gray-500'}`}>Vence: {new Date(m.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                      <button onClick={() => { const newStatus = m.status === 'active' ? 'inactive' : 'active'; api.put(`/memberships/${m.id}`, { status: newStatus }).then(() => setMemberships((p) => p.map((x) => x.id === m.id ? { ...x, status: newStatus } : x))).catch(() => toast.error('Error')); }} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all duration-200 ${m.status === 'active' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-red-500/15 text-red-400 border border-red-500/25'}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${m.status === 'active' ? 'bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.8)]'}`} />
                         {m.status === 'active' ? 'Activo' : 'Inactivo'}
                       </button>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button onClick={() => openReminder(m)} title="Enviar Recordatorio de Vencimiento" className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-all duration-200" type="button"><HiPhone className="w-4 h-4" /></button>
-                        <button onClick={() => handleEdit(m)} className="p-2 rounded-lg bg-white/[0.03] text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10 transition-all duration-200 opacity-0 group-hover:opacity-100" type="button"><HiPencil className="w-4 h-4" /></button>
-                        <button onClick={() => handleDelete(m.id)} className="p-2 rounded-lg bg-white/[0.03] text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 opacity-0 group-hover:opacity-100" type="button"><HiTrash className="w-4 h-4" /></button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-2 border-t border-white/[0.03]">
+                  <button onClick={() => openReminder(m)} className="flex-1 py-2.5 rounded-xl text-xs font-bold bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-[0.97]">
+                    <HiPhone className="w-4 h-4" /> Recordatorio
+                  </button>
+                  <button onClick={() => handleEdit(m)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10 border border-white/[0.04] transition-all duration-200 active:scale-[0.97]">
+                    <HiPencil className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => handleDelete(m.id)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-red-400 hover:bg-red-500/10 border border-white/[0.04] transition-all duration-200 active:scale-[0.97]">
+                    <HiTrash className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
