@@ -173,6 +173,16 @@ export async function supportChat(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
+    const { data: settings } = await supabase.from('settings').select('binance, pagomovil, whatsapp, whatsapp_group').maybeSingle();
+    const paymentInfo: string[] = [];
+    if (settings?.binance) paymentInfo.push(`Binance: ${settings.binance}`);
+    if (settings?.pagomovil) paymentInfo.push(`PagoMovil: ${settings.pagomovil}`);
+    if (settings?.whatsapp) paymentInfo.push(`WhatsApp: ${settings.whatsapp}`);
+    if (settings?.whatsapp_group) paymentInfo.push(`Grupo: ${settings.whatsapp_group}`);
+    const paymentLines = paymentInfo.length > 0
+      ? `- Pagos/Contacto: ${paymentInfo.join(' | ')}`
+      : '- Contacta al admin para metodos de pago.';
+
     // Tasa desde el navegador del usuario
     let tasaInfo = '';
     if (rate && rate !== '100' && parseFloat(rate) > 1) {
@@ -202,8 +212,7 @@ UNICAMENTE cuando el usuario diga "dame un copy", "genera un estado", "escribeme
 DATOS DE GLOBAL DORADO:
 - Acceso Vitalicio: 25 USDT (Venezuela) / 30 USDT (Internacional)
 - Incluye: Academia Global Elite (viralidad TikTok/Instagram), Marketplace Distribuidor (Streaming, IA, Software), App IPTV personalizada, Derechos de Reventa 100%, asesoria y grupos VIP
-- Pagos: Binance ID 355976674 (jcespinoza2011@gmail.com) / PagoMovil 0102-04243057148-28012172
-- Contacto: https://wa.me/584149132366 / Grupo: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+${paymentLines}
 
 PROHIBIDO: Usar bolivares (Bs). Todo en USDT.
 PROHIBIDO: Generar copys completos si el usuario NO te lo pidio explicitamente.

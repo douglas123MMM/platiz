@@ -24,14 +24,14 @@ interface CatalogMovie {
 const IMG = 'https://image.tmdb.org/t/p/w500';
 const IMG_ORIG = 'https://image.tmdb.org/t/p/original';
 
-async function fetchTMDB(key: string, path: string, params = '') {
+async function fetchTMDB(path: string, params = '') {
   const sep = path.includes('?') ? '&' : '?';
-  const r = await fetch(`https://api.themoviedb.org/3${path}${sep}api_key=${key}&language=es${params}`);
+  const r = await fetch(`/api/tmdb${path}${sep}language=es${params}`);
   return r.json();
 }
 
 export default function Entertainment() {
-  const [key, setKey] = useState('');
+
   const [hero, setHero] = useState<TmdbMovie | null>(null);
   const [trending, setTrending] = useState<TmdbMovie[]>([]);
   const [popular, setPopular] = useState<TmdbMovie[]>([]);
@@ -58,22 +58,17 @@ export default function Entertainment() {
   const [player, setPlayer] = useState<{ title: string; url: string } | null>(null);
 
   useEffect(() => {
-    api.get('/settings').then(r => setKey(r.data?.tmdb_api_key || '')).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    if (!key) return;
-    fetchTMDB(key, '/trending/all/week').then(d => {
+    fetchTMDB('/trending/all/week').then(d => {
       setTrending(d.results || []);
       if (d.results?.[0]) setHero(d.results[0]);
     });
-    fetchTMDB(key, '/movie/popular').then(d => setPopular(d.results || []));
-    fetchTMDB(key, '/movie/top_rated').then(d => setTopRated(d.results || []));
-    fetchTMDB(key, '/movie/upcoming').then(d => setUpcoming(d.results || []));
-    fetchTMDB(key, '/discover/movie', '&with_genres=28').then(d => setAction(d.results || []));
-    fetchTMDB(key, '/discover/movie', '&with_genres=35').then(d => setComedy(d.results || []));
-    fetchTMDB(key, '/discover/movie', '&with_genres=27').then(d => setHorror(d.results || []));
-  }, [key]);
+    fetchTMDB('/movie/popular').then(d => setPopular(d.results || []));
+    fetchTMDB('/movie/top_rated').then(d => setTopRated(d.results || []));
+    fetchTMDB('/movie/upcoming').then(d => setUpcoming(d.results || []));
+    fetchTMDB('/discover/movie', '&with_genres=28').then(d => setAction(d.results || []));
+    fetchTMDB('/discover/movie', '&with_genres=35').then(d => setComedy(d.results || []));
+    fetchTMDB('/discover/movie', '&with_genres=27').then(d => setHorror(d.results || []));
+  }, []);
 
   useEffect(() => {
     if (tab !== 'catalog') return;
@@ -117,7 +112,7 @@ export default function Entertainment() {
     clearTimeout(searchTimer.current);
     if (!q.trim()) { setSearchResults([]); return; }
     searchTimer.current = setTimeout(() => {
-      fetchTMDB(key, '/search/multi', `&query=${encodeURIComponent(q)}`).then(d => setSearchResults(d.results || []));
+      fetchTMDB('/search/multi', `&query=${encodeURIComponent(q)}`).then(d => setSearchResults(d.results || []));
     }, 400);
   };
 
@@ -128,7 +123,7 @@ export default function Entertainment() {
 
   const openTrailer = async (movie: TmdbMovie) => {
     setTrailer({ id: movie.id, title: movie.title || movie.name || '' });
-    const d = await fetchTMDB(key, `/movie/${movie.id}/videos`);
+    const d = await fetchTMDB(`/movie/${movie.id}/videos`);
     const yt = (d.results || []).find((v: any) => v.site === 'YouTube');
     setTrailerKey(yt?.key || '');
   };

@@ -9,9 +9,9 @@ const VOD = 'get_vod_streams';
 const SERIES = 'get_series';
 
 export default function ZonaVIP() {
-  const [server, setServer] = useState(localStorage.getItem('zv_server') || '');
-  const [username, setUsername] = useState(localStorage.getItem('zv_user') || '');
-  const [password, setPassword] = useState(localStorage.getItem('zv_pass') || '');
+  const [server, setServer] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [logged, setLogged] = useState(false);
   const [tab, setTab] = useState('live');
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -35,9 +35,6 @@ export default function ZonaVIP() {
       if (d.error) throw new Error(d.error);
       if (Array.isArray(d)) {
         setChannels(d);
-        localStorage.setItem('zv_server', server);
-        localStorage.setItem('zv_user', username);
-        localStorage.setItem('zv_pass', password);
         setLogged(true);
       } else {
         alert('Credenciales invalidas');

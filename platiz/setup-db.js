@@ -149,7 +149,7 @@ async function main() {
     console.log('✓ categories seeded');
 
     // Seed admin
-    const hash = bcrypt.hashSync('admin123', 10);
+    const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'ChangeMe123!', 10);
     await client.query(
       'INSERT INTO users (username, email, password, role, status) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email) DO NOTHING',
       ['admin', 'admin@platiz.com', hash, 'admin', 'approved']

@@ -140,7 +140,8 @@ INSERT INTO categories (name, slug, icon, description) VALUES
 ON CONFLICT (slug) DO NOTHING;
 
 -- ============================================================
--- ADMIN USER (password: admin123)
+-- WARNING: Change this password immediately after first deploy
+-- ADMIN USER (default password: admin123)
 -- ============================================================
 INSERT INTO users (username, email, password, role, status)
 VALUES (

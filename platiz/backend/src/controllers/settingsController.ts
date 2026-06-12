@@ -9,7 +9,7 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
       res.json({ whatsapp: '', telegram: '', guias: {} });
       return;
     }
-    const settings = data || { whatsapp: '', telegram: '' };
+    const settings = data || { whatsapp: '', telegram: '', binance: '', pagomovil: '', whatsapp_group: '' };
     const { data: guideItems } = await supabase.from('items').select('title,description').eq('category_slug', 'settings').in('title', ['guia_plr_pro', 'guia_services', 'guia_telegram', 'bcv_rate']);
     const guias: Record<string, string> = {};
     let bcv_rate = '';
@@ -25,10 +25,13 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
 
 export async function updateSettings(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { whatsapp, telegram, bcv_rate, iptv_m3u_url, guias } = req.body;
+    const { whatsapp, telegram, binance, pagomovil, whatsapp_group, bcv_rate, iptv_m3u_url, guias } = req.body;
     const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
     const updateData: any = { whatsapp, telegram, updated_at: new Date().toISOString() };
     if (iptv_m3u_url !== undefined) updateData.iptv_m3u_url = iptv_m3u_url;
+    if (binance !== undefined) updateData.binance = binance;
+    if (pagomovil !== undefined) updateData.pagomovil = pagomovil;
+    if (whatsapp_group !== undefined) updateData.whatsapp_group = whatsapp_group;
     if (existing) {
       await supabase.from('settings').update(updateData).eq('id', existing.id);
     } else {

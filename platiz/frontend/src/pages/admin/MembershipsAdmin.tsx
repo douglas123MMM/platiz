@@ -27,6 +27,7 @@ export default function MembershipsAdmin() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Membership | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [showPassword, setShowPassword] = useState(false);
   const [reminder, setReminder] = useState<{ show: boolean; membership: Membership | null; message: string }>({ show: false, membership: null, message: '' });
 
   const load = (term?: string) => {
@@ -128,7 +129,12 @@ export default function MembershipsAdmin() {
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Contraseña *</label>
-              <input type="text" value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Clave de acceso" required />
+              <div className="relative">
+                <input type={showPassword ? 'text' : 'password'} value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="w-full px-4 py-2.5 pr-12 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Clave de acceso" required />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.05] transition-colors text-xs">
+                  {showPassword ? 'Ocultar' : 'Mostrar'}
+                </button>
+              </div>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Perfil</label>

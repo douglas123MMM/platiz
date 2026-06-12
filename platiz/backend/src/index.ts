@@ -16,8 +16,10 @@ import settingsRoutes from './routes/settingsRoutes';
 import affiliateRoutes from './routes/affiliateRoutes';
 import movieRoutes from './routes/movieRoutes';
 import membershipRoutes from './routes/membershipRoutes';
+import tmdbRoutes from './routes/tmdbRoutes';
 import { streamVideo } from './controllers/videoController';
 import { xtreamProxy, xtreamStream } from './controllers/xtreamController';
+import { authenticate, requireAdmin } from './middleware/auth';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -27,7 +29,10 @@ app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173', crede
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: { error: 'Demasiados intentos. Intenta de nuevo en 15 minutos.' } });
+const globalLimiter = rateLimit({ windowMs: 60000, max: 100, message: { error: 'Too many requests' } });
+app.use('/api', globalLimiter);
+
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: { error: 'Demasiados intentos. Intenta de nuevo en 15 minutos.' } });
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
@@ -41,13 +46,14 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/affiliate', affiliateRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/memberships', membershipRoutes);
+app.use('/api/tmdb', tmdbRoutes);
 app.get('/api/video/stream', streamVideo);
 app.get('/api/xtream/proxy', xtreamProxy);
 app.get('/api/xtream/stream', xtreamStream);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', version: 'v2.0', timestamp: new Date().toISOString() }));
 
-app.post('/api/setup-db', async (_req, res) => {
+app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
   try {
     const pgHost = process.env.PG_HOST;
     const pgPass = process.env.PG_PASSWORD;
@@ -55,7 +61,7 @@ app.post('/api/setup-db', async (_req, res) => {
     const { Client } = require('pg');
     const client = new Client({
       host: pgHost, port: 5432, database: 'postgres', user: 'postgres',
-      password: pgPass, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 15000,
+      password: pgPass, ssl: { rejectUnauthorized: true }, connectionTimeoutMillis: 15000,
     });
     await client.connect();
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');
@@ -84,6 +90,9 @@ app.post('/api/setup-db', async (_req, res) => {
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_link TEXT;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS landing_video_url TEXT;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS landing_video_type TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS binance TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS pagomovil TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS whatsapp_group TEXT;');
     await client.query(`CREATE TABLE IF NOT EXISTS referrals (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       affiliate_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,

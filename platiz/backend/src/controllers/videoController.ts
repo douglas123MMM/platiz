@@ -1,6 +1,41 @@
 import { Response, Request } from 'express';
 
-// Proxy de video: convierte enlace de Google Drive en stream directo
+const INTERNAL_IP_PATTERNS = [
+  /^127\./,
+  /^10\./,
+  /^172\.(1[6-9]|2\d|3[01])\./,
+  /^192\.168\./,
+];
+
+function isInternalHost(hostname: string): boolean {
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname === '[::1]') {
+    return true;
+  }
+  return INTERNAL_IP_PATTERNS.some(p => p.test(hostname));
+}
+
+function validateGoogleUrl(urlString: string): URL | null {
+  try {
+    const parsed = new URL(urlString);
+    const hostname = parsed.hostname.toLowerCase();
+
+    if (
+      hostname !== 'googleapis.com' && !hostname.endsWith('.googleapis.com') &&
+      hostname !== 'google.com' && !hostname.endsWith('.google.com')
+    ) {
+      return null;
+    }
+
+    if (isInternalHost(hostname)) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 export async function streamVideo(req: Request, res: Response): Promise<void> {
   try {
     const { url } = req.query;
@@ -9,7 +44,12 @@ export async function streamVideo(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    // Extraer ID de Google Drive
+    const validUrl = validateGoogleUrl(url);
+    if (!validUrl) {
+      res.status(403).send('URL not allowed');
+      return;
+    }
+
     let videoUrl = '';
     if (url.includes('drive.google.com/file/d/')) {
       const id = url.match(/\/d\/([^/]+)/)?.[1];
@@ -18,12 +58,9 @@ export async function streamVideo(req: Request, res: Response): Promise<void> {
       const id = url.split('id=')[1]?.split('&')[0];
       videoUrl = id ? `https://drive.google.com/uc?export=download&id=${id}` : url;
     } else {
-      // Redirigir directamente otros URLs
-      res.redirect(url);
-      return;
+      videoUrl = url;
     }
 
-    // Intentar descargar el video de Google Drive y hacer stream
     const response = await fetch(videoUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',

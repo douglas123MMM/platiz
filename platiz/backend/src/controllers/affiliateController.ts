@@ -247,7 +247,11 @@ export async function registerWithReferral(req: AuthRequest, res: Response): Pro
 
     // Generar JWT
     const jwt = require('jsonwebtoken');
-    const JWT_SECRET = process.env.JWT_SECRET || 'platiz_secret_2024';
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      res.status(500).json({ error: 'Server configuration error' });
+      return;
+    }
     const token = jwt.sign({ id: newUser.id, role: 'client' }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({

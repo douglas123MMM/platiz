@@ -4,7 +4,10 @@ import jwt from 'jsonwebtoken';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
 
-const JWT_SECRET = process.env.JWT_SECRET || '';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('FATAL: JWT_SECRET environment variable is required');
+}
 
 export async function register(req: AuthRequest, res: Response): Promise<void> {
   try {

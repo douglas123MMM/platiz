@@ -4,7 +4,12 @@ import api from '../services/api';
 
 // v3 - Jun 2026
 
-const KB: { keywords: string[]; answer: string }[] = [
+interface PaymentSettings { binance: string; pagomovil: string; whatsapp: string; whatsapp_group: string; }
+let paymentSettings: PaymentSettings = { binance: '', pagomovil: '', whatsapp: '', whatsapp_group: '' };
+
+function getKB(): { keywords: string[]; answer: string }[] {
+  const p = paymentSettings;
+  return [
   // STREAMING
   {
     keywords: ['netflix'],
@@ -460,8 +465,8 @@ Revisa la tasa en: https://alcambio.app`,
   {
     keywords: ['binance', 'usdt', 'cripto', 'pago', 'pagar', 'metodo', 'transferencia', 'movil', 'zelle'],
     answer: `METODOS DE PAGO
-- Binance (USDT) - ID: 355976674 - jcespinoza2011@gmail.com
-- Pago movil: 0102 / 04243057148 / 28012172
+- Binance (USDT): ${p.binance || 'Consultar admin'}
+- Pago movil: ${p.pagomovil || 'Consultar admin'}
 - Transferencia bancaria (Bs)
 
 Tiempo de entrega: 5-10 minutos`,
@@ -469,12 +474,11 @@ Tiempo de entrega: 5-10 minutos`,
   {
     keywords: ['contacto', 'contactar', 'admin', 'whatsapp', 'telegram', 'hablar', 'escribir'],
     answer: `CONTACTO
-
+${p.whatsapp ? `
 • WhatsApp:
-https://wa.me/584149132366
-
+${p.whatsapp}` : ''}${p.whatsapp_group ? `
 • Grupo de Revendedores:
-https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv
+${p.whatsapp_group}` : ''}
 
 Atendemos rapido.`,
   },
@@ -488,8 +492,8 @@ Atendemos rapido.`,
   {
     keywords: ['revendedor', 'revender', 'reventa', 'pack revendedor'],
     answer: `PROGRAMA DE REVENDEDORES
-Vende todos nuestros servicios. Precios especiales para revendedores.
-Grupo: https://chat.whatsapp.com/FSpoFak5Txg6OVNg6RWbGv`,
+Vende todos nuestros servicios. Precios especiales para revendedores.${p.whatsapp_group ? `
+Grupo: ` + p.whatsapp_group : ''}`,
   },
   {
     keywords: ['plr', 'guia', 'guias', 'plantilla', 'plantillas', 'ebook', 'mockup', 'kit de marca'],
@@ -499,12 +503,14 @@ Visita la seccion PLR PRO en el menu lateral para ver todas las guias y plantill
   {
     keywords: ['licencia', 'licencias', 'programa', 'programas', 'software', 'instalacion'],
     answer: `LICENCIAS E INSTALACION
-Consultar precio del programa. Instalacion via AnyDesk/UltraViewer.
-Contacto: WhatsApp +584149132366`,
+Consultar precio del programa. Instalacion via AnyDesk/UltraViewer.${p.whatsapp ? `
+Contacto: ` + p.whatsapp : ''}`,
   },
-];
+  ];
+}
 
 function findAnswer(msg: string): string {
+  const KB = getKB();
   const lower = msg.toLowerCase();
   
   // Buscar coincidencia exacta de producto primero
@@ -619,6 +625,19 @@ export default function SupportChat() {
   const [proofFile, setProofFile] = useState<File | null>(null);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+  useEffect(() => {
+    api.get('/settings').then((r: any) => {
+      if (r.data) {
+        paymentSettings = {
+          binance: r.data.binance || '',
+          pagomovil: r.data.pagomovil || '',
+          whatsapp: r.data.whatsapp || '',
+          whatsapp_group: r.data.whatsapp_group || '',
+        };
+      }
+    }).catch(() => {});
+  }, []);
 
   const send = async (msg?: string) => {
     const text = (msg || input).trim();
