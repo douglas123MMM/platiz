@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
+import { supabase } from '../models/database';
 
 export const tmdbLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -9,9 +10,17 @@ export const tmdbLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+async function getTMDBKey(): Promise<string> {
+  try {
+    const { data } = await supabase.from('settings').select('tmdb_api_key').single();
+    if (data?.tmdb_api_key) return data.tmdb_api_key;
+  } catch {}
+  return process.env.TMDB_API_KEY || '';
+}
+
 export async function proxyTMDB(req: Request, res: Response): Promise<void> {
   try {
-    const apiKey = process.env.TMDB_API_KEY;
+    const apiKey = await getTMDBKey();
     if (!apiKey) {
       res.status(500).json({ error: 'TMDB API key not configured' });
       return;

@@ -12,12 +12,14 @@ export interface AuthRequest extends Request {
 
 export function authenticate(req: AuthRequest, res: Response, next: NextFunction): void {
   const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
+  const cookieToken = req.cookies?.token;
+  const finalToken = token || cookieToken;
+  if (!finalToken) {
     res.status(401).json({ error: 'Authentication required' });
     return;
   }
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as AuthRequest['user'];
+    const decoded = jwt.verify(finalToken, JWT_SECRET) as AuthRequest['user'];
     req.user = decoded;
     next();
   } catch {

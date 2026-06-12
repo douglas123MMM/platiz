@@ -1,17 +1,14 @@
 import axios from 'axios';
 
 /*
- * SECURITY WARNING: JWT tokens stored in localStorage are vulnerable to XSS attacks.
- * Any JavaScript running on the page can read localStorage, meaning a successful
- * XSS injection can exfiltrate the JWT and impersonate the user. Consider using
- * httpOnly cookies for JWT storage in production, or implement a token refresh
- * mechanism with short-lived access tokens stored in memory.
+ * JWT tokens are stored in httpOnly cookies to prevent XSS-based token theft.
+ * The Authorization header is kept as a fallback for backward compatibility.
  */
 
 const csrfToken = crypto.randomUUID();
 sessionStorage.setItem('csrf_token', csrfToken);
 
-const api = axios.create({ baseURL: '/api' });
+const api = axios.create({ baseURL: '/api', withCredentials: true });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');

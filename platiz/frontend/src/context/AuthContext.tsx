@@ -15,22 +15,19 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      api.get('/auth/profile')
-        .then((res) => setUser(res.data))
-        .catch(() => { localStorage.removeItem('token'); setToken(null); })
-        .finally(() => setLoading(false));
-    } else setLoading(false);
-  }, [token]);
+    api.get('/auth/profile')
+      .then((res) => { setUser(res.data); setToken('cookie'); })
+      .catch(() => { setUser(null); setToken(null); })
+      .finally(() => setLoading(false));
+  }, []);
 
   const login = async (email: string, password: string) => {
     const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
+    setToken('cookie');
     setUser(data.user);
   };
 
@@ -39,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    api.post('/auth/logout').catch(() => {});
     setToken(null);
     setUser(null);
   };

@@ -55,7 +55,6 @@ export default function AffiliateLanding() {
     try {
       const { data } = await api.post('/affiliate/register', { ...form, referral_code: ref });
       if (data.token) {
-        localStorage.setItem('token', data.token);
         setRegistered(true);
         setMsg('Registro exitoso. Tu asesor te contactara pronto.');
       }

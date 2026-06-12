@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 import { initializeDatabase } from './models/database';
 import authRoutes from './routes/authRoutes';
 import contentRoutes from './routes/contentRoutes';
@@ -28,6 +29,7 @@ app.use(helmet());
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173', credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const globalLimiter = rateLimit({ windowMs: 60000, max: 100, message: { error: 'Too many requests' } });
 app.use('/api', globalLimiter);
