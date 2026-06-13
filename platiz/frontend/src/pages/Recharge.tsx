@@ -26,12 +26,13 @@ export default function Recharge() {
   const [binanceQr, setBinanceQr] = useState('');
   const [recentRecharges, setRecentRecharges] = useState<RechargeRecord[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [copied, setCopied] = useState('');
 
   useEffect(() => {
     api.get('/store/binance-info')
       .then((r) => {
-        setBinanceId(r.data.binance_id || 'N/A');
-        setBinanceEmail(r.data.binance_email || 'N/A');
+        setBinanceId(r.data.binance_id || '');
+        setBinanceEmail(r.data.binance_email || '');
         setBinanceQr(r.data.binance_qr || '');
       })
       .catch(() => {});
@@ -52,12 +53,22 @@ export default function Recharge() {
 
   useEffect(() => { loadHistory(); }, [loadHistory]);
 
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(label);
+      toast.success('Copiado');
+      setTimeout(() => setCopied(''), 2000);
+    } catch {
+      toast.error('Error al copiar');
+    }
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) { toast.error('Solo imagenes'); return; }
     if (file.size > 2 * 1024 * 1024) { toast.error('Maximo 2MB'); return; }
-
     setUploading(true);
     const reader = new FileReader();
     reader.onload = () => {
@@ -122,68 +133,113 @@ export default function Recharge() {
   const balance = user?.credits ?? 0;
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-2xl mx-auto">
-      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[400px] h-[400px] bg-[#FFD700]/5 rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute top-0 right-1/4 translate-x-1/2 w-[400px] h-[400px] bg-[#FFD700]/5 rounded-full blur-[80px] pointer-events-none" />
-
-      <div className="text-center relative z-10">
-        <h1 className="section-title">Recargar Saldo</h1>
-        <p className="section-subtitle">Recarga manual via Binance Pay (USDT)</p>
-        <p className="text-[#FFD700]/50 text-sm mt-1">
-          Saldo disponible: <span className="text-[#FFD700] font-bold">${balance.toFixed(2)}</span>
-        </p>
-      </div>
-
-      <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-6 space-y-4">
-        <h3 className="text-white font-semibold text-lg">Datos de Pago</h3>
-        {binanceQr && (
-          <div className="flex justify-center">
-            <img src={binanceQr} alt="QR Binance Pay" className="w-48 h-48 rounded-xl border border-[#FFD700]/10" />
-          </div>
-        )}
-        <div className="space-y-3">
-          <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
-            <span className="text-gray-400 text-sm">Binance Pay ID</span>
-            <span className="text-white font-mono text-sm">{binanceId}</span>
-          </div>
-          <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
-            <span className="text-gray-400 text-sm">Email</span>
-            <span className="text-white text-sm">{binanceEmail}</span>
-          </div>
-        </div>
-        <div className="p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
-          <div className="text-gray-300 text-sm space-y-1 text-center">
-            <p>1. Transfiere USDT a la cuenta de arriba</p>
-            <p>2. Ingresa el monto y referencia abajo</p>
-            <p>3. Presiona "Enviar comprobante"</p>
-          </div>
+    <div className="max-w-3xl mx-auto space-y-6 pb-12 animate-fade-in">
+      <div className="text-center relative">
+        <h1 className="text-2xl md:text-3xl font-bold text-white">Recargar Saldo</h1>
+        <p className="text-gray-400 text-sm mt-1">Via Binance Pay (USDT)</p>
+        <div className="mt-3 inline-flex items-center gap-2 px-5 py-2 bg-[#FFD700]/10 rounded-full border border-[#FFD700]/20">
+          <span className="text-[#FFD700] text-sm">Saldo:</span>
+          <span className="text-white font-bold text-lg">${balance.toFixed(2)}</span>
         </div>
       </div>
 
-      <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-6 space-y-4">
-        <h3 className="text-white font-semibold text-lg">Monto de Recarga</h3>
+      <div className="glass rounded-2xl border border-[#FFD700]/10 p-5 md:p-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+          {binanceQr && (
+            <div className="flex-shrink-0 flex flex-col items-center gap-3">
+              <div className="p-4 bg-white rounded-2xl shadow-xl">
+                <img src={binanceQr} alt="QR Binance" className="w-36 h-36 md:w-44 md:h-44 object-contain" />
+              </div>
+              <span className="text-xs text-gray-500">Escanear con Binance</span>
+            </div>
+          )}
 
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-white/[0.02] border border-white/5">
-          <span className="text-[#FFD700] font-bold text-lg">$</span>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            placeholder="Ej: 10"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full bg-transparent border-none outline-none text-white text-lg placeholder-gray-600"
-          />
+          <div className="flex-1 space-y-3 min-w-0">
+            <h3 className="text-white font-semibold text-lg">Datos de Pago</h3>
+
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+              <p className="text-gray-500 text-xs mb-1">Binance Pay ID</p>
+              <div className="flex items-center gap-2">
+                <span className="text-white font-mono text-sm md:text-base truncate flex-1">{binanceId || '355976674'}</span>
+                <button
+                  onClick={() => copyToClipboard(binanceId || '355976674', 'id')}
+                  className="flex-shrink-0 p-2 rounded-lg bg-[#FFD700]/10 hover:bg-[#FFD700]/20 transition-colors"
+                  title="Copiar ID"
+                >
+                  {copied === 'id' ? (
+                    <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  ) : (
+                    <svg className="w-4 h-4 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+              <p className="text-gray-500 text-xs mb-1">Email</p>
+              <div className="flex items-center gap-2">
+                <span className="text-white text-sm md:text-base truncate flex-1">{binanceEmail || 'jcespinoza2011@gmail.com'}</span>
+                <button
+                  onClick={() => copyToClipboard(binanceEmail || 'jcespinoza2011@gmail.com', 'email')}
+                  className="flex-shrink-0 p-2 rounded-lg bg-[#FFD700]/10 hover:bg-[#FFD700]/20 transition-colors"
+                  title="Copiar Email"
+                >
+                  {copied === 'email' ? (
+                    <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  ) : (
+                    <svg className="w-4 h-4 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="p-3 md:p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
+              <div className="text-gray-300 text-xs md:text-sm space-y-1">
+                <p className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold flex-shrink-0">1</span>
+                  Transfiere USDT a la cuenta de arriba
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold flex-shrink-0">2</span>
+                  Ingresa el monto y referencia abajo
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold flex-shrink-0">3</span>
+                  Sube la captura y presiona "Enviar comprobante"
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="glass rounded-2xl border border-[#FFD700]/10 p-5 md:p-8 space-y-5">
+        <h3 className="text-white font-semibold text-lg">Completar Recarga</h3>
+
+        <div>
+          <label className="text-gray-400 text-sm block mb-2">Monto (USDT)</label>
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-white/[0.03] border border-white/5">
+            <span className="text-[#FFD700] font-bold text-lg">$</span>
+            <input
+              type="number"
+              min="1"
+              step="0.01"
+              placeholder="10"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full bg-transparent border-none outline-none text-white text-lg placeholder-gray-600"
+            />
+          </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {QUICK_AMOUNTS.map((v) => (
             <button
               key={v}
               onClick={() => setAmount(v.toString())}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+              className={`py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 amount === v.toString()
-                  ? 'bg-[#FFD700] text-black font-bold shadow-[0_2px_12px_rgba(255,215,0,0.25)]'
+                  ? 'bg-[#FFD700] text-black shadow-[0_2px_12px_rgba(255,215,0,0.25)]'
                   : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:border-[#FFD700]/30 hover:text-[#FFD700]'
               }`}
             >
@@ -192,28 +248,49 @@ export default function Recharge() {
           ))}
         </div>
 
-        <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+        <div>
+          <label className="text-gray-400 text-sm block mb-2">Referencia del pago</label>
           <input
             type="text"
             placeholder="N° de transaccion o referencia"
             value={reference}
             onChange={(e) => setReference(e.target.value)}
-            className="w-full bg-transparent border-none outline-none text-white placeholder-gray-600"
+            className="w-full p-3 rounded-xl bg-white/[0.03] border border-white/5 text-white placeholder-gray-600 outline-none focus:border-[#FFD700]/30 transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-2">Comprobante de pago (captura de pantalla)</label>
-          <label className="flex items-center gap-2 px-4 py-3 bg-white/[0.03] border border-dashed border-[#FFD700]/20 rounded-xl cursor-pointer hover:bg-white/[0.06] transition-colors">
-            <span className="text-2xl">📎</span>
-            <span className="text-sm text-gray-400">{proofPreview ? 'Cambiar imagen' : 'Subir captura del pago'}</span>
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          </label>
-          {uploading && <div className="mt-2 text-sm text-gray-400">Subiendo...</div>}
-          {proofPreview && (
-            <div className="mt-3 relative inline-block">
-              <img src={proofPreview} alt="Comprobante" className="w-32 h-32 rounded-xl border border-[#FFD700]/10 object-cover" />
-              <button onClick={() => { setProofImage(''); setProofPreview(''); }} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">×</button>
+          <label className="text-gray-400 text-sm block mb-2">Comprobante de pago (captura)</label>
+          {!proofPreview ? (
+            <label className="flex items-center justify-center gap-3 p-6 bg-white/[0.02] border-2 border-dashed border-[#FFD700]/10 rounded-2xl cursor-pointer hover:border-[#FFD700]/30 hover:bg-white/[0.04] transition-all group">
+              <svg className="w-8 h-8 text-[#FFD700]/30 group-hover:text-[#FFD700]/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">Toca para subir captura</span>
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            </label>
+          ) : (
+            <div className="space-y-3">
+              <div className="relative rounded-2xl overflow-hidden border border-[#FFD700]/10 bg-black/20">
+                <img src={proofPreview} alt="Comprobante" className="w-full max-h-64 object-contain" />
+                <button
+                  onClick={() => { setProofImage(''); setProofPreview(''); }}
+                  className="absolute top-3 right-3 w-8 h-8 bg-black/60 hover:bg-red-500 rounded-full flex items-center justify-center text-white transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+              <label className="flex items-center gap-2 text-sm text-gray-500 cursor-pointer hover:text-[#FFD700] transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                Cambiar imagen
+                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+              </label>
+            </div>
+          )}
+          {uploading && (
+            <div className="mt-2 flex items-center gap-2 text-sm text-gray-400">
+              <div className="w-4 h-4 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+              Procesando...
             </div>
           )}
         </div>
@@ -221,7 +298,7 @@ export default function Recharge() {
         <button
           onClick={handleRecharge}
           disabled={loading || !amount || !reference}
-          className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3.5 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
         >
           {loading ? (
             <>
@@ -237,22 +314,29 @@ export default function Recharge() {
         </button>
       </div>
 
-      <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-6 space-y-4">
-        <h3 className="text-white font-semibold text-lg">Mis Recargas</h3>
-
+      <div className="glass rounded-2xl border border-[#FFD700]/10 p-5 md:p-8">
+        <h3 className="text-white font-semibold text-lg mb-4">Mis Recargas</h3>
         {loadingHistory ? (
           <p className="text-gray-500 text-sm text-center py-4">Cargando...</p>
         ) : recentRecharges.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-4">Sin recargas registradas</p>
+          <div className="text-center py-8">
+            <div className="w-16 h-16 mx-auto mb-3 bg-[#FFD700]/5 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-[#FFD700]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <p className="text-gray-500 text-sm">Sin recargas registradas</p>
+          </div>
         ) : (
           <div className="space-y-2">
             {recentRecharges.map((r) => (
-              <div key={r.id} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                <div>
-                  <p className="text-white text-sm font-medium">${r.amount.toFixed(2)} USDT</p>
-                  <p className="text-gray-500 text-xs">{formatDate(r.created_at)}</p>
+              <div key={r.id} className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-white font-semibold">${Number(r.amount).toFixed(2)}</p>
+                    <span className="text-gray-600 text-xs">USDT</span>
+                  </div>
+                  <p className="text-gray-500 text-xs mt-0.5">{formatDate(r.created_at)}</p>
                   {r.description && (
-                    <p className="text-gray-600 text-xs mt-0.5 truncate max-w-[200px]">{r.description}</p>
+                    <p className="text-gray-600 text-xs mt-0.5 truncate max-w-[250px]">{r.description.replace(/Ref: |\| Binance ID: .*$/, '').trim()}</p>
                   )}
                 </div>
                 {statusBadge(r.status)}
