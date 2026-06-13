@@ -73,3 +73,62 @@ export async function updateSettings(req: AuthRequest, res: Response): Promise<v
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function uploadBinanceQR(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { image } = req.body;
+    if (!image) {
+      res.status(400).json({ error: 'No image provided' });
+      return;
+    }
+
+    const matches = image.match(/^data:image\/(\w+);base64,(.+)$/);
+    if (!matches) {
+      res.status(400).json({ error: 'Invalid image format. Use base64 data URL.' });
+      return;
+    }
+
+    const ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+    const base64Data = matches[2];
+    const buffer = Buffer.from(base64Data, 'base64');
+    const filename = `binance_qr_${Date.now()}.${ext}`;
+
+    const { data, error } = await supabase.storage
+      .from('public')
+      .upload(`payments/${filename}`, buffer, {
+        contentType: `image/${ext}`,
+        upsert: true,
+      });
+
+    if (error) {
+      console.error('Storage error, using base64 fallback:', error.message);
+      const imageUrl = `data:image/${ext};base64,${base64Data}`;
+
+      await supabase.from('settings').upsert({
+        id: 1,
+        binance_pay_qr: imageUrl,
+        updated_at: new Date().toISOString(),
+      });
+
+      res.json({ success: true, url: imageUrl });
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('public')
+      .getPublicUrl(`payments/${filename}`);
+
+    const imageUrl = urlData?.publicUrl || '';
+
+    const { data: existingSettings } = await supabase.from('settings').select('id').limit(1).maybeSingle();
+    if (existingSettings) {
+      await supabase.from('settings').update({ binance_pay_qr: imageUrl }).eq('id', existingSettings.id);
+    } else {
+      await supabase.from('settings').insert({ binance_pay_qr: imageUrl });
+    }
+
+    res.json({ success: true, url: imageUrl });
+  } catch (e: any) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

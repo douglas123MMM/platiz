@@ -15,6 +15,7 @@ export default function ContactSettings() {
   const [guias, setGuias] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [qrUploading, setQrUploading] = useState(false);
 
   useEffect(() => {
     api.get('/settings').then((r) => {
@@ -28,6 +29,43 @@ export default function ContactSettings() {
       setGuias(r.data.guias || {});
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  const handleQRUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Solo se permiten imagenes');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('La imagen debe ser menor a 2MB');
+      return;
+    }
+
+    setQrUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result as string;
+        const { data } = await api.post('/settings/upload-qr', { image: base64 });
+        if (data.url) {
+          setBinancePayQr(data.url);
+          toast.success('QR subido correctamente');
+        }
+        setQrUploading(false);
+      };
+      reader.onerror = () => {
+        toast.error('Error al leer la imagen');
+        setQrUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      toast.error('Error al subir QR');
+      setQrUploading(false);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,8 +119,37 @@ export default function ContactSettings() {
             <div className="space-y-4">
               <div><label className="label">Binance Pay ID</label><input className="input" placeholder="355976674" value={binancePayId} onChange={(e) => setBinancePayId(e.target.value)} /></div>
               <div><label className="label">Binance Pay Email</label><input className="input" placeholder="tucorreo@gmail.com" value={binancePayEmail} onChange={(e) => setBinancePayEmail(e.target.value)} /></div>
-              <div><label className="label">URL del QR de Binance</label><input className="input" placeholder="https://...qr.png" value={binancePayQr} onChange={(e) => setBinancePayQr(e.target.value)} /></div>
-              {binancePayQr && <img src={binancePayQr} alt="QR Binance" className="w-40 h-40 rounded-xl border border-[#FFD700]/10" />}
+              <div>
+                <label className="label">QR de Binance</label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 px-4 py-2 bg-[#F0B90B]/10 border border-[#F0B90B]/20 rounded-xl cursor-pointer hover:bg-[#F0B90B]/20 transition-colors">
+                    <span className="text-[#F0B90B] text-sm font-medium">{qrUploading ? 'Subiendo...' : 'Subir imagen'}</span>
+                    <input type="file" accept="image/*" onChange={handleQRUpload} className="hidden" disabled={qrUploading} />
+                  </label>
+                  <span className="text-xs text-gray-500">o pega el enlace</span>
+                </div>
+                <input
+                  className="input mt-2"
+                  placeholder="https://...qr.png"
+                  value={binancePayQr}
+                  onChange={(e) => setBinancePayQr(e.target.value)}
+                />
+                {qrUploading && (
+                  <div className="mt-2 flex items-center gap-2 text-sm text-gray-400">
+                    <div className="w-4 h-4 border-2 border-[#F0B90B]/30 border-t-[#F0B90B] rounded-full animate-spin" />
+                    Subiendo imagen...
+                  </div>
+                )}
+                {binancePayQr && (
+                  <div className="mt-3 relative inline-block">
+                    <img src={binancePayQr} alt="QR Binance" className="w-40 h-40 rounded-xl border border-[#FFD700]/10 object-contain bg-white" />
+                    <button
+                      onClick={() => setBinancePayQr('')}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600"
+                    >×</button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
