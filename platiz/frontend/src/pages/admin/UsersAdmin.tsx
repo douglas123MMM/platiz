@@ -43,6 +43,8 @@ export default function UsersAdmin() {
       loadUsers(search);
     } catch { toast.error('Error al activar'); }
   };
+
+  const toggleMovies = async (id: string) => {
     try {
       const r = await api.patch(`/auth/users/${id}/movies-access`);
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, movies_access: r.data.movies_access } : u));

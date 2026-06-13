@@ -34,6 +34,7 @@
   .badge-danger { @apply badge bg-red-500/10 text-red-400 border border-red-500/20; }
   .badge-info { @apply badge bg-[#00D4FF]/10 text-[#00D4FF] border border-[#00D4FF]/20; }
   .badge-gold { @apply badge bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/20; }
+  .badge-purple { @apply badge bg-purple-500/10 text-purple-400 border border-purple-500/20; }
   .section-title { @apply text-3xl md:text-4xl lg:text-5xl font-display font-bold bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#DAA520] bg-clip-text text-transparent; }
   .section-subtitle { @apply text-gray-400 mt-2 text-lg; }
   .gold-text { @apply bg-gradient-to-r from-[#FFD700] via-[#FFF] to-[#DAA520] bg-clip-text text-transparent; }

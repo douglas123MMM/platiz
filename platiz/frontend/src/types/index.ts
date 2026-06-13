@@ -7,6 +7,7 @@ export interface User {
   status: 'pending' | 'approved' | 'rejected';
   avatar?: string;
   movies_access?: boolean;
+  credits?: number;
   created_at: string;
 }
 

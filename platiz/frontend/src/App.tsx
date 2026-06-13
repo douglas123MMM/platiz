@@ -26,7 +26,10 @@ import AffiliateLanding from './pages/AffiliateLanding';
 import AffiliateCatalog from './pages/AffiliateCatalog';
 import AffiliatesAdmin from './pages/admin/AffiliatesAdmin';
 import MembershipsAdmin from './pages/admin/MembershipsAdmin';
+import StoreAdmin from './pages/admin/StoreAdmin';
+import TransactionsAdmin from './pages/admin/TransactionsAdmin';
 import Entertainment from './pages/Entertainment';
+import Store from './pages/Store';
 
 function LoadingScreen() {
   return (
@@ -76,6 +79,7 @@ export default function App() {
         <Route path="/soporte" element={<SupportChat />} />
         <Route path="/afiliado" element={<AffiliateDashboard />} />
         <Route path="/player" element={<PlayerPage />} />
+        <Route path="/store" element={<Store />} />
         <Route path="/membresias" element={<MembershipsAdmin />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
@@ -90,6 +94,8 @@ export default function App() {
         <Route path="/admin/contact" element={<ContactSettings />} />
         <Route path="/admin/affiliates" element={<AffiliatesAdmin />} />
         <Route path="/admin/memberships" element={<MembershipsAdmin />} />
+        <Route path="/admin/store" element={<StoreAdmin />} />
+        <Route path="/admin/transactions" element={<TransactionsAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

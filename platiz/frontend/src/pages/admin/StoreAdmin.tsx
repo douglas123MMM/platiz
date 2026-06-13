@@ -1,0 +1,443 @@
+import { useState, useEffect } from 'react';
+import api from '../../services/api';
+import toast from 'react-hot-toast';
+import { IconPlus, IconPencil, IconTrash, IconRefresh, IconEye, IconEyeOff, IconGrid } from '../../icons/PremiumIcons';
+
+const CATEGORIES = [
+  'Streaming', 'Creatividad', 'Diseno Grafico', 'Edicion de Videos',
+  'Herramientas', 'Antivirus', 'Oficina', 'Licencia', 'Monedas de Juegos',
+  'Redes Sociales',
+];
+
+interface Product {
+  id: string;
+  image_url: string;
+  category: string;
+  title: string;
+  description: string;
+  terms: string;
+  price: number;
+  support_number: string;
+  delivery_email: string;
+  delivery_password: string;
+  stock: number;
+  account_type: string;
+  duration_days: number;
+  delivery_type: string;
+  renewable: boolean;
+  vendor_name: string;
+  active: boolean;
+  created_at: string;
+}
+
+const emptyProduct: Product = {
+  id: '',
+  image_url: '',
+  category: '',
+  title: '',
+  description: '',
+  terms: '',
+  price: 0,
+  support_number: '',
+  delivery_email: '',
+  delivery_password: '',
+  stock: 0,
+  account_type: 'Temporal',
+  duration_days: 0,
+  delivery_type: 'Automática',
+  renewable: false,
+  vendor_name: '',
+  active: true,
+  created_at: '',
+};
+
+export default function StoreAdmin() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Product>(emptyProduct);
+  const [showPass, setShowPass] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const loadProducts = () => {
+    setLoading(true);
+    api.get('/store/admin/products')
+      .then((r) => setProducts(r.data))
+      .catch(() => toast.error('Error al cargar productos'))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { loadProducts(); }, []);
+
+  const openNew = () => {
+    setEditing({ ...emptyProduct });
+    setModalOpen(true);
+  };
+
+  const openEdit = (p: Product) => {
+    setEditing({ ...p });
+    setModalOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!editing.title || !editing.category) {
+      toast.error('Título y categoría son obligatorios');
+      return;
+    }
+    try {
+      if (editing.id) {
+        await api.put(`/store/products/${editing.id}`, editing);
+        toast.success('Producto actualizado');
+      } else {
+        await api.post('/store/products', editing);
+        toast.success('Producto creado');
+      }
+      setModalOpen(false);
+      loadProducts();
+    } catch {
+      toast.error('Error al guardar producto');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await api.delete(`/store/products/${id}`);
+      toast.success('Producto eliminado');
+      setDeleteId(null);
+      loadProducts();
+    } catch {
+      toast.error('Error al eliminar producto');
+    }
+  };
+
+  const updateField = (field: keyof Product, value: any) => {
+    setEditing((prev) => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <IconGrid className="w-8 h-8 text-[#FFD700]" />
+          <div>
+            <h1 className="section-title text-2xl">Gestión de Tienda</h1>
+            <p className="section-subtitle">Administra los productos de la tienda</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={openNew} className="btn-secondary flex items-center gap-2 bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/20 hover:bg-[#FFD700]/20">
+            <IconPlus className="w-4 h-4" /> Agregar Producto
+          </button>
+          <button onClick={loadProducts} className="btn-secondary flex items-center gap-2">
+            <IconRefresh className="w-4 h-4" /> Actualizar
+          </button>
+        </div>
+      </div>
+
+      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-[#FFD700]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Imagen</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Título</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Categoría</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Precio</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Stock</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Tipo</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
+                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={8} className="p-12 text-center text-gray-500">Cargando...</td></tr>
+              ) : products.length === 0 ? (
+                <tr><td colSpan={8} className="p-12 text-center text-gray-500">Sin productos registrados</td></tr>
+              ) : products.map((p) => (
+                <tr key={p.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                  <td className="p-4">
+                    {p.image_url ? (
+                      <img src={p.image_url} alt={p.title} className="w-10 h-10 rounded-lg object-cover border border-[#FFD700]/10" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-[#FFD700]/10 flex items-center justify-center text-[#FFD700]/40">
+                        <IconGrid className="w-5 h-5" />
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 text-white text-sm font-medium">{p.title}</td>
+                  <td className="p-4">
+                    <span className="badge badge-gold text-xs">{p.category}</span>
+                  </td>
+                  <td className="p-4 text-[#FFD700] text-sm font-bold">${Number(p.price).toFixed(2)}</td>
+                  <td className="p-4 text-gray-400 text-sm">{p.stock}</td>
+                  <td className="p-4">
+                    <span className={`badge ${p.delivery_type === 'Automática' ? 'badge-info' : 'badge-warning'}`}>
+                      {p.delivery_type}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <span className={`badge ${p.active ? 'badge-success' : 'badge-danger'}`}>
+                      {p.active ? 'Activo' : 'Inactivo'}
+                    </span>
+                  </td>
+                  <td className="p-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button onClick={() => openEdit(p)} className="p-2 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors" title="Editar">
+                        <IconPencil className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => setDeleteId(p.id)} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors" title="Eliminar">
+                        <IconTrash className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setDeleteId(null)}>
+          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-white font-bold mb-2">Eliminar Producto</h3>
+            <p className="text-gray-400 text-sm mb-6">¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.</p>
+            <div className="flex gap-3">
+              <button onClick={() => handleDelete(deleteId)} className="flex-1 py-2 bg-red-500 text-white rounded-lg font-bold text-sm">Eliminar</button>
+              <button onClick={() => setDeleteId(null)} className="flex-1 py-2 bg-white/10 text-white rounded-lg text-sm">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setModalOpen(false)}>
+          <div className="fixed inset-0 bg-[#0a0a0f]/95 backdrop-blur-xl" />
+          <div
+            className="relative bg-[#0a0a0f] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold text-white mb-6">
+              {editing.id ? 'Editar Producto' : 'Nuevo Producto'}
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">URL de Imagen</label>
+                <input
+                  type="text"
+                  value={editing.image_url}
+                  onChange={(e) => updateField('image_url', e.target.value)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Categoría</label>
+                <select
+                  value={editing.category}
+                  onChange={(e) => updateField('category', e.target.value)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#FFD700]/30"
+                >
+                  <option value="">Seleccionar...</option>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Título</label>
+                <input
+                  type="text"
+                  value={editing.title}
+                  onChange={(e) => updateField('title', e.target.value)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Descripción</label>
+                <textarea
+                  value={editing.description}
+                  onChange={(e) => updateField('description', e.target.value)}
+                  rows={3}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30 resize-none"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Términos y Condiciones</label>
+                <textarea
+                  value={editing.terms}
+                  onChange={(e) => updateField('terms', e.target.value)}
+                  rows={3}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30 resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Precio</label>
+                <input
+                  type="number"
+                  value={editing.price}
+                  onChange={(e) => updateField('price', parseFloat(e.target.value) || 0)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Número de Soporte</label>
+                <input
+                  type="text"
+                  value={editing.support_number}
+                  onChange={(e) => updateField('support_number', e.target.value)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Email de Entrega</label>
+                <input
+                  type="text"
+                  value={editing.delivery_email}
+                  onChange={(e) => updateField('delivery_email', e.target.value)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Contraseña de Entrega</label>
+                <div className="relative">
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    value={editing.delivery_password}
+                    onChange={(e) => updateField('delivery_password', e.target.value)}
+                    className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 pr-10 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FFD700] transition-colors"
+                  >
+                    {showPass ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Stock</label>
+                <input
+                  type="number"
+                  value={editing.stock}
+                  onChange={(e) => updateField('stock', parseInt(e.target.value) || 0)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Tipo de Cuenta</label>
+                <div className="flex rounded-lg overflow-hidden border border-[#FFD700]/10">
+                  <button
+                    type="button"
+                    onClick={() => updateField('account_type', 'Temporal')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.account_type === 'Temporal' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
+                  >
+                    Temporal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateField('account_type', 'Permanente')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.account_type === 'Permanente' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
+                  >
+                    Permanente
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Duración (días)</label>
+                <input
+                  type="number"
+                  value={editing.duration_days}
+                  onChange={(e) => updateField('duration_days', parseInt(e.target.value) || 0)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Tipo de Entrega</label>
+                <div className="flex rounded-lg overflow-hidden border border-[#FFD700]/10">
+                  <button
+                    type="button"
+                    onClick={() => updateField('delivery_type', 'Automática')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.delivery_type === 'Automática' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
+                  >
+                    Automática
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateField('delivery_type', 'Manual')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.delivery_type === 'Manual' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
+                  >
+                    Manual
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Vendedor</label>
+                <input
+                  type="text"
+                  value={editing.vendor_name}
+                  onChange={(e) => updateField('vendor_name', e.target.value)}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                />
+              </div>
+
+              <div className="md:col-span-2 flex items-center gap-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editing.renewable}
+                    onChange={(e) => updateField('renewable', e.target.checked)}
+                    className="w-4 h-4 rounded border-[#FFD700]/30 bg-black/30 text-[#FFD700] focus:ring-[#FFD700]/20"
+                  />
+                  <span className="text-sm text-gray-300">Renovable</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editing.active}
+                    onChange={(e) => updateField('active', e.target.checked)}
+                    className="w-4 h-4 rounded border-[#FFD700]/30 bg-black/30 text-[#FFD700] focus:ring-[#FFD700]/20"
+                  />
+                  <span className="text-sm text-gray-300">Activo</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-[#FFD700]/10">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="px-6 py-2 bg-white/10 text-white rounded-lg text-sm hover:bg-white/20 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-6 py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D] transition-colors"
+              >
+                {editing.id ? 'Guardar Cambios' : 'Crear Producto'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
