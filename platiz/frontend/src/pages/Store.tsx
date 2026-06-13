@@ -245,11 +245,11 @@ export default function Store() {
                   {/* Delivery type + Duration */}
                   <div className="flex flex-wrap items-center gap-2 text-xs">
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-medium ${
-                      product.delivery_type === 'automatica'
+                      product.delivery_type?.toLowerCase() === 'automatica'
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                     }`}>
-                      {product.delivery_type === 'automatica' ? 'Automatica' : 'Manual'}
+                      {product.delivery_type?.toLowerCase() === 'automatica' ? 'Automatica' : 'Manual'}
                     </span>
                     {(product.duration_days ?? 0) > 0 && (
                       <span className="text-gray-400">
@@ -345,11 +345,11 @@ export default function Store() {
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Tipo de entrega</p>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                    selectedProduct.delivery_type === 'automatica'
+                    selectedProduct.delivery_type?.toLowerCase() === 'automatica'
                       ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                       : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                   }`}>
-                    {selectedProduct.delivery_type === 'automatica' ? 'Automatica' : 'Manual'}
+                    {selectedProduct.delivery_type?.toLowerCase() === 'automatica' ? 'Automatica' : 'Manual'}
                   </span>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
@@ -409,7 +409,7 @@ export default function Store() {
             </div>
 
             {/* Credentials after purchase */}
-            {purchaseResult && selectedProduct.delivery_type === 'automatica' && (purchaseResult.delivery_email || purchaseResult.delivery_password) && (
+            {purchaseResult && selectedProduct.delivery_type?.toLowerCase() === 'automatica' && (purchaseResult.delivery_email || purchaseResult.delivery_password) && (
               <div className="px-6 pb-2">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                   <p className="text-emerald-400 font-semibold text-sm mb-2">Credenciales de acceso</p>
@@ -439,7 +439,7 @@ export default function Store() {
               </div>
             )}
 
-            {purchaseResult && selectedProduct.delivery_type === 'manual' && (
+            {purchaseResult && selectedProduct.delivery_type?.toLowerCase() === 'manual' && (
               <div className="px-6 pb-2">
                 <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
                   <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual - Instrucciones</p>
