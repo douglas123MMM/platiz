@@ -16,6 +16,7 @@ interface Product {
   title: string;
   description: string;
   terms: string;
+  purchase_instructions: string;
   price: number;
   support_number: string;
   delivery_email: string;
@@ -37,6 +38,7 @@ const emptyProduct: Product = {
   title: '',
   description: '',
   terms: '',
+  purchase_instructions: '',
   price: 0,
   support_number: '',
   delivery_email: '',
@@ -278,6 +280,17 @@ export default function StoreAdmin() {
                   value={editing.terms}
                   onChange={(e) => updateField('terms', e.target.value)}
                   rows={3}
+                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30 resize-none"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Instrucciones de Compra (visible tras la compra)</label>
+                <textarea
+                  value={editing.purchase_instructions}
+                  onChange={(e) => updateField('purchase_instructions', e.target.value)}
+                  rows={3}
+                  placeholder="Ej: Recibiras un correo en 2-4 horas con los datos de acceso..."
                   className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30 resize-none"
                 />
               </div>

@@ -7,6 +7,7 @@ interface StoreProduct {
   title: string;
   description?: string;
   terms?: string;
+  purchase_instructions?: string;
   image_url?: string;
   category: string;
   price: number;
@@ -442,7 +443,9 @@ export default function Store() {
               <div className="px-6 pb-2">
                 <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
                   <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual - Instrucciones</p>
-                  {selectedProduct.terms ? (
+                  {selectedProduct.purchase_instructions ? (
+                    <p className="text-gray-300 text-sm whitespace-pre-wrap">{selectedProduct.purchase_instructions}</p>
+                  ) : selectedProduct.terms ? (
                     <p className="text-gray-300 text-sm whitespace-pre-wrap">{selectedProduct.terms}</p>
                   ) : (
                     <>

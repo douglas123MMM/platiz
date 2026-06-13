@@ -62,7 +62,7 @@ export async function getStoreProductById(req: AuthRequest, res: Response): Prom
 
 export async function createStoreProduct(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { category, title, description, terms, price, image_url, support_number, delivery_email, delivery_password, stock, account_type, duration_days, delivery_type, renewable, vendor_name } = req.body;
+    const { category, title, description, terms, purchase_instructions, price, image_url, support_number, delivery_email, delivery_password, stock, account_type, duration_days, delivery_type, renewable, vendor_name } = req.body;
 
     if (!category || !title || price === undefined) {
       res.status(400).json({ error: 'Categoria, titulo y precio son obligatorios' });
@@ -73,6 +73,7 @@ export async function createStoreProduct(req: AuthRequest, res: Response): Promi
       category, title,
       description: description || '',
       terms: terms || '',
+      purchase_instructions: purchase_instructions || '',
       price: parseFloat(price) || 0,
       image_url: image_url || '',
       support_number: support_number || '',
@@ -96,7 +97,7 @@ export async function createStoreProduct(req: AuthRequest, res: Response): Promi
 export async function updateStoreProduct(req: AuthRequest, res: Response): Promise<void> {
   try {
     const updates: Record<string, unknown> = {};
-    const stringFields = ['category', 'title', 'description', 'terms', 'image_url', 'support_number', 'delivery_email', 'delivery_password', 'account_type', 'delivery_type', 'vendor_name'];
+    const stringFields = ['category', 'title', 'description', 'terms', 'purchase_instructions', 'image_url', 'support_number', 'delivery_email', 'delivery_password', 'account_type', 'delivery_type', 'vendor_name'];
     const numberFields = ['price', 'stock', 'duration_days'];
     const booleanFields = ['renewable', 'active'];
 
