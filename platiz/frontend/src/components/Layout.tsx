@@ -7,6 +7,9 @@ import { IconHome, IconMovies, IconCourses, IconBooks, IconApps, IconTelegram, I
 
 const navItems = [
   { path: '/dashboard', label: 'Inicio', icon: IconHome, roles: ['client', 'admin'] },
+  { path: '/store', label: 'Tienda', icon: IconGrid, roles: ['client', 'admin'] },
+  { path: '/recharge', label: 'Recargar', icon: IconAffiliate, roles: ['client', 'admin'] },
+  { path: '/purchases', label: 'Mis Compras', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/afiliado', label: 'Mi Oficina', icon: IconAffiliate, roles: ['client', 'admin'] },
   { path: '/soporte', label: 'Soporte', icon: IconChat, roles: ['client', 'admin'] },
   { path: '/movies', label: 'Entretenimiento', icon: IconMovies, roles: ['client', 'admin'] },
@@ -21,8 +24,6 @@ const navItems = [
   { path: '/editables', label: 'Editables', icon: IconPhoto, roles: ['client', 'admin'] },
   { path: '/plr-pro', label: 'PLR PRO', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
-  { path: '/store', label: 'Tienda', icon: IconGrid, roles: ['client', 'admin'] },
-  { path: '/purchases', label: 'Mis Compras', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/membresias', label: 'Membresias', icon: IconMovies, roles: ['client', 'admin'] },
 ];
 
