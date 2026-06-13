@@ -302,34 +302,41 @@ export default function StoreAdmin() {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Email de Entrega</label>
-                <input
-                  type="text"
-                  value={editing.delivery_email}
-                  onChange={(e) => updateField('delivery_email', e.target.value)}
-                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Contraseña de Entrega</label>
-                <div className="relative">
-                  <input
-                    type={showPass ? 'text' : 'password'}
-                    value={editing.delivery_password}
-                    onChange={(e) => updateField('delivery_password', e.target.value)}
-                    className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 pr-10 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPass(!showPass)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FFD700] transition-colors"
-                  >
-                    {showPass ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
-                  </button>
+              {editing.delivery_type === 'automatica' ? (
+                <>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Email de Entrega</label>
+                    <input
+                      type="text"
+                      value={editing.delivery_email}
+                      onChange={(e) => updateField('delivery_email', e.target.value)}
+                      className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Contraseña de Entrega</label>
+                    <div className="relative">
+                      <input
+                        type={showPass ? 'text' : 'password'}
+                        value={editing.delivery_password}
+                        onChange={(e) => updateField('delivery_password', e.target.value)}
+                        className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 pr-10 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPass(!showPass)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FFD700] transition-colors"
+                      >
+                        {showPass ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/10 text-yellow-400/60 text-xs">
+                  Entrega manual: las credenciales se enviaran al cliente por otro medio.
                 </div>
-              </div>
+              )}
 
               <div>
                 <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Stock</label>

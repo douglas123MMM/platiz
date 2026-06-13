@@ -407,7 +407,7 @@ export default function Store() {
             </div>
 
             {/* Credentials after purchase */}
-            {purchaseResult && (purchaseResult.delivery_email || purchaseResult.delivery_password) && (
+            {purchaseResult && selectedProduct.delivery_type === 'automatica' && (purchaseResult.delivery_email || purchaseResult.delivery_password) && (
               <div className="px-6 pb-2">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                   <p className="text-emerald-400 font-semibold text-sm mb-2">Credenciales de acceso</p>
@@ -433,6 +433,16 @@ export default function Store() {
                       </button>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {purchaseResult && selectedProduct.delivery_type === 'manual' && (
+              <div className="px-6 pb-2">
+                <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                  <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual</p>
+                  <p className="text-gray-300 text-sm">Tu pedido sera procesado por nuestro equipo.</p>
+                  <p className="text-gray-400 text-xs mt-1">Te contactaremos en las proximas 1-24 horas para entregarte las credenciales.</p>
                 </div>
               </div>
             )}
