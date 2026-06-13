@@ -42,6 +42,8 @@ export default function UsersAdmin() {
       toast.success(`Peliculas ${r.data.movies_access ? 'activadas' : 'desactivadas'}`);
     } catch { toast.error('Error al actualizar'); }
   };
+
+  const updateStatus = async (id: string, status: 'approved' | 'rejected') => {
     try {
       await api.patch(`/auth/users/${id}/status`, { status });
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, status } : u));
