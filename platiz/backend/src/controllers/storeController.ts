@@ -243,52 +243,114 @@ export async function createRecharge(req: AuthRequest, res: Response): Promise<v
       return;
     }
 
-    const merchantTradeNo = `RECHARGE_${Date.now()}_${req.user?.id?.substring(0, 8)}`;
+    const merchantTradeNo = `REC${Date.now()}${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     
-    const { data: tx, error } = await supabase.from('store_transactions').insert({
-      user_id: req.user?.id,
-      type: 'recharge',
-      amount,
-      description: `Recarga USDT - ${merchantTradeNo}`,
-      status: 'pending'
-    }).select().single();
-
-    if (error) throw error;
-
     try {
       const order = await createOrder({
         merchantTradeNo,
         totalFee: amount,
         currency: 'USDT',
         productName: 'Recarga Global Dorado',
-        productDetail: `Recarga de saldo por $${amount} USDT`,
-        returnUrl: 'https://platiz.vercel.app/recharge',
+        productDetail: `Recarga de saldo $${amount} USDT`,
       });
 
-      await supabase.from('store_transactions').update({
-        description: `Recarga USDT - ${merchantTradeNo} - prepayId: ${order.data?.prepayId || 'N/A'}`
-      }).eq('id', tx.id);
+      if (order.status === 'SUCCESS' && order.data) {
+        await supabase.from('store_transactions').insert({
+          user_id: req.user?.id,
+          type: 'recharge',
+          amount,
+          description: `Recarga USDT - ${merchantTradeNo}`,
+          status: 'pending',
+        });
 
-      res.json({
-        success: true,
-        transaction_id: tx.id,
-        amount,
-        prepay_id: order.data?.prepayId,
-        qrcode_url: order.data?.qrCode || order.data?.qrcodeLink,
-        checkout_url: order.data?.checkoutUrl || order.data?.universalUrl,
-        message: 'Escanea el QR o abre el enlace para pagar con Binance',
-      });
-    } catch (binanceError: any) {
-      res.json({
-        success: true,
-        transaction_id: tx.id,
-        amount,
-        manual: true,
-        message: 'Recarga registrada. Transfiere manualmente y un admin la aprobara.',
-      });
+        res.json({
+          success: true,
+          prepay_id: order.data.prepayId,
+          qrcode_url: order.data.qrcodeLink || order.data.qrCode || '',
+          checkout_url: order.data.checkoutUrl || order.data.universalUrl || '',
+          amount,
+          message: 'Escanea el QR con Binance para pagar',
+        });
+        return;
+      }
+    } catch (e) {
+      console.error('Binance createOrder error:', e);
     }
+
+    const { data: tx } = await supabase.from('store_transactions').insert({
+      user_id: req.user?.id,
+      type: 'recharge',
+      amount,
+      description: `Recarga USDT manual - ${merchantTradeNo}`,
+      status: 'pending',
+    }).select().single();
+
+    res.json({
+      success: true,
+      manual: true,
+      transaction_id: tx?.id,
+      amount,
+      message: 'Recarga registrada manualmente. Un admin la aprobara.',
+    });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function checkRechargeStatus(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { prepay_id } = req.params;
+    
+    const result = await queryOrder(prepay_id);
+    
+    if (result.status === 'SUCCESS' && result.data) {
+      const bizStatus = result.data.bizStatus || result.data.status;
+      
+      if (bizStatus === 'PAY_SUCCESS' || bizStatus === 'PAID') {
+        const { data: existingTx } = await supabase.from('store_transactions')
+          .select('*')
+          .ilike('description', `%${prepay_id}%`)
+          .eq('status', 'completed')
+          .maybeSingle();
+
+        if (existingTx) {
+          res.json({ status: 'completed', message: 'Ya acreditado' });
+          return;
+        }
+
+        const { data: pendingTx } = await supabase.from('store_transactions')
+          .select('*')
+          .ilike('description', `%${prepay_id}%`)
+          .eq('status', 'pending')
+          .maybeSingle();
+
+        if (pendingTx) {
+          await supabase.from('store_transactions').update({ status: 'completed' }).eq('id', pendingTx.id);
+
+          const { data: user } = await supabase.from('users').select('credits').eq('id', pendingTx.user_id).maybeSingle();
+          const currentCredits = parseFloat(user?.credits || '0');
+          const newCredits = currentCredits + parseFloat(String(pendingTx.amount));
+          await supabase.from('users').update({ credits: newCredits }).eq('id', pendingTx.user_id);
+
+          res.json({ 
+            status: 'completed', 
+            message: 'Pago confirmado. Saldo acreditado.',
+            new_balance: newCredits,
+            amount: pendingTx.amount,
+          });
+          return;
+        }
+      }
+      
+      if (bizStatus === 'PAY_CLOSED' || bizStatus === 'EXPIRED' || bizStatus === 'FAILED') {
+        res.json({ status: 'expired', message: 'Pago expirado o rechazado' });
+        return;
+      }
+    }
+
+    res.json({ status: 'pending', message: 'Esperando pago...' });
+  } catch {
+    res.json({ status: 'pending', message: 'Verificando...' });
   }
 }
 

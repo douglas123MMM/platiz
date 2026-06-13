@@ -35,10 +35,14 @@ export default function Recharge() {
   const [binanceInfo, setBinanceInfo] = useState<BinanceInfo | null>(null);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [verifying, setVerifying] = useState(false);
   const [recentRecharges, setRecentRecharges] = useState<RechargeRecord[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [rechargeResult, setRechargeResult] = useState<RechargeResponse | null>(null);
+  const [polling, setPolling] = useState(false);
+  const [prepayId, setPrepayId] = useState('');
+  const [qrCode, setQrCode] = useState('');
+  const [checkoutUrl, setCheckoutUrl] = useState('');
+  const [pollingMessage, setPollingMessage] = useState('');
 
   useEffect(() => {
     api.get('/store/binance-info')
@@ -61,46 +65,72 @@ export default function Recharge() {
 
   useEffect(() => { loadHistory(); }, [loadHistory]);
 
+  useEffect(() => {
+    if (!polling || !prepayId) return;
+    let attempts = 0;
+    const maxAttempts = 60;
+
+    const interval = setInterval(async () => {
+      attempts++;
+      if (attempts > maxAttempts) {
+        setPolling(false);
+        setPollingMessage('Tiempo agotado. El pago no fue detectado.');
+        toast.error('Tiempo de espera agotado');
+        return;
+      }
+      try {
+        const { data } = await api.get(`/store/recharge/status/${prepayId}`);
+        if (data.status === 'completed') {
+          setPolling(false);
+          setPollingMessage('');
+          toast.success(`Saldo acreditado: +$${data.amount}`);
+          setTimeout(() => window.location.reload(), 2000);
+        } else if (data.status === 'expired') {
+          setPolling(false);
+          setPollingMessage('Pago expirado. Intenta de nuevo.');
+          toast.error('Pago expirado');
+        } else {
+          setPollingMessage(data.message || 'Esperando pago...');
+        }
+      } catch {
+        // Keep polling
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [polling, prepayId]);
+
   const handleRecharge = async () => {
     const numAmount = parseFloat(amount);
-    if (!numAmount || numAmount <= 0) {
-      toast.error('Ingresa un monto valido');
+    if (!numAmount || numAmount < 1) {
+      toast.error('Ingresa un monto valido (min $1)');
       return;
     }
     setLoading(true);
     setRechargeResult(null);
+    setPolling(false);
+    setPollingMessage('');
+    setQrCode('');
+    setCheckoutUrl('');
     try {
-      const r = await api.post('/store/recharge', { amount: numAmount });
-      setRechargeResult(r.data);
-      setAmount('');
-      loadHistory();
-    } catch (err: any) {
-      toast.error(err?.response?.data?.error || 'Error al registrar recarga');
-    }
-    setLoading(false);
-  };
-
-  const handleVerifyPayment = async () => {
-    if (!rechargeResult?.prepay_id) return;
-    setVerifying(true);
-    try {
-      const r = await api.get(`/store/binance/order/${rechargeResult.prepay_id}`);
-      const order = r.data;
-      if (order?.data?.bizStatus === 'PAY_SUCCESS') {
-        toast.success('Pago confirmado en Binance!');
-        setRechargeResult(null);
+      const { data } = await api.post('/store/recharge', { amount: numAmount });
+      setRechargeResult(data);
+      if (data.success && data.prepay_id) {
+        setPrepayId(data.prepay_id);
+        setQrCode(data.qrcode_url);
+        setCheckoutUrl(data.checkout_url);
+        setPolling(true);
+        setPollingMessage('Esperando pago...');
+      } else if (data.success && data.manual) {
+        setPollingMessage('Recarga registrada. Un admin la aprobara.');
+        toast.success(data.message);
         loadHistory();
-      } else if (order?.data?.bizStatus === 'PAY_CLOSED') {
-        toast.error('El pago fue cerrado o cancelado');
-      } else if (order?.data?.bizStatus === 'PAY_PENDING') {
-        toast('Pago aun pendiente en Binance', { icon: '⏳' });
-      } else {
-        toast('Estado del pago: ' + (order?.data?.bizStatus || 'desconocido'));
       }
     } catch (err: any) {
-      toast.error('Error al verificar pago');
+      toast.error(err?.response?.data?.error || 'Error al crear recarga');
     }
-    setVerifying(false);
+    setLoading(false);
+    setAmount('');
   };
 
   const formatDate = (dateStr: string) => {
@@ -214,24 +244,24 @@ export default function Recharge() {
         </button>
       </div>
 
-      {rechargeResult && (
+      {(rechargeResult || polling) && (
         <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-6 space-y-4 animate-fade-in">
           <h3 className="text-white font-semibold text-lg">
-            {rechargeResult.manual ? 'Pago Manual' : 'Pago con Binance Pay'}
+            {rechargeResult?.manual ? 'Pago Manual' : 'Pago con Binance Pay'}
           </h3>
 
-          {rechargeResult.manual ? (
+          {rechargeResult?.manual ? (
             <div className="p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
               <p className="text-gray-300 text-sm text-center">{rechargeResult.message}</p>
             </div>
           ) : (
             <>
-              {rechargeResult.qrcode_url && (
+              {(qrCode || rechargeResult?.qrcode_url) && (
                 <div className="flex flex-col items-center space-y-3">
-                  <p className="text-gray-400 text-sm">Escanea el codigo QR con tu app Binance:</p>
-                  <div className="p-4 bg-white rounded-xl">
+                  <p className="text-gray-300 text-sm font-medium">Abre Binance y escanea el QR:</p>
+                  <div className={`p-4 bg-white rounded-xl ${polling ? 'animate-pulse' : ''}`}>
                     <img
-                      src={rechargeResult.qrcode_url}
+                      src={qrCode || rechargeResult?.qrcode_url}
                       alt="Binance Pay QR"
                       className="w-48 h-48 object-contain"
                     />
@@ -239,9 +269,9 @@ export default function Recharge() {
                 </div>
               )}
 
-              {rechargeResult.checkout_url && (
+              {(checkoutUrl || rechargeResult?.checkout_url) && (
                 <a
-                  href={rechargeResult.checkout_url}
+                  href={checkoutUrl || rechargeResult?.checkout_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full py-3 text-center bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200"
@@ -250,27 +280,33 @@ export default function Recharge() {
                 </a>
               )}
 
-              <button
-                onClick={handleVerifyPayment}
-                disabled={verifying || !rechargeResult.prepay_id}
-                className="w-full py-3 bg-white/[0.05] text-white font-semibold rounded-xl border border-[#FFD700]/20 hover:bg-white/[0.08] hover:border-[#FFD700]/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {verifying ? (
-                  <>
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+              {polling && (
+                <div className="flex flex-col items-center space-y-3 p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
+                  <div className="flex items-center gap-3">
+                    <svg className="animate-spin h-5 w-5 text-[#FFD700]" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Verificando...
-                  </>
-                ) : (
-                  'Verificar pago'
-                )}
-              </button>
+                    <span className="text-[#FFD700] text-sm font-medium">{pollingMessage}</span>
+                  </div>
+                </div>
+              )}
 
-              <p className="text-gray-500 text-xs text-center">
-                ID: {rechargeResult.transaction_id} | Monto: ${rechargeResult.amount?.toFixed(2)} USDT
-              </p>
+              {!polling && pollingMessage && (
+                <div className={`p-4 rounded-xl border text-center text-sm ${
+                  pollingMessage.includes('expirado') || pollingMessage.includes('agotado')
+                    ? 'bg-red-500/10 border-red-500/20 text-red-400'
+                    : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                }`}>
+                  {pollingMessage}
+                </div>
+              )}
+
+              {!polling && !pollingMessage && rechargeResult && (
+                <p className="text-gray-500 text-xs text-center">
+                  ID: {rechargeResult.transaction_id} | Monto: ${rechargeResult.amount?.toFixed(2)} USDT
+                </p>
+              )}
             </>
           )}
         </div>
