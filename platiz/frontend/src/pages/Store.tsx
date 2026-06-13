@@ -45,7 +45,7 @@ const CATEGORIES = [
 ];
 
 export default function Store() {
-  const { user, refreshProfile } = useAuth();
+  const { user, updateCredits } = useAuth();
 
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +94,10 @@ export default function Store() {
       const { data } = await api.post<PurchaseResponse>('/store/purchase', {
         product_id: selectedProduct.id,
       });
-        if (data.success) {
+          if (data.success) {
+          if ((data as any).new_balance !== undefined) {
+            updateCredits((data as any).new_balance);
+          }
           addToast('success', data.message || 'Compra realizada con exito');
           const deliveryEmail = (data as any).delivery_email || '';
           const deliveryPassword = (data as any).delivery_password || '';
@@ -104,7 +107,6 @@ export default function Store() {
             setSelectedProduct(null);
           }
           fetchProducts();
-          await refreshProfile();
       } else {
         addToast('error', data.message || 'Error al procesar la compra');
       }
