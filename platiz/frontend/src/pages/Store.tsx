@@ -10,11 +10,11 @@ interface StoreProduct {
   category: string;
   price: number;
   delivery_type: 'automatica' | 'manual';
-  duration?: string;
+  duration_days?: number;
   account_type?: string;
   stock?: number;
   renewable?: boolean;
-  vendor?: string;
+  vendor_name?: string;
 }
 
 interface PurchaseResponse {
@@ -246,9 +246,9 @@ export default function Store() {
                     }`}>
                       {product.delivery_type === 'automatica' ? 'Automatica' : 'Manual'}
                     </span>
-                    {product.duration && (
+                    {(product.duration_days ?? 0) > 0 && (
                       <span className="text-gray-400">
-                        {product.duration}{product.account_type ? ` \u2022 ${product.account_type}` : ''}
+                        {product.duration_days} dias{product.account_type ? ` \u2022 ${product.account_type === 'temporal' ? 'Temporal' : product.account_type === 'permanente' ? 'Permanente' : product.account_type}` : ''}
                       </span>
                     )}
                   </div>
@@ -349,11 +349,11 @@ export default function Store() {
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Duracion</p>
-                  <p className="text-white text-sm font-medium">{selectedProduct.duration || 'N/A'}</p>
+                  <p className="text-white text-sm font-medium">{(selectedProduct.duration_days ?? 0) > 0 ? `${selectedProduct.duration_days} dias` : 'Permanente'}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Tipo de cuenta</p>
-                  <p className="text-white text-sm font-medium">{selectedProduct.account_type || 'N/A'}</p>
+                  <p className="text-white text-sm font-medium">{selectedProduct.account_type === 'temporal' ? 'Temporal' : selectedProduct.account_type === 'permanente' ? 'Permanente' : (selectedProduct.account_type || 'N/A')}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Renovable</p>
@@ -361,7 +361,7 @@ export default function Store() {
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Vendedor</p>
-                  <p className="text-white text-sm font-medium">{selectedProduct.vendor || 'Global Dorado'}</p>
+                  <p className="text-white text-sm font-medium">{selectedProduct.vendor_name || 'Global Dorado'}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Stock</p>
