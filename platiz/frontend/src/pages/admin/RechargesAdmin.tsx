@@ -10,11 +10,13 @@ interface Recharge {
   description: string;
   status: string;
   created_at: string;
+  proof_image?: string;
 }
 
 export default function RechargesAdmin() {
   const [recharges, setRecharges] = useState<Recharge[]>([]);
   const [loading, setLoading] = useState(true);
+  const [previewImage, setPreviewImage] = useState('');
 
   const loadRecharges = () => {
     setLoading(true);
@@ -82,6 +84,7 @@ export default function RechargesAdmin() {
               <tr className="border-b border-[#FFD700]/10">
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Usuario</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Monto</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Comprobante</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Fecha</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Accion</th>
@@ -89,13 +92,25 @@ export default function RechargesAdmin() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={5} className="p-12 text-center text-gray-500">Cargando...</td></tr>
+                <tr><td colSpan={6} className="p-12 text-center text-gray-500">Cargando...</td></tr>
               ) : recharges.length === 0 ? (
-                <tr><td colSpan={5} className="p-12 text-center text-gray-500">No hay recargas pendientes</td></tr>
+                <tr><td colSpan={6} className="p-12 text-center text-gray-500">No hay recargas pendientes</td></tr>
               ) : recharges.map((r) => (
                 <tr key={r.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
                   <td className="p-4 text-white text-sm font-medium">{r.user_id}</td>
                   <td className="p-4 text-[#FFD700] text-sm font-bold">${r.amount.toFixed(2)} USDT</td>
+                  <td className="p-4">
+                    {r.proof_image ? (
+                      <img
+                        src={r.proof_image}
+                        alt="Comprobante"
+                        className="w-10 h-10 rounded-lg object-cover cursor-pointer hover:ring-2 ring-[#FFD700] transition-all"
+                        onClick={() => setPreviewImage(r.proof_image!)}
+                      />
+                    ) : (
+                      <span className="text-gray-600 text-xs">Sin comprobante</span>
+                    )}
+                  </td>
                   <td className="p-4 text-gray-400 text-sm">{formatDate(r.created_at)}</td>
                   <td className="p-4">{statusBadge(r.status)}</td>
                   <td className="p-4">
@@ -120,6 +135,12 @@ export default function RechargesAdmin() {
           </table>
         </div>
       </div>
+
+      {previewImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setPreviewImage('')}>
+          <img src={previewImage} alt="Comprobante" className="max-w-full max-h-[90vh] rounded-2xl" onClick={e => e.stopPropagation()} />
+        </div>
+      )}
     </div>
   );
 }

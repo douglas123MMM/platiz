@@ -17,6 +17,9 @@ export default function Recharge() {
   const { user } = useAuth();
   const [amount, setAmount] = useState('');
   const [reference, setReference] = useState('');
+  const [proofImage, setProofImage] = useState('');
+  const [proofPreview, setProofPreview] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [binanceId, setBinanceId] = useState('');
   const [binanceEmail, setBinanceEmail] = useState('');
@@ -49,6 +52,24 @@ export default function Recharge() {
 
   useEffect(() => { loadHistory(); }, [loadHistory]);
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast.error('Solo imagenes'); return; }
+    if (file.size > 2 * 1024 * 1024) { toast.error('Maximo 2MB'); return; }
+
+    setUploading(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setProofImage(base64);
+      setProofPreview(base64);
+      setUploading(false);
+    };
+    reader.onerror = () => { toast.error('Error al leer imagen'); setUploading(false); };
+    reader.readAsDataURL(file);
+  };
+
   const handleRecharge = async () => {
     const numAmount = parseFloat(amount);
     if (!numAmount || numAmount < 1) {
@@ -61,11 +82,13 @@ export default function Recharge() {
     }
     setLoading(true);
     try {
-      const { data } = await api.post('/store/recharge', { amount: numAmount, reference: reference.trim() });
+      const { data } = await api.post('/store/recharge', { amount: numAmount, reference: reference.trim(), image: proofImage || undefined });
       toast.success(data.message || 'Comprobante enviado');
       loadHistory();
       setAmount('');
       setReference('');
+      setProofImage('');
+      setProofPreview('');
     } catch (err: any) {
       toast.error(err?.response?.data?.error || 'Error al enviar comprobante');
     }
@@ -177,6 +200,22 @@ export default function Recharge() {
             onChange={(e) => setReference(e.target.value)}
             className="w-full bg-transparent border-none outline-none text-white placeholder-gray-600"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm text-gray-400 mb-2">Comprobante de pago (captura de pantalla)</label>
+          <label className="flex items-center gap-2 px-4 py-3 bg-white/[0.03] border border-dashed border-[#FFD700]/20 rounded-xl cursor-pointer hover:bg-white/[0.06] transition-colors">
+            <span className="text-2xl">📎</span>
+            <span className="text-sm text-gray-400">{proofPreview ? 'Cambiar imagen' : 'Subir captura del pago'}</span>
+            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+          </label>
+          {uploading && <div className="mt-2 text-sm text-gray-400">Subiendo...</div>}
+          {proofPreview && (
+            <div className="mt-3 relative inline-block">
+              <img src={proofPreview} alt="Comprobante" className="w-32 h-32 rounded-xl border border-[#FFD700]/10 object-cover" />
+              <button onClick={() => { setProofImage(''); setProofPreview(''); }} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">×</button>
+            </div>
+          )}
         </div>
 
         <button

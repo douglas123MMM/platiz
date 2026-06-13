@@ -10,6 +10,7 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
       return;
     }
     const settings = data || { whatsapp: '', telegram: '', binance: '', pagomovil: '', whatsapp_group: '' };
+    delete settings.iptv_m3u_url;
     const { data: guideItems } = await supabase.from('items').select('title,description').eq('category_slug', 'settings').in('title', ['guia_plr_pro', 'guia_services', 'guia_telegram', 'bcv_rate']);
     const guias: Record<string, string> = {};
     let bcv_rate = '';

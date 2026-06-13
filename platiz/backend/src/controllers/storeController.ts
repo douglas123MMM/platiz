@@ -236,7 +236,7 @@ export async function getUserTransactions(req: AuthRequest, res: Response): Prom
 
 export async function createRecharge(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { amount, reference } = req.body;
+    const { amount, reference, image } = req.body;
     if (!amount || amount < 1) {
       res.status(400).json({ error: 'Monto minimo: $1 USDT' });
       return;
@@ -256,6 +256,7 @@ export async function createRecharge(req: AuthRequest, res: Response): Promise<v
       amount,
       description: `Ref: ${String(reference).trim()} | Binance ID: ${binanceId}`,
       status: 'pending',
+      proof_image: image || null,
     }).select().single();
 
     if (error) throw error;
@@ -267,6 +268,7 @@ export async function createRecharge(req: AuthRequest, res: Response): Promise<v
       message: 'Recarga enviada para revision. Se acreditara cuando el admin la apruebe.',
       binance_id: binanceId,
       binance_email: binanceEmail,
+      proof_image: tx.proof_image || null,
     });
   } catch {
     res.status(500).json({ error: 'Internal server error' });

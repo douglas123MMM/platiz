@@ -155,6 +155,7 @@ app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
       status TEXT DEFAULT 'completed',
       created_at TIMESTAMPTZ DEFAULT NOW()
     );`);
+    await client.query('ALTER TABLE store_transactions ADD COLUMN IF NOT EXISTS proof_image TEXT;');
     await client.end();
     res.json({ ok: true, message: 'Migraciones ejecutadas' });
   } catch (e: any) {
