@@ -42,9 +42,9 @@ const emptyProduct: Product = {
   delivery_email: '',
   delivery_password: '',
   stock: 0,
-  account_type: 'Temporal',
+  account_type: 'temporal',
   duration_days: 0,
-  delivery_type: 'Automática',
+  delivery_type: 'automatica',
   renewable: false,
   vendor_name: '',
   active: true,
@@ -174,8 +174,8 @@ export default function StoreAdmin() {
                     {p.stock > 0 ? p.stock : <span className="text-[#FFD700]/60">Ilimitado</span>}
                   </td>
                   <td className="p-4">
-                    <span className={`badge ${p.delivery_type === 'Automática' ? 'badge-info' : 'badge-warning'}`}>
-                      {p.delivery_type}
+                    <span className={`badge ${p.delivery_type === 'automatica' ? 'badge-info' : 'badge-warning'}`}>
+                      {p.delivery_type === 'automatica' ? 'Automática' : 'Manual'}
                     </span>
                   </td>
                   <td className="p-4">
@@ -346,16 +346,16 @@ export default function StoreAdmin() {
                 <div className="flex rounded-lg overflow-hidden border border-[#FFD700]/10">
                   <button
                     type="button"
-                    onClick={() => updateField('account_type', 'Temporal')}
-                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.account_type === 'Temporal' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
-                  >
+                    onClick={() => updateField('account_type', 'temporal')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.account_type === 'temporal' ? 'bg-[#FFD700] text-black font-bold' : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15'}`}
+                    >
                     Temporal
                   </button>
                   <button
                     type="button"
-                    onClick={() => updateField('account_type', 'Permanente')}
-                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.account_type === 'Permanente' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
-                  >
+                    onClick={() => updateField('account_type', 'permanente')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.account_type === 'permanente' ? 'bg-[#FFD700] text-black font-bold' : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15'}`}
+                    >
                     Permanente
                   </button>
                 </div>
@@ -376,9 +376,9 @@ export default function StoreAdmin() {
                 <div className="flex rounded-lg overflow-hidden border border-[#FFD700]/10">
                   <button
                     type="button"
-                    onClick={() => updateField('delivery_type', 'Automática')}
-                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.delivery_type === 'Automática' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
-                  >
+                    onClick={() => updateField('delivery_type', 'automatica')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.delivery_type === 'automatica' ? 'bg-[#FFD700] text-black font-bold' : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15'}`}
+                    >
                     Automática
                   </button>
                   <button
