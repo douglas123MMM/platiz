@@ -156,6 +156,7 @@ app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
       created_at TIMESTAMPTZ DEFAULT NOW()
     );`);
     await client.query('ALTER TABLE store_transactions ADD COLUMN IF NOT EXISTS proof_image TEXT;');
+    await client.query('ALTER TABLE store_purchases ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;');
     await client.end();
     res.json({ ok: true, message: 'Migraciones ejecutadas' });
   } catch (e: any) {

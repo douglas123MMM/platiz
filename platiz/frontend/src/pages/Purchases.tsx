@@ -7,6 +7,8 @@ interface Purchase {
   product_title: string;
   amount: number;
   status: string;
+  status_display: string;
+  expires_at?: string;
   created_at: string;
 }
 
@@ -68,9 +70,11 @@ export default function Purchases() {
                   <td className="p-4 text-sm text-[#FFD700] font-mono">{formatAmount(p.amount)}</td>
                   <td className="p-4">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
-                      p.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                      p.status_display === 'Activo' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                      p.status_display === 'Vencido' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                      'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                     }`}>
-                      {p.status === 'completed' ? 'Activo' : 'Inactivo'}
+                      {p.status_display}
                     </span>
                   </td>
                 </tr>

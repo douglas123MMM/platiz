@@ -41,6 +41,7 @@ const adminItems = [
   { path: '/admin/store', label: 'Tienda', icon: IconGrid },
   { path: '/admin/transactions', label: 'Transacciones', icon: IconMovies },
   { path: '/admin/recharges', label: 'Recargas', icon: IconChat },
+  { path: '/admin/purchases', label: 'Compras', icon: IconMovies },
 ];
 
 export default function Layout() {

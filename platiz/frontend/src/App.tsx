@@ -33,6 +33,7 @@ import Store from './pages/Store';
 import Recharge from './pages/Recharge';
 import Purchases from './pages/Purchases';
 import RechargesAdmin from './pages/admin/RechargesAdmin';
+import PurchasesAdmin from './pages/admin/PurchasesAdmin';
 
 function LoadingScreen() {
   return (
@@ -102,6 +103,7 @@ export default function App() {
         <Route path="/admin/store" element={<StoreAdmin />} />
         <Route path="/admin/transactions" element={<TransactionsAdmin />} />
         <Route path="/admin/recharges" element={<RechargesAdmin />} />
+        <Route path="/admin/purchases" element={<PurchasesAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

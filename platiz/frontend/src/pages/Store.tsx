@@ -53,6 +53,7 @@ export default function Store() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [purchaseResult, setPurchaseResult] = useState<{ delivery_email?: string; delivery_password?: string } | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [termsOpen, setTermsOpen] = useState(false);
 
@@ -94,14 +95,14 @@ export default function Store() {
         product_id: selectedProduct.id,
       });
       if (data.success) {
-        let msg = data.message || 'Compra realizada con exito';
-        if (data.credentials) {
-          const c = data.credentials;
-          if (c.username && c.password) msg += ` | Usuario: ${c.username} / Contrasena: ${c.password}`;
-          else if (c.data) msg += ` | Datos: ${c.data}`;
+        addToast('success', data.message || 'Compra realizada con exito');
+        const deliveryEmail = (data as any).delivery_email || '';
+        const deliveryPassword = (data as any).delivery_password || '';
+        if (deliveryEmail || deliveryPassword) {
+          setPurchaseResult({ delivery_email: deliveryEmail, delivery_password: deliveryPassword });
+        } else {
+          setSelectedProduct(null);
         }
-        addToast('success', msg);
-        setSelectedProduct(null);
         fetchProducts();
       } else {
         addToast('error', data.message || 'Error al procesar la compra');
@@ -282,7 +283,7 @@ export default function Store() {
       {selectedProduct && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={() => { if (!purchaseLoading) setSelectedProduct(null); }}
+          onClick={() => { if (!purchaseLoading) { setSelectedProduct(null); setPurchaseResult(null); } }}
         >
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
@@ -294,7 +295,7 @@ export default function Store() {
           >
             {/* Close button */}
             <button
-              onClick={() => setSelectedProduct(null)}
+              onClick={() => { setSelectedProduct(null); setPurchaseResult(null); }}
               disabled={purchaseLoading}
               className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
             >
@@ -402,7 +403,39 @@ export default function Store() {
               )}
             </div>
 
-            {/* Price Summary */}
+            {/* Credentials after purchase */}
+            {purchaseResult && (purchaseResult.delivery_email || purchaseResult.delivery_password) && (
+              <div className="px-6 pb-2">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <p className="text-emerald-400 font-semibold text-sm mb-2">Credenciales de acceso</p>
+                  {purchaseResult.delivery_email && (
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-white text-sm">Email: {purchaseResult.delivery_email}</p>
+                      <button
+                        onClick={() => { navigator.clipboard.writeText(purchaseResult.delivery_email!); }}
+                        className="text-gray-500 hover:text-emerald-400 transition-colors text-xs px-2 py-1 rounded bg-white/5"
+                      >
+                        Copiar
+                      </button>
+                    </div>
+                  )}
+                  {purchaseResult.delivery_password && (
+                    <div className="flex items-center justify-between gap-2 mt-1">
+                      <p className="text-white text-sm">Clave: {purchaseResult.delivery_password}</p>
+                      <button
+                        onClick={() => { navigator.clipboard.writeText(purchaseResult.delivery_password!); }}
+                        className="text-gray-500 hover:text-emerald-400 transition-colors text-xs px-2 py-1 rounded bg-white/5"
+                      >
+                        Copiar
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Price Summary */
+            }
             <div className="p-6 pt-4 space-y-3">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -422,20 +455,31 @@ export default function Store() {
               </div>
 
               <div className="flex gap-3 pt-2">
-                <button
-                  onClick={() => setSelectedProduct(null)}
-                  disabled={purchaseLoading}
-                  className="flex-1 py-3 rounded-xl border border-white/10 text-gray-400 font-semibold hover:bg-white/[0.04] hover:text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handlePurchase}
-                  disabled={purchaseLoading || balance < selectedProduct.price}
-                  className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {purchaseLoading ? 'Procesando...' : 'Confirmar compra'}
-                </button>
+                {purchaseResult ? (
+                  <button
+                    onClick={() => { setSelectedProduct(null); setPurchaseResult(null); }}
+                    className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)]"
+                  >
+                    Cerrar
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setSelectedProduct(null)}
+                      disabled={purchaseLoading}
+                      className="flex-1 py-3 rounded-xl border border-white/10 text-gray-400 font-semibold hover:bg-white/[0.04] hover:text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handlePurchase}
+                      disabled={purchaseLoading || balance < selectedProduct.price}
+                      className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {purchaseLoading ? 'Procesando...' : 'Confirmar compra'}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -163,6 +163,10 @@ export async function purchaseProduct(req: AuthRequest, res: Response): Promise<
 
     const newBalance = userCredits - price;
 
+    const expiresAt = product.duration_days > 0
+      ? new Date(Date.now() + product.duration_days * 24 * 60 * 60 * 1000).toISOString()
+      : null;
+
     await supabase.from('users').update({ credits: newBalance }).eq('id', userId);
 
     if (product.stock > 0) {
@@ -174,7 +178,8 @@ export async function purchaseProduct(req: AuthRequest, res: Response): Promise<
       product_id,
       product_title: product.title,
       amount: price,
-      status: 'completed'
+      status: 'completed',
+      expires_at: expiresAt
     }]);
 
     await supabase.from('store_transactions').insert([{
@@ -205,7 +210,26 @@ export async function getPurchaseHistory(req: AuthRequest, res: Response): Promi
 
     const { data, error } = await supabase.from('store_purchases').select('*').eq('user_id', userId).order('created_at', { ascending: false });
     if (error) throw error;
-    res.json(data || []);
+    const enriched = (data || []).map(p => {
+      const isActive = !p.expires_at || new Date(p.expires_at) > new Date();
+      return { ...p, status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
+    });
+    res.json(enriched);
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getAllPurchases(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data, error } = await supabase.from('store_purchases').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    const enriched = await Promise.all((data || []).map(async (p) => {
+      const { data: user } = await supabase.from('users').select('username, email, phone').eq('id', p.user_id).maybeSingle();
+      const isActive = !p.expires_at || new Date(p.expires_at) > new Date();
+      return { ...p, user: user || null, status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
+    }));
+    res.json(enriched);
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -215,7 +239,11 @@ export async function getTransactions(_req: AuthRequest, res: Response): Promise
   try {
     const { data, error } = await supabase.from('store_transactions').select('*').order('created_at', { ascending: false });
     if (error) throw error;
-    res.json(data || []);
+    const enriched = await Promise.all((data || []).map(async (tx) => {
+      const { data: user } = await supabase.from('users').select('username, email, phone').eq('id', tx.user_id).maybeSingle();
+      return { ...tx, user: user || { username: 'N/A', email: 'N/A', phone: 'N/A' } };
+    }));
+    res.json(enriched);
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -287,10 +315,10 @@ export async function getPendingRecharges(req: AuthRequest, res: Response): Prom
 
     const enriched = await Promise.all((data || []).map(async (tx) => {
       const { data: user } = await supabase.from('users')
-        .select('username, email')
+        .select('username, email, phone')
         .eq('id', tx.user_id)
         .maybeSingle();
-      return { ...tx, user: user || { username: 'N/A', email: 'N/A' } };
+      return { ...tx, user: user || { username: 'N/A', email: 'N/A', phone: 'N/A' } };
     }));
 
     res.json(enriched);

@@ -5,11 +5,16 @@ import { IconRefresh, IconMovies } from '../../icons/PremiumIcons';
 
 interface Transaction {
   id: string;
-  user_name: string;
-  type: 'compra' | 'recarga' | 'reembolso';
+  user_id: string;
+  type: 'purchase' | 'recharge' | 'refund';
   amount: number;
   description: string;
   created_at: string;
+  user?: {
+    username: string;
+    email: string;
+    phone?: string;
+  };
 }
 
 export default function TransactionsAdmin() {
@@ -33,15 +38,15 @@ export default function TransactionsAdmin() {
   };
 
   const typeStyles: Record<string, string> = {
-    compra: 'badge badge-purple',
-    recarga: 'badge badge-success',
-    reembolso: 'badge badge-danger',
+    purchase: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    recharge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    refund: 'bg-red-500/10 text-red-400 border-red-500/20',
   };
 
   const typeLabels: Record<string, string> = {
-    compra: 'Compra',
-    recarga: 'Recarga',
-    reembolso: 'Reembolso',
+    purchase: 'Compra',
+    recharge: 'Recarga',
+    refund: 'Reembolso',
   };
 
   return (
@@ -78,9 +83,13 @@ export default function TransactionsAdmin() {
                 <tr><td colSpan={5} className="p-12 text-center text-gray-500">Sin transacciones registradas</td></tr>
               ) : transactions.map((t) => (
                 <tr key={t.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
-                  <td className="p-4 text-white text-sm font-medium">{t.user_name}</td>
                   <td className="p-4">
-                    <span className={typeStyles[t.type] || 'badge badge-info'}>
+                    <p className="text-white text-sm font-medium">{t.user?.username || 'N/A'}</p>
+                    <p className="text-gray-500 text-xs">{t.user?.email || ''}</p>
+                    {t.user?.phone && <p className="text-gray-600 text-xs">{t.user.phone}</p>}
+                  </td>
+                  <td className="p-4">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${typeStyles[t.type] || 'bg-gray-500/10 text-gray-400 border-gray-500/20'}`}>
                       {typeLabels[t.type] || t.type}
                     </span>
                   </td>

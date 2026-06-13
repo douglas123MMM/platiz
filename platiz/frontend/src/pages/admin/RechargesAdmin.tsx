@@ -11,6 +11,11 @@ interface Recharge {
   status: string;
   created_at: string;
   proof_image?: string;
+  user?: {
+    username: string;
+    email: string;
+    phone?: string;
+  };
 }
 
 export default function RechargesAdmin() {
@@ -97,7 +102,10 @@ export default function RechargesAdmin() {
                 <tr><td colSpan={6} className="p-12 text-center text-gray-500">No hay recargas pendientes</td></tr>
               ) : recharges.map((r) => (
                 <tr key={r.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
-                  <td className="p-4 text-white text-sm font-medium">{r.user_id}</td>
+                  <td className="p-4">
+                    <p className="text-white text-sm font-medium">{r.user?.username || 'Usuario'}</p>
+                    <p className="text-gray-500 text-xs">{r.user?.email || ''}</p>
+                  </td>
                   <td className="p-4 text-[#FFD700] text-sm font-bold">${r.amount.toFixed(2)} USDT</td>
                   <td className="p-4">
                     {r.proof_image ? (
@@ -114,20 +122,24 @@ export default function RechargesAdmin() {
                   <td className="p-4 text-gray-400 text-sm">{formatDate(r.created_at)}</td>
                   <td className="p-4">{statusBadge(r.status)}</td>
                   <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleAction(r.id, 'completed')}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
-                      >
-                        Aprobar
-                      </button>
-                      <button
-                        onClick={() => handleAction(r.id, 'rejected')}
-                        className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
-                      >
-                        Rechazar
-                      </button>
-                    </div>
+                    {r.status === 'pending' ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleAction(r.id, 'completed')}
+                          className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+                        >
+                          Aprobar
+                        </button>
+                        <button
+                          onClick={() => handleAction(r.id, 'rejected')}
+                          className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
+                        >
+                          Rechazar
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-gray-600 text-xs">-</span>
+                    )}
                   </td>
                 </tr>
               ))}
