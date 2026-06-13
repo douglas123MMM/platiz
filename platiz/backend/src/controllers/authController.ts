@@ -87,9 +87,9 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 
 export async function getProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, movies_access, created_at').eq('id', req.user?.id).maybeSingle();
+    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
     if (error && error.message.includes('phone')) {
-      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, movies_access, created_at').eq('id', req.user?.id).maybeSingle();
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
       if (!u2) { res.status(404).json({ error: 'User not found' }); return; }
       res.json({ ...u2, phone: null });
       return;
@@ -104,14 +104,14 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
 export async function getUsers(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { search } = req.query;
-    let query = supabase.from('users').select('id, username, email, phone, role, status, avatar, movies_access, created_at').order('created_at', { ascending: false });
+    let query = supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').order('created_at', { ascending: false });
     if (search && String(search).trim()) {
       const term = `%${String(search).trim()}%`;
       query = query.or(`username.ilike.${term},email.ilike.${term}`);
     }
     const { data: users, error } = await query;
     if (error && error.message.includes('phone')) {
-      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, movies_access, created_at').order('created_at', { ascending: false });
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').order('created_at', { ascending: false });
       res.json(u2 || []);
       return;
     }
