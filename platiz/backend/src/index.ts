@@ -61,7 +61,7 @@ app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
     const { Client } = require('pg');
     const client = new Client({
       host: pgHost, port: 5432, database: 'postgres', user: 'postgres',
-      password: pgPass, ssl: { rejectUnauthorized: true }, connectionTimeoutMillis: 15000,
+      password: pgPass, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 15000,
     });
     await client.connect();
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;');
