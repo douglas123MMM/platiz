@@ -205,10 +205,19 @@ export async function getPurchaseHistory(req: AuthRequest, res: Response): Promi
 
     const { data, error } = await supabase.from('store_purchases').select('*').eq('user_id', userId).order('created_at', { ascending: false });
     if (error) throw error;
-    const enriched = (data || []).map(p => {
+    const enriched = await Promise.all((data || []).map(async (p) => {
+      const { data: product } = await supabase.from('store_products').select('delivery_email, delivery_password').eq('id', p.product_id).maybeSingle();
       const isActive = !p.expires_at || new Date(p.expires_at) > new Date();
-      return { ...p, status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
-    });
+      const daysLeft = p.expires_at ? Math.ceil((new Date(p.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
+      return {
+        ...p,
+        delivery_email: product?.delivery_email || '',
+        delivery_password: product?.delivery_password || '',
+        status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente',
+        days_left: daysLeft,
+        expiring_soon: daysLeft !== null && daysLeft <= 5 && daysLeft > 0
+      };
+    }));
     res.json(enriched);
   } catch {
     res.status(500).json({ error: 'Internal server error' });
@@ -221,8 +230,9 @@ export async function getAllPurchases(_req: AuthRequest, res: Response): Promise
     if (error) throw error;
     const enriched = await Promise.all((data || []).map(async (p) => {
       const { data: user } = await supabase.from('users').select('username, email, phone').eq('id', p.user_id).maybeSingle();
+      const { data: product } = await supabase.from('store_products').select('delivery_email, delivery_password').eq('id', p.product_id).maybeSingle();
       const isActive = !p.expires_at || new Date(p.expires_at) > new Date();
-      return { ...p, user: user || null, status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
+      return { ...p, user: user || null, delivery_email: product?.delivery_email || '', delivery_password: product?.delivery_password || '', status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
     }));
     res.json(enriched);
   } catch {
@@ -369,6 +379,42 @@ export async function getBinancePaymentInfo(req: AuthRequest, res: Response): Pr
     const binanceEmail = settings?.binance_pay_email || process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
     const binanceQr = settings?.binance_pay_qr || process.env.BINANCE_PAY_QR || '';
     res.json({ binance_id: binanceId, binance_email: binanceEmail, binance_qr: binanceQr });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function renewPurchase(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { purchase_id } = req.body;
+    const userId = req.user?.id;
+
+    const { data: purchase } = await supabase.from('store_purchases')
+      .select('*, store_products(*)')
+      .eq('id', purchase_id).eq('user_id', userId).maybeSingle();
+
+    if (!purchase) { res.status(404).json({ error: 'Compra no encontrada' }); return; }
+
+    const price = parseFloat(purchase.store_products?.price || '0');
+    const { data: user } = await supabase.from('users').select('credits').eq('id', userId).maybeSingle();
+    const credits = parseFloat(user?.credits || '0');
+
+    if (credits < price) { res.status(400).json({ error: 'Saldo insuficiente' }); return; }
+
+    const newBalance = credits - price;
+    await supabase.from('users').update({ credits: newBalance }).eq('id', userId);
+
+    const durationDays = purchase.store_products?.duration_days || 30;
+    const newExpiry = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+
+    await supabase.from('store_purchases').update({ expires_at: newExpiry }).eq('id', purchase_id);
+
+    await supabase.from('store_transactions').insert({
+      user_id: userId, type: 'purchase', amount: price,
+      description: `Renovacion: ${purchase.product_title}`, status: 'completed'
+    });
+
+    res.json({ success: true, new_balance: newBalance, new_expiry: newExpiry });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }

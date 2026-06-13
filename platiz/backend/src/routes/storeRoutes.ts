@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate, requireAdmin } from '../middleware/auth';
-import { getStoreCategories, getStoreProducts, getStoreProductById, createStoreProduct, updateStoreProduct, deleteStoreProduct, getAdminProducts, purchaseProduct, getPurchaseHistory, getAllPurchases, getTransactions, getUserTransactions, createRecharge, getPendingRecharges, approveRecharge, getBinancePaymentInfo } from '../controllers/storeController';
+import { getStoreCategories, getStoreProducts, getStoreProductById, createStoreProduct, updateStoreProduct, deleteStoreProduct, getAdminProducts, purchaseProduct, getPurchaseHistory, getAllPurchases, getTransactions, getUserTransactions, createRecharge, getPendingRecharges, approveRecharge, getBinancePaymentInfo, renewPurchase } from '../controllers/storeController';
 
 const router = Router();
 
@@ -10,6 +10,7 @@ router.get('/products/:id', authenticate, getStoreProductById);
 router.post('/purchase', authenticate, purchaseProduct);
 router.get('/purchases', authenticate, getPurchaseHistory);
 router.get('/my-transactions', authenticate, getUserTransactions);
+router.post('/renew', authenticate, renewPurchase);
 
 router.get('/admin/products', authenticate, requireAdmin, getAdminProducts);
 router.post('/products', authenticate, requireAdmin, createStoreProduct);
