@@ -1,6 +1,7 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
+import { createOrder, queryOrder } from '../utils/binancePay';
 
 const CATEGORIES = ['Todos','Streaming','Creatividad','Diseno Grafico','Edicion de Videos','Herramientas','Antivirus','Oficina','Licencia','Monedas de Juegos','Redes Sociales'];
 
@@ -236,31 +237,56 @@ export async function getUserTransactions(req: AuthRequest, res: Response): Prom
 
 export async function createRecharge(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const userId = req.user?.id;
-    if (!userId) { res.status(401).json({ error: 'Authentication required' }); return; }
-
     const { amount } = req.body;
-    if (!amount || parseFloat(amount) <= 0) {
-      res.status(400).json({ error: 'Monto invalido' });
+    if (!amount || amount < 1) {
+      res.status(400).json({ error: 'Monto minimo: $1 USDT' });
       return;
     }
 
-    const { data, error } = await supabase.from('store_transactions').insert([{
-      user_id: userId,
+    const merchantTradeNo = `RECHARGE_${Date.now()}_${req.user?.id?.substring(0, 8)}`;
+    
+    const { data: tx, error } = await supabase.from('store_transactions').insert({
+      user_id: req.user?.id,
       type: 'recharge',
-      amount: parseFloat(amount),
-      description: 'Recarga USDT - Pendiente',
+      amount,
+      description: `Recarga USDT - ${merchantTradeNo}`,
       status: 'pending'
-    }]).select().single();
+    }).select().single();
 
     if (error) throw error;
 
-    res.status(201).json({
-      success: true,
-      transaction_id: data.id,
-      amount: parseFloat(amount),
-      message: 'Recarga registrada. Espera confirmacion.'
-    });
+    try {
+      const order = await createOrder({
+        merchantTradeNo,
+        totalFee: amount,
+        currency: 'USDT',
+        productName: 'Recarga Global Dorado',
+        productDetail: `Recarga de saldo por $${amount} USDT`,
+        returnUrl: 'https://platiz.vercel.app/recharge',
+      });
+
+      await supabase.from('store_transactions').update({
+        description: `Recarga USDT - ${merchantTradeNo} - prepayId: ${order.data?.prepayId || 'N/A'}`
+      }).eq('id', tx.id);
+
+      res.json({
+        success: true,
+        transaction_id: tx.id,
+        amount,
+        prepay_id: order.data?.prepayId,
+        qrcode_url: order.data?.qrCode || order.data?.qrcodeLink,
+        checkout_url: order.data?.checkoutUrl || order.data?.universalUrl,
+        message: 'Escanea el QR o abre el enlace para pagar con Binance',
+      });
+    } catch (binanceError: any) {
+      res.json({
+        success: true,
+        transaction_id: tx.id,
+        amount,
+        manual: true,
+        message: 'Recarga registrada. Transfiere manualmente y un admin la aprobara.',
+      });
+    }
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -306,6 +332,16 @@ export async function approveRecharge(req: AuthRequest, res: Response): Promise<
   }
 }
 
+export async function queryBinanceOrder(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { prepayId } = req.params;
+    const order = await queryOrder(prepayId);
+    res.json(order);
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Error querying Binance order' });
+  }
+}
+
 export async function getBinancePaymentInfo(_req: AuthRequest, res: Response): Promise<void> {
   try {
     const { data, error } = await supabase.from('settings').select('binance, whatsapp').single();
@@ -321,5 +357,43 @@ export async function getBinancePaymentInfo(_req: AuthRequest, res: Response): P
     });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function binanceWebhook(req: Request, res: Response): Promise<void> {
+  try {
+    const { bizType, bizId, bizStatus, data } = req.body;
+
+    if (bizStatus !== 'PAY_SUCCESS') {
+      res.json({ returnCode: 'SUCCESS', returnMessage: 'Ignored' });
+      return;
+    }
+
+    const prepayId = data?.merchantTradeNo || bizId;
+
+    const { data: tx } = await supabase.from('store_transactions')
+      .select('*')
+      .ilike('description', `%${prepayId}%`)
+      .eq('status', 'pending')
+      .maybeSingle();
+
+    if (!tx) {
+      res.json({ returnCode: 'SUCCESS', returnMessage: 'No pending transaction found' });
+      return;
+    }
+
+    await supabase.from('store_transactions').update({
+      status: 'completed',
+      description: `${tx.description} - Webhook confirmed`
+    }).eq('id', tx.id);
+
+    const { data: user } = await supabase.from('users').select('credits').eq('id', tx.user_id).maybeSingle();
+    const currentCredits = parseFloat(user?.credits || '0');
+    const newCredits = currentCredits + parseFloat(String(tx.amount));
+    await supabase.from('users').update({ credits: newCredits }).eq('id', tx.user_id);
+
+    res.json({ returnCode: 'SUCCESS', returnMessage: 'Payment confirmed' });
+  } catch {
+    res.json({ returnCode: 'FAIL', returnMessage: 'Error processing' });
   }
 }
