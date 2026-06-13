@@ -233,3 +233,93 @@ export async function getUserTransactions(req: AuthRequest, res: Response): Prom
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export async function createRecharge(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const userId = req.user?.id;
+    if (!userId) { res.status(401).json({ error: 'Authentication required' }); return; }
+
+    const { amount } = req.body;
+    if (!amount || parseFloat(amount) <= 0) {
+      res.status(400).json({ error: 'Monto invalido' });
+      return;
+    }
+
+    const { data, error } = await supabase.from('store_transactions').insert([{
+      user_id: userId,
+      type: 'recharge',
+      amount: parseFloat(amount),
+      description: 'Recarga USDT - Pendiente',
+      status: 'pending'
+    }]).select().single();
+
+    if (error) throw error;
+
+    res.status(201).json({
+      success: true,
+      transaction_id: data.id,
+      amount: parseFloat(amount),
+      message: 'Recarga registrada. Espera confirmacion.'
+    });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getPendingRecharges(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data, error } = await supabase.from('store_transactions').select('*').eq('type', 'recharge').eq('status', 'pending').order('created_at', { ascending: false });
+    if (error) throw error;
+    res.json(data || []);
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function approveRecharge(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status || !['completed', 'rejected'].includes(status)) {
+      res.status(400).json({ error: 'Estado invalido. Usa "completed" o "rejected".' });
+      return;
+    }
+
+    const { data: transaction, error: fetchError } = await supabase.from('store_transactions').select('*').eq('id', id).single();
+    if (fetchError || !transaction) { res.status(404).json({ error: 'Transaccion no encontrada' }); return; }
+
+    const { data, error } = await supabase.from('store_transactions').update({ status }).eq('id', id).select().single();
+    if (error) throw error;
+
+    if (status === 'completed') {
+      const { data: user, error: userError } = await supabase.from('users').select('credits').eq('id', transaction.user_id).single();
+      if (!userError && user) {
+        const currentCredits = user.credits || 0;
+        await supabase.from('users').update({ credits: currentCredits + parseFloat(transaction.amount) }).eq('id', transaction.user_id);
+      }
+    }
+
+    res.json(data);
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getBinancePaymentInfo(_req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data, error } = await supabase.from('settings').select('binance, whatsapp').single();
+    if (error || !data) {
+      res.json({ binance_id: '', binance_email: 'jcespinoza2011@gmail.com', binance_qr: '' });
+      return;
+    }
+
+    res.json({
+      binance_id: data.binance || '',
+      binance_email: data.binance || 'jcespinoza2011@gmail.com',
+      binance_qr: data.binance || ''
+    });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

@@ -30,6 +30,8 @@ import StoreAdmin from './pages/admin/StoreAdmin';
 import TransactionsAdmin from './pages/admin/TransactionsAdmin';
 import Entertainment from './pages/Entertainment';
 import Store from './pages/Store';
+import Recharge from './pages/Recharge';
+import RechargesAdmin from './pages/admin/RechargesAdmin';
 
 function LoadingScreen() {
   return (
@@ -80,6 +82,7 @@ export default function App() {
         <Route path="/afiliado" element={<AffiliateDashboard />} />
         <Route path="/player" element={<PlayerPage />} />
         <Route path="/store" element={<Store />} />
+        <Route path="/recharge" element={<Recharge />} />
         <Route path="/membresias" element={<MembershipsAdmin />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
@@ -96,6 +99,7 @@ export default function App() {
         <Route path="/admin/memberships" element={<MembershipsAdmin />} />
         <Route path="/admin/store" element={<StoreAdmin />} />
         <Route path="/admin/transactions" element={<TransactionsAdmin />} />
+        <Route path="/admin/recharges" element={<RechargesAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
