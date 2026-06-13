@@ -104,7 +104,7 @@ export default function Store() {
             setSelectedProduct(null);
           }
           fetchProducts();
-          refreshProfile();
+          await refreshProfile();
       } else {
         addToast('error', data.message || 'Error al procesar la compra');
       }
@@ -366,7 +366,7 @@ export default function Store() {
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3">
                   <p className="text-gray-500 text-xs mb-0.5">Stock</p>
-                  <p className="text-white text-sm font-medium">{selectedProduct.stock != null ? `${selectedProduct.stock} uds.` : 'Ilimitado'}</p>
+                  <p className="text-white text-sm font-medium">{selectedProduct.stock != null ? `${selectedProduct.stock} cuentas` : 'Ilimitado'}</p>
                 </div>
               </div>
             </div>
