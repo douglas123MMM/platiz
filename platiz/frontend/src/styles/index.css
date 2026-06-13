@@ -51,3 +51,6 @@
   to { transform: translateX(0); }
 }
 .animate-slide-in { animation: slide-in 0.3s ease-out; }
+
+body.modal-open { overflow: hidden; position: fixed; width: 100%; }
+.store-modal-scroll { -webkit-overflow-scrolling: touch; overflow-y: auto; }

@@ -51,6 +51,16 @@ export default function Store() {
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResponse | null>(null);
   const [termsOpen, setTermsOpen] = useState(false);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => document.body.classList.remove('modal-open');
+  }, [selectedProduct]);
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
@@ -237,16 +247,11 @@ export default function Store() {
 
       {/* Purchase Modal */}
       {selectedProduct && (
-        <div
-          className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-2 md:p-4"
-          style={{ WebkitOverflowScrolling: 'touch' }}
+        <div className="fixed inset-0 z-50 overflow-y-auto store-modal-scroll md:flex md:items-center md:justify-center md:p-4"
           onClick={() => { if (!purchaseLoading) { setSelectedProduct(null); setPurchaseResult(null); } }}
         >
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-          <div
-            className="relative z-10 w-full max-w-lg max-h-[85vh] md:max-h-[90vh] overflow-y-auto overscroll-contain rounded-2xl md:rounded-3xl bg-[#0a0a0f]/95 backdrop-blur-xl border border-[#FFD700]/10 shadow-2xl shadow-black/50"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="fixed inset-0 bg-black/80 md:bg-black/70 md:backdrop-blur-sm" />
+          <div className="relative z-10 w-full md:max-w-lg md:my-8 bg-[#0a0a0f] md:rounded-3xl md:border md:border-[#FFD700]/10 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => { setSelectedProduct(null); setPurchaseResult(null); }}
               disabled={purchaseLoading}
