@@ -35,7 +35,14 @@ export default function UsersAdmin() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const toggleMovies = async (id: string) => {
+  const toggleMoviesAll = async () => {
+    if (!confirm('Activar peliculas para TODOS los usuarios?')) return;
+    try {
+      const r = await api.post('/auth/users/activate-movies-all');
+      toast.success(`Peliculas activadas para ${r.data.count} usuarios`);
+      loadUsers(search);
+    } catch { toast.error('Error al activar'); }
+  };
     try {
       const r = await api.patch(`/auth/users/${id}/movies-access`);
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, movies_access: r.data.movies_access } : u));
@@ -61,7 +68,10 @@ export default function UsersAdmin() {
             <p className="section-subtitle">Gestiona los socios de la plataforma</p>
           </div>
         </div>
-        <button onClick={() => loadUsers(search)} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
+        <div className="flex gap-2">
+          <button onClick={toggleMoviesAll} className="btn-secondary flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20">🎬 Activar peliculas para todos</button>
+          <button onClick={() => loadUsers(search)} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
+        </div>
       </div>
 
       <div className="flex items-center gap-3 px-4 py-3 glass rounded-2xl border border-[#FFD700]/10 max-w-md">
