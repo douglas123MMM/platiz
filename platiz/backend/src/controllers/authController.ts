@@ -82,7 +82,7 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/'
     });
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone || null, role: user.role, status: user.status, avatar: user.avatar } });
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone || null, role: user.role, status: user.status, avatar: user.avatar, movies_access: user.movies_access ?? false } });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -90,9 +90,9 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 
 export async function getProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
+    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, movies_access, created_at').eq('id', req.user?.id).maybeSingle();
     if (error && error.message.includes('phone')) {
-      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').eq('id', req.user?.id).maybeSingle();
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, movies_access, created_at').eq('id', req.user?.id).maybeSingle();
       if (!u2) { res.status(404).json({ error: 'User not found' }); return; }
       res.json({ ...u2, phone: null });
       return;
@@ -107,14 +107,14 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
 export async function getUsers(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { search } = req.query;
-    let query = supabase.from('users').select('id, username, email, phone, role, status, avatar, created_at').order('created_at', { ascending: false });
+    let query = supabase.from('users').select('id, username, email, phone, role, status, avatar, movies_access, created_at').order('created_at', { ascending: false });
     if (search && String(search).trim()) {
       const term = `%${String(search).trim()}%`;
       query = query.or(`username.ilike.${term},email.ilike.${term}`);
     }
     const { data: users, error } = await query;
     if (error && error.message.includes('phone')) {
-      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, created_at').order('created_at', { ascending: false });
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, movies_access, created_at').order('created_at', { ascending: false });
       res.json(u2 || []);
       return;
     }
@@ -148,6 +148,19 @@ export async function logout(_req: AuthRequest, res: Response): Promise<void> {
     path: '/'
   });
   res.json({ message: 'Logged out' });
+}
+
+export async function toggleMoviesAccess(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { data: user } = await supabase.from('users').select('movies_access').eq('id', id).maybeSingle();
+    if (!user) { res.status(404).json({ error: 'User not found' }); return; }
+    const newVal = !(user.movies_access ?? false);
+    await supabase.from('users').update({ movies_access: newVal }).eq('id', id);
+    res.json({ movies_access: newVal });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 export async function adminResetPassword(req: AuthRequest, res: Response): Promise<void> {

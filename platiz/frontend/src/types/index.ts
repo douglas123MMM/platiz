@@ -6,6 +6,7 @@ export interface User {
   role: 'admin' | 'client';
   status: 'pending' | 'approved' | 'rejected';
   avatar?: string;
+  movies_access?: boolean;
   created_at: string;
 }
 

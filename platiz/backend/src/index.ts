@@ -90,6 +90,7 @@ app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS display_name TEXT;');
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp TEXT;');
     await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_link TEXT;');
+    await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS movies_access BOOLEAN DEFAULT false;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS landing_video_url TEXT;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS landing_video_type TEXT;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS binance TEXT;');

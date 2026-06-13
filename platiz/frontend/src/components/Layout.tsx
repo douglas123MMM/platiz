@@ -46,7 +46,11 @@ export default function Layout() {
   const navigate = useNavigate();
 
   const isAdmin = user?.role === 'admin';
-  const filteredNav = navItems.filter((item) => item.roles.includes(user?.role || 'client'));
+  const canAccessMovies = isAdmin || user?.movies_access === true;
+  const filteredNav = navItems.filter((item) => {
+    if (item.path === '/movies' && !canAccessMovies) return false;
+    return item.roles.includes(user?.role || 'client');
+  });
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 

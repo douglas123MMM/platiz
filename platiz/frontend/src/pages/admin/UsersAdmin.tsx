@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { User } from '../../types';
 import toast from 'react-hot-toast';
-import { HiCheck, HiX, HiRefresh, HiUserGroup, HiSearch } from 'react-icons/hi';
+import { HiCheck, HiX, HiRefresh, HiUserGroup, HiSearch, HiFilm } from 'react-icons/hi';
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<User[]>([]);
@@ -35,7 +35,13 @@ export default function UsersAdmin() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const updateStatus = async (id: string, status: 'approved' | 'rejected') => {
+  const toggleMovies = async (id: string) => {
+    try {
+      const r = await api.patch(`/auth/users/${id}/movies-access`);
+      setUsers((prev) => prev.map((u) => u.id === id ? { ...u, movies_access: r.data.movies_access } : u));
+      toast.success(`Peliculas ${r.data.movies_access ? 'activadas' : 'desactivadas'}`);
+    } catch { toast.error('Error al actualizar'); }
+  };
     try {
       await api.patch(`/auth/users/${id}/status`, { status });
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, status } : u));
@@ -71,15 +77,16 @@ export default function UsersAdmin() {
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Teléfono</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Rol</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Registro</th>
+                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Peliculas</th>
+                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Registro</th>
                 <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acción</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={7} className="p-12 text-center text-gray-500">Cargando...</td></tr>
+                <tr><td colSpan={8} className="p-12 text-center text-gray-500">Cargando...</td></tr>
               ) : users.length === 0 ? (
-                <tr><td colSpan={7} className="p-12 text-center text-gray-500">Sin socios registrados</td></tr>
+                <tr><td colSpan={8} className="p-12 text-center text-gray-500">Sin socios registrados</td></tr>
               ) : users.map((user) => (
                 <tr key={user.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
                   <td className="p-4">
@@ -95,6 +102,15 @@ export default function UsersAdmin() {
                     <span className={`badge ${user.status === 'approved' ? 'badge-success' : user.status === 'rejected' ? 'badge-danger' : 'badge-warning'}`}>
                       {user.status === 'approved' ? 'Aprobado' : user.status === 'rejected' ? 'Rechazado' : 'Pendiente'}
                     </span>
+                  </td>
+                  <td className="p-4 text-gray-400 text-sm">
+                    <button
+                      onClick={() => toggleMovies(user.id)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${user.movies_access ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20'}`}
+                    >
+                      <HiFilm className="w-4 h-4 inline mr-1" />
+                      {user.movies_access ? 'ON' : 'OFF'}
+                    </button>
                   </td>
                   <td className="p-4 text-gray-400 text-sm">{new Date(user.created_at).toLocaleDateString()}</td>
                   <td className="p-4 text-right">
