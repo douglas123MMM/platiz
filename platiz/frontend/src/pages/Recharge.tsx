@@ -20,6 +20,7 @@ export default function Recharge() {
   const [loading, setLoading] = useState(false);
   const [binanceId, setBinanceId] = useState('');
   const [binanceEmail, setBinanceEmail] = useState('');
+  const [binanceQr, setBinanceQr] = useState('');
   const [recentRecharges, setRecentRecharges] = useState<RechargeRecord[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
@@ -28,6 +29,7 @@ export default function Recharge() {
       .then((r) => {
         setBinanceId(r.data.binance_id || 'N/A');
         setBinanceEmail(r.data.binance_email || 'N/A');
+        setBinanceQr(r.data.binance_qr || '');
       })
       .catch(() => {});
   }, []);
@@ -111,6 +113,11 @@ export default function Recharge() {
 
       <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-6 space-y-4">
         <h3 className="text-white font-semibold text-lg">Datos de Pago</h3>
+        {binanceQr && (
+          <div className="flex justify-center">
+            <img src={binanceQr} alt="QR Binance Pay" className="w-48 h-48 rounded-xl border border-[#FFD700]/10" />
+          </div>
+        )}
         <div className="space-y-3">
           <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
             <span className="text-gray-400 text-sm">Binance Pay ID</span>

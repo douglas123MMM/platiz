@@ -22,6 +22,7 @@ const navItems = [
   { path: '/plr-pro', label: 'PLR PRO', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
   { path: '/store', label: 'Tienda', icon: IconGrid, roles: ['client', 'admin'] },
+  { path: '/purchases', label: 'Mis Compras', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/membresias', label: 'Membresias', icon: IconMovies, roles: ['client', 'admin'] },
 ];
 

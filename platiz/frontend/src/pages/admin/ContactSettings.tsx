@@ -9,6 +9,9 @@ export default function ContactSettings() {
   const [telegram, setTelegram] = useState('');
   const [bcvRate, setBcvRate] = useState('');
   const [iptvUrl, setIptvUrl] = useState('');
+  const [binancePayId, setBinancePayId] = useState('');
+  const [binancePayEmail, setBinancePayEmail] = useState('');
+  const [binancePayQr, setBinancePayQr] = useState('');
   const [guias, setGuias] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -19,6 +22,9 @@ export default function ContactSettings() {
       setTelegram(r.data.telegram || '');
       setBcvRate(r.data.bcv_rate || '');
       setIptvUrl(r.data.iptv_m3u_url || '');
+      setBinancePayId(r.data.binance_pay_id || '');
+      setBinancePayEmail(r.data.binance_pay_email || '');
+      setBinancePayQr(r.data.binance_pay_qr || '');
       setGuias(r.data.guias || {});
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
@@ -27,7 +33,7 @@ export default function ContactSettings() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/settings', { whatsapp, telegram, bcv_rate: bcvRate, iptv_m3u_url: iptvUrl, guias });
+      await api.put('/settings', { whatsapp, telegram, bcv_rate: bcvRate, iptv_m3u_url: iptvUrl, binance_pay_id: binancePayId, binance_pay_email: binancePayEmail, binance_pay_qr: binancePayQr, guias });
       toast.success('Configuración guardada');
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Error al guardar');
@@ -66,6 +72,19 @@ export default function ContactSettings() {
             <div><p className="text-white font-medium">IPTV M3U URL</p><p className="text-gray-400 text-xs">Lista de canales que aparecera en Entretenimiento</p></div>
           </div>
           <div><label className="label">URL de lista M3U</label><input className="input" placeholder="https://servidor.com/lista.m3u" value={iptvUrl} onChange={(e) => setIptvUrl(e.target.value)} /></div>
+
+          <div className="mt-8 pt-6 border-t border-[#FFD700]/10">
+            <div className="p-4 bg-[#F0B90B]/10 rounded-xl flex items-center gap-3 mb-4">
+              <span className="text-2xl">₿</span>
+              <div><p className="text-white font-medium">Configuración de Pagos Binance</p><p className="text-gray-400 text-xs">Datos de pago que ven los clientes al recargar</p></div>
+            </div>
+            <div className="space-y-4">
+              <div><label className="label">Binance Pay ID</label><input className="input" placeholder="355976674" value={binancePayId} onChange={(e) => setBinancePayId(e.target.value)} /></div>
+              <div><label className="label">Binance Pay Email</label><input className="input" placeholder="tucorreo@gmail.com" value={binancePayEmail} onChange={(e) => setBinancePayEmail(e.target.value)} /></div>
+              <div><label className="label">URL del QR de Binance</label><input className="input" placeholder="https://...qr.png" value={binancePayQr} onChange={(e) => setBinancePayQr(e.target.value)} /></div>
+              {binancePayQr && <img src={binancePayQr} alt="QR Binance" className="w-40 h-40 rounded-xl border border-[#FFD700]/10" />}
+            </div>
+          </div>
 
           <div className="mt-8 pt-6 border-t border-[#FFD700]/10">
             <div className="flex items-center gap-3 mb-4">

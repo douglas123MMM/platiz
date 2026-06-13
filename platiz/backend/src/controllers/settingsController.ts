@@ -25,13 +25,16 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
 
 export async function updateSettings(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { whatsapp, telegram, binance, pagomovil, whatsapp_group, bcv_rate, iptv_m3u_url, guias } = req.body;
+    const { whatsapp, telegram, binance, pagomovil, whatsapp_group, bcv_rate, iptv_m3u_url, binance_pay_id, binance_pay_email, binance_pay_qr, guias } = req.body;
     const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
     const updateData: any = { whatsapp, telegram, updated_at: new Date().toISOString() };
     if (iptv_m3u_url !== undefined) updateData.iptv_m3u_url = iptv_m3u_url;
     if (binance !== undefined) updateData.binance = binance;
     if (pagomovil !== undefined) updateData.pagomovil = pagomovil;
     if (whatsapp_group !== undefined) updateData.whatsapp_group = whatsapp_group;
+    if (binance_pay_id !== undefined) updateData.binance_pay_id = binance_pay_id;
+    if (binance_pay_email !== undefined) updateData.binance_pay_email = binance_pay_email;
+    if (binance_pay_qr !== undefined) updateData.binance_pay_qr = binance_pay_qr;
     if (existing) {
       await supabase.from('settings').update(updateData).eq('id', existing.id);
     } else {

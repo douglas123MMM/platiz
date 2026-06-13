@@ -246,8 +246,9 @@ export async function createRecharge(req: AuthRequest, res: Response): Promise<v
       return;
     }
 
-    const binanceId = process.env.BINANCE_PAY_ID || '355976674';
-    const binanceEmail = process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
+    const { data: settings } = await supabase.from('settings').select('binance_pay_id, binance_pay_email').maybeSingle();
+    const binanceId = settings?.binance_pay_id || process.env.BINANCE_PAY_ID || '355976674';
+    const binanceEmail = settings?.binance_pay_email || process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
 
     const { data: tx, error } = await supabase.from('store_transactions').insert({
       user_id: req.user?.id,
@@ -326,9 +327,11 @@ export async function approveRecharge(req: AuthRequest, res: Response): Promise<
 
 export async function getBinancePaymentInfo(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const binanceId = process.env.BINANCE_PAY_ID || '355976674';
-    const binanceEmail = process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
-    res.json({ binance_id: binanceId, binance_email: binanceEmail });
+    const { data: settings } = await supabase.from('settings').select('binance_pay_id, binance_pay_email, binance_pay_qr').maybeSingle();
+    const binanceId = settings?.binance_pay_id || process.env.BINANCE_PAY_ID || '355976674';
+    const binanceEmail = settings?.binance_pay_email || process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
+    const binanceQr = settings?.binance_pay_qr || process.env.BINANCE_PAY_QR || '';
+    res.json({ binance_id: binanceId, binance_email: binanceEmail, binance_qr: binanceQr });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }

@@ -96,6 +96,9 @@ app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS binance TEXT;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS pagomovil TEXT;');
     await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS whatsapp_group TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS binance_pay_id TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS binance_pay_email TEXT;');
+    await client.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS binance_pay_qr TEXT;');
     await client.query(`CREATE TABLE IF NOT EXISTS referrals (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       affiliate_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
