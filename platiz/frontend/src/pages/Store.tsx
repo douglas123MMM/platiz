@@ -6,6 +6,7 @@ interface StoreProduct {
   id: string;
   title: string;
   description?: string;
+  terms?: string;
   image_url?: string;
   category: string;
   price: number;
@@ -440,9 +441,15 @@ export default function Store() {
             {purchaseResult && selectedProduct.delivery_type === 'manual' && (
               <div className="px-6 pb-2">
                 <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                  <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual</p>
-                  <p className="text-gray-300 text-sm">Tu pedido sera procesado por nuestro equipo.</p>
-                  <p className="text-gray-400 text-xs mt-1">Te contactaremos en las proximas 1-24 horas para entregarte las credenciales.</p>
+                  <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual - Instrucciones</p>
+                  {selectedProduct.terms ? (
+                    <p className="text-gray-300 text-sm whitespace-pre-wrap">{selectedProduct.terms}</p>
+                  ) : (
+                    <>
+                      <p className="text-gray-300 text-sm">Tu pedido sera procesado por nuestro equipo.</p>
+                      <p className="text-gray-400 text-xs mt-1">Te contactaremos en las proximas 1-24 horas para entregarte las credenciales.</p>
+                    </>
+                  )}
                 </div>
               </div>
             )}
