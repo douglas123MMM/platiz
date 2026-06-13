@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
-import { createOrder, queryOrder } from '../utils/binancePay';
 
 const CATEGORIES = ['Todos','Streaming','Creatividad','Diseno Grafico','Edicion de Videos','Herramientas','Antivirus','Oficina','Licencia','Monedas de Juegos','Redes Sociales'];
 
@@ -237,128 +236,61 @@ export async function getUserTransactions(req: AuthRequest, res: Response): Prom
 
 export async function createRecharge(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { amount } = req.body;
+    const { amount, reference } = req.body;
     if (!amount || amount < 1) {
       res.status(400).json({ error: 'Monto minimo: $1 USDT' });
       return;
     }
-
-    const merchantTradeNo = `REC${Date.now()}${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-    
-    try {
-      const order = await createOrder({
-        merchantTradeNo,
-        totalFee: amount,
-        currency: 'USDT',
-        productName: 'Recarga Global Dorado',
-        productDetail: `Recarga de saldo $${amount} USDT`,
-      });
-
-      if (order.status === 'SUCCESS' && order.data) {
-        await supabase.from('store_transactions').insert({
-          user_id: req.user?.id,
-          type: 'recharge',
-          amount,
-          description: `Recarga USDT - ${merchantTradeNo}`,
-          status: 'pending',
-        });
-
-        res.json({
-          success: true,
-          prepay_id: order.data.prepayId,
-          qrcode_url: order.data.qrcodeLink || order.data.qrCode || '',
-          checkout_url: order.data.checkoutUrl || order.data.universalUrl || '',
-          amount,
-          message: 'Escanea el QR con Binance para pagar',
-        });
-        return;
-      }
-    } catch (e) {
-      console.error('Binance createOrder error:', e);
+    if (!reference || String(reference).trim().length < 3) {
+      res.status(400).json({ error: 'Ingresa una referencia del pago (min 3 caracteres)' });
+      return;
     }
 
-    const { data: tx } = await supabase.from('store_transactions').insert({
+    const binanceId = process.env.BINANCE_PAY_ID || '355976674';
+    const binanceEmail = process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
+
+    const { data: tx, error } = await supabase.from('store_transactions').insert({
       user_id: req.user?.id,
       type: 'recharge',
       amount,
-      description: `Recarga USDT manual - ${merchantTradeNo}`,
+      description: `Ref: ${String(reference).trim()} | Binance ID: ${binanceId}`,
       status: 'pending',
     }).select().single();
 
+    if (error) throw error;
+
     res.json({
       success: true,
-      manual: true,
-      transaction_id: tx?.id,
+      transaction_id: tx.id,
       amount,
-      message: 'Recarga registrada manualmente. Un admin la aprobara.',
+      message: 'Recarga enviada para revision. Se acreditara cuando el admin la apruebe.',
+      binance_id: binanceId,
+      binance_email: binanceEmail,
     });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
 
-export async function checkRechargeStatus(req: AuthRequest, res: Response): Promise<void> {
+export async function getPendingRecharges(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { prepay_id } = req.params;
-    
-    const result = await queryOrder(prepay_id);
-    
-    if (result.status === 'SUCCESS' && result.data) {
-      const bizStatus = result.data.bizStatus || result.data.status;
-      
-      if (bizStatus === 'PAY_SUCCESS' || bizStatus === 'PAID') {
-        const { data: existingTx } = await supabase.from('store_transactions')
-          .select('*')
-          .ilike('description', `%${prepay_id}%`)
-          .eq('status', 'completed')
-          .maybeSingle();
+    const { data, error } = await supabase.from('store_transactions')
+      .select('*')
+      .eq('type', 'recharge')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
 
-        if (existingTx) {
-          res.json({ status: 'completed', message: 'Ya acreditado' });
-          return;
-        }
-
-        const { data: pendingTx } = await supabase.from('store_transactions')
-          .select('*')
-          .ilike('description', `%${prepay_id}%`)
-          .eq('status', 'pending')
-          .maybeSingle();
-
-        if (pendingTx) {
-          await supabase.from('store_transactions').update({ status: 'completed' }).eq('id', pendingTx.id);
-
-          const { data: user } = await supabase.from('users').select('credits').eq('id', pendingTx.user_id).maybeSingle();
-          const currentCredits = parseFloat(user?.credits || '0');
-          const newCredits = currentCredits + parseFloat(String(pendingTx.amount));
-          await supabase.from('users').update({ credits: newCredits }).eq('id', pendingTx.user_id);
-
-          res.json({ 
-            status: 'completed', 
-            message: 'Pago confirmado. Saldo acreditado.',
-            new_balance: newCredits,
-            amount: pendingTx.amount,
-          });
-          return;
-        }
-      }
-      
-      if (bizStatus === 'PAY_CLOSED' || bizStatus === 'EXPIRED' || bizStatus === 'FAILED') {
-        res.json({ status: 'expired', message: 'Pago expirado o rechazado' });
-        return;
-      }
-    }
-
-    res.json({ status: 'pending', message: 'Esperando pago...' });
-  } catch {
-    res.json({ status: 'pending', message: 'Verificando...' });
-  }
-}
-
-export async function getPendingRecharges(_req: AuthRequest, res: Response): Promise<void> {
-  try {
-    const { data, error } = await supabase.from('store_transactions').select('*').eq('type', 'recharge').eq('status', 'pending').order('created_at', { ascending: false });
     if (error) throw error;
-    res.json(data || []);
+
+    const enriched = await Promise.all((data || []).map(async (tx) => {
+      const { data: user } = await supabase.from('users')
+        .select('username, email')
+        .eq('id', tx.user_id)
+        .maybeSingle();
+      return { ...tx, user: user || { username: 'N/A', email: 'N/A' } };
+    }));
+
+    res.json(enriched);
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -367,95 +299,37 @@ export async function getPendingRecharges(_req: AuthRequest, res: Response): Pro
 export async function approveRecharge(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
-    const { status } = req.body;
 
-    if (!status || !['completed', 'rejected'].includes(status)) {
-      res.status(400).json({ error: 'Estado invalido. Usa "completed" o "rejected".' });
+    const { data: tx, error } = await supabase.from('store_transactions')
+      .select('*').eq('id', id).eq('status', 'pending').maybeSingle();
+
+    if (error || !tx) {
+      res.status(404).json({ error: 'Recarga no encontrada o ya procesada' });
       return;
     }
 
-    const { data: transaction, error: fetchError } = await supabase.from('store_transactions').select('*').eq('id', id).single();
-    if (fetchError || !transaction) { res.status(404).json({ error: 'Transaccion no encontrada' }); return; }
-
-    const { data, error } = await supabase.from('store_transactions').update({ status }).eq('id', id).select().single();
-    if (error) throw error;
-
-    if (status === 'completed') {
-      const { data: user, error: userError } = await supabase.from('users').select('credits').eq('id', transaction.user_id).single();
-      if (!userError && user) {
-        const currentCredits = user.credits || 0;
-        await supabase.from('users').update({ credits: currentCredits + parseFloat(transaction.amount) }).eq('id', transaction.user_id);
-      }
-    }
-
-    res.json(data);
-  } catch {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
-export async function queryBinanceOrder(req: AuthRequest, res: Response): Promise<void> {
-  try {
-    const { prepayId } = req.params;
-    const order = await queryOrder(prepayId);
-    res.json(order);
-  } catch (err: any) {
-    res.status(500).json({ error: err?.message || 'Error querying Binance order' });
-  }
-}
-
-export async function getBinancePaymentInfo(_req: AuthRequest, res: Response): Promise<void> {
-  try {
-    const { data, error } = await supabase.from('settings').select('binance, whatsapp').single();
-    if (error || !data) {
-      res.json({ binance_id: '', binance_email: 'jcespinoza2011@gmail.com', binance_qr: '' });
-      return;
-    }
-
-    res.json({
-      binance_id: data.binance || '',
-      binance_email: data.binance || 'jcespinoza2011@gmail.com',
-      binance_qr: data.binance || ''
-    });
-  } catch {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
-export async function binanceWebhook(req: Request, res: Response): Promise<void> {
-  try {
-    const { bizType, bizId, bizStatus, data } = req.body;
-
-    if (bizStatus !== 'PAY_SUCCESS') {
-      res.json({ returnCode: 'SUCCESS', returnMessage: 'Ignored' });
-      return;
-    }
-
-    const prepayId = data?.merchantTradeNo || bizId;
-
-    const { data: tx } = await supabase.from('store_transactions')
-      .select('*')
-      .ilike('description', `%${prepayId}%`)
-      .eq('status', 'pending')
-      .maybeSingle();
-
-    if (!tx) {
-      res.json({ returnCode: 'SUCCESS', returnMessage: 'No pending transaction found' });
-      return;
-    }
-
-    await supabase.from('store_transactions').update({
-      status: 'completed',
-      description: `${tx.description} - Webhook confirmed`
-    }).eq('id', tx.id);
+    await supabase.from('store_transactions')
+      .update({ status: 'completed', description: `${tx.description} [APROBADA]` })
+      .eq('id', id);
 
     const { data: user } = await supabase.from('users').select('credits').eq('id', tx.user_id).maybeSingle();
     const currentCredits = parseFloat(user?.credits || '0');
-    const newCredits = currentCredits + parseFloat(String(tx.amount));
+    const amount = parseFloat(String(tx.amount));
+    const newCredits = currentCredits + amount;
     await supabase.from('users').update({ credits: newCredits }).eq('id', tx.user_id);
 
-    res.json({ returnCode: 'SUCCESS', returnMessage: 'Payment confirmed' });
+    res.json({ success: true, new_balance: newCredits, amount, username: user?.username || tx.user_id });
   } catch {
-    res.json({ returnCode: 'FAIL', returnMessage: 'Error processing' });
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+export async function getBinancePaymentInfo(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const binanceId = process.env.BINANCE_PAY_ID || '355976674';
+    const binanceEmail = process.env.BINANCE_PAY_EMAIL || 'jcespinoza2011@gmail.com';
+    res.json({ binance_id: binanceId, binance_email: binanceEmail });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
