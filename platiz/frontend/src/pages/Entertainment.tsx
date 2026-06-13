@@ -35,18 +35,6 @@ export default function Entertainment() {
   const { user } = useAuth();
   const hasAccess = user?.role === 'admin' || user?.movies_access === true;
 
-  if (!hasAccess) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8">
-        <div className="w-20 h-20 bg-[#FFD700]/10 rounded-full flex items-center justify-center mb-6">
-          <span className="text-3xl">🔒</span>
-        </div>
-        <h2 className="text-2xl font-bold text-white mb-3">Acceso Restringido</h2>
-        <p className="text-gray-400 max-w-md">El apartado de peliculas no esta disponible para tu cuenta. Contacta al administrador para activarlo.</p>
-      </div>
-    );
-  }
-
   const [hero, setHero] = useState<TmdbMovie | null>(null);
   const [trending, setTrending] = useState<TmdbMovie[]>([]);
   const [popular, setPopular] = useState<TmdbMovie[]>([]);
@@ -172,6 +160,18 @@ export default function Entertainment() {
       </div>
     </div>
   );
+
+  if (!hasAccess) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8">
+        <div className="w-20 h-20 bg-[#FFD700]/10 rounded-full flex items-center justify-center mb-6">
+          <span className="text-3xl">&#x1F512;</span>
+        </div>
+        <h2 className="text-2xl font-bold text-white mb-3">Acceso Restringido</h2>
+        <p className="text-gray-400 max-w-md">El apartado de peliculas no esta disponible para tu cuenta. Contacta al administrador para activarlo.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] pb-12 animate-fade-in">
