@@ -22,16 +22,17 @@ export default function RechargesAdmin() {
   const [recharges, setRecharges] = useState<Recharge[]>([]);
   const [loading, setLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState('');
+  const [statusFilter, setStatusFilter] = useState('pending');
 
   const loadRecharges = () => {
     setLoading(true);
-    api.get('/store/admin/recharges')
+    api.get(`/store/admin/recharges?status=${statusFilter}`)
       .then((r) => setRecharges(r.data))
       .catch(() => toast.error('Error al cargar recargas'))
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { loadRecharges(); }, []);
+  useEffect(() => { loadRecharges(); }, [statusFilter]);
 
   const handleAction = async (id: string, status: 'completed' | 'rejected') => {
     try {
@@ -73,13 +74,32 @@ export default function RechargesAdmin() {
         <div className="flex items-center gap-3">
           <IconChat className="w-8 h-8 text-[#FFD700]" />
           <div>
-            <h1 className="section-title text-2xl">Recargas Pendientes</h1>
+            <h1 className="section-title text-2xl">Recargas</h1>
             <p className="section-subtitle">Gestionar recargas via Binance Pay</p>
           </div>
         </div>
         <button onClick={loadRecharges} className="btn-secondary flex items-center gap-2">
           <IconRefresh className="w-4 h-4" /> Actualizar
         </button>
+      </div>
+
+      <div className="flex gap-2">
+        {[
+          { key: 'pending', label: 'Pendientes' },
+          { key: 'all', label: 'Todas' },
+        ].map(f => (
+          <button
+            key={f.key}
+            onClick={() => setStatusFilter(f.key)}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              statusFilter === f.key
+                ? 'bg-[#FFD700] text-black'
+                : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:text-[#FFD700]'
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
       </div>
 
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
@@ -99,12 +119,13 @@ export default function RechargesAdmin() {
               {loading ? (
                 <tr><td colSpan={6} className="p-12 text-center text-gray-500">Cargando...</td></tr>
               ) : recharges.length === 0 ? (
-                <tr><td colSpan={6} className="p-12 text-center text-gray-500">No hay recargas pendientes</td></tr>
+                <tr><td colSpan={6} className="p-12 text-center text-gray-500">No hay recargas{statusFilter === 'pending' ? ' pendientes' : ''}</td></tr>
               ) : recharges.map((r) => (
                 <tr key={r.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
                   <td className="p-4">
                     <p className="text-white text-sm font-medium">{r.user?.username || 'Usuario'}</p>
                     <p className="text-gray-500 text-xs">{r.user?.email || ''}</p>
+                    {r.user?.phone && <p className="text-gray-600 text-xs">{r.user.phone}</p>}
                   </td>
                   <td className="p-4 text-[#FFD700] text-sm font-bold">${r.amount.toFixed(2)} USDT</td>
                   <td className="p-4">

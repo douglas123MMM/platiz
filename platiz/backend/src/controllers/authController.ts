@@ -79,7 +79,7 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/'
     });
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone || null, role: user.role, status: user.status, avatar: user.avatar, movies_access: user.movies_access ?? false } });
+    res.json({ token, user: { id: user.id, username: user.username, email: user.email, phone: user.phone || null, role: user.role, status: user.status, avatar: user.avatar, movies_access: user.movies_access ?? false, credits: user.credits ?? 0 } });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -87,9 +87,9 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 
 export async function getProfile(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, movies_access, created_at').eq('id', req.user?.id).maybeSingle();
+    const { data: user, error } = await supabase.from('users').select('id, username, email, phone, role, status, avatar, movies_access, credits, created_at').eq('id', req.user?.id).maybeSingle();
     if (error && error.message.includes('phone')) {
-      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, movies_access, created_at').eq('id', req.user?.id).maybeSingle();
+      const { data: u2 } = await supabase.from('users').select('id, username, email, role, status, avatar, movies_access, credits, created_at').eq('id', req.user?.id).maybeSingle();
       if (!u2) { res.status(404).json({ error: 'User not found' }); return; }
       res.json({ ...u2, phone: null });
       return;

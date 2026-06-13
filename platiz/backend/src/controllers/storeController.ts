@@ -145,11 +145,6 @@ export async function purchaseProduct(req: AuthRequest, res: Response): Promise<
     const { data: product, error: productError } = await supabase.from('store_products').select('*').eq('id', product_id).single();
     if (productError || !product) { res.status(404).json({ error: 'Producto no encontrado' }); return; }
 
-    if (product.stock !== null && product.stock !== undefined && product.stock <= 0) {
-      res.status(400).json({ error: 'Producto agotado' });
-      return;
-    }
-
     const { data: user, error: userError } = await supabase.from('users').select('credits').eq('id', userId).single();
     if (userError || !user) { res.status(404).json({ error: 'Usuario no encontrado' }); return; }
 
@@ -305,12 +300,17 @@ export async function createRecharge(req: AuthRequest, res: Response): Promise<v
 
 export async function getPendingRecharges(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data, error } = await supabase.from('store_transactions')
+    const statusFilter = req.query.status as string || 'pending';
+    let query = supabase.from('store_transactions')
       .select('*')
       .eq('type', 'recharge')
-      .eq('status', 'pending')
       .order('created_at', { ascending: false });
 
+    if (statusFilter !== 'all') {
+      query = query.eq('status', statusFilter);
+    }
+
+    const { data, error } = await query;
     if (error) throw error;
 
     const enriched = await Promise.all((data || []).map(async (tx) => {
@@ -330,6 +330,7 @@ export async function getPendingRecharges(req: AuthRequest, res: Response): Prom
 export async function approveRecharge(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
+    const { status } = req.body;
 
     const { data: tx, error } = await supabase.from('store_transactions')
       .select('*').eq('id', id).eq('status', 'pending').maybeSingle();
@@ -339,17 +340,23 @@ export async function approveRecharge(req: AuthRequest, res: Response): Promise<
       return;
     }
 
+    const finalStatus = status === 'rejected' ? 'rejected' : 'completed';
+    const descriptionSuffix = finalStatus === 'completed' ? ' [APROBADA]' : ' [RECHAZADA]';
+
     await supabase.from('store_transactions')
-      .update({ status: 'completed', description: `${tx.description} [APROBADA]` })
+      .update({ status: finalStatus, description: `${tx.description}${descriptionSuffix}` })
       .eq('id', id);
 
-    const { data: user } = await supabase.from('users').select('credits').eq('id', tx.user_id).maybeSingle();
-    const currentCredits = parseFloat(user?.credits || '0');
-    const amount = parseFloat(String(tx.amount));
-    const newCredits = currentCredits + amount;
-    await supabase.from('users').update({ credits: newCredits }).eq('id', tx.user_id);
+    let newCredits: number | null = null;
+    if (finalStatus === 'completed') {
+      const { data: user } = await supabase.from('users').select('credits').eq('id', tx.user_id).maybeSingle();
+      const currentCredits = parseFloat(user?.credits || '0');
+      const amount = parseFloat(String(tx.amount));
+      newCredits = currentCredits + amount;
+      await supabase.from('users').update({ credits: newCredits }).eq('id', tx.user_id);
+    }
 
-    res.json({ success: true, new_balance: newCredits, amount, username: user?.username || tx.user_id });
+    res.json({ success: true, new_balance: newCredits, status: finalStatus });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
   }

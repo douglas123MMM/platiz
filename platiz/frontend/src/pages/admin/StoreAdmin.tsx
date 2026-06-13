@@ -170,7 +170,9 @@ export default function StoreAdmin() {
                     <span className="badge badge-gold text-xs">{p.category}</span>
                   </td>
                   <td className="p-4 text-[#FFD700] text-sm font-bold">${Number(p.price).toFixed(2)}</td>
-                  <td className="p-4 text-gray-400 text-sm">{p.stock}</td>
+                  <td className="p-4 text-gray-400 text-sm">
+                    {p.stock > 0 ? p.stock : <span className="text-[#FFD700]/60">Ilimitado</span>}
+                  </td>
                   <td className="p-4">
                     <span className={`badge ${p.delivery_type === 'Automática' ? 'badge-info' : 'badge-warning'}`}>
                       {p.delivery_type}
