@@ -45,6 +45,7 @@ function detectType(url: string): string {
   if (getTwitchChannel(u)) return 'twitch';
   if (getGoogleDriveId(u)) return 'gdrive';
   if (u.endsWith('.m3u8') || u.includes('.m3u8')) return 'm3u8';
+  if (u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.mov') || u.endsWith('.mkv') || u.includes('supabase.co/storage/v1/object/')) return 'direct';
   return 'iframe';
 }
 
@@ -163,7 +164,21 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
         {!loaded && thumbnail && <img src={thumbnail} alt={title || ''} className="absolute inset-0 w-full h-full object-cover" />}
         <video className="absolute inset-0 w-full h-full" controls autoPlay={autoPlay} playsInline onError={onError} onLoadedData={onLoad}>
           <source src={videoUrl} type="application/x-mpegURL" />
-          Tu navegador no soporta la reproducción de este formato.
+          Tu navegador no soporta la reproduccion de este formato.
+        </video>
+      </div>
+    );
+  }
+
+  // Video directo (MP4, WebM, MOV, Supabase Storage) - usar proxy para compatibilidad
+  if (type === 'direct') {
+    const proxyUrl = `/api/video/stream?url=${encodeURIComponent(videoUrl)}`;
+    return (
+      <div className={containerClasses} style={{ aspectRatio: '16/9' }}>
+        {!loaded && thumbnail && <img src={thumbnail} alt={title || ''} className="absolute inset-0 w-full h-full object-cover" />}
+        <video className="absolute inset-0 w-full h-full" controls autoPlay={autoPlay} playsInline onError={onError} onLoadedData={onLoad}
+          controlsList="nodownload" disablePictureInPicture>
+          <source src={proxyUrl} type="video/mp4" />
         </video>
       </div>
     );

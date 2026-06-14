@@ -126,7 +126,7 @@ export default function ContentAdmin() {
                   }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
                   {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
                 </div>
-                <p className="text-xs text-gray-600 mt-1">Formatos: MP4, WebM, MOV. Maximo 200MB</p>
+                <p className="text-xs text-gray-600 mt-1">Formatos: MP4, WebM, MOV. Maximo 200MB. Recomendado: MP4 H.264</p>
               </div>
               <div>
                 <label className="label">Imagen del recurso</label>

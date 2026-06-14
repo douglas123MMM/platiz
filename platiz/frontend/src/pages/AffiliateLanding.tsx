@@ -80,17 +80,9 @@ export default function AffiliateLanding() {
       const id = url.split('vimeo.com/')[1]?.split('?')[0];
       return { type: 'iframe', src: `https://player.vimeo.com/video/${id}` };
     }
-    // Google Drive - usar proxy de stream para video tag limpio
-    if (url.includes('drive.google.com')) {
-      const encoded = encodeURIComponent(url);
-      return { type: 'video', src: `/api/video/stream?url=${encoded}` };
-    }
-    // MP4 o M3U8 directo
-    if (url.endsWith('.mp4') || url.endsWith('.m3u8') || url.endsWith('.webm')) {
-      return { type: 'video', src: url };
-    }
-    // Otros URLs como iframe
-    return { type: 'iframe', src: url };
+    // Cualquier video directo o almacenamiento: pasar por proxy para compatibilidad
+    const encoded = encodeURIComponent(url);
+    return { type: 'video', src: `/api/video/stream?url=${encoded}` };
   };
 
   if (registered) {
