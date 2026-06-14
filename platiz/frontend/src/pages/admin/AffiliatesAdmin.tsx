@@ -31,6 +31,7 @@ export default function AffiliatesAdmin() {
   const [lcPrice, setLcPrice] = useState('');
   const [lcCta, setLcCta] = useState('');
   const [lcShowForm, setLcShowForm] = useState(true);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [proofs, setProofs] = useState<any[]>([]);
 
   useEffect(() => {
@@ -220,6 +221,26 @@ export default function AffiliatesAdmin() {
               placeholder="Subtitulo" value={lcSubtitle} onChange={e => setLcSubtitle(e.target.value)} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="URL del video (YouTube, Vimeo, Drive)" value={lcVideoUrl} onChange={e => setLcVideoUrl(e.target.value)} />
+            <div>
+              <label className="text-xs text-gray-500 mb-1 block">O subir video desde el ordenador (MP4, WebM, MOV)</label>
+              <div className="flex gap-2 items-center">
+                <input type="file" accept="video/*" onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  setUploadingVideo(true);
+                  const fd = new FormData();
+                  fd.append('video', f);
+                  try {
+                    const { data } = await api.post('/content/upload-video', fd);
+                    setLcVideoUrl(data.url);
+                    setMsg('Video subido correctamente');
+                  } catch { setMsg('Error al subir video'); }
+                  setUploadingVideo(false);
+                  setTimeout(() => setMsg(''), 2000);
+                }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
+                {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
+              </div>
+            </div>
             <textarea className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[100px]"
               placeholder="Texto principal" value={lcText} onChange={e => setLcText(e.target.value)} />
             <textarea className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[80px]"

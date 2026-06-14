@@ -12,6 +12,8 @@ export default function ContentAdmin() {
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState({ title: '', description: '', link: '', video_url: '' });
   const [file, setFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [catError, setCatError] = useState('');
 
@@ -102,13 +104,29 @@ export default function ContentAdmin() {
                 <input className="input" placeholder="https://..." value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} />
               </div>
               <div>
-                <label className="label">URL del video (YouTube, Vimeo, Drive, M3U8, etc.)</label>
+                <label className="label">URL del video (YouTube, Vimeo, Drive, etc.)</label>
                 <input className="input" placeholder="https://youtube.com/watch?v=... o https://drive.google.com/..." value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
               </div>
               <div>
-                <label className="label">URL de video (YouTube, Vimeo, Drive, etc.)</label>
-                <input className="input" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} />
-                <p className="text-xs text-gray-600 mt-1">Al agregar un video, los usuarios podrán reproducirlo al hacer clic en la portada</p>
+                <label className="label">O subir video desde el ordenador</label>
+                <div className="flex gap-2 items-center">
+                  <input type="file" accept="video/*" onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    setVideoFile(f);
+                    setUploadingVideo(true);
+                    const fd = new FormData();
+                    fd.append('video', f);
+                    try {
+                      const { data } = await api.post('/content/upload-video', fd);
+                      setForm({ ...form, video_url: data.url });
+                      toast.success('Video subido');
+                    } catch { toast.error('Error al subir video'); }
+                    setUploadingVideo(false);
+                  }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
+                  {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
+                </div>
+                <p className="text-xs text-gray-600 mt-1">Formatos: MP4, WebM, MOV. Maximo 200MB</p>
               </div>
               <div>
                 <label className="label">Imagen del recurso</label>
