@@ -170,17 +170,38 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
   }
 }
 
-// Catálogo público - solo servicios digitales
+// Catálogo público - servicios digitales + productos de la tienda
 export async function getCatalog(_req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data } = await supabase
+    // Items del catalogo original
+    const { data: items } = await supabase
       .from('items')
       .select('id, category_slug, title, description, image_url, link, video_url, sort_order')
       .eq('active', 1)
       .in('category_slug', ['services', 'movies'])
       .order('sort_order', { ascending: true });
 
-    res.json(data || []);
+    // Productos de la tienda activos
+    const { data: store } = await supabase
+      .from('store_products')
+      .select('id, category, title, description, image_url, vendor_name')
+      .eq('active', true)
+      .order('created_at', { ascending: false });
+
+    // Mapear store_products al formato del catalogo
+    const storeItems = (store || []).map((p: any) => ({
+      id: `store_${p.id}`,
+      category_slug: p.category || 'servicios',
+      title: p.title,
+      description: p.description || '',
+      image_url: p.image_url || '',
+      link: '',
+      video_url: '',
+      sort_order: 0,
+    }));
+
+    const merged = [...(items || []), ...storeItems];
+    res.json(merged);
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }

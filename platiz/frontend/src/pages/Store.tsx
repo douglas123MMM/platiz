@@ -177,20 +177,20 @@ export default function Store() {
               key={product.id}
               className="group relative rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[#FFD700]/20 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
             >
-              {/* Image */}
-              <div className="aspect-[4/3] bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center">
+              {/* Image - Flyer style */}
+              <div className="aspect-[4/3] bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center overflow-hidden relative">
                 {product.image_url ? (
                   <img
                     src={product.image_url}
                     alt={product.title}
-                    className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                       (e.target as HTMLImageElement).parentElement!.querySelector('.card-fallback')?.classList.remove('hidden');
                     }}
                   />
                 ) : null}
-                <span className={`card-fallback ${product.image_url ? 'hidden' : ''} text-4xl font-black text-[#FFD700]/15`}>
+                <span className={`card-fallback absolute inset-0 flex items-center justify-center ${product.image_url ? 'hidden' : ''} text-6xl font-black text-[#FFD700]/20`}>
                   {product.title.trim().charAt(0).toUpperCase()}
                 </span>
               </div>
