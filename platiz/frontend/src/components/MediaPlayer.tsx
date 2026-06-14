@@ -170,15 +170,14 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
     );
   }
 
-  // Video directo (MP4, WebM, MOV, Supabase Storage) - usar proxy para compatibilidad
+  // Video directo (MP4, WebM, MOV, Supabase Storage)
   if (type === 'direct') {
-    const proxyUrl = `/api/video/stream?url=${encodeURIComponent(videoUrl)}`;
     return (
       <div className={containerClasses} style={{ aspectRatio: '16/9' }}>
         {!loaded && thumbnail && <img src={thumbnail} alt={title || ''} className="absolute inset-0 w-full h-full object-cover" />}
-        <video className="absolute inset-0 w-full h-full" controls autoPlay={autoPlay} playsInline onError={onError} onLoadedData={onLoad}
-          controlsList="nodownload" disablePictureInPicture>
-          <source src={proxyUrl} type="video/mp4" />
+        <video className="absolute inset-0 w-full h-full" controls autoPlay={autoPlay} playsInline onError={onError} onLoadedData={onLoad}>
+          <source src={videoUrl} type="video/mp4" />
+          <p className="text-gray-400 text-center mt-10">Tu navegador no puede reproducir este video. Prueba con otro navegador o descarga el archivo.</p>
         </video>
       </div>
     );

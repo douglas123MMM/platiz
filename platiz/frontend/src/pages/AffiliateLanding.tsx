@@ -80,9 +80,13 @@ export default function AffiliateLanding() {
       const id = url.split('vimeo.com/')[1]?.split('?')[0];
       return { type: 'iframe', src: `https://player.vimeo.com/video/${id}` };
     }
-    // Cualquier video directo o almacenamiento: pasar por proxy para compatibilidad
-    const encoded = encodeURIComponent(url);
-    return { type: 'video', src: `/api/video/stream?url=${encoded}` };
+    // Google Drive - usar proxy de stream (necesario para descargar)
+    if (url.includes('drive.google.com')) {
+      const encoded = encodeURIComponent(url);
+      return { type: 'video', src: `/api/video/stream?url=${encoded}` };
+    }
+    // Video directo (MP4, WebM, Supabase Storage) - reproducir sin proxy
+    return { type: 'video', src: url };
   };
 
   if (registered) {
@@ -118,9 +122,11 @@ export default function AffiliateLanding() {
 
             if (vs.type === 'video') {
               return (
-                <video controls playsInline className="w-full aspect-video rounded-xl bg-black object-contain"
-                  controlsList="nodownload nofullscreen" disablePictureInPicture>
-                  <source src={vs.src} />
+                <video controls playsInline className="w-full aspect-video rounded-xl bg-black"
+                  controlsList="nodownload" disablePictureInPicture
+                  onError={() => console.log('Error cargando video')}>
+                  <source src={vs.src} type="video/mp4" />
+                  <p className="text-white text-center p-8">Tu navegador no puede reproducir este video. Intenta con Chrome o descarga el video.</p>
                 </video>
               );
             }

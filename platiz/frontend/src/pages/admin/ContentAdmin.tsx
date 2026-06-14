@@ -126,7 +126,7 @@ export default function ContentAdmin() {
                   }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
                   {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
                 </div>
-                <p className="text-xs text-gray-600 mt-1">Formatos: MP4, WebM, MOV. Maximo 200MB. Recomendado: MP4 H.264</p>
+                <p className="text-xs text-gray-400 mt-1 bg-red-500/10 border border-red-500/20 rounded p-2">IMPORTANTE: Para que el video funcione en TODOS los navegadores y dispositivos, debe estar en formato <b>MP4 con codec H.264</b>. Si el video fue grabado con TikTok, conviertelo primero a MP4 normal antes de subir.</p>
               </div>
               <div>
                 <label className="label">Imagen del recurso</label>

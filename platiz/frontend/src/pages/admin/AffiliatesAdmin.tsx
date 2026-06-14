@@ -222,7 +222,7 @@ export default function AffiliatesAdmin() {
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="URL del video (YouTube, Vimeo, Drive)" value={lcVideoUrl} onChange={e => setLcVideoUrl(e.target.value)} />
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">O subir video desde el ordenador (MP4, WebM, MOV)</label>
+              <label className="text-xs text-gray-500 mb-1 block">O subir video desde el ordenador (MP4 H.264 - max 200MB)</label>
               <div className="flex gap-2 items-center">
                 <input type="file" accept="video/*" onChange={async (e) => {
                   const f = e.target.files?.[0];
