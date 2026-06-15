@@ -117,7 +117,6 @@ export default function ContentAdmin() {
                     setUploadingVideo(true);
                     const fd = new FormData();
                     fd.append('video', f);
-                    if (form.video_url) fd.append('old_url', form.video_url);
                     try {
                       const { data } = await api.post('/content/upload-video', fd, { timeout: 120000 });
                       setForm({ ...form, video_url: data.url });
