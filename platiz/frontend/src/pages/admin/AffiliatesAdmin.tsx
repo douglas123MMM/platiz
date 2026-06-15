@@ -230,7 +230,7 @@ export default function AffiliatesAdmin() {
                   fd.append('video', f);
                   if (lcVideoUrl) fd.append('old_url', lcVideoUrl);
                   try {
-                    const { data } = await api.post('/content/upload-video', fd);
+                    const { data } = await api.post('/content/upload-video', fd, { timeout: 120000 });
                     setLcVideoUrl(data.url);
                     toast.success('Guardado');
                   } catch { toast.error('Error al subir video'); }

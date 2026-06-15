@@ -119,7 +119,7 @@ export default function ContentAdmin() {
                     fd.append('video', f);
                     if (form.video_url) fd.append('old_url', form.video_url);
                     try {
-                      const { data } = await api.post('/content/upload-video', fd);
+                      const { data } = await api.post('/content/upload-video', fd, { timeout: 120000 });
                       setForm({ ...form, video_url: data.url });
                       toast.success('Guardado');
                     } catch { toast.error('Error al subir video'); }
