@@ -40,11 +40,11 @@ export default function ContentAdmin() {
     try {
       if (editId) {
         await api.put(`/content/items/${editId}`, fd);
-        toast.success('Item actualizado');
+        toast.success('Guardado');
       } else {
         fd.append('category_slug', selectedCat);
         await api.post('/content/items', fd);
-        toast.success('Item creado');
+        toast.success('Guardado');
       }
       resetForm();
       const { data } = await api.get(`/content/items/${selectedCat}`);
@@ -120,7 +120,7 @@ export default function ContentAdmin() {
                     try {
                       const { data } = await api.post('/content/upload-video', fd);
                       setForm({ ...form, video_url: data.url });
-                      toast.success('Video subido');
+                      toast.success('Guardado');
                     } catch { toast.error('Error al subir video'); }
                     setUploadingVideo(false);
                   }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />

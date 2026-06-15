@@ -10,6 +10,7 @@ function detectVideoType(url: string): { type: string; platform: string } {
   if (u.includes('twitch.tv/')) return { type: 'twitch', platform: 'Twitch' };
   if (u.includes('drive.google.com/file/d/')) return { type: 'gdrive', platform: 'Google Drive' };
   if (u.endsWith('.m3u8') || u.includes('.m3u8')) return { type: 'm3u8', platform: 'M3U8 Stream' };
+  if ((u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.mov') || u.endsWith('.mkv') || u.includes('supabase.co/storage/v1/object/'))) return { type: 'direct', platform: 'Direct Video' };
   if (u.includes('buymeacoffee.com/') || u.includes('buyinet.com/')) return { type: 'iframe', platform: 'BuyMeACoffee' };
   return { type: 'iframe', platform: 'Embed' };
 }

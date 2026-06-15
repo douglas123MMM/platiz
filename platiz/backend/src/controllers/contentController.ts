@@ -92,6 +92,7 @@ export async function createItem(req: AuthRequest, res: Response): Promise<void>
       else if (u.includes('twitch.tv/')) insertData.video_type = 'twitch';
       else if (u.includes('drive.google.com/file/d/')) insertData.video_type = 'gdrive';
       else if (u.endsWith('.m3u8') || u.includes('.m3u8')) insertData.video_type = 'm3u8';
+      else if ((u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.mov') || u.endsWith('.mkv') || u.includes('supabase.co/storage/v1/object/'))) insertData.video_type = 'direct';
       else insertData.video_type = 'iframe';
       insertData.video_url = video_url;
     }
