@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
-import { uploadToSupabase } from '../utils/upload';
+import { uploadToSupabase, deleteFromSupabase } from '../utils/upload';
 
 export async function getCategories(_req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -117,7 +117,7 @@ export async function createItem(req: AuthRequest, res: Response): Promise<void>
 export async function updateItem(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
-    const { data: existing } = await supabase.from('items').select('id').eq('id', id).maybeSingle();
+    const { data: existing } = await supabase.from('items').select('id, video_url').eq('id', id).maybeSingle();
     if (!existing) { res.status(404).json({ error: 'Item not found' }); return; }
 
     const { title, description, link, video_url } = req.body;
@@ -134,6 +134,7 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
         else if (u.includes('twitch.tv/')) updates.video_type = 'twitch';
         else if (u.includes('drive.google.com/file/d/')) updates.video_type = 'gdrive';
         else if (u.endsWith('.m3u8') || u.includes('.m3u8')) updates.video_type = 'm3u8';
+        else if ((u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.mov') || u.endsWith('.mkv') || u.includes('supabase.co/storage/v1/object/'))) updates.video_type = 'direct';
         else updates.video_type = 'iframe';
       } else {
         updates.video_type = null;
@@ -147,6 +148,11 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
       delete updates.video_type;
       await supabase.from('items').update(updates).eq('id', id);
     }
+
+    if (existing.video_url && video_url !== undefined && video_url !== existing.video_url) {
+      await deleteFromSupabase(existing.video_url);
+    }
+
     res.json({ message: 'Item updated' });
   } catch {
     res.status(500).json({ error: 'Internal server error' });
@@ -156,8 +162,11 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
 export async function deleteItem(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
-    const { data: existing } = await supabase.from('items').select('id').eq('id', id).maybeSingle();
+    const { data: existing } = await supabase.from('items').select('id, video_url').eq('id', id).maybeSingle();
     if (!existing) { res.status(404).json({ error: 'Item not found' }); return; }
+
+    if (existing.video_url) await deleteFromSupabase(existing.video_url);
+
     await supabase.from('items').delete().eq('id', id);
     res.json({ message: 'Item deleted' });
   } catch {

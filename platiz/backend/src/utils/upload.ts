@@ -39,3 +39,13 @@ export async function uploadToSupabase(file: Express.Multer.File): Promise<strin
 
   return publicUrl;
 }
+
+export async function deleteFromSupabase(url: string): Promise<void> {
+  try {
+    const u = new URL(url);
+    if (!u.hostname.includes('supabase.co')) return;
+    const pathParts = u.pathname.split('/storage/v1/object/public/uploads/');
+    if (pathParts.length < 2) return;
+    await supabase.storage.from('uploads').remove([decodeURIComponent(pathParts[1])]);
+  } catch { /* ignorar */ }
+}

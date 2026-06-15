@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
-import { uploadToSupabase } from '../utils/upload';
+import { uploadToSupabase, deleteFromSupabase } from '../utils/upload';
 
 // Dashboard del afiliado
 export async function getDashboard(req: AuthRequest, res: Response): Promise<void> {
@@ -361,12 +361,19 @@ export async function adminUpdateLandingConfig(req: AuthRequest, res: Response):
       currentConfig = typeof existing.landing_config === 'string' ? JSON.parse(existing.landing_config) : existing.landing_config;
     }
 
+    const oldPageConfig = currentConfig[pageType] || {};
+    const oldVideoUrl = oldPageConfig.video_url as string | undefined;
+
     currentConfig[pageType] = config;
 
     if (existing) {
       await supabase.from('settings').update({ landing_config: currentConfig }).eq('id', existing.id);
     } else {
       await supabase.from('settings').insert({ landing_config: currentConfig });
+    }
+
+    if (oldVideoUrl && config.video_url && oldVideoUrl !== config.video_url) {
+      await deleteFromSupabase(oldVideoUrl);
     }
 
     res.json({ message: `Config de pagina "${pageType}" actualizada` });

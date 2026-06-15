@@ -228,6 +228,7 @@ export default function AffiliatesAdmin() {
                   setUploadingVideo(true);
                   const fd = new FormData();
                   fd.append('video', f);
+                  if (lcVideoUrl) fd.append('old_url', lcVideoUrl);
                   try {
                     const { data } = await api.post('/content/upload-video', fd);
                     setLcVideoUrl(data.url);

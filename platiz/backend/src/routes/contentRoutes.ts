@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { getCategories, getItems, getItemById, getAllItems, createItem, updateItem, deleteItem, searchItems } from '../controllers/contentController';
 import { authenticate, requireAdmin } from '../middleware/auth';
-import { upload, uploadVideo } from '../utils/upload';
-import { uploadToSupabase } from '../utils/upload';
+import { upload, uploadVideo, uploadToSupabase, deleteFromSupabase } from '../utils/upload';
 import { AuthRequest } from '../middleware/auth';
 import { Response } from 'express';
 
@@ -21,7 +20,9 @@ router.delete('/items/:id', authenticate, requireAdmin, deleteItem);
 router.post('/upload-video', authenticate, requireAdmin, uploadVideo.single('video'), async (req: AuthRequest, res: Response) => {
   try {
     if (!req.file) { res.status(400).json({ error: 'No video file provided' }); return; }
+    const oldUrl = req.body.old_url as string | undefined;
     const url = await uploadToSupabase(req.file);
+    if (oldUrl) await deleteFromSupabase(oldUrl);
     res.json({ url });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
