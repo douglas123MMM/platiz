@@ -373,7 +373,7 @@ export async function adminUpdateLandingConfig(req: AuthRequest, res: Response):
     }
 
     if (oldVideoUrl && config.video_url && oldVideoUrl !== config.video_url) {
-      await deleteFromSupabase(oldVideoUrl);
+      deleteFromSupabase(oldVideoUrl).catch(() => {});
     }
 
     res.json({ message: `Config de pagina "${pageType}" actualizada` });

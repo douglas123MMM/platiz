@@ -150,7 +150,7 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
     }
 
     if (existing.video_url && video_url !== undefined && video_url !== existing.video_url) {
-      await deleteFromSupabase(existing.video_url);
+      deleteFromSupabase(existing.video_url).catch(() => {});
     }
 
     res.json({ message: 'Item updated' });
@@ -165,7 +165,7 @@ export async function deleteItem(req: AuthRequest, res: Response): Promise<void>
     const { data: existing } = await supabase.from('items').select('id, video_url').eq('id', id).maybeSingle();
     if (!existing) { res.status(404).json({ error: 'Item not found' }); return; }
 
-    if (existing.video_url) await deleteFromSupabase(existing.video_url);
+    if (existing.video_url) deleteFromSupabase(existing.video_url).catch(() => {});
 
     await supabase.from('items').delete().eq('id', id);
     res.json({ message: 'Item deleted' });

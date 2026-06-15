@@ -22,7 +22,7 @@ router.post('/upload-video', authenticate, requireAdmin, uploadVideo.single('vid
     if (!req.file) { res.status(400).json({ error: 'No video file provided' }); return; }
     const oldUrl = req.body.old_url as string | undefined;
     const url = await uploadToSupabase(req.file);
-    if (oldUrl) await deleteFromSupabase(oldUrl);
+    if (oldUrl) deleteFromSupabase(oldUrl).catch(() => {});
     res.json({ url });
   } catch (e: any) {
     res.status(500).json({ error: e.message });

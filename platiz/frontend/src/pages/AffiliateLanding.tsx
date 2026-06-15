@@ -39,6 +39,7 @@ export default function AffiliateLanding() {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [registered, setRegistered] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     if (!ref) return;
@@ -124,9 +125,9 @@ export default function AffiliateLanding() {
               return (
                 <video controls playsInline className="w-full aspect-video rounded-xl bg-black"
                   controlsList="nodownload" disablePictureInPicture
-                  onError={() => console.log('Error cargando video')}>
+                  onError={() => setVideoError(true)}
+                  onLoadedData={() => setVideoError(false)}>
                   <source src={vs.src} type="video/mp4" />
-                  <p className="text-white text-center p-8">Tu navegador no puede reproducir este video. Intenta con Chrome o descarga el video.</p>
                 </video>
               );
             }
@@ -137,6 +138,11 @@ export default function AffiliateLanding() {
               </div>
             );
           })()}
+          {videoError && (
+            <p className="text-red-400 text-xs text-center mt-2">
+              Error al cargar el video. El archivo puede estar dañado o no ser accesible.
+            </p>
+          )}
         </div>
       )}
 
