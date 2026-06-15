@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { IconSearch } from '../../icons/PremiumIcons';
+import toast from 'react-hot-toast';
 
 type Tab = 'affiliates' | 'history' | 'landings' | 'proofs';
 
@@ -19,7 +20,6 @@ export default function AffiliatesAdmin() {
   const [search, setSearch] = useState('');
   const [editingCredits, setEditingCredits] = useState<string | null>(null);
   const [creditValue, setCreditValue] = useState(0);
-  const [msg, setMsg] = useState('');
 
   // Landing config
   const [lcTab, setLcTab] = useState('landing');
@@ -80,9 +80,8 @@ export default function AffiliatesAdmin() {
           show_form: lcShowForm,
         },
       });
-      setMsg('Pagina guardada');
-      setTimeout(() => setMsg(''), 2000);
-    } catch { setMsg('Error al guardar'); }
+      toast.success('Guardado');
+    } catch { toast.error('Error al guardar'); }
   };
 
   const updateCredits = async (userId: string) => {
@@ -103,7 +102,6 @@ export default function AffiliatesAdmin() {
   return (
     <div className="p-4 md:p-6 max-w-5xl mx-auto animate-fade-in">
       <h1 className="text-xl font-bold text-white mb-4">Gestion de Afiliados</h1>
-      {msg && <div className="mb-3 p-2 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-lg text-[#FFD700] text-xs text-center">{msg}</div>}
 
       {/* Top Tabs */}
       <div className="flex gap-2 mb-6 flex-wrap">
@@ -233,10 +231,9 @@ export default function AffiliatesAdmin() {
                   try {
                     const { data } = await api.post('/content/upload-video', fd);
                     setLcVideoUrl(data.url);
-                    setMsg('Video subido correctamente');
-                  } catch { setMsg('Error al subir video'); }
+                    toast.success('Guardado');
+                  } catch { toast.error('Error al subir video'); }
                   setUploadingVideo(false);
-                  setTimeout(() => setMsg(''), 2000);
                 }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
                 {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
               </div>
