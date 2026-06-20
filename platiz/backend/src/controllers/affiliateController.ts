@@ -216,9 +216,22 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
     }
 
     // Enriquecer items con precio del store o custom
+    // Construir mapa de custom prices por titulo tambien
+    const customByTitle: Record<string, number> = {};
+    if (refCode && Object.keys(customPrices).length > 0) {
+      // Buscar los titulos de los store_products para hacer match por titulo
+      for (const p of (store || [])) {
+        const storeId = `store_${p.id}`;
+        if (customPrices[storeId]) {
+          customByTitle[p.title.toLowerCase().trim()] = customPrices[storeId];
+        }
+      }
+    }
+
     const enrichedItems = (items || []).map((item: any) => {
       const storeInfo = priceMap.get(item.title.toLowerCase().trim());
-      const customPrice = customPrices[item.id] ?? customPrices[`store_${item.id}`];
+      const titleKey = item.title.toLowerCase().trim();
+      const customPrice = customPrices[item.id] ?? customPrices[`store_${item.id}`] ?? customByTitle[titleKey];
       const finalPrice = customPrice ?? (storeInfo ? storeInfo.price : 0);
       return {
         ...item,
