@@ -214,19 +214,19 @@ export default function AffiliateCatalog() {
                 ? 'bg-white border-gray-100 shadow-sm hover:border-[#FFD700]/40' 
                 : 'bg-gradient-to-b from-[#1a1a1a] to-[#111] border-[#FFD700]/5 hover:border-[#FFD700]/20 shadow-lg shadow-black/20'
             }`}>
-              {/* Logo Area */}
-              <div className={`relative p-6 flex items-center justify-center h-36 ${
+              {/* Image Banner - full width, no padding */}
+              <div className={`relative w-full aspect-[4/3] flex items-center justify-center overflow-hidden ${
                 theme === 'light' 
-                  ? 'bg-gradient-to-br from-gray-50 to-white' 
+                  ? 'bg-gradient-to-br from-gray-100 to-gray-200' 
                   : 'bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d]'
               }`}>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.03),transparent_70%)]" />
                 {item.image_url ? (
-                  <img src={item.image_url} alt={item.title} className="relative z-10 max-h-24 max-w-[75%] object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-lg" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  <img src={item.image_url} alt={item.title} className="relative z-10 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 ) : (
                   <div className={`relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-extrabold ${
                     theme === 'light' 
-                      ? 'bg-gray-100 text-gray-400' 
+                      ? 'bg-gray-200 text-gray-400' 
                       : 'bg-white/5 text-gray-600'
                   }`}>
                     {item.title.charAt(0)}
