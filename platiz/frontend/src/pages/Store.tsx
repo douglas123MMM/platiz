@@ -69,9 +69,12 @@ export default function Store() {
       const params = new URLSearchParams();
       if (activeCategory && activeCategory !== 'Todos') params.set('category', activeCategory);
       if (search.trim()) params.set('search', search.trim());
-      const { data } = await api.get(`/store/products?${params.toString()}`);
+      const qs = params.toString();
+      const { data } = await api.get(`/store/products${qs ? '?' + qs : ''}`);
       setProducts(data || []);
-    } catch { /* ignore */ }
+    } catch (e) {
+      console.error('Store fetch error:', e);
+    }
     setLoading(false);
   }, [activeCategory, search]);
 
