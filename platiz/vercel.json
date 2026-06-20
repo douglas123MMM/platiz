@@ -2,10 +2,6 @@
   "installCommand": "cd platiz && npm install && cd frontend && npm install",
   "buildCommand": "cd platiz/frontend && npm run build",
   "outputDirectory": "platiz/frontend/dist",
-  "headers": [
-    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
-    { "source": "/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] }
-  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/assets/(.*)", "destination": "/assets/$1" },
