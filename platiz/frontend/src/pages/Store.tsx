@@ -237,19 +237,12 @@ export default function Store() {
                 </p>
 
                 {/* Buy button */}
-                {product.price > 0 && (
                 <button
                   onClick={() => setSelectedProduct(product)}
                   className="w-full mt-1 py-2.5 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)]"
                 >
                   Comprar ahora
                 </button>
-                )}
-                {product.price <= 0 && (
-                <span className="block w-full mt-1 py-2.5 bg-gray-700 text-gray-400 text-center rounded-xl text-sm">
-                  No disponible
-                </span>
-                )}
               </div>
             </div>
           ))}
