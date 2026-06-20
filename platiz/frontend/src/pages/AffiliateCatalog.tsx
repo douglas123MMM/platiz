@@ -51,6 +51,16 @@ export default function AffiliateCatalog() {
   }, [code]);
 
   const categories = [...new Set(items.map(i => i.category_slug))];
+  const catLabel = (slug: string) => {
+    const map: Record<string, string> = {
+      movies: 'Streaming', streaming: 'Streaming', services: 'Servicios',
+      ia: 'IA', 'monedas-de-juegos': 'Juegos', antivirus: 'Antivirus',
+      oficina: 'Oficina', creatividad: 'Creatividad', 'diseno-grafico': 'Diseno',
+      herramientas: 'Herramientas', 'edicion-de-videos': 'Edicion',
+      licencia: 'Licencias',
+    };
+    return map[slug] || slug;
+  };
   const filtered = items.filter(item => {
     const catMatch = activeCategory === 'all' || item.category_slug === activeCategory;
     const searchMatch = !search || item.title.toLowerCase().includes(search.toLowerCase());
@@ -217,38 +227,22 @@ export default function AffiliateCatalog() {
                 ? 'bg-white border-gray-100 shadow-sm hover:border-[#FFD700]/40' 
                 : 'bg-gradient-to-b from-[#1a1a1a] to-[#111] border-[#FFD700]/5 hover:border-[#FFD700]/20 shadow-lg shadow-black/20'
             }`}>
-              {/* Image Banner - full width, no padding */}
+              {/* Image Banner */}
               <div className={`relative w-full aspect-[4/3] flex items-center justify-center overflow-hidden ${
-                theme === 'light' 
-                  ? 'bg-gradient-to-br from-gray-100 to-gray-200' 
-                  : 'bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d]'
+                theme === 'light' ? 'bg-gradient-to-br from-gray-100 to-gray-200' : 'bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d]'
               }`}>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.03),transparent_70%)]" />
                 {item.image_url ? (
                   <img src={item.image_url} alt={item.title} className="relative z-10 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 ) : (
-                  <div className={`relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-extrabold ${
-                    theme === 'light' 
-                      ? 'bg-gray-200 text-gray-400' 
-                      : 'bg-white/5 text-gray-600'
-                  }`}>
-                    {item.title.charAt(0)}
-                  </div>
+                  <span className={`relative z-10 text-6xl font-black opacity-10 ${theme === 'light' ? 'text-gray-400' : 'text-white'}`}>{item.title.charAt(0)}</span>
                 )}
               </div>
-
               {/* Content */}
               <div className="p-3 flex flex-col flex-1">
-                <h3 className={`text-sm font-bold mb-1 line-clamp-2 leading-snug ${
-                  theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'
-                }`}>{item.title}</h3>
-                {item.description && (
-                  <p className={`text-xs line-clamp-2 mb-2 flex-1 ${
-                    theme === 'light' ? 'text-gray-500' : 'text-gray-400'
-                  }`}>{item.description}</p>
-                )}
+                <h3 className={`text-sm font-bold mb-1 line-clamp-2 leading-snug ${theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'}`}>{item.title}</h3>
+                {item.description && <p className={`text-xs line-clamp-2 mb-2 flex-1 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>{item.description}</p>}
                 {!item.description && <div className="flex-1" />}
-                {/* Price + Button */}
                 {(item.price ?? 0) > 0 ? (
                   <div className="flex items-center gap-2 mt-auto">
                     <div className="flex flex-col">
@@ -256,22 +250,10 @@ export default function AffiliateCatalog() {
                       <span className="text-lg font-bold text-[#FFD700]">${(item.price ?? 0).toFixed(2)}</span>
                       <span className="text-[10px] text-gray-500">USDT</span>
                     </div>
-                    <a
-                      href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}%20por%20%24${(item.price ?? 0).toFixed(2)}` : (affiliate?.telegram_link || '#')}
-                      target="_blank" rel="noopener noreferrer"
-                      className="flex-1 text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
-                    >
-                      Comprar
-                    </a>
+                    <a href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}%20por%20%24${(item.price ?? 0).toFixed(2)}` : (affiliate?.telegram_link || '#')} target="_blank" rel="noopener noreferrer" className="flex-1 text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">Comprar</a>
                   </div>
                 ) : (
-                  <a
-                    href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
-                    target="_blank" rel="noopener noreferrer"
-                    className="w-full text-center mt-auto py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
-                  >
-                    Consultar
-                  </a>
+                  <a href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')} target="_blank" rel="noopener noreferrer" className="w-full text-center mt-auto py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">Consultar</a>
                 )}
               </div>
             </div>
