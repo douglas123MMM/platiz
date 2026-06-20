@@ -171,8 +171,10 @@ export async function getLanding(req: AuthRequest, res: Response): Promise<void>
 }
 
 // Catálogo público - servicios digitales + productos de la tienda
-export async function getCatalog(_req: AuthRequest, res: Response): Promise<void> {
+export async function getCatalog(req: AuthRequest, res: Response): Promise<void> {
   try {
+    const refCode = req.query.ref as string;
+
     // Items del catalogo original
     const { data: items } = await supabase
       .from('items')
@@ -188,7 +190,18 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
       .eq('active', true)
       .order('created_at', { ascending: false });
 
-    // Crear mapa de precios desde store_products (titulo -> precio)
+    // Cargar precios personalizados del afiliado si viene ref
+    let customPrices: Record<string, number> = {};
+    if (refCode) {
+      const { data: affUser } = await supabase.from('users')
+        .select('custom_prices').eq('referral_code', refCode).maybeSingle();
+      if (affUser?.custom_prices) {
+        customPrices = typeof affUser.custom_prices === 'string'
+          ? JSON.parse(affUser.custom_prices) : affUser.custom_prices;
+      }
+    }
+
+    // Crear mapa de precios desde store_products
     const priceMap = new Map<string, { price: number; delivery_type: string; account_type: string; duration_days: number }>();
     for (const p of (store || [])) {
       const key = p.title.toLowerCase().trim();
@@ -202,12 +215,15 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
       }
     }
 
-    // Enriquecer items con precio del store si existe
+    // Enriquecer items con precio del store o custom
     const enrichedItems = (items || []).map((item: any) => {
       const storeInfo = priceMap.get(item.title.toLowerCase().trim());
+      const customPrice = customPrices[item.id] ?? customPrices[`store_${item.id}`];
+      const finalPrice = customPrice ?? (storeInfo ? storeInfo.price : 0);
       return {
         ...item,
-        price: storeInfo ? storeInfo.price : 0,
+        price: finalPrice,
+        has_price: finalPrice > 0,
         delivery_type: storeInfo ? storeInfo.delivery_type : 'manual',
         account_type: storeInfo ? storeInfo.account_type : '',
         duration_days: storeInfo ? storeInfo.duration_days : 0,
@@ -218,22 +234,35 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
     const itemTitles = new Set(enrichedItems.map((i: any) => i.title.toLowerCase().trim()));
     const storeItems = (store || [])
       .filter((p: any) => !itemTitles.has(p.title.toLowerCase().trim()))
-      .map((p: any) => ({
-        id: `store_${p.id}`,
-        category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
-        title: p.title,
-        description: p.description || '',
-        image_url: p.image_url || '',
-        link: '',
-        video_url: '',
-        sort_order: 0,
-        price: parseFloat(p.price) || 0,
-        delivery_type: p.delivery_type || 'manual',
-        account_type: p.account_type || '',
-        duration_days: p.duration_days || 0,
-      }));
+      .map((p: any) => {
+        const storeId = `store_${p.id}`;
+        const customPrice = customPrices[storeId] ?? customPrices[p.id];
+        const finalPrice = customPrice ?? (parseFloat(p.price) || 0);
+        return {
+          id: storeId,
+          category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
+          title: p.title,
+          description: p.description || '',
+          image_url: p.image_url || '',
+          link: '',
+          video_url: '',
+          sort_order: 0,
+          price: finalPrice,
+          has_price: finalPrice > 0,
+          delivery_type: p.delivery_type || 'manual',
+          account_type: p.account_type || '',
+          duration_days: p.duration_days || 0,
+        };
+      });
 
-    const merged = [...enrichedItems, ...storeItems];
+    // Mezclar y ordenar: productos con precio primero, luego los demas
+    let merged = [...enrichedItems, ...storeItems];
+    merged.sort((a: any, b: any) => {
+      if (a.has_price && !b.has_price) return -1;
+      if (!a.has_price && b.has_price) return 1;
+      return 0;
+    });
+
     res.json(merged);
   } catch (e: any) {
     res.status(500).json({ error: e.message });
@@ -244,19 +273,33 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
 export async function getProduct(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
+    const refCode = req.query.ref as string;
     const isStore = id.startsWith('store_');
     const realId = isStore ? id.replace('store_', '') : id;
+
+    // Cargar precios custom del afiliado
+    let customPrices: Record<string, number> = {};
+    if (refCode) {
+      const { data: affUser } = await supabase.from('users')
+        .select('custom_prices').eq('referral_code', refCode).maybeSingle();
+      if (affUser?.custom_prices) {
+        customPrices = typeof affUser.custom_prices === 'string'
+          ? JSON.parse(affUser.custom_prices) : affUser.custom_prices;
+      }
+    }
 
     if (isStore) {
       const { data } = await supabase.from('store_products').select('*').eq('id', realId).single();
       if (!data) { res.status(404).json({ error: 'Producto no encontrado' }); return; }
+      const customPrice = customPrices[id] ?? customPrices[realId];
+      const finalPrice = customPrice ?? (parseFloat(data.price) || 0);
       res.json({
         id: `store_${data.id}`,
         title: data.title,
         description: data.description || '',
         image_url: data.image_url || '',
         category: data.category,
-        price: parseFloat(data.price) || 0,
+        price: finalPrice,
         delivery_type: data.delivery_type || 'manual',
         account_type: data.account_type || '',
         duration_days: data.duration_days || 0,
@@ -266,14 +309,16 @@ export async function getProduct(req: AuthRequest, res: Response): Promise<void>
         renewable: data.renewable || false,
       });
     } else {
-      // Buscar en items y enriquecer con precio del store
       const { data: item } = await supabase.from('items').select('*').eq('id', realId).single();
       if (!item) { res.status(404).json({ error: 'Producto no encontrado' }); return; }
       
-      // Buscar precio en store_products
       const { data: storeMatch } = await supabase.from('store_products')
         .select('price, delivery_type, account_type, duration_days, terms, vendor_name')
         .eq('title', item.title).maybeSingle();
+      
+      const basePrice = storeMatch ? parseFloat(storeMatch.price) || 0 : 0;
+      const customPrice = customPrices[id] ?? customPrices[item.id];
+      const finalPrice = customPrice ?? basePrice;
       
       res.json({
         id: item.id,
@@ -283,7 +328,7 @@ export async function getProduct(req: AuthRequest, res: Response): Promise<void>
         category_slug: item.category_slug,
         link: item.link || '',
         video_url: item.video_url || '',
-        price: storeMatch ? parseFloat(storeMatch.price) || 0 : 0,
+        price: finalPrice,
         delivery_type: storeMatch?.delivery_type || 'manual',
         account_type: storeMatch?.account_type || '',
         duration_days: storeMatch?.duration_days || 0,

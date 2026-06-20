@@ -31,16 +31,16 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    api.get(`/affiliate/product/${id}`).then(({ data }) => setProduct(data)).catch(() => {});
-    // Get affiliate info from localStorage or query param
     const code = new URLSearchParams(window.location.search).get('ref');
+    const params = code ? `?ref=${code}` : '';
+    api.get(`/affiliate/product/${id}${params}`).then(({ data }) => setProduct(data)).catch(() => {});
     if (code) {
       api.get(`/affiliate/landing/${code}/landing`).then(({ data }: any) => {
         if (data.affiliate) setAffiliate(data.affiliate);
       }).catch(() => {});
     }
     // Related products
-    api.get('/affiliate/catalog').then(({ data }: any) => {
+    api.get(`/affiliate/catalog${params}`).then(({ data }: any) => {
       const filtered = (data || []).filter((p: any) => p.id !== id).slice(0, 4);
       setRelated(filtered);
     }).catch(() => {});
