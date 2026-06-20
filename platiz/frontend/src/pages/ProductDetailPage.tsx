@@ -167,17 +167,17 @@ export default function ProductDetailPage() {
                 {product.description && (
                   <>
                     <p className="text-gray-300 whitespace-pre-wrap">{product.description}</p>
-                    <div className="grid grid-cols-3 gap-4 mt-4">
-                      <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10 text-center">
-                        <span className="text-emerald-400 text-xs font-medium">Licencia 100% original y verificada</span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10 text-center">
-                        <span className="text-[#FFD700] text-xs font-medium">Entrega automatica por email</span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 text-center">
-                        <span className="text-blue-400 text-xs font-medium">Soporte post-venta incluido</span>
-                      </div>
-                    </div>
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                  <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10 text-center">
+                    <span className="text-emerald-400 text-xs font-medium">Licencia 100% original</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10 text-center">
+                    <span className="text-[#FFD700] text-xs font-medium">Soporte 24/7 incluido</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 text-center">
+                    <span className="text-blue-400 text-xs font-medium">Pago seguro con Binance</span>
+                  </div>
+                </div>
                   </>
                 )}
                 {!product.description && <p className="text-gray-500">Sin descripcion disponible.</p>}

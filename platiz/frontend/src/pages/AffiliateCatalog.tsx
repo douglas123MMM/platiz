@@ -243,25 +243,17 @@ export default function AffiliateCatalog() {
                 <h3 className={`text-sm font-bold mb-1 line-clamp-2 leading-snug ${theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'}`}>{item.title}</h3>
                 {item.description && <p className={`text-xs line-clamp-2 mb-2 flex-1 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>{item.description}</p>}
                 {!item.description && <div className="flex-1" />}
-                {(item.price ?? 0) > 0 && (
-                  <div className="flex flex-col mb-1">
-                    <span className="text-[10px] text-gray-500">Desde</span>
-                    <span className="text-lg font-bold text-[#FFD700]">${(item.price ?? 0).toFixed(2)} <span className="text-[10px] text-gray-500">USDT</span></span>
-                  </div>
-                )}
                 <div className="flex gap-2 mt-auto">
-                  {(item.price ?? 0) > 0 && (
-                    <a
-                      href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20comprar%20${encodeURIComponent(item.title)}%20por%20%24${(item.price ?? 0).toFixed(2)}` : (affiliate?.telegram_link || '#')}
-                      target="_blank" rel="noopener noreferrer"
-                      className="flex-1 text-center py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-[11px] rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
-                    >
-                      Comprar
-                    </a>
-                  )}
+                  <a
+                    href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20comprar%20${encodeURIComponent(item.title)}${(item.price ?? 0) > 0 ? '%20por%20%24' + (item.price ?? 0).toFixed(2) : ''}` : (affiliate?.telegram_link || '#')}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex-1 text-center py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-[11px] rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
+                  >
+                    Comprar
+                  </a>
                   <Link
                     to={`/producto/${item.id}?ref=${code || ''}`}
-                    className={`${(item.price ?? 0) > 0 ? 'flex-1' : 'w-full'} text-center py-2 border border-[#FFD700]/20 text-[#FFD700] text-[11px] rounded-xl font-bold hover:bg-[#FFD700]/10 active:scale-[0.98] transition-all`}
+                    className="flex-1 text-center py-2 border border-[#FFD700]/20 text-[#FFD700] text-[11px] rounded-xl font-bold hover:bg-[#FFD700]/10 active:scale-[0.98] transition-all"
                   >
                     Ver detalles
                   </Link>
