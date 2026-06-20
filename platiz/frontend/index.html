@@ -18,12 +18,25 @@
     <title>Global Dorado - Transforma el Internet en Dinero</title>
   </head>
   <body class="bg-[#0a0a0f] text-white antialiased">
-    <div id="root"></div>
+    <div id="root"><div style="color:#FFD700;text-align:center;padding-top:40vh;font-family:system-ui"><p style="font-size:20px">Global Dorado</p><p id="loading-msg" style="color:#888;font-size:14px">Cargando...</p></div></div>
+    <noscript><div style="color:red;text-align:center;padding:40px;font-family:monospace">JavaScript esta desactivado. Activalo para usar la plataforma.</div></noscript>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
-      }
+      (function(){
+        var el = document.getElementById('loading-msg');
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(regs){ regs.forEach(function(r){ r.unregister(); }); });
+        }
+        window.addEventListener('error', function(e){
+          if (el) { el.style.color = 'red'; el.textContent = 'JS Error: ' + (e.message || e.filename || 'desconocido'); }
+        });
+        if (!document.querySelector('script[type="module"][src]') && !document.querySelector('script[type="module"][crossorigin]')) {
+          setTimeout(function(){
+            var scripts = document.querySelectorAll('script[type="module"]');
+            if (scripts.length === 0 && el) { el.style.color = 'red'; el.textContent = 'Error: JS module no cargado'; }
+          }, 5000);
+        }
+      })();
     </script>
   </body>
 </html>
