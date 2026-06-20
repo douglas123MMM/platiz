@@ -11,6 +11,10 @@ interface Item {
   link: string;
   video_url: string;
   sort_order: number;
+  price?: number;
+  delivery_type?: string;
+  account_type?: string;
+  duration_days?: number;
 }
 
 export default function AffiliateCatalog() {
@@ -234,22 +238,41 @@ export default function AffiliateCatalog() {
               </div>
 
               {/* Content */}
-              <div className="p-4 flex flex-col flex-1">
-                <h3 className={`text-sm font-bold mb-1.5 line-clamp-2 leading-snug ${
+              <div className="p-3 flex flex-col flex-1">
+                <h3 className={`text-sm font-bold mb-1 line-clamp-2 leading-snug ${
                   theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'
                 }`}>{item.title}</h3>
                 {item.description && (
-                  <p className={`text-xs line-clamp-2 mb-4 flex-1 ${
+                  <p className={`text-xs line-clamp-2 mb-2 flex-1 ${
                     theme === 'light' ? 'text-gray-500' : 'text-gray-400'
                   }`}>{item.description}</p>
                 )}
-                <a
-                  href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
-                  target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
-                >
-                  Adquirir
-                </a>
+                {!item.description && <div className="flex-1" />}
+                {/* Price + Button */}
+                {(item.price ?? 0) > 0 ? (
+                  <div className="flex items-center gap-2 mt-auto">
+                    <div className="flex flex-col">
+                      <span className="text-xs text-gray-500">Desde</span>
+                      <span className="text-lg font-bold text-[#FFD700]">${(item.price ?? 0).toFixed(2)}</span>
+                      <span className="text-[10px] text-gray-500">USDT</span>
+                    </div>
+                    <a
+                      href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}%20por%20%24${(item.price ?? 0).toFixed(2)}` : (affiliate?.telegram_link || '#')}
+                      target="_blank" rel="noopener noreferrer"
+                      className="flex-1 text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
+                    >
+                      Comprar
+                    </a>
+                  </div>
+                ) : (
+                  <a
+                    href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
+                    target="_blank" rel="noopener noreferrer"
+                    className="w-full text-center mt-auto py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
+                  >
+                    Consultar
+                  </a>
+                )}
               </div>
             </div>
           </div>

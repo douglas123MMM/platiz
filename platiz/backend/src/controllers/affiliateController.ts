@@ -184,11 +184,11 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
     // Productos de la tienda activos
     const { data: store } = await supabase
       .from('store_products')
-      .select('id, category, title, description, image_url, vendor_name')
+      .select('id, category, title, description, image_url, vendor_name, price, delivery_type, account_type, duration_days')
       .eq('active', true)
       .order('created_at', { ascending: false });
 
-    // Mapear store_products al formato del catalogo (sin precios, sin duplicados)
+    // Mapear store_products al formato del catalogo
     const itemTitles = new Set((items || []).map((i: any) => i.title.toLowerCase().trim()));
     const storeItems = (store || [])
       .filter((p: any) => !itemTitles.has(p.title.toLowerCase().trim()))
@@ -201,6 +201,10 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
         link: '',
         video_url: '',
         sort_order: 0,
+        price: parseFloat(p.price) || 0,
+        delivery_type: p.delivery_type || 'manual',
+        account_type: p.account_type || '',
+        duration_days: p.duration_days || 0,
       }));
 
     const merged = [...(items || []), ...storeItems];
