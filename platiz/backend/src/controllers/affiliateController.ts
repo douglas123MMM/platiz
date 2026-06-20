@@ -188,8 +188,34 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
       .eq('active', true)
       .order('created_at', { ascending: false });
 
-    // Mapear store_products al formato del catalogo
-    const itemTitles = new Set((items || []).map((i: any) => i.title.toLowerCase().trim()));
+    // Crear mapa de precios desde store_products (titulo -> precio)
+    const priceMap = new Map<string, { price: number; delivery_type: string; account_type: string; duration_days: number }>();
+    for (const p of (store || [])) {
+      const key = p.title.toLowerCase().trim();
+      if (!priceMap.has(key)) {
+        priceMap.set(key, {
+          price: parseFloat(p.price) || 0,
+          delivery_type: p.delivery_type || 'manual',
+          account_type: p.account_type || '',
+          duration_days: p.duration_days || 0,
+        });
+      }
+    }
+
+    // Enriquecer items con precio del store si existe
+    const enrichedItems = (items || []).map((item: any) => {
+      const storeInfo = priceMap.get(item.title.toLowerCase().trim());
+      return {
+        ...item,
+        price: storeInfo ? storeInfo.price : 0,
+        delivery_type: storeInfo ? storeInfo.delivery_type : 'manual',
+        account_type: storeInfo ? storeInfo.account_type : '',
+        duration_days: storeInfo ? storeInfo.duration_days : 0,
+      };
+    });
+
+    // Agregar productos de la tienda que no esten ya en items
+    const itemTitles = new Set(enrichedItems.map((i: any) => i.title.toLowerCase().trim()));
     const storeItems = (store || [])
       .filter((p: any) => !itemTitles.has(p.title.toLowerCase().trim()))
       .map((p: any) => ({
@@ -207,7 +233,7 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
         duration_days: p.duration_days || 0,
       }));
 
-    const merged = [...(items || []), ...storeItems];
+    const merged = [...enrichedItems, ...storeItems];
     res.json(merged);
   } catch (e: any) {
     res.status(500).json({ error: e.message });
