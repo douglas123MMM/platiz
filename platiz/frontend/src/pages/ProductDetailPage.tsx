@@ -54,8 +54,9 @@ export default function ProductDetailPage() {
     );
   }
 
+  const purchaseId = 'GD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
   const whatsappMsg = affiliate?.whatsapp
-    ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(product.title)}%20por%20%24${product.price.toFixed(2)}`
+    ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Quiero comprar:\n\n*${product.title}*\nID: ${purchaseId}\nPrecio: $${product.price.toFixed(2)} USDT\n\nEnviare mi comprobante de pago.`)}`
     : '#';
 
   const cat = product.category || product.category_slug || '';
@@ -108,6 +109,23 @@ export default function ProductDetailPage() {
             >
               Comprar por WhatsApp
             </a>
+
+            {/* Purchase Info */}
+            <div className="mt-4 p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
+              <p className="text-[#FFD700] text-xs font-bold mb-2">ID de Compra: {purchaseId}</p>
+              {product.price > 0 && (
+                <div className="space-y-1 text-xs text-gray-400 mb-3">
+                  <div className="flex justify-between"><span>Producto:</span><span className="text-white">{product.title}</span></div>
+                  <div className="flex justify-between"><span>Precio:</span><span className="text-[#FFD700] font-bold">${product.price.toFixed(2)} USDT</span></div>
+                  {product.duration_days > 0 && <div className="flex justify-between"><span>Duracion:</span><span className="text-white">{product.duration_days} dias</span></div>}
+                  <div className="flex justify-between"><span>Entrega:</span><span className="text-white">{product.delivery_type === 'automatica' ? 'Automatica' : 'Manual'}</span></div>
+                </div>
+              )}
+              <div className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <p className="text-yellow-400 text-[11px] font-medium">Entrega Manual</p>
+                <p className="text-yellow-400/70 text-[10px] mt-0.5">Envia tu factura/comprobante a soporte para mayor rapidez en la entrega. Guarda tu ID de compra como referencia.</p>
+              </div>
+            </div>
           </div>
         </div>
 
