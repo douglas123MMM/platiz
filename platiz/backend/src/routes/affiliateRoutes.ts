@@ -10,6 +10,8 @@ import {
   getProduct,
   getMyPrices,
   saveMyPrices,
+  registerCatalogPurchase,
+  getMyCatalogPurchases,
   registerWithReferral,
   adminListAffiliates,
   adminUpdateCredits,
@@ -28,6 +30,7 @@ const router = Router();
 router.get('/landing/:code/:pageType?', getLanding);
 router.get('/catalog', getCatalog);
 router.get('/product/:id', getProduct);
+router.post('/catalog-purchase', registerCatalogPurchase);
 router.post('/register', registerWithReferral);
 router.get('/iptv-proxy', iptvProxy);
 
@@ -36,6 +39,7 @@ router.use(authenticate);
 router.get('/dashboard', getDashboard);
 router.get('/prices', getMyPrices);
 router.put('/prices', saveMyPrices);
+router.get('/my-catalog-purchases', getMyCatalogPurchases);
 router.put('/profile', updateProfile);
 router.put('/profile/avatar', upload.single('avatar'), updateProfile);
 router.post('/referrals/:referralId/approve', approveReferral);

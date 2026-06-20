@@ -28,8 +28,13 @@ export default function ProductDetailPage() {
   const [related, setRelated] = useState<Product[]>([]);
   const [activeTab, setActiveTab] = useState<'desc' | 'guide' | 'warranty'>('desc');
   const [selectedPlan, setSelectedPlan] = useState(0);
+  const [purchaseId, setPurchaseId] = useState('');
+  const [purchaseRegistered, setPurchaseRegistered] = useState(false);
 
   useEffect(() => {
+    const genId = 'GD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+    setPurchaseId(genId);
+
     if (!id) return;
     const code = new URLSearchParams(window.location.search).get('ref');
     const params = code ? `?ref=${code}` : '';
@@ -39,7 +44,6 @@ export default function ProductDetailPage() {
         if (data.affiliate) setAffiliate(data.affiliate);
       }).catch(() => {});
     }
-    // Related products
     api.get(`/affiliate/catalog${params}`).then(({ data }: any) => {
       const filtered = (data || []).filter((p: any) => p.id !== id).slice(0, 4);
       setRelated(filtered);
@@ -54,15 +58,22 @@ export default function ProductDetailPage() {
     );
   }
 
-  const purchaseId = 'GD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+  const cat = product.category || product.category_slug || '';
+
   const whatsappMsg = affiliate?.whatsapp
     ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Quiero comprar:\n\n*${product.title}*\nID: ${purchaseId}\nPrecio: $${product.price.toFixed(2)} USDT\n\nEnviare mi comprobante de pago.`)}`
     : '#';
 
-  const cat = product.category || product.category_slug || '';
-  const plans = product.price > 0 ? [
-    { label: `${product.duration_days > 0 ? product.duration_days + ' DIAS' : 'ACCESO'}`, price: product.price }
-  ] : [];
+  const handleBuy = () => {
+    const code = new URLSearchParams(window.location.search).get('ref');
+    api.post('/affiliate/catalog-purchase', {
+      product_id: product.id,
+      product_title: product.title,
+      amount: product.price,
+      affiliate_code: code || '',
+    }).then(() => setPurchaseRegistered(true)).catch(() => {});
+    window.open(whatsappMsg, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
@@ -102,13 +113,12 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Buy Button */}
-            <a
-              href={whatsappMsg}
-              target="_blank" rel="noopener noreferrer"
+            <button
+              onClick={handleBuy}
               className="w-full text-center py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
             >
               Comprar por WhatsApp
-            </a>
+            </button>
 
             {/* Purchase Info */}
             <div className="mt-4 p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">

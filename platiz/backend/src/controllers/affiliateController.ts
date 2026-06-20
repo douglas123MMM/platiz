@@ -602,3 +602,36 @@ export async function saveMyPrices(req: AuthRequest, res: Response): Promise<voi
     res.json({ ok: true });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
 }
+
+// Registrar compra desde catalogo (publico)
+export async function registerCatalogPurchase(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { product_id, product_title, amount, affiliate_code } = req.body;
+    const purchaseId = 'GD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+    
+    const record: any = {
+      type: 'catalog_purchase',
+      amount: parseFloat(amount) || 0,
+      description: `Catalogo: ${product_title}`,
+      status: 'pending',
+      proof_image: null,
+    };
+    if (req.user?.id) record.user_id = req.user.id;
+    if (affiliate_code) record.description += ` | Ref: ${affiliate_code}`;
+    
+    await supabase.from('store_transactions').insert(record);
+    res.json({ id: purchaseId, status: 'pending' });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}
+
+// Obtener compras del catalogo del usuario
+export async function getMyCatalogPurchases(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data } = await supabase.from('store_transactions')
+      .select('*')
+      .eq('user_id', req.user!.id)
+      .eq('type', 'catalog_purchase')
+      .order('created_at', { ascending: false });
+    res.json(data || []);
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}
