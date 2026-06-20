@@ -8,6 +8,7 @@ import DashboardHome from './pages/DashboardHome';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SectionPage from './pages/SectionPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import SearchPage from './pages/SearchPage';
 import SupportChat from './pages/SupportChat';
 import ChatPage from './pages/ChatPage';
@@ -58,6 +59,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/catalogo/:code" element={<AffiliateCatalog />} />
+      <Route path="/producto/:id" element={<ProductDetailPage />} />
       <Route path="/landing/:code" element={<AffiliateLanding />} />
       <Route path="/presentacion/:code" element={<AffiliateLanding />} />
       <Route path="/franquicia/:code" element={<AffiliateLanding />} />

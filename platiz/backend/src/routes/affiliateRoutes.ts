@@ -7,6 +7,7 @@ import {
   approveReferral,
   getLanding,
   getCatalog,
+  getProduct,
   registerWithReferral,
   adminListAffiliates,
   adminUpdateCredits,
@@ -24,6 +25,7 @@ const router = Router();
 // Público
 router.get('/landing/:code/:pageType?', getLanding);
 router.get('/catalog', getCatalog);
+router.get('/product/:id', getProduct);
 router.post('/register', registerWithReferral);
 router.get('/iptv-proxy', iptvProxy);
 

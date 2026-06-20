@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
 
 interface Item {
@@ -250,10 +250,10 @@ export default function AffiliateCatalog() {
                       <span className="text-lg font-bold text-[#FFD700]">${(item.price ?? 0).toFixed(2)}</span>
                       <span className="text-[10px] text-gray-500">USDT</span>
                     </div>
-                    <a href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}%20por%20%24${(item.price ?? 0).toFixed(2)}` : (affiliate?.telegram_link || '#')} target="_blank" rel="noopener noreferrer" className="flex-1 text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">Comprar</a>
+                    <Link to={`/producto/${item.id}?ref=${code || ''}`} className="flex-1 text-center py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">Ver detalles</Link>
                   </div>
                 ) : (
-                  <a href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20adquirir%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')} target="_blank" rel="noopener noreferrer" className="w-full text-center mt-auto py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">Consultar</a>
+                  <Link to={`/producto/${item.id}?ref=${code || ''}`} className="w-full text-center mt-auto py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20">Ver detalles</Link>
                 )}
               </div>
             </div>

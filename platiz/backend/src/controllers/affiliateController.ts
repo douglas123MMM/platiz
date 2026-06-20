@@ -240,6 +240,62 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
   }
 }
 
+// Detalle de un producto individual (público)
+export async function getProduct(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const isStore = id.startsWith('store_');
+    const realId = isStore ? id.replace('store_', '') : id;
+
+    if (isStore) {
+      const { data } = await supabase.from('store_products').select('*').eq('id', realId).single();
+      if (!data) { res.status(404).json({ error: 'Producto no encontrado' }); return; }
+      res.json({
+        id: `store_${data.id}`,
+        title: data.title,
+        description: data.description || '',
+        image_url: data.image_url || '',
+        category: data.category,
+        price: parseFloat(data.price) || 0,
+        delivery_type: data.delivery_type || 'manual',
+        account_type: data.account_type || '',
+        duration_days: data.duration_days || 0,
+        vendor_name: data.vendor_name || '',
+        terms: data.terms || '',
+        stock: data.stock,
+        renewable: data.renewable || false,
+      });
+    } else {
+      // Buscar en items y enriquecer con precio del store
+      const { data: item } = await supabase.from('items').select('*').eq('id', realId).single();
+      if (!item) { res.status(404).json({ error: 'Producto no encontrado' }); return; }
+      
+      // Buscar precio en store_products
+      const { data: storeMatch } = await supabase.from('store_products')
+        .select('price, delivery_type, account_type, duration_days, terms, vendor_name')
+        .eq('title', item.title).maybeSingle();
+      
+      res.json({
+        id: item.id,
+        title: item.title,
+        description: item.description || '',
+        image_url: item.image_url || '',
+        category_slug: item.category_slug,
+        link: item.link || '',
+        video_url: item.video_url || '',
+        price: storeMatch ? parseFloat(storeMatch.price) || 0 : 0,
+        delivery_type: storeMatch?.delivery_type || 'manual',
+        account_type: storeMatch?.account_type || '',
+        duration_days: storeMatch?.duration_days || 0,
+        vendor_name: storeMatch?.vendor_name || '',
+        terms: storeMatch?.terms || '',
+      });
+    }
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+}
+
 // Registro vía enlace de afiliado
 export async function registerWithReferral(req: AuthRequest, res: Response): Promise<void> {
   try {
