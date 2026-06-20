@@ -4,6 +4,7 @@ import { IconDiamond, IconUserAdd, IconChart, IconMoon, IconSun } from '../icons
 
 const IconCopy = () => <svg viewBox="0 0 24 24" style={{width:16,height:16,fill:'currentColor'}}><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>;
 const IconCheck = () => <svg viewBox="0 0 24 24" style={{width:16,height:16,fill:'currentColor'}}><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>;
+const IconSave = () => <svg viewBox="0 0 24 24" style={{width:16,height:16,fill:'currentColor'}}><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>;
 
 interface Referral {
   id: string;
@@ -51,8 +52,19 @@ export default function AffiliateDashboard() {
   const [facebook, setFacebook] = useState('');
   const [youtube, setYoutube] = useState('');
   const [catalogTheme, setCatalogTheme] = useState('dark');
+  const [myPrices, setMyPrices] = useState<Record<string, number>>({});
+  const [catalogItems, setCatalogItems] = useState<Array<{ id: string; title: string; category_slug: string }>>([]);
+  const [savingPrices, setSavingPrices] = useState(false);
 
-  useEffect(() => { fetchDashboard(); }, []);
+  useEffect(() => { fetchDashboard(); fetchPrices(); }, []);
+
+  const fetchPrices = async () => {
+    try {
+      const { data } = await api.get('/affiliate/prices');
+      setMyPrices(data || {});
+    } catch {}
+    loadCatalogItems();
+  };
 
   const fetchDashboard = async () => {
     try {
@@ -111,7 +123,6 @@ export default function AffiliateDashboard() {
 
   const saveProfile = async () => {
     try {
-      // Guardar datos de texto como JSON (siempre funciona)
       await api.put('/affiliate/profile', {
         display_name: displayName,
         whatsapp,
@@ -123,22 +134,46 @@ export default function AffiliateDashboard() {
         youtube,
         catalog_theme: catalogTheme,
       });
-
-      // Si hay foto, subirla por separado
       if (avatarFile) {
         const fd = new FormData();
         fd.append('avatar', avatarFile);
-        const { data } = await api.put('/affiliate/profile/avatar', fd);
-        if (data?.avatar) setAvatarPreview(data.avatar);
+        await api.put('/affiliate/profile/avatar', fd);
         setAvatarFile(null);
+        setAvatarPreview('');
       }
-
-      setEditing(false);
-      setMsg('Informacion guardada correctamente');
+      setMsg('Perfil guardado');
       setTimeout(() => setMsg(''), 3000);
-      fetchDashboard();
-    } catch {
-      setMsg('Error al guardar');
+      setEditing(false);
+    } catch (e: any) {
+      setMsg(e.response?.data?.error || 'Error al guardar');
+    }
+  };
+
+  const loadCatalogItems = async () => {
+    try {
+      const { data } = await api.get('/affiliate/catalog');
+      setCatalogItems((data || []).map((i: any) => ({ id: i.id, title: i.title, category_slug: i.category_slug })));
+    } catch {}
+  };
+
+  const savePrices = async () => {
+    setSavingPrices(true);
+    try {
+      await api.put('/affiliate/prices', { prices: myPrices });
+      setMsg('Precios guardados correctamente');
+      setTimeout(() => setMsg(''), 3000);
+    } catch (e: any) {
+      setMsg(e.response?.data?.error || 'Error al guardar precios');
+    }
+    setSavingPrices(false);
+  };
+
+  const updatePrice = (id: string, val: string) => {
+    const num = parseFloat(val);
+    if (!isNaN(num) && num >= 0) {
+      setMyPrices(prev => ({ ...prev, [id]: num }));
+    } else if (val === '') {
+      setMyPrices(prev => { const next = { ...prev }; delete next[id]; return next; });
     }
   };
 
@@ -380,6 +415,43 @@ export default function AffiliateDashboard() {
               <p className="text-gray-400 text-center py-4">Completa tu perfil para que tus clientes vean tus datos en el catalogo.</p>
             )}
           </div>
+        )}
+      </div>
+
+      {/* Prices Section */}
+      <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-white font-bold text-sm">Mis Precios (USD)</h2>
+          <div className="flex gap-2">
+            <button onClick={loadCatalogItems} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">Cargar productos</button>
+            <button onClick={savePrices} disabled={savingPrices} className="text-xs px-3 py-1.5 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 disabled:opacity-50 transition-colors flex items-center gap-1">
+              <IconSave /> {savingPrices ? 'Guardando...' : 'Guardar'}
+            </button>
+          </div>
+        </div>
+        <p className="text-gray-500 text-xs mb-3">Define el precio de venta para cada servicio. Los productos sin precio usaran el mensaje generico.</p>
+        {catalogItems.length > 0 ? (
+          <div className="space-y-1 max-h-80 overflow-y-auto">
+            {catalogItems.map(item => (
+              <div key={item.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
+                <span className="text-gray-300 text-xs flex-1 truncate mr-3">{item.title}</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-xs">$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    placeholder="--"
+                    value={myPrices[item.id] ?? ''}
+                    onChange={(e) => updatePrice(item.id, e.target.value)}
+                    className="w-16 bg-black/50 border border-white/10 rounded-lg px-2 py-1 text-xs text-white text-right focus:outline-none focus:border-[#FFD700]/40"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-xs text-center py-4">Haz clic en "Cargar productos" para ver la lista.</p>
         )}
       </div>
 
