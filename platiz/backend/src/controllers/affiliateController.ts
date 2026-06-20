@@ -526,3 +526,21 @@ export async function iptvProxy(_req: AuthRequest, res: Response): Promise<void>
     res.send(await r.text());
   } catch (e: any) { res.status(500).send(e.message); }
 }
+
+// Obtener precios personalizados del afiliado
+export async function getMyPrices(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data: user } = await supabase.from('users').select('custom_prices').eq('id', req.user!.id).single();
+    res.json(user?.custom_prices || {});
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}
+
+// Guardar precios personalizados del afiliado
+export async function saveMyPrices(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { prices } = req.body;
+    if (!prices || typeof prices !== 'object') { res.status(400).json({ error: 'Formato invalido' }); return; }
+    await supabase.from('users').update({ custom_prices: prices }).eq('id', req.user!.id);
+    res.json({ ok: true });
+  } catch (e: any) { res.status(500).json({ error: e.message }); }
+}

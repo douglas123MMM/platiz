@@ -8,6 +8,8 @@ import {
   getLanding,
   getCatalog,
   getProduct,
+  getMyPrices,
+  saveMyPrices,
   registerWithReferral,
   adminListAffiliates,
   adminUpdateCredits,
@@ -32,6 +34,8 @@ router.get('/iptv-proxy', iptvProxy);
 // Afiliado (logueado)
 router.use(authenticate);
 router.get('/dashboard', getDashboard);
+router.get('/prices', getMyPrices);
+router.put('/prices', saveMyPrices);
 router.put('/profile', updateProfile);
 router.put('/profile/avatar', upload.single('avatar'), updateProfile);
 router.post('/referrals/:referralId/approve', approveReferral);

@@ -245,7 +245,7 @@ export default function AffiliateCatalog() {
                 {!item.description && <div className="flex-1" />}
                 <div className="flex gap-2 mt-auto">
                   <a
-                    href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20comprar%20${encodeURIComponent(item.title)}${(item.price ?? 0) > 0 ? '%20por%20%24' + (item.price ?? 0).toFixed(2) : ''}` : (affiliate?.telegram_link || '#')}
+                    href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20comprar%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
                     target="_blank" rel="noopener noreferrer"
                     className="flex-1 text-center py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-[11px] rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
                   >

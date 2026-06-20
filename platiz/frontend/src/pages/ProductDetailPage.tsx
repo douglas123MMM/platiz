@@ -93,42 +93,10 @@ export default function ProductDetailPage() {
             <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.title}</h1>
 
             {/* Plans */}
-            {plans.length > 0 && (
-              <div className="mb-4">
-                <p className="text-sm text-gray-400 mb-2">Selecciona tu plan:</p>
-                <div className="space-y-2">
-                  {plans.map((plan, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedPlan(i)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
-                        selectedPlan === i
-                          ? 'border-[#FFD700] bg-[#FFD700]/5'
-                          : 'border-white/5 bg-white/[0.02] hover:border-white/20'
-                      }`}
-                    >
-                      <span className="font-medium">{plan.label}</span>
-                      <span className="text-lg font-bold text-[#FFD700]">${plan.price.toFixed(2)} <span className="text-xs text-gray-500">USDT</span></span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Price & Stock */}
-            <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 mb-4">
-              <div>
-                <span className="text-sm text-gray-400">Precio</span>
-                <div className="text-2xl font-bold text-[#FFD700]">${product.price.toFixed(2)} <span className="text-sm text-gray-500">USDT</span></div>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center gap-1.5 text-emerald-400 text-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  {product.stock != null && product.stock > 0 ? 'En stock' : 'En stock'}
-                </div>
-                <span className="text-xs text-gray-500">
-                  {product.delivery_type === 'automatica' ? 'Entrega instantanea' : 'Entrega pendiente'}
-                </span>
+            <div className="mb-4">
+              <p className="text-sm text-gray-400 mb-2">Consulta el precio con el vendedor:</p>
+              <div className="p-3 rounded-xl border border-[#FFD700]/20 bg-[#FFD700]/5">
+                <p className="text-white text-sm">Los precios los define cada afiliado. Contacta al vendedor para conocer el precio actualizado.</p>
               </div>
             </div>
 
@@ -138,7 +106,7 @@ export default function ProductDetailPage() {
               target="_blank" rel="noopener noreferrer"
               className="w-full text-center py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
             >
-              Comprar — ${product.price.toFixed(2)} USDT
+              Comprar por WhatsApp
             </a>
           </div>
         </div>
