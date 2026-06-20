@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { IconPlus, IconPencil, IconTrash, IconRefresh, IconEye, IconEyeOff, IconGrid } from '../../icons/PremiumIcons';
+import { IconPlus, IconPencil, IconTrash, IconRefresh, IconEye, IconEyeOff, IconGrid, IconSearch } from '../../icons/PremiumIcons';
+import { uploadVideoToStorage } from '../../services/supabase';
 
 const CATEGORIES = [
   'Streaming', 'Creatividad', 'Diseno Grafico', 'Edicion de Videos',
@@ -60,6 +61,8 @@ export default function StoreAdmin() {
   const [editing, setEditing] = useState<Product>(emptyProduct);
   const [showPass, setShowPass] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [search, setSearch] = useState('');
 
   const loadProducts = () => {
     setLoading(true);
@@ -116,6 +119,10 @@ export default function StoreAdmin() {
     setEditing((prev) => ({ ...prev, [field]: value }));
   };
 
+  const filteredProducts = search.trim()
+    ? products.filter(p => p.title.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase()))
+    : products;
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-4">
@@ -136,6 +143,11 @@ export default function StoreAdmin() {
         </div>
       </div>
 
+      <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <IconSearch className="w-5 h-5 text-gray-500 flex-shrink-0" />
+        <input type="text" placeholder="Buscar producto por nombre o categoria..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
+      </div>
+
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -154,9 +166,9 @@ export default function StoreAdmin() {
             <tbody>
               {loading ? (
                 <tr><td colSpan={8} className="p-12 text-center text-gray-500">Cargando...</td></tr>
-              ) : products.length === 0 ? (
-                <tr><td colSpan={8} className="p-12 text-center text-gray-500">Sin productos registrados</td></tr>
-              ) : products.map((p) => (
+              ) : filteredProducts.length === 0 ? (
+                <tr><td colSpan={8} className="p-12 text-center text-gray-500">{search ? 'Sin resultados' : 'Sin productos registrados'}</td></tr>
+              ) : filteredProducts.map((p) => (
                 <tr key={p.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
                   <td className="p-4">
                     {p.image_url ? (
@@ -231,13 +243,29 @@ export default function StoreAdmin() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">URL de Imagen</label>
+                <div className="flex gap-2">
                 <input
                   type="text"
                   value={editing.image_url}
                   onChange={(e) => updateField('image_url', e.target.value)}
-                  className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
+                  className="flex-1 bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#FFD700]/30"
                   placeholder="https://..."
                 />
+                <label className={`flex items-center gap-1 px-3 py-2 rounded-lg cursor-pointer text-xs font-medium whitespace-nowrap ${imageUploading ? 'bg-gray-600 text-gray-300' : 'bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 border border-[#FFD700]/20'}`}>
+                  {imageUploading ? 'Subiendo...' : 'Subir imagen'}
+                  <input type="file" accept="image/*" onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    setImageUploading(true);
+                    try { const url = await uploadVideoToStorage(f); updateField('image_url', url); toast.success('Imagen subida'); }
+                    catch { toast.error('Error al subir imagen'); }
+                    setImageUploading(false);
+                  }} className="hidden" />
+                </label>
+                </div>
+                {editing.image_url && (
+                  <img src={editing.image_url} alt="" className="mt-2 w-20 h-20 rounded-lg object-contain bg-black/30 border border-[#FFD700]/10" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                )}
               </div>
 
               <div>

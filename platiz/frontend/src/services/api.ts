@@ -22,7 +22,9 @@ api.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401) {
       localStorage.removeItem('token');
-      if (window.location.pathname !== '/login') window.location.href = '/login';
+      const publicPaths = ['/', '/login', '/register', '/landing', '/catalogo', '/presentacion', '/asesoria', '/vsl', '/franquicia'];
+      const isPublicPath = publicPaths.some(p => window.location.pathname === p || window.location.pathname.startsWith(p + '/'));
+      if (!isPublicPath) window.location.href = '/login';
     }
     return Promise.reject(err);
   }

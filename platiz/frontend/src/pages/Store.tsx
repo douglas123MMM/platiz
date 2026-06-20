@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import ScrollReveal from '../components/ScrollReveal';
+import { IconSearch, IconPackage, IconClose, IconChevronDown } from '../icons/PremiumIcons';
 
 interface StoreProduct {
   id: string;
@@ -27,7 +29,7 @@ interface PurchaseResponse {
   delivery_password?: string;
 }
 
-const CATEGORIES = ['Streaming', 'Creatividad', 'Diseno Grafico', 'Edicion de Videos', 'Herramientas', 'Antivirus', 'Oficina', 'Licencia', 'Monedas de Juegos', 'Redes Sociales'];
+const CATEGORIES = ['Streaming', 'IA', 'Creatividad', 'Diseno Grafico', 'Edicion de Videos', 'Herramientas', 'Antivirus', 'Oficina', 'Licencia', 'Monedas de Juegos', 'Redes Sociales'];
 
 function addToast(type: 'success' | 'error', message: string) {
   // Use inline toast or leave as placeholder — toast from react-hot-toast is imported in parent
@@ -126,8 +128,8 @@ export default function Store() {
       {/* Search */}
       <div className="max-w-md mx-auto">
         <div className="flex items-center gap-3 px-4 py-3 glass rounded-2xl border border-[#FFD700]/10">
-          <svg className="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-          <input type="text" placeholder="Buscar productos..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
+          <IconSearch className="w-5 h-5 text-gray-400 flex-shrink-0" />
+          <input type="text" placeholder="Buscar productos..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-400 w-full" />
         </div>
       </div>
 
@@ -135,7 +137,7 @@ export default function Store() {
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide px-1">
         <button
           onClick={() => setActiveCategory('Todos')}
-          className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+          className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
             activeCategory === 'Todos'
               ? 'bg-[#FFD700] text-black font-bold shadow-[0_2px_12px_rgba(255,215,0,0.25)]'
               : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:border-[#FFD700]/30 hover:text-[#FFD700]'
@@ -147,7 +149,7 @@ export default function Store() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
               activeCategory === cat
                 ? 'bg-[#FFD700] text-black font-bold shadow-[0_2px_12px_rgba(255,215,0,0.25)]'
                 : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:border-[#FFD700]/30 hover:text-[#FFD700]'
@@ -166,16 +168,17 @@ export default function Store() {
       ) : products.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-20 h-20 mx-auto mb-4 bg-[#FFD700]/5 rounded-full flex items-center justify-center">
-            <svg className="w-10 h-10 text-[#FFD700]/20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+            <IconPackage className="w-10 h-10 text-[#FFD700]/20" />
           </div>
-          <p className="text-gray-500">No hay productos disponibles</p>
+          <p className="text-gray-400">No hay productos disponibles</p>
         </div>
       ) : (
+        <ScrollReveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {products.map((product) => (
             <div
               key={product.id}
-              className="group relative rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[#FFD700]/20 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              className="group relative rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[#FFD700]/20 hover:-translate-y-1 transition-colors duration-300 overflow-hidden cursor-pointer"
             >
               {/* Image - Flyer style */}
               <div className="aspect-[4/3] bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] flex items-center justify-center overflow-hidden relative">
@@ -183,6 +186,7 @@ export default function Store() {
                   <img
                     src={product.image_url}
                     alt={product.title}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
@@ -222,7 +226,7 @@ export default function Store() {
 
                 {/* Stock */}
                 {product.stock != null && (
-                  <p className="text-gray-500 text-xs mt-2">
+                  <p className="text-gray-400 text-xs mt-2">
                     Stock: {product.stock} disponibles
                   </p>
                 )}
@@ -233,21 +237,29 @@ export default function Store() {
                 </p>
 
                 {/* Buy button */}
+                {product.price > 0 && (
                 <button
                   onClick={() => setSelectedProduct(product)}
-                  className="w-full mt-1 py-2.5 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)]"
+                  className="w-full mt-1 py-2.5 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)]"
                 >
                   Comprar ahora
                 </button>
+                )}
+                {product.price <= 0 && (
+                <span className="block w-full mt-1 py-2.5 bg-gray-700 text-gray-400 text-center rounded-xl text-sm">
+                  No disponible
+                </span>
+                )}
               </div>
             </div>
           ))}
         </div>
+        </ScrollReveal>
       )}
 
       {/* Purchase Modal */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-50 overflow-y-auto store-modal-scroll md:flex md:items-center md:justify-center md:p-4"
+        <div className="fixed inset-0 z-50 overflow-y-auto store-modal-scroll md:flex md:items-center md:justify-center md:p-4" role="dialog" aria-modal="true" aria-label="Comprar producto"
           onClick={() => { if (!purchaseLoading) { setSelectedProduct(null); setPurchaseResult(null); } }}
         >
           <div className="fixed inset-0 bg-black/80 md:bg-black/70 md:backdrop-blur-sm" />
@@ -257,16 +269,14 @@ export default function Store() {
               disabled={purchaseLoading}
               className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
+              <IconClose className="w-4 h-4" />
             </button>
 
             <div className="p-5 md:p-6">
               <div className="flex items-start gap-3 md:gap-4">
                 <div className="w-14 h-14 md:w-16 md:h-16 flex-shrink-0 rounded-xl bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1a] border border-white/5 flex items-center justify-center overflow-hidden">
                   {selectedProduct.image_url ? (
-                    <img src={selectedProduct.image_url} alt={selectedProduct.title} className="w-full h-full object-contain p-2" />
+                    <img src={selectedProduct.image_url} alt={selectedProduct.title} loading="lazy" className="w-full h-full object-contain p-2" />
                   ) : (
                     <span className="text-2xl font-black text-[#FFD700]/30">{selectedProduct.title.trim().charAt(0).toUpperCase()}</span>
                   )}
@@ -284,7 +294,7 @@ export default function Store() {
             <div className="px-5 md:px-6">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3">
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 md:p-3">
-                  <p className="text-gray-500 text-xs mb-0.5">Entrega</p>
+                  <p className="text-gray-400 text-xs mb-0.5">Entrega</p>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                     selectedProduct.delivery_type?.toLowerCase() === 'automatica'
                       ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
@@ -294,23 +304,23 @@ export default function Store() {
                   </span>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 md:p-3">
-                  <p className="text-gray-500 text-xs mb-0.5">Duracion</p>
+                  <p className="text-gray-400 text-xs mb-0.5">Duracion</p>
                   <p className="text-white text-sm font-medium">{(selectedProduct.duration_days ?? 0) > 0 ? `${selectedProduct.duration_days} dias` : 'Permanente'}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 md:p-3">
-                  <p className="text-gray-500 text-xs mb-0.5">Cuenta</p>
+                  <p className="text-gray-400 text-xs mb-0.5">Cuenta</p>
                   <p className="text-white text-sm font-medium truncate">{selectedProduct.account_type === 'temporal' ? 'Temporal' : selectedProduct.account_type === 'permanente' ? 'Permanente' : (selectedProduct.account_type || 'N/A')}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 md:p-3">
-                  <p className="text-gray-500 text-xs mb-0.5">Renovable</p>
+                  <p className="text-gray-400 text-xs mb-0.5">Renovable</p>
                   <p className="text-white text-sm font-medium">{selectedProduct.renewable ? 'Si' : 'No'}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 md:p-3">
-                  <p className="text-gray-500 text-xs mb-0.5">Vendedor</p>
+                  <p className="text-gray-400 text-xs mb-0.5">Vendedor</p>
                   <p className="text-white text-sm font-medium truncate">{selectedProduct.vendor_name || 'GD'}</p>
                 </div>
                 <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 md:p-3">
-                  <p className="text-gray-500 text-xs mb-0.5">Stock</p>
+                  <p className="text-gray-400 text-xs mb-0.5">Stock</p>
                   <p className="text-white text-sm font-medium">{selectedProduct.stock != null ? `${selectedProduct.stock} cuentas` : 'Ilimitado'}</p>
                 </div>
               </div>
@@ -320,13 +330,13 @@ export default function Store() {
               <div className="px-5 md:px-6 pt-3">
                 <button onClick={() => setTermsOpen(!termsOpen)} className="flex items-center justify-between w-full p-3 rounded-xl bg-white/[0.02] border border-white/5 text-left">
                   <span className="text-gray-400 text-sm">Terminos y Condiciones</span>
-                  <svg className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${termsOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+                  <IconChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${termsOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {termsOpen && (
                   <div className="mt-2 p-3 rounded-xl bg-white/[0.02] border border-white/5 max-h-32 overflow-y-auto">
                     <p className="text-gray-400 text-xs whitespace-pre-wrap">{selectedProduct.terms}</p>
-                  </div>
-                )}
+        </div>
+      )}
               </div>
             )}
 
@@ -337,13 +347,13 @@ export default function Store() {
                   {purchaseResult.delivery_email && (
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-white text-xs md:text-sm break-all">Email: {purchaseResult.delivery_email}</p>
-                      <button onClick={() => { navigator.clipboard.writeText(purchaseResult.delivery_email!); }} className="flex-shrink-0 text-gray-500 hover:text-emerald-400 transition-colors text-xs px-2 py-1 rounded bg-white/5">Copiar</button>
+                      <button onClick={() => { navigator.clipboard.writeText(purchaseResult.delivery_email!); }} className="flex-shrink-0 text-gray-400 hover:text-emerald-400 transition-colors text-xs px-2 py-1 rounded bg-white/5">Copiar</button>
                     </div>
                   )}
                   {purchaseResult.delivery_password && (
                     <div className="flex items-center justify-between gap-2 mt-1">
                       <p className="text-white text-xs md:text-sm break-all">Clave: {purchaseResult.delivery_password}</p>
-                      <button onClick={() => { navigator.clipboard.writeText(purchaseResult.delivery_password!); }} className="flex-shrink-0 text-gray-500 hover:text-emerald-400 transition-colors text-xs px-2 py-1 rounded bg-white/5">Copiar</button>
+                      <button onClick={() => { navigator.clipboard.writeText(purchaseResult.delivery_password!); }} className="flex-shrink-0 text-gray-400 hover:text-emerald-400 transition-colors text-xs px-2 py-1 rounded bg-white/5">Copiar</button>
                     </div>
                   )}
                 </div>
@@ -384,6 +394,11 @@ export default function Store() {
                     ${balance.toFixed(2)}
                   </span>
                 </div>
+                {balance < selectedProduct.price && (
+                  <p className="text-red-400 text-xs mt-1 text-center bg-red-500/10 rounded-lg py-1.5">
+                    Saldo insuficiente. Recarga para poder comprar.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -391,7 +406,7 @@ export default function Store() {
               {purchaseResult ? (
                 <button
                   onClick={() => { setSelectedProduct(null); setPurchaseResult(null); }}
-                  className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)]"
+                  className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)]"
                 >
                   Cerrar
                 </button>
@@ -400,14 +415,14 @@ export default function Store() {
                   <button
                     onClick={() => setSelectedProduct(null)}
                     disabled={purchaseLoading}
-                    className="flex-1 py-3 rounded-xl border border-white/10 text-gray-400 font-semibold hover:bg-white/[0.04] hover:text-white transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+                    className="flex-1 py-3 rounded-xl border border-white/10 text-gray-400 font-semibold hover:bg-white/[0.04] hover:text-white transition-colors duration-200 active:scale-[0.98] disabled:opacity-50"
                   >
                     Cancelar
                   </button>
                   <button
                     onClick={handlePurchase}
                     disabled={purchaseLoading || balance < selectedProduct.price}
-                    className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {purchaseLoading ? 'Procesando...' : 'Confirmar compra'}
                   </button>

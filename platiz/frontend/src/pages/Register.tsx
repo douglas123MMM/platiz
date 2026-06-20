@@ -40,20 +40,20 @@ export default function Register() {
           </div>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="label">Usuario</label>
-              <input type="text" className="input" placeholder="usuario" value={username} onChange={(e) => setUsername(e.target.value)} required />
+              <label htmlFor="usuario" className="label">Usuario</label>
+              <input id="usuario" type="text" className="input" placeholder="usuario" value={username} onChange={(e) => setUsername(e.target.value)} required />
             </div>
             <div>
-              <label className="label">Email</label>
-              <input type="email" className="input" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <label htmlFor="email" className="label">Email</label>
+              <input id="email" type="email" className="input" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div>
-              <label className="label">Teléfono</label>
-              <input type="tel" className="input" placeholder="+5491123456789" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+              <label htmlFor="telefono" className="label">Teléfono</label>
+              <input id="telefono" type="tel" className="input" placeholder="+5491123456789" value={phone} onChange={(e) => setPhone(e.target.value)} required />
             </div>
             <div>
-              <label className="label">Contraseña</label>
-              <input type="password" className="input" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+              <label htmlFor="contraseña" className="label">Contraseña</label>
+              <input id="contraseña" type="password" className="input" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
               {loading && <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />}

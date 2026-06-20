@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { supabase } from '../models/database';
 import { AuthRequest } from '../middleware/auth';
 
-const CATEGORIES = ['Todos','Streaming','Creatividad','Diseno Grafico','Edicion de Videos','Herramientas','Antivirus','Oficina','Licencia','Monedas de Juegos','Redes Sociales'];
+const CATEGORIES = ['Todos','Streaming','IA','Creatividad','Diseno Grafico','Edicion de Videos','Herramientas','Antivirus','Oficina','Licencia','Monedas de Juegos','Redes Sociales'];
 
 export async function getStoreCategories(_req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -151,6 +151,11 @@ export async function purchaseProduct(req: AuthRequest, res: Response): Promise<
 
     const userCredits = user.credits || 0;
     const price = parseFloat(product.price) || 0;
+
+    if (price <= 0) {
+      res.status(400).json({ error: 'Este producto no esta disponible para compra' });
+      return;
+    }
 
     if (userCredits < price) {
       res.status(400).json({ error: 'Saldo insuficiente' });

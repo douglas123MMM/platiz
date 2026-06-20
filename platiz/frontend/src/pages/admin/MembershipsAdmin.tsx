@@ -45,12 +45,14 @@ export default function MembershipsAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.service || !form.account_email || !form.account_password || !form.client_name || !form.client_phone || !form.expiry_date) {
+    if (!form.service || !form.account_password || !form.client_name || !form.client_phone || !form.expiry_date) {
       toast.error('Completa todos los campos obligatorios'); return;
     }
     try {
       if (editing) {
-        await api.put(`/memberships/${editing.id}`, form);
+        const { account_password, ...rest } = form;
+        const payload = account_password === '[encrypted]' ? rest : form;
+        await api.put(`/memberships/${editing.id}`, payload);
         toast.success('Membresia actualizada');
       } else {
         await api.post('/memberships', form);
@@ -85,6 +87,7 @@ export default function MembershipsAdmin() {
   };
 
   const handleEdit = (m: Membership) => {
+    setEditing(m);
     setForm({
       service: m.service, account_email: m.account_email, account_password: m.account_password,
       profile: m.profile, client_name: m.client_name, client_phone: m.client_phone,
@@ -110,70 +113,74 @@ export default function MembershipsAdmin() {
             <p className="text-sm text-gray-500">{memberships.length} registros &middot; Total ganado: <span className="text-green-400 font-bold">${totalEarnings.toFixed(2)}</span></p>
           </div>
         </div>
-        <button onClick={() => { setShowForm(!showForm); if (editing) resetForm(); }} className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 ${showForm ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20' : 'bg-[#FFD700] text-black hover:bg-[#FFE44D] shadow-[0_4px_16px_rgba(255,215,0,0.15)]'}`}>
+        <button onClick={() => { if (showForm) resetForm(); else setShowForm(true); }} className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-colors duration-200 ${showForm ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20' : 'bg-[#FFD700] text-black hover:bg-[#FFE44D] shadow-[0_4px_16px_rgba(255,215,0,0.15)]'}`}>
           {showForm ? 'Cancelar' : <><HiPlus className="w-5 h-5" /> Nueva Membresia</>}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="rounded-2xl p-6 bg-white/[0.02] border border-white/[0.05] space-y-5 shadow-[0_4px_24px_rgba(0,0,0,0.15)]">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 md:pt-20 p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => resetForm()}>
+          <div className="w-full max-w-4xl my-auto" onClick={(e) => e.stopPropagation()}>
+          <form onSubmit={handleSubmit} className="rounded-2xl p-6 bg-[#0a0a0f] border border-[#FFD700]/10 space-y-5 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Servicio *</label>
-              <input type="text" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Ej: Netflix, Canva Pro, ChatGPT Plus..." list="service-list" required />
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-service">Servicio *</label>
+              <input id="memb-service" type="text" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Ej: Netflix, Canva Pro, ChatGPT Plus..." list="service-list" required />
               <datalist id="service-list">{SERVICES.map((s) => <option key={s} value={s} />)}</datalist>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Correo de la cuenta *</label>
-              <input type="email" value={form.account_email} onChange={(e) => setForm({ ...form, account_email: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="cuenta@email.com" required />
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-account-email">Credenciales de la cuenta</label>
+              <input id="memb-account-email" type="text" value={form.account_email} onChange={(e) => setForm({ ...form, account_email: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Usuario, correo o codigo" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Contraseña *</label>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-account-password">Contraseña *</label>
               <div className="relative">
-                <input type={showPassword ? 'text' : 'password'} value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="w-full px-4 py-2.5 pr-12 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Clave de acceso" required />
+                <input id="memb-account-password" type={showPassword ? 'text' : 'password'} value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="w-full px-4 py-2.5 pr-12 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Clave de acceso" required />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.05] transition-colors text-xs">
                   {showPassword ? 'Ocultar' : 'Mostrar'}
                 </button>
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Perfil</label>
-              <select value={form.profile} onChange={(e) => setForm({ ...form, profile: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors">
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-profile">Perfil</label>
+              <select id="memb-profile" value={form.profile} onChange={(e) => setForm({ ...form, profile: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors">
                 {PROFILES.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Nombre del Cliente *</label>
-              <input type="text" value={form.client_name} onChange={(e) => setForm({ ...form, client_name: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Nombre completo" required />
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-client-name">Nombre del Cliente *</label>
+              <input id="memb-client-name" type="text" value={form.client_name} onChange={(e) => setForm({ ...form, client_name: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Nombre completo" required />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Telefono *</label>
-              <input type="tel" value={formatPhone(form.client_phone)} onChange={(e) => setForm({ ...form, client_phone: e.target.value.replace(/[^\d+]/g, '') })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="+58 414 1234567" maxLength={15} required />
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-client-phone">Telefono *</label>
+              <input id="memb-client-phone" type="tel" value={formatPhone(form.client_phone)} onChange={(e) => setForm({ ...form, client_phone: e.target.value.replace(/[^\d+]/g, '') })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="+58 414 1234567" maxLength={15} required />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Costo ($)</label>
-              <input type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="0.00" step="0.01" min="0" />
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-cost">Costo ($)</label>
+              <input id="memb-cost" type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Fecha de Compra</label>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-purchase-date">Fecha de Compra</label>
               <MiniCalendar value={form.purchase_date} onChange={(d) => setForm({ ...form, purchase_date: d })} min="2020-01-01" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Fecha de Vencimiento *</label>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-expiry-date">Fecha de Vencimiento *</label>
               <MiniCalendar value={form.expiry_date} onChange={(d) => setForm({ ...form, expiry_date: d })} min={form.purchase_date || undefined} />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Estatus</label>
               <div className="flex gap-3">
-                <button type="button" onClick={() => setForm({ ...form, status: 'active' })} className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${form.status === 'active' ? 'bg-green-500 text-white shadow-[0_0_16px_rgba(34,197,94,0.3)]' : 'bg-white/[0.03] text-gray-500 border border-white/5 hover:bg-white/[0.06]'}`}>Activo</button>
-                <button type="button" onClick={() => setForm({ ...form, status: 'inactive' })} className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${form.status === 'inactive' ? 'bg-red-500 text-white shadow-[0_0_16px_rgba(239,68,68,0.3)]' : 'bg-white/[0.03] text-gray-500 border border-white/5 hover:bg-white/[0.06]'}`}>Inactivo</button>
+                <button type="button" onClick={() => setForm({ ...form, status: 'active' })} className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-200 ${form.status === 'active' ? 'bg-green-500 text-white shadow-[0_0_16px_rgba(34,197,94,0.3)]' : 'bg-white/[0.03] text-gray-500 border border-white/5 hover:bg-white/[0.06]'}`}>Activo</button>
+                <button type="button" onClick={() => setForm({ ...form, status: 'inactive' })} className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors duration-200 ${form.status === 'inactive' ? 'bg-red-500 text-white shadow-[0_0_16px_rgba(239,68,68,0.3)]' : 'bg-white/[0.03] text-gray-500 border border-white/5 hover:bg-white/[0.06]'}`}>Inactivo</button>
               </div>
             </div>
           </div>
-          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 min-h-[50px]">
+          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 min-h-[50px]">
             {editing ? 'Actualizar Membresia' : 'Registrar Membresia'}
           </button>
         </form>
+          </div>
+        </div>
       )}
 
       <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
@@ -195,7 +202,7 @@ export default function MembershipsAdmin() {
           {memberships.map((m) => {
             const isExpired = new Date(m.expiry_date + 'T12:00:00') < new Date();
             return (
-              <div key={m.id} className="rounded-2xl bg-white/[0.02] border border-white/[0.04] p-4 sm:p-5 hover:border-[#FFD700]/10 transition-all duration-200 space-y-3">
+              <div key={m.id} className="rounded-2xl bg-white/[0.02] border border-white/[0.04] p-4 sm:p-5 hover:border-[#FFD700]/10 transition-colors duration-200 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -210,7 +217,7 @@ export default function MembershipsAdmin() {
                     <div className="flex items-center gap-3 mt-1.5 text-xs">
                       <span className={`${isExpired ? 'text-red-400 font-semibold' : 'text-gray-500'}`}>Vence: {new Date(m.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                       <span className="text-[#FFD700] font-bold">${(m.cost || 0).toFixed(2)}</span>
-                      <button onClick={() => { const newStatus = m.status === 'active' ? 'inactive' : 'active'; api.put(`/memberships/${m.id}`, { status: newStatus }).then(() => setMemberships((p) => p.map((x) => x.id === m.id ? { ...x, status: newStatus } : x))).catch(() => toast.error('Error')); }} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all duration-200 ${m.status === 'active' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-red-500/15 text-red-400 border border-red-500/25'}`}>
+                      <button onClick={() => { const newStatus = m.status === 'active' ? 'inactive' : 'active'; api.put(`/memberships/${m.id}`, { status: newStatus }).then(() => setMemberships((p) => p.map((x) => x.id === m.id ? { ...x, status: newStatus } : x))).catch(() => toast.error('Error')); }} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-colors duration-200 ${m.status === 'active' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-red-500/15 text-red-400 border border-red-500/25'}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${m.status === 'active' ? 'bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.8)]'}`} />
                         {m.status === 'active' ? 'Activo' : 'Inactivo'}
                       </button>
@@ -218,13 +225,13 @@ export default function MembershipsAdmin() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 pt-2 border-t border-white/[0.03]">
-                  <button onClick={() => openReminder(m)} className="flex-1 py-2.5 rounded-xl text-xs font-bold bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-[0.97]">
+                  <button onClick={() => openReminder(m)} className="flex-1 py-2.5 rounded-xl text-xs font-bold bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-colors duration-200 flex items-center justify-center gap-1.5 active:scale-[0.97]">
                     <HiPhone className="w-4 h-4" /> Recordatorio
                   </button>
-                  <button onClick={() => handleEdit(m)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10 border border-white/[0.04] transition-all duration-200 active:scale-[0.97]">
+                  <button onClick={() => handleEdit(m)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10 border border-white/[0.04] transition-colors duration-200 active:scale-[0.97]">
                     <HiPencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(m.id)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-red-400 hover:bg-red-500/10 border border-white/[0.04] transition-all duration-200 active:scale-[0.97]">
+                  <button onClick={() => handleDelete(m.id)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-red-400 hover:bg-red-500/10 border border-white/[0.04] transition-colors duration-200 active:scale-[0.97]">
                     <HiTrash className="w-4 h-4" />
                   </button>
                 </div>
@@ -238,7 +245,7 @@ export default function MembershipsAdmin() {
         <>
           <div className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm" onClick={() => setReminder({ show: false, membership: null, message: '' })} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6 animate-slide-down">
+            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6 animate-slide-down" role="dialog" aria-modal="true" aria-label="Enviar Recordatorio">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-bold text-white">Enviar Recordatorio</h3>
                 <button onClick={() => setReminder({ show: false, membership: null, message: '' })} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors">
@@ -269,8 +276,9 @@ export default function MembershipsAdmin() {
                 </div>
               </div>
 
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Mensaje (puedes editarlo)</label>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2" htmlFor="reminder-message">Mensaje (puedes editarlo)</label>
               <textarea
+                id="reminder-message"
                 value={reminder.message}
                 onChange={(e) => setReminder({ ...reminder, message: e.target.value })}
                 className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors resize-none"
@@ -279,11 +287,11 @@ export default function MembershipsAdmin() {
 
               <div className="flex gap-3 mt-5">
                 <button onClick={() => setReminder({ show: false, membership: null, message: '' })}
-                  className="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.04] transition-all duration-200">
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.04] transition-colors duration-200">
                   Cancelar
                 </button>
                 <button onClick={sendWhatsApp}
-                  className="flex-1 py-3 rounded-xl text-sm font-bold bg-green-500 text-white hover:bg-green-600 shadow-[0_4px_16px_rgba(34,197,94,0.2)] transition-all duration-200 flex items-center justify-center gap-2">
+                  className="flex-1 py-3 rounded-xl text-sm font-bold bg-green-500 text-white hover:bg-green-600 shadow-[0_4px_16px_rgba(34,197,94,0.2)] transition-colors duration-200 flex items-center justify-center gap-2">
                   <HiPhone className="w-4 h-4" />
                   Enviar por WhatsApp
                 </button>

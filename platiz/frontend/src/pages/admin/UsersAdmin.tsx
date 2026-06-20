@@ -145,9 +145,10 @@ export default function UsersAdmin() {
       </div>
       {passModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setPassModal(null)}>
-          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Cambiar Contrasena">
             <h3 className="text-white font-bold mb-4">Cambiar Contrasena</h3>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white mb-4"
+            <label className="label" htmlFor="new-password">Nueva contrasena</label>
+            <input id="new-password" className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white mb-4"
               type="text" placeholder="Nueva contrasena (min 6 caracteres)"
               value={newPass} onChange={e => setNewPass(e.target.value)} />
             <div className="flex gap-3">

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import api from '../services/api';
 import { ContentItem } from '../types';
-import { IconExternalLink, IconPhoto, IconPlay, IconSearch } from '../icons/PremiumIcons';
+import { IconExternalLink, IconPhoto, IconPlay, IconSearch, IconClose } from '../icons/PremiumIcons';
 import { SectionStreaming, IconCourses, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate } from '../icons/PremiumIcons';
 import IPTVPlayer from '../components/IPTVPlayer';
 
@@ -18,6 +18,7 @@ const sectionMeta: Record<string, { title: string; icon: React.FC<{ className?: 
   'plr-pro': { title: 'PLR PRO', icon: SectionBooks, subtitle: 'Guías con derechos de reventa maestra listas para personalizar y vender' },
   programas: { title: 'Programas', icon: SectionServices, subtitle: 'Software profesional y herramientas digitales para tu negocio' },
   editables: { title: 'Editables', icon: SectionBooks, subtitle: 'Plantillas y recursos editables para crear contenido profesional' },
+  ia: { title: 'Inteligencia Artificial', icon: SectionServices, subtitle: 'ChatGPT, Gemini, Claude, Perplexity y las mejores IAs del mercado' },
 };
 
 export default function SectionPage() {
@@ -30,7 +31,7 @@ export default function SectionPage() {
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: '📄', subtitle: '' };
+  const meta = sectionMeta[slug || ''] || { title: 'Sección', icon: ({ className, size }: { className?: string; size?: number }) => <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className || ''}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>, subtitle: '' };
 
   // Buscar usa el endpoint de busqueda global (server-side)
   const searchItems = async (q: string) => {
@@ -77,8 +78,8 @@ export default function SectionPage() {
 
   return (
     <div className="space-y-8 animate-fade-in relative">
-      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[400px] h-[400px] bg-[#00D4FF]/5 rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute top-0 right-1/4 translate-x-1/2 w-[400px] h-[400px] bg-[#A855F7]/5 rounded-full blur-[80px] pointer-events-none" />
+      <div aria-hidden="true" className="absolute top-0 left-1/4 -translate-x-1/2 w-[400px] h-[400px] bg-[#00D4FF]/5 rounded-full blur-[80px] pointer-events-none" />
+      <div aria-hidden="true" className="absolute top-0 right-1/4 translate-x-1/2 w-[400px] h-[400px] bg-[#A855F7]/5 rounded-full blur-[80px] pointer-events-none" />
       <div className="text-center relative z-10">
         <meta.icon className="w-14 h-14 text-[#FFD700] mx-auto mb-4" />
         <h1 className="section-title">{meta.title}</h1>
@@ -98,11 +99,11 @@ export default function SectionPage() {
               placeholder="Buscar guías..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-12 pr-12 py-3 bg-[#0a0a0f] border border-[#FFD700]/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 transition-all"
+              className="w-full pl-12 pr-12 py-3 bg-[#0a0a0f] border border-[#FFD700]/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 transition-colors"
             />
             {query && (
-              <button onClick={() => setQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 text-xs">
-                ✕
+              <button onClick={() => setQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20">
+                <IconClose className="w-3 h-3" />
               </button>
             )}
           </div>

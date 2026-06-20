@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate, requireAdmin } from '../middleware/auth';
-import { upload } from '../utils/upload';
+import { upload, uploadVideo } from '../utils/upload';
 import {
   getDashboard,
   updateProfile,
@@ -12,6 +12,7 @@ import {
   adminUpdateCredits,
   adminReferralHistory,
   adminUpdateLandingConfig,
+  uploadLandingVideo,
   submitPaymentProof,
   adminListProofs,
   adminUpdateProof,
@@ -37,7 +38,15 @@ router.post('/referrals/:referralId/approve', approveReferral);
 router.get('/admin/affiliates', requireAdmin, adminListAffiliates);
 router.put('/admin/credits/:userId', requireAdmin, adminUpdateCredits);
 router.get('/admin/history', requireAdmin, adminReferralHistory);
+router.get('/admin/landing-config', requireAdmin, (async (req: any, res: any) => {
+  try {
+    const { supabase } = require('../models/database');
+    const { data } = await supabase.from('settings').select('landing_config').maybeSingle();
+    res.json(data?.landing_config || {});
+  } catch { res.status(500).json({ error: 'Error' }); }
+}) as any);
 router.put('/admin/landing-config', requireAdmin, adminUpdateLandingConfig);
+router.post('/admin/upload-landing-video', requireAdmin, uploadVideo.single('video'), uploadLandingVideo);
 router.get('/admin/proofs', requireAdmin, adminListProofs);
 router.patch('/admin/proofs/:id', requireAdmin, adminUpdateProof);
 

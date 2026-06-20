@@ -78,13 +78,13 @@ export default function PartnersAdmin() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
-          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={editId ? 'Editar Socio' : 'Nuevo Socio'}>
             <h2 className="text-xl font-bold text-white mb-6">{editId ? 'Editar' : 'Nuevo'} Socio</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div><label className="label">Nombre</label><input className="input" placeholder="Nombre del socio" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></div>
-              <div><label className="label">Rol / Cargo</label><input className="input" placeholder="Ej: Fundador, Líder, Mentor..." value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} /></div>
-              <div><label className="label">Enlace (opcional)</label><input className="input" placeholder="https://..." value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} /></div>
-              <div><label className="label">Foto del socio</label><input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20" /></div>
+              <div><label className="label" htmlFor="partner-name">Nombre</label><input id="partner-name" className="input" placeholder="Nombre del socio" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></div>
+              <div><label className="label" htmlFor="partner-role">Rol / Cargo</label><input id="partner-role" className="input" placeholder="Ej: Fundador, Líder, Mentor..." value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} /></div>
+              <div><label className="label" htmlFor="partner-link">Enlace (opcional)</label><input id="partner-link" className="input" placeholder="https://..." value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} /></div>
+              <div><label className="label" htmlFor="partner-photo">Foto del socio</label><input id="partner-photo" type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20" /></div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="btn-primary flex-1">{saving ? 'Guardando...' : editId ? 'Actualizar' : 'Crear'}</button>
                 <button type="button" onClick={resetForm} className="btn-secondary flex-1">Cancelar</button>

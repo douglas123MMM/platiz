@@ -34,6 +34,7 @@ import Recharge from './pages/Recharge';
 import Purchases from './pages/Purchases';
 import RechargesAdmin from './pages/admin/RechargesAdmin';
 import PurchasesAdmin from './pages/admin/PurchasesAdmin';
+import LandingConfigAdmin from './pages/admin/LandingConfigAdmin';
 
 function LoadingScreen() {
   return (
@@ -78,6 +79,7 @@ export default function App() {
         <Route path="/programas" element={<SectionPage />} />
         <Route path="/editables" element={<SectionPage />} />
         <Route path="/plr-pro" element={<SectionPage />} />
+        <Route path="/ia" element={<SectionPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/soporte" element={<SupportChat />} />
@@ -104,6 +106,7 @@ export default function App() {
         <Route path="/admin/transactions" element={<TransactionsAdmin />} />
         <Route path="/admin/recharges" element={<RechargesAdmin />} />
         <Route path="/admin/purchases" element={<PurchasesAdmin />} />
+        <Route path="/admin/landing-config" element={<LandingConfigAdmin />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -220,9 +220,9 @@ export default function AffiliatesAdmin() {
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="URL del video (YouTube, Vimeo, Drive)" value={lcVideoUrl} onChange={e => setLcVideoUrl(e.target.value)} />
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">O subir video desde el ordenador (MP4 H.264 - max 200MB)</label>
+              <label className="text-xs text-gray-500 mb-1 block" htmlFor="landing-video-file">O subir video desde el ordenador (MP4 H.264 - max 200MB)</label>
               <div className="flex gap-2 items-center">
-                <input type="file" accept="video/*" onChange={async (e) => {
+                <input id="landing-video-file" type="file" accept="video/*" onChange={async (e) => {
                   const f = e.target.files?.[0];
                   if (!f) return;
                   setUploadingVideo(true);
@@ -247,8 +247,8 @@ export default function AffiliatesAdmin() {
               placeholder="Precio (ej: $25 USDT)" value={lcPrice} onChange={e => setLcPrice(e.target.value)} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="Texto del boton (ej: Quiero Registrarme)" value={lcCta} onChange={e => setLcCta(e.target.value)} />
-            <label className="flex items-center gap-2 text-sm text-gray-400">
-              <input type="checkbox" checked={lcShowForm} onChange={e => setLcShowForm(e.target.checked)} />
+            <label className="flex items-center gap-2 text-sm text-gray-400" htmlFor="landing-show-form">
+              <input id="landing-show-form" type="checkbox" checked={lcShowForm} onChange={e => setLcShowForm(e.target.checked)} />
               Mostrar formulario de registro
             </label>
             <button onClick={saveLandingConfig} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">

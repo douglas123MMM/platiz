@@ -11,8 +11,8 @@ export default {
         emerald: { 400: '#34D399', 500: '#10B981' },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Playfair Display', 'Georgia', 'serif'],
+        sans: ['Jost', 'system-ui', 'sans-serif'],
+        display: ['Bodoni Moda', 'Georgia', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
@@ -23,6 +23,8 @@ export default {
         'glow-gold': 'glowGold 2s ease-in-out infinite alternate',
         'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
         'shimmer': 'shimmer 3s ease-in-out infinite',
+        'liquid-morph': 'liquidMorph 8s ease-in-out infinite',
+        'aurora': 'aurora 8s linear infinite',
       },
       keyframes: {
         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
@@ -32,6 +34,8 @@ export default {
         glowGold: { '0%': { boxShadow: '0 0 5px rgba(255, 215, 0, 0.3)' }, '100%': { boxShadow: '0 0 25px rgba(255, 215, 0, 0.6)' } },
         pulseSoft: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0.7' } },
         shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+        liquidMorph: { '0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }, '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' } },
+        aurora: { '0%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' }, '100%': { backgroundPosition: '0% 50%' } },
       },
     },
   },

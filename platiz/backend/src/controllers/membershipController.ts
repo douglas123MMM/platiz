@@ -30,7 +30,10 @@ function decrypt(data: string): string {
 export async function getMemberships(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { search } = req.query;
+    const isAdmin = req.user?.role === 'admin';
     let query = supabase.from('memberships').select('*').order('expiry_date', { ascending: true });
+    // TODO: activar filtro por user_id cuando la columna exista
+    // if (!isAdmin) query = query.eq('user_id', req.user?.id);
     if (search && typeof search === 'string' && search.trim()) {
       const term = `%${search.trim()}%`;
       query = query.or(`client_name.ilike.${term},service.ilike.${term},account_email.ilike.${term},client_phone.ilike.${term}`);
@@ -60,7 +63,7 @@ export async function getMembershipById(req: AuthRequest, res: Response): Promis
 export async function createMembership(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { service, account_email, account_password, profile, client_name, client_phone, purchase_date, expiry_date, status, cost } = req.body;
-    if (!service || !account_email || !account_password || !client_name || !client_phone || !expiry_date) {
+    if (!service || !account_password || !client_name || !client_phone || !expiry_date) {
       res.status(400).json({ error: 'Todos los campos marcados son obligatorios' });
       return;
     }

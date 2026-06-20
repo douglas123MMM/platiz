@@ -188,7 +188,7 @@ export default function PurchasesAdmin() {
         <>
           <div className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm" onClick={() => setReminder({ show: false, purchase: null, message: '' })} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6">
+            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6" role="dialog" aria-modal="true" aria-label="Enviar Recordatorio">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-bold text-white">Enviar Recordatorio</h3>
                 <button onClick={() => setReminder({ show: false, purchase: null, message: '' })} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors">
@@ -217,8 +217,9 @@ export default function PurchasesAdmin() {
                 </div>
               </div>
 
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Mensaje</label>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2" htmlFor="purchase-reminder-message">Mensaje</label>
               <textarea
+                id="purchase-reminder-message"
                 value={reminder.message}
                 onChange={(e) => setReminder({ ...reminder, message: e.target.value })}
                 className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors resize-none"
@@ -227,12 +228,12 @@ export default function PurchasesAdmin() {
 
               <div className="flex gap-3 mt-5">
                 <button onClick={() => setReminder({ show: false, purchase: null, message: '' })}
-                  className="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.04] transition-all duration-200">
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:text-white hover:bg-white/[0.04] transition-colors duration-200">
                   Cancelar
                 </button>
                 <button onClick={sendWhatsApp}
                   disabled={!reminder.purchase?.user?.phone}
-                  className="flex-1 py-3 rounded-xl text-sm font-bold bg-green-500 text-white hover:bg-green-600 shadow-[0_4px_16px_rgba(34,197,94,0.2)] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                  className="flex-1 py-3 rounded-xl text-sm font-bold bg-green-500 text-white hover:bg-green-600 shadow-[0_4px_16px_rgba(34,197,94,0.2)] transition-colors duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
                   Enviar por WhatsApp
                 </button>

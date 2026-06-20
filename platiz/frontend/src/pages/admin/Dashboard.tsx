@@ -64,6 +64,7 @@ export default function AdminDashboard() {
               { label: 'Gestionar Banners', href: '/admin/banners', desc: 'Sube imágenes promocionales' },
               { label: 'Configurar IAs', href: '/admin/ai', desc: 'Conecta ChatGPT, Gemini, Claude y más' },
               { label: 'Gestionar Transmisiones', href: '/admin/streams', desc: 'Transmisiones en vivo y videos de múltiples plataformas' },
+              { label: 'Landing Afiliados', href: '/admin/landing-config', desc: 'Video, texto y configuracion de la landing de afiliados' },
             ].map((item) => (
               <Link key={item.href} to={item.href} className="flex items-center justify-between p-3 rounded-xl bg-[#111]/50 hover:bg-[#111] transition-colors group">
                 <div>
@@ -81,7 +82,7 @@ export default function AdminDashboard() {
           <h3 className="text-lg font-semibold text-white mb-4">Estadísticas Global Dorado</h3>
           <p className="text-gray-500 text-sm">El panel de estadísticas detalladas estará disponible próximamente.</p>
           <div className="mt-6 p-4 bg-[#FFD700]/5 rounded-xl border border-[#FFD700]/10">
-            <p className="text-[#FFD700] text-sm font-medium">💡 Recuerda:</p>
+            <p className="text-[#FFD700] text-sm font-medium flex items-center gap-2"><IconLightning className="w-4 h-4" /> Recuerda:</p>
             <p className="text-gray-400 text-xs mt-1">Los socios ganan el 80% de comisión directa por cada venta del acceso vitalicio al sistema.</p>
           </div>
         </div>

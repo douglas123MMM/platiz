@@ -59,13 +59,13 @@ export default function MiniCalendar({ value, onChange, min }: Props) {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute z-50 mt-2 w-72 bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-4 animate-slide-down">
             <div className="flex items-center justify-between mb-4">
-              <button type="button" onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors"><HiChevronLeft className="w-5 h-5" /></button>
+              <button type="button" onClick={prevMonth} aria-label="Mes anterior" className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors"><HiChevronLeft className="w-5 h-5" /></button>
               <span className="text-white font-semibold text-sm">{MONTHS[month]} {year}</span>
-              <button type="button" onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors"><HiChevronRight className="w-5 h-5" /></button>
+              <button type="button" onClick={nextMonth} aria-label="Mes siguiente" className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors"><HiChevronRight className="w-5 h-5" /></button>
             </div>
 
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {DAYS.map((d) => <div key={d} className="text-center text-[10px] font-semibold text-gray-600 uppercase py-1">{d}</div>)}
+              {DAYS.map((d) => <div key={d} className="text-center text-[10px] font-semibold text-gray-400 uppercase py-1">{d}</div>)}
               {Array.from({ length: firstDay }).map((_, i) => <div key={`e${i}`} />)}
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const day = i + 1;

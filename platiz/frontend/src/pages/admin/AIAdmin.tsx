@@ -54,28 +54,28 @@ export default function AIAdmin() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
-          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={editId ? 'Editar Proveedor IA' : 'Conectar Proveedor IA'}>
             <h2 className="text-xl font-bold text-white mb-6">{editId ? 'Editar' : 'Conectar'} Proveedor IA</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="label">Nombre</label>
-                <input className="input" placeholder="Ej: OpenAI, Google Gemini, Anthropic Claude..." value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+                <label className="label" htmlFor="ai-name">Nombre</label>
+                <input id="ai-name" className="input" placeholder="Ej: OpenAI, Google Gemini, Anthropic Claude..." value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div>
-                <label className="label">API URL</label>
-                <input className="input" placeholder="https://api.openai.com/v1/chat/completions" value={form.api_url} onChange={(e) => setForm({ ...form, api_url: e.target.value })} required />
+                <label className="label" htmlFor="ai-api-url">API URL</label>
+                <input id="ai-api-url" className="input" placeholder="https://api.openai.com/v1/chat/completions" value={form.api_url} onChange={(e) => setForm({ ...form, api_url: e.target.value })} required />
               </div>
               <div>
-                <label className="label">API Key</label>
-                <input className="input" placeholder="sk-..." value={form.api_key} onChange={(e) => setForm({ ...form, api_key: e.target.value })} />
+                <label className="label" htmlFor="ai-api-key">API Key</label>
+                <input id="ai-api-key" className="input" placeholder="sk-..." value={form.api_key} onChange={(e) => setForm({ ...form, api_key: e.target.value })} />
               </div>
               <div>
-                <label className="label">Modelo (opcional)</label>
-                <input className="input" placeholder="gpt-4, gemini-pro, claude-3, perplexity..." value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
+                <label className="label" htmlFor="ai-model">Modelo (opcional)</label>
+                <input id="ai-model" className="input" placeholder="gpt-4, gemini-pro, claude-3, perplexity..." value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
               </div>
               <div>
-                <label className="label">System Prompt (instrucciones para la IA)</label>
-                <textarea className="textarea min-h-[150px]" placeholder="Eres un asistente de Global Dorado. Ayudas a clientes con precios, pagos..." value={form.system_prompt} onChange={(e) => setForm({ ...form, system_prompt: e.target.value })} />
+                <label className="label" htmlFor="ai-system-prompt">System Prompt (instrucciones para la IA)</label>
+                <textarea id="ai-system-prompt" className="textarea min-h-[150px]" placeholder="Eres un asistente de Global Dorado. Ayudas a clientes con precios, pagos..." value={form.system_prompt} onChange={(e) => setForm({ ...form, system_prompt: e.target.value })} />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Conectando...' : editId ? 'Actualizar' : 'Conectar'}</button>

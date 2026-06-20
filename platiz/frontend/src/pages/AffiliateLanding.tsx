@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useParams, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
+import { IconCheckCircle, IconUsers } from '../icons/PremiumIcons';
 
 interface Affiliate {
   display_name: string;
@@ -95,7 +97,7 @@ export default function AffiliateLanding() {
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f] p-4">
         <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-8 max-w-md w-full text-center">
           <div className="w-16 h-16 rounded-full bg-[#FFD700] flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">✅</span>
+            <IconCheckCircle className="text-[#0a0a0f]" size={40} />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">Registro Exitoso</h2>
           <p className="text-gray-400 text-sm mb-4">{msg}</p>
@@ -108,11 +110,11 @@ export default function AffiliateLanding() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] animate-fade-in">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} className="min-h-screen bg-[#0a0a0f] animate-fade-in">
       {/* Header */}
       <div className="bg-gradient-to-b from-black to-transparent py-6 text-center px-4">
         <h1 className="text-2xl font-bold text-[#FFD700]">{page?.title || 'Global Dorado'}</h1>
-        <p className="text-gray-500 text-xs mt-1">{page?.subtitle}</p>
+        <p className="text-gray-400 text-xs mt-1">{page?.subtitle}</p>
       </div>
 
       {/* Video */}
@@ -151,13 +153,13 @@ export default function AffiliateLanding() {
         <div className="text-center px-4 mb-8">
           <div className="w-16 h-16 rounded-full bg-[#FFD700]/20 flex items-center justify-center mx-auto mb-2">
             {affiliate.avatar ? (
-              <img src={affiliate.avatar} alt="" className="w-16 h-16 rounded-full object-cover" />
+              <img src={affiliate.avatar} alt="" className="w-16 h-16 rounded-full object-cover" loading="lazy" />
             ) : (
-              <span className="text-3xl">👤</span>
+              <IconUsers className="text-[#FFD700]" size={32} />
             )}
           </div>
           <h2 className="text-white font-bold">{affiliate.display_name || 'Global Dorado'}</h2>
-          <p className="text-gray-500 text-xs">Tu asesor personal</p>
+          <p className="text-gray-400 text-xs">Tu asesor personal</p>
           {/* Social media links - solo iconos */}
           {(affiliate.instagram || affiliate.tiktok || affiliate.facebook || affiliate.youtube) && (
             <div className="flex justify-center gap-2 mt-3">
@@ -229,7 +231,7 @@ export default function AffiliateLanding() {
           {page?.show_form !== false && (
             !showForm ? (
               <button onClick={() => setShowForm(true)}
-                className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] transition-colors">
+                className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] transition-colors cursor-pointer">
                 {page?.cta_text || 'Quiero Registrarme'}
               </button>
             ) : (
@@ -253,12 +255,12 @@ export default function AffiliateLanding() {
                   className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] transition-colors disabled:opacity-50">
                   {loading ? 'Registrando...' : 'Registrarme'}
                 </button>
-                <button type="button" onClick={() => setShowForm(false)} className="w-full py-2 text-gray-500 text-sm hover:text-gray-300">Cancelar</button>
+                <button type="button" onClick={() => setShowForm(false)} className="w-full py-2 text-gray-400 text-sm hover:text-gray-300">Cancelar</button>
               </form>
             )
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

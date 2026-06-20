@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { IconMovies, IconVideo } from '../icons/PremiumIcons';
 
 interface Channel { stream_id: number; name: string; stream_icon?: string; category_id: string; }
 interface Vod { stream_id: number; name: string; stream_icon?: string; category_id: string; }
@@ -155,7 +156,9 @@ export default function ZonaVIP() {
                   {ch.stream_icon ? (
                     <img src={ch.stream_icon} alt="" className="w-full h-20 object-contain mb-1 rounded bg-black/50 group-hover:scale-105 transition-transform" loading="lazy" onError={e => { e.currentTarget.style.display = 'none'; }} />
                   ) : (
-                    <div className="w-full h-20 mb-1 rounded bg-black/30 flex items-center justify-center text-2xl text-gray-600">{tab === 'vod' ? '🎬' : tab === 'series' ? '📺' : '📡'}</div>
+                    <div className="w-full h-20 mb-1 rounded bg-black/30 flex items-center justify-center text-gray-600">
+                      {tab === 'vod' ? <IconMovies className="w-8 h-8" /> : tab === 'series' ? <IconVideo className="w-8 h-8" /> : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" opacity="0.5"/></svg>}
+                    </div>
                   )}
                   <p className="text-white text-xs line-clamp-2 leading-tight">{ch.name}</p>
                 </button>

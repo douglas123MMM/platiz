@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
 import FloatingButtons from '../components/FloatingButtons';
-import { HiArrowRight, HiChevronDown, HiPlay } from 'react-icons/hi';
-import { IconLightning, IconStar, IconShield, IconGlobe, IconCheck } from '../icons/PremiumIcons';
-import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat } from '../icons/PremiumIcons';
+import { IconArrowRight, IconChevronDown, IconPlay, IconLightning, IconStar, IconShield, IconGlobe, IconCheck } from '../icons/PremiumIcons';
+import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat, IconEducation, IconTools, IconRobot, IconVideo, IconUsers } from '../icons/PremiumIcons';
 
 const features = [
   { title: '80% Comisión Directa', desc: 'Gana el 80% por cada venta del acceso vitalicio al sistema.', icon: IconLightning },
@@ -36,6 +36,9 @@ const arsenalItems = [
 
 export default function LandingPage() {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fadeIn = prefersReducedMotion ? {} : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.8 } };
+  const reveal = prefersReducedMotion ? {} : { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-100px" }, transition: { duration: 0.6 } };
   const [partners, setPartners] = useState<any[]>([]);
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
 
@@ -49,7 +52,7 @@ export default function LandingPage() {
   return (
     <div className="bg-[#0a0a0f] text-white overflow-hidden">
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0">
+      <motion.section {...fadeIn} className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.08),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,180,255,0.04),transparent_50%)]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700]/[0.04] rounded-full blur-[120px]" />
@@ -73,15 +76,15 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
             <Link to="/register" className="group inline-flex items-center gap-2 px-10 py-4 bg-[#FFD700] text-black font-bold rounded-2xl text-lg hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_24px_rgba(255,215,0,0.25)] hover:shadow-[0_6px_32px_rgba(255,215,0,0.35)] min-h-[56px]">
               Comenzar ahora
-              <HiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <button onClick={() => scrollTo('info')} className="group inline-flex items-center gap-2 px-10 py-4 border border-white/10 text-gray-300 font-semibold rounded-2xl text-lg hover:bg-white/5 hover:border-white/20 hover:text-white active:scale-[0.98] transition-all duration-200 backdrop-blur-sm min-h-[56px]">
               Conocer más
-              <HiChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+              <IconChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
             </button>
           </div>
 
-          <div className="mt-16 flex items-center justify-center gap-8 text-sm text-gray-500 animate-fade-in">
+          <div className="mt-16 flex items-center justify-center gap-8 text-sm text-gray-400 animate-fade-in">
             <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> Acceso Vitalicio</span>
             <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> 80% Comisión</span>
             <span className="flex items-center gap-2"><IconCheck className="w-4 h-4 text-[#FFD700]" /> Soporte 24/7</span>
@@ -115,11 +118,9 @@ export default function LandingPage() {
             </div>
           )}
         </div>
-      </section>
-
-      {/* VALUE PROPOSITION */}
+      </motion.section>
       {/* Features */}
-      <section id="info" className="relative py-24 md:py-32">
+      <motion.section {...reveal} id="info" className="relative py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4 gold-text">¿Qué es Global Dorado?</h2>
@@ -152,14 +153,14 @@ export default function LandingPage() {
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* THE METHOD */}
-      <section className="relative py-24 md:py-32">
+      <motion.section {...reveal} className="relative py-24 md:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-16">
-            <h2 className="section-title text-4xl md:text-5xl mb-4">🎓 Sistema de Capacitación</h2>
+            <h2 className="section-title text-4xl md:text-5xl mb-4"><IconEducation className="w-6 h-6 text-[#FFD700] inline mr-2" />Sistema de Capacitación</h2>
             <p className="section-subtitle text-lg">El Método Global Dorado</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -187,13 +188,13 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CATALOG PREVIEW */}
-      <section className="relative py-24 md:py-32">
+      <motion.section {...reveal} className="relative py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="section-title text-4xl md:text-5xl mb-4">🛠️ El Arsenal Digital</h2>
+            <h2 className="section-title text-4xl md:text-5xl mb-4"><IconTools className="w-6 h-6 text-[#FFD700] inline mr-2" />El Arsenal Digital</h2>
             <p className="section-subtitle text-lg">La biblioteca de software y servicios digitales más grande del mercado</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -223,10 +224,10 @@ export default function LandingPage() {
             </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* AI CHAT */}
-      <section className="relative py-24 md:py-32">
+      <motion.section {...reveal} className="relative py-24 md:py-32">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="glass rounded-3xl p-10 md:p-16 border border-[#FFD700]/10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl" />
@@ -235,7 +236,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#FFD700]/20">
                 <IconChat className="w-8 h-8 text-white" />
               </div>
-              <h2 className="section-title text-3xl md:text-4xl mb-4">🤖 Chat con IA Integrado</h2>
+              <h2 className="section-title text-3xl md:text-4xl mb-4"><IconRobot className="w-6 h-6 text-[#FFD700] inline mr-2" />Chat con IA Integrado</h2>
               <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
                 Conecta con múltiples proveedores de IA desde un solo lugar. 
                 <strong className="text-[#FFD700]"> ChatGPT Plus, Gemini, Perplexity, Claude</strong> y más — 
@@ -244,14 +245,14 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* LANDING VIDEOS */}
       {landingVideos.length > 0 && (
-        <section className="relative py-24 md:py-32">
+        <motion.section {...reveal} className="relative py-24 md:py-32">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="section-title text-4xl md:text-5xl mb-4">🎥 Contenido Exclusivo</h2>
+              <h2 className="section-title text-4xl md:text-5xl mb-4"><IconVideo className="w-6 h-6 text-[#FFD700] inline mr-2" />Contenido Exclusivo</h2>
               <p className="section-subtitle text-lg">Descubre nuestro contenido en video</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -259,15 +260,15 @@ export default function LandingPage() {
                 <div key={v.id} className="glass rounded-2xl overflow-hidden border border-[#FFD700]/10 hover:border-[#FFD700]/20 transition-all group">
                   <div className="relative" style={{ aspectRatio: '16/9' }}>
                     {v.thumbnail_url ? (
-                      <img src={v.thumbnail_url} alt={v.title} className="absolute inset-0 w-full h-full object-cover" />
+                      <img loading="lazy" src={v.thumbnail_url} alt={v.title} className="absolute inset-0 w-full h-full object-cover" />
                     ) : (
                       <div className="absolute inset-0 bg-[#111] flex items-center justify-center">
-                        <HiPlay className="w-16 h-16 text-[#FFD700]/30 group-hover:text-[#FFD700]/60 transition-colors" />
+                        <IconPlay className="w-16 h-16 text-[#FFD700]/30 group-hover:text-[#FFD700]/60 transition-colors" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
                       <div className="w-16 h-16 rounded-full bg-[#FFD700]/20 backdrop-blur flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <HiPlay className="w-8 h-8 text-white ml-1" />
+                        <IconPlay className="w-8 h-8 text-white ml-1" />
                       </div>
                     </div>
                   </div>
@@ -282,16 +283,16 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
       )}
 
       {/* SOCIOS */}
       {partners.length > 0 && (
-        <section className="relative py-24 md:py-32">
+        <motion.section {...reveal} className="relative py-24 md:py-32">
           <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="text-center mb-12">
-              <h2 className="section-title text-4xl md:text-5xl mb-4">👥 Nuestros Socios</h2>
+              <h2 className="section-title text-4xl md:text-5xl mb-4"><IconUsers className="w-6 h-6 text-[#FFD700] inline mr-2" />Nuestros Socios</h2>
               <p className="section-subtitle text-lg">Conoce al equipo que transforma el internet en dinero</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -299,7 +300,7 @@ export default function LandingPage() {
                 <div key={p.id} className="glass rounded-2xl p-6 text-center border border-[#FFD700]/10 hover:border-[#FFD700]/20 transition-all group">
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden ring-2 ring-[#FFD700]/20 group-hover:ring-[#FFD700]/40 transition-all">
                     {p.photo_url ? (
-                      <img src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
+                      <img loading="lazy" src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center text-2xl font-bold text-black">
                         {p.name.charAt(0).toUpperCase()}
@@ -312,11 +313,11 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
       )}
 
       {/* CTA FINAL */}
-      <section className="relative py-24 md:py-32">
+      <motion.section {...reveal} className="relative py-24 md:py-32">
         <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 via-transparent to-transparent" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <h2 className="section-title text-4xl md:text-6xl mb-6">¿Listo para transformar el internet en dinero?</h2>
@@ -326,16 +327,14 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/register" className="btn-primary text-lg px-12 py-5 inline-flex items-center gap-3 group">
-              Crear cuenta gratis <HiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              Crear cuenta gratis <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link to="/login" className="btn-secondary text-lg px-12 py-5 inline-flex items-center gap-2">
               Iniciar sesión
             </Link>
           </div>
         </div>
-      </section>
-
-      {/* FOOTER */}
+      </motion.section>
       <footer className="border-t border-[#FFD700]/10 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">

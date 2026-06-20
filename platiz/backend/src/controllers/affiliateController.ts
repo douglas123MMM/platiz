@@ -178,7 +178,7 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
       .from('items')
       .select('id, category_slug, title, description, image_url, link, video_url, sort_order')
       .eq('active', 1)
-      .in('category_slug', ['services', 'movies'])
+      .in('category_slug', ['services', 'movies', 'ia'])
       .order('sort_order', { ascending: true });
 
     // Productos de la tienda activos
@@ -188,17 +188,20 @@ export async function getCatalog(_req: AuthRequest, res: Response): Promise<void
       .eq('active', true)
       .order('created_at', { ascending: false });
 
-    // Mapear store_products al formato del catalogo
-    const storeItems = (store || []).map((p: any) => ({
-      id: `store_${p.id}`,
-      category_slug: p.category || 'servicios',
-      title: p.title,
-      description: p.description || '',
-      image_url: p.image_url || '',
-      link: '',
-      video_url: '',
-      sort_order: 0,
-    }));
+    // Mapear store_products al formato del catalogo (sin precios, sin duplicados)
+    const itemTitles = new Set((items || []).map((i: any) => i.title.toLowerCase().trim()));
+    const storeItems = (store || [])
+      .filter((p: any) => !itemTitles.has(p.title.toLowerCase().trim()))
+      .map((p: any) => ({
+        id: `store_${p.id}`,
+        category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
+        title: p.title,
+        description: p.description || '',
+        image_url: p.image_url || '',
+        link: '',
+        video_url: '',
+        sort_order: 0,
+      }));
 
     const merged = [...(items || []), ...storeItems];
     res.json(merged);
@@ -411,6 +414,20 @@ export async function adminUpdateProof(req: AuthRequest, res: Response): Promise
     await supabase.from('payment_proofs').update({ status: req.body.status }).eq('id', id);
     res.json({ message: 'Actualizado' });
   } catch (e: any) { res.status(500).json({ error: e.message }); }
+}
+
+// Subir video de landing a Supabase Storage
+export async function uploadLandingVideo(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'No se envio ningun archivo de video' });
+      return;
+    }
+    const publicUrl = await uploadToSupabase(req.file);
+    res.json({ url: publicUrl });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
 }
 
 // Proxy IPTV - evita bloqueo HTTP en paginas HTTPS

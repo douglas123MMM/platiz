@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
+import { IconDiamond, IconUserAdd, IconChart, IconMoon, IconSun } from '../icons/PremiumIcons';
 
 const IconCopy = () => <svg viewBox="0 0 24 24" style={{width:16,height:16,fill:'currentColor'}}><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>;
 const IconCheck = () => <svg viewBox="0 0 24 24" style={{width:16,height:16,fill:'currentColor'}}><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>;
@@ -153,20 +154,20 @@ export default function AffiliateDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center">
-          <span className="text-2xl">💎</span>
+        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center cursor-pointer">
+          <IconDiamond className="text-[#FFD700] mx-auto" size={28} />
           <p className="text-2xl font-bold text-white">{credits}</p>
-          <p className="text-xs text-gray-500">Créditos</p>
+          <p className="text-xs text-gray-400">Créditos</p>
         </div>
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center">
-          <span className="text-2xl">👤</span>
+        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center cursor-pointer">
+          <IconUserAdd className="text-[#FFD700] mx-auto" size={28} />
           <p className="text-2xl font-bold text-white">{stats.pendientes}</p>
-          <p className="text-xs text-gray-500">Pendientes</p>
+          <p className="text-xs text-gray-400">Pendientes</p>
         </div>
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center">
-          <span className="text-2xl">📊</span>
+        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center cursor-pointer">
+          <IconChart className="text-[#FFD700] mx-auto" size={28} />
           <p className="text-2xl font-bold text-white">{stats.activos}</p>
-          <p className="text-xs text-gray-500">Activos</p>
+          <p className="text-xs text-gray-400">Activos</p>
         </div>
       </div>
 
@@ -182,7 +183,7 @@ export default function AffiliateDashboard() {
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 mb-0.5">Link de Captacion de Prospecto</p>
+              <p className="text-xs text-gray-400 mb-0.5">Link de Captacion de Prospecto</p>
               <p className="text-sm text-[#FFD700] truncate">{window.location.origin}{links.landing}</p>
             </div>
             <button
@@ -194,7 +195,7 @@ export default function AffiliateDashboard() {
           </div>
           <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-gray-500 mb-0.5">Link de Catalogo</p>
+              <p className="text-xs text-gray-400 mb-0.5">Link de Catalogo</p>
               <p className="text-sm text-[#FFD700] truncate">{window.location.origin}{links.catalog}</p>
             </div>
             <button
@@ -273,26 +274,28 @@ export default function AffiliateDashboard() {
             <div className="flex gap-2">
               <button type="button" onClick={() => setCatalogTheme('dark')}
                 className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'dark' ? 'bg-[#FFD700] text-black' : 'bg-black/30 text-gray-400 border border-[#FFD700]/10'}`}>
-                🌙 Oscuro
+                <IconMoon className="inline mr-1" size={14} /> Oscuro
               </button>
               <button type="button" onClick={() => setCatalogTheme('light')}
                 className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'light' ? 'bg-[#FFD700] text-black' : 'bg-black/30 text-gray-400 border border-[#FFD700]/10'}`}>
-                ☀️ Claro
+                <IconSun className="inline mr-1" size={14} /> Claro
               </button>
             </div>
 
             <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
-            <p className="text-gray-500 text-xs">Binance</p>
+            <label htmlFor="binance_id" className="text-gray-400 text-xs">Binance</label>
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="ID Binance" value={paymentMethods.binance_id}
+              id="binance_id"
               onChange={(e) => setPaymentMethods({...paymentMethods, binance_id: e.target.value})} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Correo Binance" value={paymentMethods.binance_email}
               onChange={(e) => setPaymentMethods({...paymentMethods, binance_email: e.target.value})} />
 
-            <p className="text-gray-500 text-xs">Pago Movil</p>
+            <label htmlFor="pago_movil_bank" className="text-gray-400 text-xs">Pago Movil</label>
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Banco" value={paymentMethods.pago_movil_bank}
+              id="pago_movil_bank"
               onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_bank: e.target.value})} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Telefono" value={paymentMethods.pago_movil_phone}
@@ -301,9 +304,10 @@ export default function AffiliateDashboard() {
               placeholder="CI / ID" value={paymentMethods.pago_movil_id}
               onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_id: e.target.value})} />
 
-            <p className="text-gray-500 text-xs">Zelle / Otro</p>
+            <label htmlFor="zelle" className="text-gray-400 text-xs">Zelle / Otro</label>
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Zelle" value={paymentMethods.zelle}
+              id="zelle"
               onChange={(e) => setPaymentMethods({...paymentMethods, zelle: e.target.value})} />
             <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Otro metodo" value={paymentMethods.otro}
@@ -324,56 +328,56 @@ export default function AffiliateDashboard() {
               </div>
               <div>
                 {displayName && <p className="text-white font-bold">{displayName}</p>}
-                {!displayName && <p className="text-gray-500 italic">Sin nombre de marca</p>}
+                {!displayName && <p className="text-gray-400 italic">Sin nombre de marca</p>}
               </div>
             </div>
             {whatsapp ? (
-              <p><span className="text-gray-500">WhatsApp:</span> <a href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-400 underline hover:text-green-300">{whatsapp}</a></p>
+              <p><span className="text-gray-400">WhatsApp:</span> <a href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-400 underline hover:text-green-300">{whatsapp}</a></p>
             ) : (
-              <p className="text-gray-500 italic">Sin WhatsApp configurado</p>
+              <p className="text-gray-400 italic">Sin WhatsApp configurado</p>
             )}
             {telegram ? (
-              <p><span className="text-gray-500">Telegram:</span> <span className="text-blue-400">{telegram}</span></p>
+              <p><span className="text-gray-400">Telegram:</span> <span className="text-blue-400">{telegram}</span></p>
             ) : (
-              <p className="text-gray-500 italic">Sin Telegram configurado</p>
+              <p className="text-gray-400 italic">Sin Telegram configurado</p>
             )}
 
             {(instagram || tiktok || facebook || youtube) && (
               <div className="pt-1">
-                <p className="text-gray-500 text-xs mb-1">Redes Sociales</p>
-                {instagram && <p className="text-white text-xs">📷 Instagram: {instagram}</p>}
-                {tiktok && <p className="text-white text-xs">🎵 TikTok: {tiktok}</p>}
-                {facebook && <p className="text-white text-xs">📘 Facebook: {facebook}</p>}
-                {youtube && <p className="text-white text-xs">▶️ YouTube: {youtube}</p>}
+                <p className="text-gray-400 text-xs mb-1">Redes Sociales</p>
+                {instagram && <p className="text-white text-xs"><svg className="inline w-3.5 h-3.5 mr-1 align-text-bottom" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg> Instagram: {instagram}</p>}
+                {tiktok && <p className="text-white text-xs"><svg className="inline w-3.5 h-3.5 mr-1 align-text-bottom" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> TikTok: {tiktok}</p>}
+                {facebook && <p className="text-white text-xs"><svg className="inline w-3.5 h-3.5 mr-1 align-text-bottom" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg> Facebook: {facebook}</p>}
+                {youtube && <p className="text-white text-xs"><svg className="inline w-3.5 h-3.5 mr-1 align-text-bottom" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29.94 29.94 0 001 11.75a29.94 29.94 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29.94 29.94 0 00.46-5.25 29.94 29.94 0 00-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg> YouTube: {youtube}</p>}
               </div>
             )}
             {paymentMethods.binance_id && (
               <div>
-                <p className="text-gray-500 text-xs mt-2">Binance</p>
+                <p className="text-gray-400 text-xs mt-2">Binance</p>
                 <p className="text-white text-xs">ID: {paymentMethods.binance_id}</p>
                 {paymentMethods.binance_email && <p className="text-white text-xs">{paymentMethods.binance_email}</p>}
               </div>
             )}
             {paymentMethods.pago_movil_phone && (
               <div>
-                <p className="text-gray-500 text-xs mt-2">Pago Movil</p>
+                <p className="text-gray-400 text-xs mt-2">Pago Movil</p>
                 <p className="text-white text-xs">{paymentMethods.pago_movil_bank} / {paymentMethods.pago_movil_phone} / {paymentMethods.pago_movil_id}</p>
               </div>
             )}
             {paymentMethods.zelle && (
               <div>
-                <p className="text-gray-500 text-xs mt-2">Zelle</p>
+                <p className="text-gray-400 text-xs mt-2">Zelle</p>
                 <p className="text-white text-xs">{paymentMethods.zelle}</p>
               </div>
             )}
             {paymentMethods.otro && (
               <div>
-                <p className="text-gray-500 text-xs mt-2">Otro</p>
+                <p className="text-gray-400 text-xs mt-2">Otro</p>
                 <p className="text-white text-xs">{paymentMethods.otro}</p>
               </div>
             )}
             {!displayName && !whatsapp && !telegram && !paymentMethods.binance_id && !paymentMethods.pago_movil_phone && !paymentMethods.zelle && !paymentMethods.otro && (
-              <p className="text-gray-500 text-center py-4">Completa tu perfil para que tus clientes vean tus datos en el catalogo.</p>
+              <p className="text-gray-400 text-center py-4">Completa tu perfil para que tus clientes vean tus datos en el catalogo.</p>
             )}
           </div>
         )}
@@ -383,12 +387,12 @@ export default function AffiliateDashboard() {
       <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4">
         <h2 className="text-white font-bold mb-3 text-sm">Mis Referidos ({stats.total})</h2>
         {referrals.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-4">Aun no tienes referidos. Comparte tu link de ventas.</p>
+          <p className="text-gray-400 text-sm text-center py-4">Aun no tienes referidos. Comparte tu link de ventas.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+                <tr className="text-gray-400 text-xs border-b border-[#FFD700]/10">
                   <th className="text-left py-2">Usuario</th>
                   <th className="text-left py-2 hidden md:table-cell">Contacto</th>
                   <th className="text-left py-2 hidden md:table-cell">Fecha</th>
@@ -421,7 +425,7 @@ export default function AffiliateDashboard() {
                           disabled={credits <= 0 || approving === ref.id}
                           className={`text-xs px-3 py-1 rounded-lg font-bold ${
                             credits <= 0
-                              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                              ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                               : 'bg-[#FFD700] text-black hover:bg-[#FFE44D]'
                           }`}
                         >

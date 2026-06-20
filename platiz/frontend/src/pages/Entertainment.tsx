@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { IconPlay } from '../icons/PremiumIcons';
 
 interface TmdbMovie {
   id: number;
@@ -150,7 +151,7 @@ export default function Entertainment() {
             <div className="relative overflow-hidden rounded-lg">
               <img src={IMG + m.poster_path} alt={m.title || m.name} className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                <span className="text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity">▶</span>
+                <IconPlay className="text-white w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </div>
             <p className="text-white text-xs mt-1 truncate">{m.title || m.name}</p>
@@ -165,7 +166,7 @@ export default function Entertainment() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8">
         <div className="w-20 h-20 bg-[#FFD700]/10 rounded-full flex items-center justify-center mb-6">
-          <span className="text-3xl">&#x1F512;</span>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#FFD700]"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
         </div>
         <h2 className="text-2xl font-bold text-white mb-3">Acceso Restringido</h2>
         <p className="text-gray-400 max-w-md">El apartado de peliculas no esta disponible para tu cuenta. Contacta al administrador para activarlo.</p>
@@ -177,10 +178,10 @@ export default function Entertainment() {
     <div className="min-h-screen bg-[#0a0a0f] pb-12 animate-fade-in">
       {/* Tabs */}
       <div className="flex justify-center gap-2 mb-6 px-4 pt-4">
-        <button onClick={() => setTab('tmdb')} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${tab === 'tmdb' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+        <button onClick={() => setTab('tmdb')} className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${tab === 'tmdb' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
           Cartelera TMDB
         </button>
-        <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${tab === 'catalog' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+        <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${tab === 'catalog' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
           Cat&aacute;logo
         </button>
       </div>
@@ -189,7 +190,7 @@ export default function Entertainment() {
         <>
           {hero && (
             <div className="relative h-[50vh] md:h-[70vh] mb-8">
-              <img src={IMG_ORIG + hero.backdrop_path} alt="" className="w-full h-full object-cover" />
+              <img src={IMG_ORIG + hero.backdrop_path} alt={`${hero.title || hero.name} backdrop`} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-transparent" />
               <div className="absolute top-4 left-4 text-2xl font-bold gold-text">Global Dorado</div>
               <div className="absolute bottom-12 md:bottom-20 left-4 md:left-12 max-w-xl">
@@ -214,7 +215,7 @@ export default function Entertainment() {
               {searchResults.filter(m => m.poster_path).map(m => (
                 <div key={m.id} className="cursor-pointer group" onClick={() => openTrailer(m)}>
                   <div className="relative overflow-hidden rounded-lg">
-                    <img src={IMG + m.poster_path} alt="" className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                    <img src={IMG + m.poster_path} alt={m.title || m.name} className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                   </div>
                   <p className="text-white text-xs mt-1 truncate">{m.title || m.name}</p>
                 </div>
@@ -265,7 +266,7 @@ export default function Entertainment() {
                     <CatalogImage src={m.image} alt={m.name} />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                       <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-3xl block">▶</span>
+                        <IconPlay className="w-8 h-8 mx-auto block" />
                         <span className="text-xs mt-1 font-bold">Ver</span>
                       </div>
                     </div>

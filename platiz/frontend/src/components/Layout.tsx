@@ -3,14 +3,15 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 import FloatingButtons from './FloatingButtons';
-import { IconHome, IconMovies, IconCourses, IconBooks, IconApps, IconTelegram, IconServices, IconAcademy, IconAffiliate, IconChat, IconCog, IconPhoto, IconUsers, IconGrid, IconMenu, IconClose, IconBell, IconSearch, IconChevronDown, IconLogout } from '../icons/PremiumIcons';
+import { IconHome, IconMovies, IconCourses, IconBooks, IconApps, IconTelegram, IconServices, IconAcademy, IconAffiliate, IconChat, IconCog, IconPhoto, IconUsers, IconGrid, IconMenu, IconClose, IconBell, IconSearch, IconChevronDown, IconLogout, IconStar, IconShield } from '../icons/PremiumIcons';
 
 const navItems = [
   { path: '/dashboard', label: 'Inicio', icon: IconHome, roles: ['client', 'admin'] },
   { path: '/store', label: 'Tienda', icon: IconGrid, roles: ['client', 'admin'] },
-  { path: '/recharge', label: 'Recargar', icon: IconAffiliate, roles: ['client', 'admin'] },
-  { path: '/purchases', label: 'Mis Compras', icon: IconMovies, roles: ['client', 'admin'] },
-  { path: '/afiliado', label: 'Mi Oficina', icon: IconAffiliate, roles: ['client', 'admin'] },
+  { path: '/membresias', label: 'Membresias', icon: IconUsers, roles: ['client', 'admin'] },
+  { path: '/recharge', label: 'Recargar', icon: IconStar, roles: ['client', 'admin'] },
+  { path: '/purchases', label: 'Mis Compras', icon: IconShield, roles: ['client', 'admin'] },
+  { path: '/afiliado', label: 'Mi Oficina', icon: IconCog, roles: ['client', 'admin'] },
   { path: '/soporte', label: 'Soporte', icon: IconChat, roles: ['client', 'admin'] },
   { path: '/movies', label: 'Entretenimiento', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/courses', label: 'Capacitación', icon: IconCourses, roles: ['client', 'admin'] },
@@ -22,9 +23,9 @@ const navItems = [
   { path: '/affiliate', label: 'Afiliación', icon: IconAffiliate, roles: ['client', 'admin'] },
   { path: '/programas', label: 'Programas', icon: IconGrid, roles: ['client', 'admin'] },
   { path: '/editables', label: 'Editables', icon: IconPhoto, roles: ['client', 'admin'] },
+  { path: '/ia', label: 'IA', icon: IconChat, roles: ['client', 'admin'] },
   { path: '/plr-pro', label: 'PLR PRO', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/chat', label: 'Chat IA', icon: IconChat, roles: ['client', 'admin'] },
-  { path: '/membresias', label: 'Membresias', icon: IconMovies, roles: ['client', 'admin'] },
 ];
 
 const adminItems = [
@@ -40,7 +41,7 @@ const adminItems = [
   { path: '/admin/memberships', label: 'Membresias', icon: IconMovies },
   { path: '/admin/store', label: 'Tienda', icon: IconGrid },
   { path: '/admin/transactions', label: 'Transacciones', icon: IconMovies },
-  { path: '/admin/recharges', label: 'Recargas', icon: IconChat },
+  { path: '/admin/recharges', label: 'Recargas', icon: IconStar },
   { path: '/admin/purchases', label: 'Compras', icon: IconMovies },
 ];
 
@@ -58,6 +59,11 @@ export default function Layout() {
     if (item.path === '/movies' && !canAccessMovies) return false;
     return item.roles.includes(user?.role || 'client');
   });
+  // Membresias siempre visible para todos los usuarios autenticados
+  const membresiasItem = navItems.find(item => item.path === '/membresias');
+  if (membresiasItem && !filteredNav.find(item => item.path === '/membresias')) {
+    filteredNav.splice(2, 0, membresiasItem);
+  }
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
@@ -83,7 +89,7 @@ export default function Layout() {
       >
         <div className="flex flex-col items-center px-3 py-3 border-b border-[#FFD700]/10">
           <Logo size={28} />
-          <span className="text-[8px] text-[#FFD700]/50 uppercase tracking-[3px] mt-1">Transforma el Internet en Dinero</span>
+          <span className="text-[10px] text-[#FFD700]/60 uppercase tracking-[3px] mt-1">Transforma el Internet en Dinero</span>
         </div>
         <div className="flex flex-col h-[calc(100vh-4rem)]">
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -91,7 +97,7 @@ export default function Layout() {
               const isActive = location.pathname === item.path;
               const Icon = item.icon;
               return (
-                <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive ? 'bg-gradient-to-r from-[#FFD700]/15 to-transparent text-[#FFD700] border border-[#FFD700]/15' : 'text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/5 border border-transparent'}`}>
+                <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200 group ${isActive ? 'bg-gradient-to-r from-[#FFD700]/15 to-transparent text-[#FFD700] border border-[#FFD700]/15' : 'text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/5 border border-transparent'}`}>
                   <Icon className={`w-5 h-5 ${isActive ? 'text-[#FFD700]' : 'group-hover:text-[#FFD700] transition-colors'}`} />
                   <span className="font-medium">{item.label}</span>
                   {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#FFD700] shadow-[0_0_6px_rgba(255,215,0,0.8)]" />}
@@ -109,7 +115,7 @@ export default function Layout() {
                   const isActive = location.pathname === item.path;
                   const Icon = item.icon;
                   return (
-                <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive ? 'bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/15 shadow-[0_2px_8px_rgba(255,215,0,0.06)]' : 'text-gray-400 hover:text-[#FFD700] hover:bg-white/[0.03] border border-transparent'}`}>
+                <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200 group ${isActive ? 'bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/15 shadow-[0_2px_8px_rgba(255,215,0,0.06)]' : 'text-gray-400 hover:text-[#FFD700] hover:bg-white/[0.03] border border-transparent'}`}>
                       <Icon className={`w-5 h-5 ${isActive ? 'text-[#FFD700]' : 'group-hover:text-[#FFD700] transition-colors'}`} />
                       <span className="font-medium">{item.label}</span>
                       {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#FFD700] shadow-[0_0_6px_rgba(255,215,0,0.8)]" />}
@@ -122,10 +128,10 @@ export default function Layout() {
         </div>
       </aside>
 
-      <div className="lg:pl-72 transition-all duration-300 min-h-screen overflow-x-hidden">
+      <div className="lg:pl-72 transition-colors duration-300 min-h-screen overflow-x-hidden">
         <header className="sticky top-0 z-30 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[#FFD700]/10">
           <div className="flex items-center justify-between h-11 md:h-16 px-2 md:px-8 gap-0.5">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-1.5 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-1.5 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0" aria-label="Menú principal" aria-expanded={sidebarOpen}>
               {sidebarOpen ? <IconClose className="w-5 h-5" /> : <IconMenu className="w-5 h-5" />}
             </button>
             <div className="flex items-center gap-0.5 md:gap-2 px-1.5 md:px-4 py-1 md:py-2 bg-[#0a0a0f]/50 rounded-lg md:rounded-xl border border-[#FFD700]/10 flex-1 max-w-full md:max-w-md">
@@ -134,7 +140,7 @@ export default function Layout() {
             </div>
             <div className="flex items-center gap-0.5 md:gap-2 flex-shrink-0">
               <div className="relative">
-                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-0.5 md:gap-2 p-1 rounded-lg md:rounded-xl hover:bg-[#FFD700]/5 transition-colors">
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-0.5 md:gap-2 p-1 rounded-lg md:rounded-xl hover:bg-[#FFD700]/5 transition-colors cursor-pointer" aria-haspopup="true" aria-expanded={userMenuOpen}>
                   <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-lg flex items-center justify-center text-black text-[10px] md:text-sm font-bold">{user?.username?.charAt(0).toUpperCase()}</div>
                   <IconChevronDown className="w-3 h-3 md:w-4 md:h-4 text-gray-500 flex-shrink-0" />
                 </button>

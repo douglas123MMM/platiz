@@ -91,7 +91,7 @@ export default function RechargesAdmin() {
           <button
             key={f.key}
             onClick={() => setStatusFilter(f.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
               statusFilter === f.key
                 ? 'bg-[#FFD700] text-black'
                 : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:text-[#FFD700]'
@@ -133,7 +133,7 @@ export default function RechargesAdmin() {
                       <img
                         src={r.proof_image}
                         alt="Comprobante"
-                        className="w-10 h-10 rounded-lg object-cover cursor-pointer hover:ring-2 ring-[#FFD700] transition-all"
+                        className="w-10 h-10 rounded-lg object-cover cursor-pointer hover:ring-2 ring-[#FFD700] transition-colors"
                         onClick={() => setPreviewImage(r.proof_image!)}
                       />
                     ) : (
@@ -170,7 +170,7 @@ export default function RechargesAdmin() {
       </div>
 
       {previewImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setPreviewImage('')}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-label="Vista previa de comprobante" onClick={() => setPreviewImage('')}>
           <img src={previewImage} alt="Comprobante" className="max-w-full max-h-[90vh] rounded-2xl" onClick={e => e.stopPropagation()} />
         </div>
       )}
