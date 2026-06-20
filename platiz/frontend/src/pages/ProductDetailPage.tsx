@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
               target="_blank" rel="noopener noreferrer"
               className="w-full text-center py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-500 hover:to-emerald-500 active:scale-[0.98] transition-all shadow-lg shadow-green-600/20"
             >
-              Agregar al carrito — ${product.price.toFixed(2)}
+              Comprar — ${product.price.toFixed(2)} USDT
             </a>
           </div>
         </div>
@@ -184,19 +184,44 @@ export default function ProductDetailPage() {
               </div>
             )}
             {activeTab === 'guide' && (
-              <div className="text-gray-300 space-y-2">
-                <p>✅ INICIA SESION EN LA APP OFICIAL</p>
-                <p>✅ INGRESA LOS DATOS ENVIADOS</p>
-                <p>✅ SI TIENE ALGUNA DUDA ESTAMOS AL WHATSAPP</p>
+              <div className="text-gray-300 space-y-3">
+                <div className="p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
+                  <h3 className="text-[#FFD700] font-semibold mb-2">Como usar tu {product.category || 'servicio'}</h3>
+                  <ol className="list-decimal pl-5 space-y-1.5 text-sm">
+                    <li>Recibe los datos de acceso en tu WhatsApp o email</li>
+                    <li>Descarga la aplicacion oficial desde la tienda de tu dispositivo</li>
+                    <li>Inicia sesion con el usuario y contrasena proporcionados</li>
+                    <li>Selecciona el perfil asignado (si aplica)</li>
+                    <li>Disfruta del servicio durante el periodo contratado</li>
+                  </ol>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <span className="text-[#FFD700] text-xs font-medium">✅ Cuenta original</span>
+                    <p className="text-gray-500 text-xs mt-1">Licencia 100% verificada</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <span className="text-[#FFD700] text-xs font-medium">✅ Soporte 24/7</span>
+                    <p className="text-gray-500 text-xs mt-1">Asistencia via WhatsApp</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <span className="text-[#FFD700] text-xs font-medium">✅ Entrega inmediata</span>
+                    <p className="text-gray-500 text-xs mt-1">Datos enviados al instante</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <span className="text-[#FFD700] text-xs font-medium">✅ Multi-dispositivo</span>
+                    <p className="text-gray-500 text-xs mt-1">Compatible con TV, PC y movil</p>
+                  </div>
+                </div>
               </div>
             )}
             {activeTab === 'warranty' && (
-              <div className="text-gray-300 space-y-2">
-                <p>✅ Garantia de reemplazo en todas las licencias</p>
-                <p>✅ Recibiras un #Venta como referencia</p>
-                <p>✅ Contactanos con tu #Venta para cualquier problema</p>
-                <p>✅ Respuesta en menos de 24 horas</p>
-                <p>✅ Cada ID de pago queda registrado como prueba</p>
+              <div className="text-gray-300 space-y-3">
+                <p>✅ Garantia de reemplazo durante todo el periodo contratado</p>
+                <p>✅ Si el servicio falla, contactanos y te damos una cuenta nueva</p>
+                <p>✅ Soporte tecnico incluido para ayudarte con la configuracion</p>
+                <p>✅ Todos los pagos quedan registrados con un ID unico de referencia</p>
+                <p>✅ Tiempo de respuesta: menos de 24 horas</p>
               </div>
             )}
           </div>
