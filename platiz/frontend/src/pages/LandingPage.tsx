@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
 import FloatingButtons from '../components/FloatingButtons';
@@ -41,8 +41,6 @@ export default function LandingPage() {
   const reveal = prefersReducedMotion ? {} : { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-100px" }, transition: { duration: 0.6 } };
   const [partners, setPartners] = useState<any[]>([]);
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
-
-  const api = axios.create({ baseURL: 'https://platiz.vercel.app/api' });
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
