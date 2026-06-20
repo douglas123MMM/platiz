@@ -1,1 +1,0 @@
-const bcrypt = require('bcryptjs'); const hash = '\\\'; console.log('Fallback:', bcrypt.compareSync('ChangeMe123!', hash)); console.log('Local:', bcrypt.compareSync('Platiz2026Seguro!', hash));

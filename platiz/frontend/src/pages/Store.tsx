@@ -30,6 +30,11 @@ interface PurchaseResponse {
 }
 
 const CATEGORIES = ['Streaming', 'IA', 'Creatividad', 'Diseno Grafico', 'Edicion de Videos', 'Herramientas', 'Antivirus', 'Oficina', 'Licencia', 'Monedas de Juegos', 'Redes Sociales'];
+const Bs_RATE = 85;
+
+function toBs(usd: number): string {
+  return `Bs. ${(usd * Bs_RATE).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 
 function addToast(type: 'success' | 'error', message: string) {
   // Use inline toast or leave as placeholder — toast from react-hot-toast is imported in parent
@@ -125,6 +130,7 @@ export default function Store() {
         <div className="mt-3 inline-flex items-center gap-2 px-5 py-2 bg-[#FFD700]/10 rounded-full border border-[#FFD700]/20">
           <span className="text-[#FFD700] text-sm">Saldo:</span>
           <span className="text-white font-bold text-lg">${balance.toFixed(2)}</span>
+          <span className="text-gray-500 text-xs">{toBs(balance)}</span>
         </div>
       </div>
 
@@ -235,9 +241,14 @@ export default function Store() {
                 )}
 
                 {/* Price */}
-                <p className="text-[#FFD700] text-xl font-bold mt-1">
-                  ${product.price.toFixed(2)}
-                </p>
+                <div className="mt-1">
+                  <p className="text-[#FFD700] text-xl font-bold">
+                    ${product.price.toFixed(2)}
+                  </p>
+                  <p className="text-gray-500 text-xs">
+                    {toBs(product.price)}
+                  </p>
+                </div>
 
                 {/* Buy button */}
                 <button
@@ -378,17 +389,26 @@ export default function Store() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Precio</span>
-                  <span className="text-white">${selectedProduct.price.toFixed(2)}</span>
+                  <div className="text-right">
+                    <span className="text-white">${selectedProduct.price.toFixed(2)}</span>
+                    <p className="text-gray-500 text-xs">{toBs(selectedProduct.price)}</p>
+                  </div>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Total</span>
-                  <span className="text-[#FFD700] font-bold text-lg">${selectedProduct.price.toFixed(2)}</span>
+                  <div className="text-right">
+                    <span className="text-[#FFD700] font-bold text-lg">${selectedProduct.price.toFixed(2)}</span>
+                    <p className="text-gray-500 text-xs">{toBs(selectedProduct.price)}</p>
+                  </div>
                 </div>
                 <div className="flex justify-between text-sm pt-2 border-t border-white/5">
                   <span className="text-gray-400">Tu saldo</span>
-                  <span className={`font-medium ${balance >= selectedProduct.price ? 'text-emerald-400' : 'text-red-400'}`}>
-                    ${balance.toFixed(2)}
-                  </span>
+                  <div className="text-right">
+                    <span className={`font-medium ${balance >= selectedProduct.price ? 'text-emerald-400' : 'text-red-400'}`}>
+                      ${balance.toFixed(2)}
+                    </span>
+                    <p className="text-gray-500 text-xs">{toBs(balance)}</p>
+                  </div>
                 </div>
                 {balance < selectedProduct.price && (
                   <p className="text-red-400 text-xs mt-1 text-center bg-red-500/10 rounded-lg py-1.5">
