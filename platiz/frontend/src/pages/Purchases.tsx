@@ -23,15 +23,19 @@ interface Purchase {
 export default function Purchases() {
   const { refreshProfile } = useAuth();
   const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [catalogPurchases, setCatalogPurchases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [renewingId, setRenewingId] = useState<string | null>(null);
 
   const loadPurchases = () => {
     setLoading(true);
-    api.get('/store/purchases')
-      .then((r) => setPurchases(r.data || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    Promise.all([
+      api.get('/store/purchases').then(r => r.data || []).catch(() => []),
+      api.get('/affiliate/my-catalog-purchases').then(r => r.data || []).catch(() => []),
+    ]).then(([store, catalog]) => {
+      setPurchases(store);
+      setCatalogPurchases(catalog);
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => { loadPurchases(); }, []);
@@ -88,15 +92,16 @@ export default function Purchases() {
         </Link>
       </div>
 
-      {purchases.length === 0 ? (
+      {purchases.length === 0 && catalogPurchases.length === 0 ? (
         <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-12 text-center">
           <p className="text-gray-400 text-sm">No has realizado compras aun</p>
           <Link to="/store" className="inline-flex items-center gap-1 mt-3 text-sm text-[#FFD700] hover:underline">Ir a la tienda</Link>
         </div>
       ) : (
-        <ScrollReveal>
-        <div className="relative z-10 space-y-3">
-          {purchases.map((p) => (
+        <>
+          <ScrollReveal>
+          <div className="relative z-10 space-y-3">
+            {purchases.map((p) => (
             <div key={p.id} className="glass rounded-2xl border border-[#FFD700]/10 p-5 space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -163,8 +168,33 @@ export default function Purchases() {
               )}
             </div>
           ))}
-        </div>
-        </ScrollReveal>
+          </div>
+          </ScrollReveal>
+
+          {catalogPurchases.length > 0 && (
+            <div className="relative z-10 mt-6">
+              <h2 className="text-white font-bold text-lg mb-3">Compras del Catalogo</h2>
+              <div className="space-y-3">
+                {catalogPurchases.map((p: any) => (
+                  <div key={p.id} className="glass rounded-2xl border border-[#FFD700]/10 p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-white font-medium text-sm">{p.description?.replace('Catalogo: ', '')}</p>
+                        <p className="text-gray-500 text-xs mt-0.5">{formatDate(p.created_at)}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[#FFD700] font-bold">${parseFloat(p.amount).toFixed(2)}</p>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${p.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
+                          {p.status === 'completed' ? 'Completada' : 'Pendiente'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
