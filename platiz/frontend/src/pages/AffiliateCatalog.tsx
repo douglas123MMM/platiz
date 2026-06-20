@@ -59,12 +59,11 @@ export default function AffiliateCatalog() {
       <div className={`py-5 text-center px-4 border-b ${theme === 'light' ? 'bg-white border-gray-100' : 'bg-[#111] border-[#FFD700]/10'}`}>
         {affiliate && (
           <div className="flex items-center justify-center gap-3 mb-3">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${theme === 'light' ? 'bg-gray-100' : 'bg-[#FFD700]/20'}`}>
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center overflow-hidden ${theme === 'light' ? 'bg-gray-100' : 'bg-[#FFD700]/20'}`}>
               {affiliate.avatar ? (
-                <img src={affiliate.avatar} alt="" className="w-12 h-12 rounded-full object-cover" />
-              ) : (
-                <span className="text-2xl">👤</span>
-              )}
+                <img src={affiliate.avatar} alt="" className="w-12 h-12 rounded-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; (e.currentTarget.parentElement!.querySelector('.avatar-fallback') as HTMLElement).style.display = 'flex'; }} />
+              ) : null}
+              <span className={`avatar-fallback text-2xl ${affiliate.avatar ? 'hidden' : ''}`} style={{ display: affiliate.avatar ? 'none' : 'flex' }}>👤</span>
             </div>
             <div className="text-left">
               <p className={`font-bold text-sm ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{affiliate.display_name || 'Global Dorado'}</p>
