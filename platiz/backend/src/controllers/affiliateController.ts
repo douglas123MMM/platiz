@@ -234,7 +234,7 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
     allItems.sort((a: any, b: any) => {
     const score = (img: string) => {
       if (!img || img.length < 5) return 0;
-      if (img.includes('kfstreaming')) return 5;
+      if (img.includes('kfstreaming') || img.includes('net-revolution.com')) return 5;
       if (img.includes('venegift') || img.includes('cuentasfull')) return 4;
       if (img.includes('cdnlogo') || img.includes('logodownload') || img.includes('brandlogos') || img.includes('clearbit')) return 3;
       if (img.includes('icons8') || img.includes('wikipedia') || img.includes('wikimedia')) return 1;
