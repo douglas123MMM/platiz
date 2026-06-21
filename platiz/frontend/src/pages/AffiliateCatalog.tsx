@@ -244,7 +244,9 @@ export default function AffiliateCatalog() {
                 {item.description && <p className={`text-xs line-clamp-2 mb-2 flex-1 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>{item.description}</p>}
                 {!item.description && <div className="flex-1" />}
                 {(item as any).price > 0 && (
-                  <p className="text-[#FFD700] text-sm font-bold mb-1">${(item as any).price.toFixed(2)} USDT</p>
+                  <p className="text-[#FFD700] text-sm font-bold mb-1">
+                    {(item as any).price_label ? `${(item as any).price_label}: ` : ''}${(item as any).price.toFixed(2)} USDT
+                  </p>
                 )}
                 <div className="flex gap-2 mt-auto">
                   <a

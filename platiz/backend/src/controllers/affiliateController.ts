@@ -191,7 +191,7 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       .order('created_at', { ascending: false });
 
     // Cargar precios personalizados del afiliado si viene ref
-    let customPrices: Record<string, number> = {};
+    let customPrices: Record<string, any> = {};
     if (refCode) {
       const { data: affUser } = await supabase.from('users')
         .select('custom_prices').eq('referral_code', refCode).maybeSingle();
@@ -200,6 +200,19 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
           ? JSON.parse(affUser.custom_prices) : affUser.custom_prices;
       }
     }
+
+    // Normalizar customPrices: { id: { price, label } } o { id: number }
+    const getCustomPrice = (id: string): number => {
+      const v = customPrices[id];
+      if (typeof v === 'number') return v;
+      if (v && typeof v.price === 'number') return v.price;
+      return 0;
+    };
+    const getCustomLabel = (id: string): string => {
+      const v = customPrices[id];
+      if (v && typeof v.label === 'string') return v.label;
+      return '';
+    };
 
     // Crear mapa de precios desde store_products
     const priceMap = new Map<string, { price: number; delivery_type: string; account_type: string; duration_days: number }>();
@@ -219,11 +232,11 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
     // Construir mapa de custom prices por titulo tambien
     const customByTitle: Record<string, number> = {};
     if (refCode && Object.keys(customPrices).length > 0) {
-      // Buscar los titulos de los store_products para hacer match por titulo
       for (const p of (store || [])) {
         const storeId = `store_${p.id}`;
-        if (customPrices[storeId]) {
-          customByTitle[p.title.toLowerCase().trim()] = customPrices[storeId];
+        const cp = getCustomPrice(storeId);
+        if (cp > 0) {
+          customByTitle[p.title.toLowerCase().trim()] = cp;
         }
       }
     }
@@ -231,11 +244,13 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
     const enrichedItems = (items || []).map((item: any) => {
       const storeInfo = priceMap.get(item.title.toLowerCase().trim());
       const titleKey = item.title.toLowerCase().trim();
-      const customPrice = customPrices[item.id] ?? customPrices[`store_${item.id}`] ?? customByTitle[titleKey];
-      const finalPrice = refCode ? (customPrice ?? 0) : (customPrice ?? (storeInfo ? storeInfo.price : 0));
+      const customPrice = getCustomPrice(item.id) || getCustomPrice(`store_${item.id}`) || customByTitle[titleKey] || 0;
+      const customLabel = getCustomLabel(item.id) || getCustomLabel(`store_${item.id}`);
+      const finalPrice = refCode ? customPrice : (customPrice || (storeInfo ? storeInfo.price : 0));
       return {
         ...item,
         price: finalPrice,
+        price_label: customLabel || '',
         has_price: finalPrice > 0,
         delivery_type: storeInfo ? storeInfo.delivery_type : 'manual',
         account_type: storeInfo ? storeInfo.account_type : '',
@@ -249,8 +264,9 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       .filter((p: any) => !itemTitles.has(p.title.toLowerCase().trim()))
       .map((p: any) => {
         const storeId = `store_${p.id}`;
-        const customPrice = customPrices[storeId] ?? customPrices[p.id];
-        const finalPrice = refCode ? (customPrice ?? 0) : (customPrice ?? (parseFloat(p.price) || 0));
+        const cp = getCustomPrice(storeId) || getCustomPrice(p.id);
+        const cl = getCustomLabel(storeId) || getCustomLabel(p.id);
+        const finalPrice = refCode ? cp : (cp || (parseFloat(p.price) || 0));
         return {
           id: storeId,
           category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
@@ -261,6 +277,7 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
           video_url: '',
           sort_order: 0,
           price: finalPrice,
+          price_label: cl || '',
           has_price: finalPrice > 0,
           delivery_type: p.delivery_type || 'manual',
           account_type: p.account_type || '',
