@@ -28,12 +28,14 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
 export default function LandingPage() {
   const [partners, setPartners] = useState<any[]>([]);
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
+  const [customLogo, setCustomLogo] = useState('');
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], [0, 40]);
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
     api.get('/partners/landing-videos').then((r) => setLandingVideos(r.data)).catch(() => {});
+    api.get('/settings').then((r) => { if (r.data?.logo_url) setCustomLogo(r.data.logo_url); }).catch(() => {});
   }, []);
 
   return (
@@ -42,7 +44,11 @@ export default function LandingPage() {
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring", stiffness: 200 }}>
-            <Logo size={64} className="mx-auto mb-6" />
+            {customLogo ? (
+              <img src={customLogo} alt="Global Dorado" className="mx-auto mb-6 h-16 md:h-20 object-contain" />
+            ) : (
+              <Logo size={64} className="mx-auto mb-6" />
+            )}
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}

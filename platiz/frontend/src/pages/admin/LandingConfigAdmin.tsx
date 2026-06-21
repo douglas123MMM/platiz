@@ -158,22 +158,13 @@ export default function LandingConfigAdmin() {
           ) : (
             <div className="w-16 h-16 rounded-xl bg-[#111] border border-[#FFD700]/10 flex items-center justify-center text-2xl text-[#FFD700]">G</div>
           )}
-          <div>
-            <p className="text-gray-400 text-xs mb-2">Sube el logo original de Global Dorado</p>
-            <input type="file" accept="image/*" disabled={logoUploading}
-              onChange={async (e) => {
-                const file = e.target.files?.[0]; if (!file) return;
-                setLogoUploading(true);
-                try {
-                  const { uploadVideoToStorage } = await import('../../services/supabase');
-                  const url = await (uploadVideoToStorage as any)(file);
-                  await api.put('/settings', { logo_url: url });
-                  setLogoUrl(url);
-                  toast.success('Logo actualizado');
-                } catch { toast.error('Error al subir'); }
-                setLogoUploading(false);
-              }}
-              className="text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20" />
+          <div className="flex-1">
+            <p className="text-gray-400 text-xs mb-2">URL del logo (ej: https://ejemplo.com/logo.png)</p>
+            <div className="flex gap-2">
+              <input className="input flex-1" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="https://..." />
+              <button onClick={async () => { await api.put('/settings', { logo_url: logoUrl }); toast.success('Logo guardado'); }}
+                className="px-4 py-2 bg-[#FFD700] text-black rounded-xl text-sm font-bold hover:bg-[#FFE44D]">Guardar</button>
+            </div>
           </div>
         </div>
       </div>
