@@ -217,8 +217,15 @@ export default function Store() {
               </div>
 
               <div className="p-4">
-                {/* Category */}
-                <span className="badge-gold text-xs mb-2">{product.category}</span>
+                {/* Category + Type */}
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="badge-gold text-xs">{product.category}</span>
+                  {(product as any).product_type === 'perfil' || product.title.toLowerCase().includes('perfil') ? (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Perfil</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">Cuenta</span>
+                  )}
+                </div>
 
                 {/* Title */}
                 <h3 className="text-white font-semibold text-sm md:text-base mt-2 line-clamp-2">
