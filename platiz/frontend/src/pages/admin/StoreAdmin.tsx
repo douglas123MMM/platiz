@@ -442,6 +442,26 @@ export default function StoreAdmin() {
               </div>
 
               <div>
+                <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Tipo de Producto</label>
+                <div className="flex rounded-lg overflow-hidden border border-[#FFD700]/10">
+                  <button
+                    type="button"
+                    onClick={() => updateField('product_type', 'cuenta')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.product_type === 'cuenta' ? 'bg-[#FFD700] text-black font-bold' : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15'}`}
+                  >
+                    Cuenta Completa
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateField('product_type', 'perfil')}
+                    className={`flex-1 py-2 text-xs font-medium transition-colors ${editing.product_type === 'perfil' ? 'bg-[#FFD700]/15 text-[#FFD700]' : 'bg-black/30 text-gray-400 hover:bg-[#FFD700]/5'}`}
+                  >
+                    Perfil
+                  </button>
+                </div>
+              </div>
+
+              <div>
                 <label className="block text-xs font-semibold text-[#FFD700]/60 mb-1">Vendedor</label>
                 <input
                   type="text"
