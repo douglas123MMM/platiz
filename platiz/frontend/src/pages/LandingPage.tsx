@@ -64,9 +64,7 @@ export default function LandingPage() {
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
   const heroRef = useRef(null);
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 600], [1, 0.92]);
-  const heroY = useTransform(scrollY, [0, 600], [0, 100]);
+  const heroY = useTransform(scrollY, [0, 800], [0, 60]);
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
@@ -87,7 +85,7 @@ export default function LandingPage() {
       </div>
 
       {/* Hero */}
-      <motion.section ref={heroRef} style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
+      <motion.section ref={heroRef} style={{ y: heroY }}
         className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0 z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.10),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,180,255,0.05),transparent_50%)]" />
