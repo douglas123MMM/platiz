@@ -486,8 +486,8 @@ export default function AffiliateDashboard() {
             {catalogItems.filter(i => !priceSearch || i.title.toLowerCase().includes(priceSearch.toLowerCase())).map(item => (
               <div key={item.id} className="py-2 px-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-gray-300 text-xs font-medium truncate mr-2">{item.title}</span>
-                  <button onClick={() => addVariant(item.id)} className="text-[10px] px-2 py-0.5 rounded bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 flex-shrink-0">+ Agregar</button>
+                  <span className="text-gray-300 text-sm font-medium truncate mr-2">{item.title}</span>
+                  <button onClick={() => addVariant(item.id)} className="text-xs px-3 py-1 rounded bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 flex-shrink-0">+ Agregar</button>
                 </div>
                 {(myPrices[item.id] || []).map((v, idx) => (
                   <div key={idx} className="flex items-center gap-1 mt-1 ml-2">
@@ -497,14 +497,14 @@ export default function AffiliateDashboard() {
                       placeholder="Completa/Perfil"
                       value={v.label}
                       onChange={(e) => updateVariantLabel(item.id, idx, e.target.value)}
-                      className="w-20 bg-black/50 border border-white/10 rounded px-2 py-1 text-[10px] text-white focus:outline-none focus:border-[#FFD700]/40"
+                      className="w-24 bg-black/50 border border-white/10 rounded px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#FFD700]/40"
                     />
-                    <span className="text-gray-500 text-[10px]">$</span>
+                    <span className="text-gray-500 text-xs">$</span>
                     <input
                       type="number" min="0" step="0.5" placeholder="--"
                       value={v.price || ''}
                       onChange={(e) => updateVariantPrice(item.id, idx, e.target.value)}
-                      className="w-14 bg-black/50 border border-white/10 rounded px-2 py-1 text-xs text-white text-right focus:outline-none focus:border-[#FFD700]/40"
+                      className="w-16 bg-black/50 border border-white/10 rounded px-2 py-1.5 text-sm text-white text-right focus:outline-none focus:border-[#FFD700]/40"
                     />
                     <button onClick={() => removeVariant(item.id, idx)} className="text-red-400 text-[10px] px-1 hover:text-red-300">&times;</button>
                   </div>
