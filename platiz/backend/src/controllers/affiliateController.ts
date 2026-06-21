@@ -232,10 +232,14 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
     }
 
     allItems.sort((a: any, b: any) => {
-      if (a.has_price && !b.has_price) return -1;
-      if (!a.has_price && b.has_price) return 1;
-      if (a.has_price && b.has_price) return (b.price || 0) - (a.price || 0);
-      return (a.title || '').localeCompare(b.title || '');
+      const score = (img: string) => {
+        if (!img || img.length < 5) return 0;
+        if (img.includes('kfstreaming')) return 4;
+        if (img.includes('venegift') || img.includes('cuentasfull')) return 3;
+        if (img.includes('cdnlogo') || img.includes('logodownload') || img.includes('brandlogos')) return 2;
+        return 1;
+      };
+      return score(b.image_url || '') - score(a.image_url || '');
     });
 
     res.json(allItems);
