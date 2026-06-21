@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import Logo from './Logo';
 import FloatingButtons from './FloatingButtons';
 import { IconHome, IconMovies, IconCourses, IconBooks, IconApps, IconTelegram, IconServices, IconAcademy, IconAffiliate, IconChat, IconCog, IconPhoto, IconUsers, IconGrid, IconMenu, IconClose, IconBell, IconSearch, IconChevronDown, IconLogout, IconStar, IconShield } from '../icons/PremiumIcons';
@@ -49,9 +50,14 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [customLogo, setCustomLogo] = useState('');
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    api.get('/settings').then((r) => { if (r.data?.logo_url) setCustomLogo(r.data.logo_url); }).catch(() => {});
+  }, []);
 
   const isAdmin = user?.role === 'admin';
   const canAccessMovies = isAdmin || user?.movies_access === true;
@@ -88,7 +94,11 @@ export default function Layout() {
         onTouchEnd={handleTouchEnd}
       >
         <div className="flex flex-col items-center px-3 py-3 border-b border-[#FFD700]/10">
-          <Logo size={28} />
+          {customLogo ? (
+            <img src={customLogo} alt="Global Dorado" className="h-8 object-contain" />
+          ) : (
+            <Logo size={28} />
+          )}
           <span className="text-[10px] text-[#FFD700]/60 uppercase tracking-[3px] mt-1">Transforma el Internet en Dinero</span>
         </div>
         <div className="flex flex-col h-[calc(100vh-4rem)]">
