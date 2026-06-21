@@ -49,35 +49,35 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="text-[#FCD34D]/60 text-xs tracking-[0.35em] uppercase mb-5 font-medium">Plataforma Digital Todo en Uno</motion.p>
+            className="text-[#FCD34D]/60 text-xs tracking-[0.35em] uppercase mb-5 font-medium">Ecosistema Digital de Afiliados Premium</motion.p>
 
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}
             className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 leading-[0.95]"
             style={{ fontFamily: "'Bodoni Moda', Georgia, serif", textShadow: '0 0 60px rgba(255,215,0,0.15)' }}>
-            <span className="text-white">Global </span>
-            <span className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">Dorado</span>
+            <span className="text-white">Tu Negocio Digital </span>
+            <span className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">Llave en Mano</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
             className="text-base md:text-lg text-[#A0A0A0] max-w-xl mx-auto mb-10 leading-relaxed">
-            Ecosistema digital con acceso vitalicio. El arsenal de software y servicios digitales mas completo del mercado con oportunidades reales de ingresos.
+            Tecnologia automatizada que trabaja por ti. Paginas de venta, catalogo digital, recordatorios automaticos y entregas al instante. Solo enciende, promociona y gana.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/register"
               className="px-10 py-4 bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-base hover:from-[#FFE44D] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.3)] transition-all duration-200 inline-flex items-center gap-2">
-              Comenzar Ahora <IconArrowRight className="w-4 h-4" />
+              Activa Tu Oficina Virtual <IconArrowRight className="w-4 h-4" />
             </Link>
             <Link to="/login"
               className="px-10 py-4 border border-[#FCD34D]/20 text-[#D1D5DB] font-medium rounded-xl text-base hover:border-[#FCD34D]/40 hover:text-white transition-all duration-200">
-              Iniciar Sesion
+              Acceder a Mi Panel
             </Link>
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
             className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[{ v: '170+', l: 'Servicios Digitales' }, { v: '80%', l: 'Comision Directa' }, { v: '24/7', l: 'Soporte VIP' }, { v: '1', l: 'Pago Unico' }].map((s, i) => (
+            {[{ v: '170+', l: 'Servicios para Vender' }, { v: '80%', l: 'Comision por Venta' }, { v: '0', l: 'Experiencia Necesaria' }, { v: '24/7', l: 'Sistema Automatizado' }].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + i * 0.1 }}
                 className="text-center p-5 rounded-2xl bg-[#111111] border border-[#2A2A2A]">
                 <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent" style={{ textShadow: '0 0 20px rgba(255,215,0,0.2)' }}>
@@ -102,22 +102,24 @@ export default function LandingPage() {
         </div>
       </motion.section>
 
-      {/* FEATURES */}
+      {/* ECOSISTEMA DE HERRAMIENTAS */}
       <Reveal className="py-28 md:py-36">
         <div className="max-w-6xl mx-auto px-5">
           <div className="text-center mb-16">
-            <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">¿Por que Global Dorado?</p>
+            <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">Tecnologia que Trabaja por Ti</p>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px' }}>
-              Todo lo que necesitas en un solo lugar
+              El Ecosistema de Herramientas Automatizadas
             </h2>
-            <p className="text-[#A0A0A0] max-w-lg mx-auto">Acceso ilimitado a software, streaming, capacitacion y oportunidades de ingreso.</p>
+            <p className="text-[#A0A0A0] max-w-lg mx-auto">Todo lo que necesitas para vender, gestionar y escalar. Sin complicaciones tecnicas.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { i: IconShield, t: 'Acceso Vitalicio', d: 'Un solo pago. Sin mensualidades ni costos ocultos.' },
-              { i: IconLightning, t: '80% Comision', d: 'Gana el 80% por cada venta como promotor.' },
-              { i: IconGlobe, t: 'Actualizaciones', d: 'Cada nuevo servicio se agrega sin costo adicional.' },
-              { i: IconStar, t: 'Soporte VIP', d: 'Asistencia directa cuando la necesites.' }
+              { i: IconStar, t: 'Centro de Control', d: 'Gestiona todas tus cuentas. Visualiza fechas de ingreso, vencimiento y estado de cada servicio en un solo panel.' },
+              { i: IconChat, t: 'Recordatorios Automatizados', d: 'Mensajes y alertas de cobro predefinidas. El sistema avisa a tus clientes por ti.' },
+              { i: IconGlobe, t: 'Tu Maquina de Ventas', d: 'Paginas de captura, embudos profesionales y catalogo digital interactivo listos para promocionar.' },
+              { i: IconTools, t: 'Tu Negocio, Tus Reglas', d: 'Personaliza precios, redes sociales, WhatsApp y canales de contacto. Tu marca, tu estilo.' },
+              { i: IconLightning, t: 'Activaciones al Instante', d: 'Compra creditos en tu oficina virtual y activa usuarios de forma manual e inmediata.' },
+              { i: IconShield, t: 'Entrega en Piloto Automatico', d: 'Tienda con despacho automatizado. Los servicios se entregan solos al completar la compra.' },
             ].map((f, i) => {
               const I = f.i;
               return (
@@ -139,11 +141,11 @@ export default function LandingPage() {
       <Reveal className="py-28 md:py-36">
         <div className="max-w-6xl mx-auto px-5">
           <div className="text-center mb-16">
-            <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">Catalogo</p>
+            <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">170+ Servicios para Vender</p>
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px' }}>
               Arsenal Digital Completo
             </h2>
-            <p className="text-[#A0A0A0] max-w-lg mx-auto">170+ servicios en streaming, software, IA, diseno y mas.</p>
+            <p className="text-[#A0A0A0] max-w-lg mx-auto">Streaming, software premium, IA, diseno, videojuegos y mucho mas. Todo listo para que lo comercialices.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {[
@@ -183,38 +185,34 @@ export default function LandingPage() {
         </div>
       </Reveal>
 
-      {/* CAPACITACION */}
+      {/* PILARES DE EXITO */}
       <Reveal className="py-28 md:py-36">
         <div className="max-w-6xl mx-auto px-5">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">Capacitacion</p>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px' }}>
-                Aprende a generar ingresos
-              </h2>
-              <p className="text-[#A0A0A0] leading-relaxed mb-8">
-                Te ensenamos a dominar las redes sociales, estrategias de venta y tecnicas de cierre para comercializar servicios digitales de forma efectiva.
-              </p>
-              <div className="space-y-4">
-                {['Estrategias de venta y cierre', 'Marketing en redes sociales', 'Guiones de persuasion', 'Soporte y mentoria personalizada'].map((item, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#FFD700]/10 flex items-center justify-center flex-shrink-0">
-                      <IconCheck className="w-3 h-3 text-[#FFD700]" />
-                    </div>
-                    <span className="text-[#D1D5DB] text-sm">{item}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              className={`${cardBase} p-12 text-center border-[#FCD34D]/10`}>
-              <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#FFD700]/15 to-[#B8860B]/10 flex items-center justify-center">
-                <IconEducation className="w-10 h-10 text-[#FFD700]" />
-              </div>
-              <p className="text-[#FFD700] font-bold text-xl mb-1">El Metodo</p>
-              <p className="text-[#A0A0A0]">Global Dorado</p>
-            </motion.div>
+          <div className="text-center mb-16">
+            <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">No Estas Solo en Esto</p>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px' }}>
+              Tus Pilares de Exito
+            </h2>
+            <p className="text-[#A0A0A0] max-w-lg mx-auto">Herramientas, comunidad y un camino claro hacia ingresos reales.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { i: IconTools, t: 'El Arsenal de Marketing', d: 'Material visual, banners, guiones de venta y paginas de captura listas para promocionar la plataforma y cada uno de los 170+ servicios digitales.' },
+              { i: IconUsers, t: 'Comunidad Activa', d: 'Un espacio privado de apoyo mutuo. Estrategias compartidas, soporte constante y miembros que crecen contigo. Aqui no se emprende solo.' },
+              { i: IconLightning, t: 'Libertad Financiera Real', d: 'Un ecosistema practico y transparente para construir un negocio legitimo. Ingresos recurrentes desde casa, sin experiencia previa.' },
+            ].map((f, i) => {
+              const I = f.i;
+              return (
+                <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                  className={`${cardBase} ${cardHover} p-8 text-center group`}>
+                  <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#FFD700]/15 to-[#B8860B]/10 flex items-center justify-center group-hover:from-[#FFD700]/20 transition-all">
+                    <I className="w-7 h-7 text-[#FFD700]" />
+                  </div>
+                  <h3 className="text-white font-bold text-lg mb-3">{f.t}</h3>
+                  <p className="text-[#A0A0A0] text-sm leading-relaxed">{f.d}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </Reveal>
@@ -301,23 +299,23 @@ export default function LandingPage() {
         </Reveal>
       )}
 
-      {/* CTA */}
+      {/* CTA FINAL */}
       <Reveal className="py-32 md:py-44 text-center">
         <div className="max-w-3xl mx-auto px-5">
           <h2 className="text-3xl md:text-6xl font-extrabold text-white mb-6 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px', textShadow: '0 0 40px rgba(255,215,0,0.1)' }}>
-            ¿Listo para empezar?
+            Tienes las herramientas. Tienes el material. Tienes la comunidad.
           </h2>
           <p className="text-[#A0A0A0] text-lg mb-10 max-w-md mx-auto">
-            Unete a Global Dorado y accede al arsenal digital mas completo con oportunidades reales de ingresos.
+            Solo falta que actives tu oficina virtual y empieces a generar ingresos hoy.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/register"
               className="px-12 py-4.5 bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-lg hover:from-[#FFE44D] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.3)] transition-all duration-200 inline-flex items-center gap-2">
-              Crear Cuenta Gratis <IconArrowRight className="w-5 h-5" />
+              Activar Mi Oficina Ahora <IconArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/login"
               className="px-12 py-4.5 border border-[#FCD34D]/20 text-[#D1D5DB] font-medium rounded-xl text-lg hover:border-[#FCD34D]/40 hover:text-white transition-all duration-200">
-              Iniciar Sesion
+              Ya Tengo Cuenta
             </Link>
           </div>
         </div>
