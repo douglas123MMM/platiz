@@ -12,7 +12,7 @@ const fadeUp = {
   visible: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.08 } })
 };
 
-const cardBase = 'rounded-2xl bg-[#1A1A1A] border border-[#2A2A2A] hover:border-[#FCD34D]/30 transition-all duration-300';
+const cardBase = 'rounded-2xl bg-[#1F1F1F] md:bg-[#1A1A1A] border border-[#2A2A2A] hover:border-[#FCD34D]/30 transition-all duration-300';
 const cardHover = 'hover:-translate-y-1 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]';
 
 function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -37,7 +37,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-[#0A0A0A] text-white overflow-hidden">
+    <div className="bg-[#111111] md:bg-[#0A0A0A] text-white overflow-hidden">
       {/* HERO */}
       <motion.section style={{ y: heroY }} className="relative min-h-screen flex items-center justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.06),transparent_60%)]" />
@@ -54,7 +54,8 @@ export default function LandingPage() {
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}
             className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 leading-[0.95]"
             style={{ fontFamily: "'Bodoni Moda', Georgia, serif", textShadow: '0 0 60px rgba(255,215,0,0.15)' }}>
-            <span className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">Global Dorado</span>
+            <span className="text-white">Global </span>
+            <span className="bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#B8860B] bg-clip-text text-transparent" style={{ textShadow: '0 0 50px rgba(255,215,0,0.25)' }}>Dorado</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
@@ -78,7 +79,7 @@ export default function LandingPage() {
             className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[{ v: '170+', l: 'Servicios para Vender' }, { v: '80%', l: 'Comision por Venta' }, { v: '0', l: 'Experiencia Necesaria' }, { v: '24/7', l: 'Sistema Automatizado' }].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + i * 0.1 }}
-                className="text-center p-5 rounded-2xl bg-[#111111] border border-[#2A2A2A]">
+                className="text-center p-5 rounded-2xl bg-[#1A1A1A] md:bg-[#111111] border border-[#2A2A2A]">
                 <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent" style={{ textShadow: '0 0 20px rgba(255,215,0,0.2)' }}>
                   {s.v}
                 </p>
