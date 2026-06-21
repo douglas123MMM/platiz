@@ -6,7 +6,7 @@ export async function getSettings(_req: AuthRequest, res: Response): Promise<voi
   try {
     const { data, error } = await supabase.from('settings').select('*').maybeSingle();
     if (error && error.message.includes('does not exist')) {
-      res.json({ whatsapp: '', telegram: '', guias: {} });
+      res.json({ whatsapp: '', telegram: '', guias: {}, logo_url: '' });
       return;
     }
     const settings = data || { whatsapp: '', telegram: '', binance: '', pagomovil: '', whatsapp_group: '' };

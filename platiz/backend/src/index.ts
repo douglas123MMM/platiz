@@ -160,6 +160,7 @@ app.post('/api/setup-db', authenticate, requireAdmin, async (_req, res) => {
     await client.query('ALTER TABLE store_purchases ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;');
     await client.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS custom_prices JSONB DEFAULT '{}'::jsonb;");
     await client.query("ALTER TABLE store_products ADD COLUMN IF NOT EXISTS variants JSONB DEFAULT '[]'::jsonb;");
+    await client.query("ALTER TABLE settings ADD COLUMN IF NOT EXISTS logo_url TEXT DEFAULT '';");
     await client.end();
     res.json({ ok: true, message: 'Migraciones ejecutadas' });
   } catch (e: any) {
