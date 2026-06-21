@@ -5,6 +5,7 @@ import { IconRefresh, IconGrid } from '../../icons/PremiumIcons';
 
 interface Purchase {
   id: string;
+  purchase_id?: string;
   user_id: string;
   product_id: string;
   product_title: string;
@@ -21,11 +22,13 @@ interface Purchase {
 export default function PurchasesAdmin() {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [reminder, setReminder] = useState<{ show: boolean; purchase: Purchase | null; message: string }>({ show: false, purchase: null, message: '' });
 
-  const loadPurchases = () => {
+  const loadPurchases = (searchTerm?: string) => {
     setLoading(true);
-    api.get('/store/admin/purchases')
+    const params = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '';
+    api.get(`/store/admin/purchases${params}`)
       .then((r) => setPurchases(r.data))
       .catch(() => toast.error('Error al cargar compras'))
       .finally(() => setLoading(false));
@@ -84,9 +87,19 @@ export default function PurchasesAdmin() {
             <p className="section-subtitle">Historial de compras de la tienda</p>
           </div>
         </div>
-        <button onClick={loadPurchases} className="btn-secondary flex items-center gap-2">
-          <IconRefresh className="w-4 h-4" /> Actualizar
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <input
+            type="text"
+            placeholder="Usuario, email o ID..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') loadPurchases(search); }}
+            className="px-3 py-1.5 bg-black/30 border border-[#FFD700]/10 rounded-xl text-sm text-white placeholder-gray-500 w-48 focus:outline-none focus:border-[#FFD700]/40"
+          />
+          <button onClick={() => { setSearch(''); loadPurchases(''); }} className="btn-secondary flex items-center gap-2">
+            <IconRefresh className="w-4 h-4" /> Actualizar
+          </button>
+        </div>
       </div>
 
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
@@ -94,6 +107,7 @@ export default function PurchasesAdmin() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#FFD700]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">ID</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Cliente</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Email</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Telefono</th>
@@ -107,11 +121,14 @@ export default function PurchasesAdmin() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={9} className="p-12 text-center text-gray-500">Cargando...</td></tr>
+                <tr><td colSpan={10} className="p-12 text-center text-gray-500">Cargando...</td></tr>
               ) : purchases.length === 0 ? (
-                <tr><td colSpan={9} className="p-12 text-center text-gray-500">Sin compras registradas</td></tr>
+                <tr><td colSpan={10} className="p-12 text-center text-gray-500">Sin compras registradas</td></tr>
               ) : purchases.map((p) => (
                 <tr key={p.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                  <td className="p-4">
+                    <span className="text-xs font-mono text-[#FFD700]/70">{p.purchase_id || '-'}</span>
+                  </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-xs font-bold text-[#FFD700] flex-shrink-0">

@@ -8,6 +8,7 @@ import { IconChevronLeft } from '../icons/PremiumIcons';
 
 interface Purchase {
   id: string;
+  purchase_id?: string;
   product_title: string;
   amount: number;
   status: string;
@@ -106,6 +107,7 @@ export default function Purchases() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-white font-semibold text-lg">{p.product_title}</h3>
+                  {p.purchase_id && <p className="text-[#FFD700] text-xs font-mono mt-0.5">ID: {p.purchase_id}</p>}
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-gray-400">
                     <span>{formatDate(p.created_at)}</span>
                     <span className="text-[#FFD700] font-bold font-mono">{formatAmount(p.amount)}</span>

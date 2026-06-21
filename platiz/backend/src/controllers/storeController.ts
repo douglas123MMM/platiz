@@ -220,6 +220,7 @@ export async function getPurchaseHistory(req: AuthRequest, res: Response): Promi
       const daysLeft = p.expires_at ? Math.ceil((new Date(p.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
       return {
         ...p,
+        purchase_id: p.id ? 'GD-' + p.id.substring(0, 8).toUpperCase() : null,
         delivery_email: product?.delivery_email || '',
         delivery_password: product?.delivery_password || '',
         status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente',
@@ -233,16 +234,47 @@ export async function getPurchaseHistory(req: AuthRequest, res: Response): Promi
   }
 }
 
-export async function getAllPurchases(_req: AuthRequest, res: Response): Promise<void> {
+export async function getAllPurchases(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data, error } = await supabase.from('store_purchases').select('*').order('created_at', { ascending: false });
+    const search = req.query.search as string;
+    let query = supabase.from('store_purchases').select('*').order('created_at', { ascending: false });
+
+    if (search) {
+      // Buscar por ID de compra o titulo
+      const isUuid = search.match(/^[0-9a-f-]{36}$/i);
+      const isShortId = search.match(/^GD-/i);
+      if (isUuid) {
+        query = query.eq('id', search);
+      } else if (isShortId) {
+        // Buscar por los primeros 8 chars del UUID
+        const shortId = search.replace('GD-', '');
+        query = query.ilike('id', `${shortId}%`);
+      } else {
+        query = query.ilike('product_title', `%${search}%`);
+      }
+    }
+
+    const { data, error } = await query;
     if (error) throw error;
-    const enriched = await Promise.all((data || []).map(async (p) => {
+
+    let enriched = await Promise.all((data || []).map(async (p) => {
       const { data: user } = await supabase.from('users').select('username, email, phone').eq('id', p.user_id).maybeSingle();
       const { data: product } = await supabase.from('store_products').select('delivery_email, delivery_password').eq('id', p.product_id).maybeSingle();
       const isActive = !p.expires_at || new Date(p.expires_at) > new Date();
-      return { ...p, user: user || null, delivery_email: product?.delivery_email || '', delivery_password: product?.delivery_password || '', status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
+      return { ...p, purchase_id: p.id ? 'GD-' + p.id.substring(0, 8).toUpperCase() : null, user: user || null, delivery_email: product?.delivery_email || '', delivery_password: product?.delivery_password || '', status_display: p.expires_at ? (isActive ? 'Activo' : 'Vencido') : 'Permanente' };
     }));
+
+    // Si se busca por usuario/email, filtrar del lado del cliente
+    if (search && !search.match(/^[0-9a-f-]{36}$/i) && !search.match(/^GD-/i)) {
+      enriched = enriched.filter(p => {
+        const u = p.user;
+        if (!u) return false;
+        return (u.username || '').toLowerCase().includes(search.toLowerCase()) ||
+               (u.email || '').toLowerCase().includes(search.toLowerCase()) ||
+               (u.phone || '').includes(search);
+      });
+    }
+
     res.json(enriched);
   } catch {
     res.status(500).json({ error: 'Internal server error' });
