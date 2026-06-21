@@ -65,8 +65,9 @@ export default function LandingPage() {
     <div className="bg-[#0a0a0f] text-white">
       {/* HERO */}
       <motion.section style={{ y: heroY }} className="relative min-h-screen flex items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.08),transparent_60%)]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700]/[0.04] rounded-full blur-[150px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.12),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.06),transparent_50%)]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-[#F59E0B]/[0.04] rounded-full blur-[120px]" />
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring" }}>
@@ -77,9 +78,9 @@ export default function LandingPage() {
             className="text-[#FFD700]/60 text-sm tracking-[0.4em] uppercase mb-4">Plataforma Digital Todo en Uno</motion.p>
 
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.1]"
-            style={{ fontFamily: "'Bodoni Moda', Georgia, serif", fontWeight: 700 }}>
-            <span className="gold-text">Global Dorado</span>
+            className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 leading-[0.95]"
+            style={{ fontFamily: "'Bodoni Moda', Georgia, serif", fontWeight: 700, background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 30%, #FFD700 50%, #FBBF24 70%, #F59E0B 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200% 100%' }}>
+            Global Dorado
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
