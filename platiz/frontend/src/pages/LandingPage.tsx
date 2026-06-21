@@ -54,13 +54,12 @@ export default function LandingPage() {
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}
             className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 leading-[0.95]"
             style={{ fontFamily: "'Bodoni Moda', Georgia, serif", textShadow: '0 0 60px rgba(255,215,0,0.15)' }}>
-            <span className="text-white">Tu Negocio Digital </span>
-            <span className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">Llave en Mano</span>
+            <span className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">Global Dorado</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
             className="text-base md:text-lg text-[#A0A0A0] max-w-xl mx-auto mb-10 leading-relaxed">
-            Tecnologia automatizada que trabaja por ti. Paginas de venta, catalogo digital, recordatorios automaticos y entregas al instante. Solo enciende, promociona y gana.
+            Ecosistema digital con acceso vitalicio. El arsenal de software y servicios digitales mas completo del mercado con oportunidades reales de ingresos por internet.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
