@@ -26,6 +26,7 @@ interface Product {
   account_type: string;
   duration_days: number;
   delivery_type: string;
+  product_type: string;
   renewable: boolean;
   vendor_name: string;
   active: boolean;
@@ -48,6 +49,7 @@ const emptyProduct: Product = {
   account_type: 'temporal',
   duration_days: 0,
   delivery_type: 'automatica',
+  product_type: 'cuenta',
   renewable: false,
   vendor_name: '',
   active: true,

@@ -241,13 +241,11 @@ export default function AffiliateCatalog() {
               </div>
                 {/* Content */}
               <div className="p-3 flex flex-col flex-1">
-                <div className="flex items-center gap-1 mb-1">
-                  {((item as any).title || '').toLowerCase().includes('perfil') ? (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Perfil</span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">Cuenta</span>
-                  )}
-                </div>
+                {(item as any).price_label && (
+                  <span className={`self-start px-2 py-0.5 rounded-full text-[10px] font-medium mb-1 ${(item as any).price_label.toLowerCase().includes('perfil') ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}`}>
+                    {(item as any).price_label}
+                  </span>
+                )}
                 <h3 className={`text-sm font-bold mb-1 line-clamp-2 leading-snug ${theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'}`}>{item.title}</h3>
                 {item.description && <p className={`text-xs line-clamp-2 mb-2 flex-1 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>{item.description}</p>}
                 {!item.description && <div className="flex-1" />}
