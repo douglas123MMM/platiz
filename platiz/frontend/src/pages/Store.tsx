@@ -73,11 +73,14 @@ export default function Store() {
       const qs = params.toString();
       const { data } = await api.get(`/store/products${qs ? '?' + qs : ''}`);
       const sorted = (data || []).sort((a: any, b: any) => {
-        const aGood = a.image_url && a.image_url.length > 5 && !a.image_url.includes('wikimedia') && !a.image_url.includes('wikipedia');
-        const bGood = b.image_url && b.image_url.length > 5 && !b.image_url.includes('wikimedia') && !b.image_url.includes('wikipedia');
-        if (aGood && !bGood) return -1;
-        if (!aGood && bGood) return 1;
-        return 0;
+        const score = (img: string) => {
+          if (!img || img.length < 5) return 0;
+          if (img.includes('wikimedia') || img.includes('wikipedia')) return 0;
+          if (img.includes('kfstreaming') || img.includes('venegift') || img.includes('cuentasfull')) return 3;
+          if (img.includes('cdnlogo') || img.includes('logodownload') || img.includes('brandlogos') || img.includes('clearbit')) return 2;
+          return 1;
+        };
+        return score(b.image_url || '') - score(a.image_url || '');
       });
       setProducts(sorted);
     } catch (e) {
