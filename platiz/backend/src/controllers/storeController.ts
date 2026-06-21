@@ -19,7 +19,7 @@ export async function getStoreProducts(req: AuthRequest, res: Response): Promise
 
     let query = supabase
       .from('store_products')
-      .select('id, category, title, description, terms, purchase_instructions, price, image_url, support_number, delivery_type, account_type, duration_days, stock, renewable, vendor_name, created_at')
+      .select('id, category, title, description, terms, purchase_instructions, price, image_url, support_number, delivery_type, account_type, duration_days, stock, renewable, vendor_name, created_at, updated_at')
       .eq('active', true)
       .order('created_at', { ascending: false });
 

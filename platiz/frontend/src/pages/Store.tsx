@@ -83,7 +83,13 @@ export default function Store() {
         const isStreamA = a.category === 'Streaming' ? 0 : 1;
         const isStreamB = b.category === 'Streaming' ? 0 : 1;
         if (isStreamA !== isStreamB) return isStreamA - isStreamB;
-        return score(b.image_url || '') - score(a.image_url || '');
+        const scoreA = score(a.image_url || '');
+        const scoreB = score(b.image_url || '');
+        if (scoreA !== scoreB) return scoreB - scoreA;
+        // Recent updates first
+        const dateA = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+        const dateB = b.updated_at ? new Date(b.updated_at).getTime() : 0;
+        return dateB - dateA;
       });
       setProducts(sorted);
     } catch (e) {
