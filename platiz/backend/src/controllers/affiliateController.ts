@@ -239,6 +239,10 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       if (img.includes('icons8') || img.includes('wikipedia') || img.includes('wikimedia')) return 1;
       return 2;
     };
+    const catOrder = (slug: string) => slug === 'streaming' ? 0 : 1;
+    const catA = catOrder(a.category_slug);
+    const catB = catOrder(b.category_slug);
+    if (catA !== catB) return catA - catB;
     return score(b.image_url || '') - score(a.image_url || '');
     });
 

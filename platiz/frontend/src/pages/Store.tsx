@@ -80,6 +80,9 @@ export default function Store() {
           if (img.includes('icons8') || img.includes('wikipedia') || img.includes('wikimedia')) return 1;
           return 2;
         };
+        const isStreamA = a.category === 'Streaming' ? 0 : 1;
+        const isStreamB = b.category === 'Streaming' ? 0 : 1;
+        if (isStreamA !== isStreamB) return isStreamA - isStreamB;
         return score(b.image_url || '') - score(a.image_url || '');
       });
       setProducts(sorted);
