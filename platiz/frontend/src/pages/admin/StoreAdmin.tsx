@@ -65,6 +65,16 @@ export default function StoreAdmin() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
   const [search, setSearch] = useState('');
+  const [variants, setVariants] = useState<{label: string; price: number}[]>([]);
+
+  const addVariant = () => setVariants([...variants, { label: '', price: 0 }]);
+  const removeVariant = (i: number) => setVariants(variants.filter((_, idx) => idx !== i));
+  const updateVariant = (i: number, field: 'label'|'price', val: string) => {
+    const v = [...variants];
+    if (field === 'price') { v[i].price = parseFloat(val) || 0; }
+    else { v[i].label = val; }
+    setVariants(v);
+  };
 
   const loadProducts = () => {
     setLoading(true);
@@ -93,10 +103,10 @@ export default function StoreAdmin() {
     }
     try {
       if (editing.id) {
-        await api.put(`/store/products/${editing.id}`, editing);
+        await api.put(`/store/products/${editing.id}`, { ...editing, variants });
         toast.success('Producto actualizado');
       } else {
-        await api.post('/store/products', editing);
+        await api.post('/store/products', { ...editing, variants });
         toast.success('Producto creado');
       }
       setModalOpen(false);
@@ -459,6 +469,22 @@ export default function StoreAdmin() {
                     Perfil
                   </button>
                 </div>
+              </div>
+
+              {/* Variantes */}
+              <div className="md:col-span-2">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-semibold text-[#FFD700]/60">Variantes (Perfil/Completa)</label>
+                  <button type="button" onClick={addVariant} className="text-xs px-2 py-1 rounded bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20">+ Agregar</button>
+                </div>
+                {variants.map((v, i) => (
+                  <div key={i} className="flex items-center gap-2 mb-2">
+                    <input type="text" placeholder="Completa/Perfil" value={v.label} onChange={(e) => updateVariant(i, 'label', e.target.value)} className="flex-1 bg-black/30 border border-[#FFD700]/10 rounded px-3 py-1.5 text-sm text-white outline-none focus:border-[#FFD700]/30" />
+                    <span className="text-gray-400 text-xs">$</span>
+                    <input type="number" min="0" step="0.5" value={v.price || ''} onChange={(e) => updateVariant(i, 'price', e.target.value)} className="w-20 bg-black/30 border border-[#FFD700]/10 rounded px-3 py-1.5 text-sm text-white outline-none focus:border-[#FFD700]/30" />
+                    <button onClick={() => removeVariant(i)} className="text-red-400 hover:text-red-300">&times;</button>
+                  </div>
+                ))}
               </div>
 
               <div>
