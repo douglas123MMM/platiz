@@ -37,14 +37,12 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-[#0D0D0D] text-white overflow-hidden">
-      {/* HERO */}
+    <div className="bg-[#0A0A0A] text-white overflow-hidden">
       <motion.section style={{ y: heroY }} className="relative min-h-screen flex items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.04),transparent_50%)]" />
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring", stiffness: 200 }}>
-            <Logo size={64} className="mx-auto mb-6 drop-shadow-[0_0_24px_rgba(255,215,0,0.35)]" />
+            <Logo size={64} className="mx-auto mb-6 drop-shadow-[0_0_30px_rgba(255,215,0,0.5)]" />
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -54,7 +52,7 @@ export default function LandingPage() {
             className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 leading-[0.95]"
             style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
             <span className="text-white">Global </span>
-            <span className="text-[#FFD700] drop-shadow-[0_0_30px_rgba(255,215,0,0.5)]">Dorado</span>
+            <span className="bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#FFF8DC] bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(255,215,0,0.4)]">Dorado</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
@@ -65,7 +63,7 @@ export default function LandingPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/register"
-              className="px-10 py-4 bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-base hover:from-[#FFE44D] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.3)] transition-all duration-200 inline-flex items-center gap-2">
+              className="px-10 py-4 bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-base hover:from-[#FFD700] hover:via-[#FFF8DC] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.4)] transition-all duration-200 inline-flex items-center gap-2">
               Activa Tu Oficina Virtual <IconArrowRight className="w-4 h-4" />
             </Link>
             <Link to="/login"
@@ -79,7 +77,7 @@ export default function LandingPage() {
             {[{ v: '170+', l: 'Servicios para Vender' }, { v: '80%', l: 'Comision por Venta' }, { v: '0', l: 'Experiencia Necesaria' }, { v: '24/7', l: 'Sistema Automatizado' }].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + i * 0.1 }}
                 className="text-center p-5 rounded-2xl bg-[#161616] border border-[#2A2A2A]">
-                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent" style={{ textShadow: '0 0 20px rgba(255,215,0,0.2)' }}>
+                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#FFF8DC] bg-clip-text text-transparent" style={{ filter: 'drop-shadow(0 0 15px rgba(255,215,0,0.35))' }}>
                   {s.v}
                 </p>
                 <p className="text-xs text-[#A0A0A0] mt-1.5">{s.l}</p>
@@ -309,7 +307,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/register"
-              className="px-12 py-4.5 bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-lg hover:from-[#FFE44D] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.3)] transition-all duration-200 inline-flex items-center gap-2">
+              className="px-12 py-4.5 bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-lg hover:from-[#FFD700] hover:via-[#FFF8DC] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.4)] transition-all duration-200 inline-flex items-center gap-2">
               Activar Mi Oficina Ahora <IconArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/login"
