@@ -243,6 +243,9 @@ export default function AffiliateCatalog() {
                 <h3 className={`text-sm font-bold mb-1 line-clamp-2 leading-snug ${theme === 'light' ? 'text-gray-900' : 'text-white group-hover:text-[#FFD700] transition-colors'}`}>{item.title}</h3>
                 {item.description && <p className={`text-xs line-clamp-2 mb-2 flex-1 ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>{item.description}</p>}
                 {!item.description && <div className="flex-1" />}
+                {(item as any).price > 0 && (
+                  <p className="text-[#FFD700] text-sm font-bold mb-1">${(item as any).price.toFixed(2)} USDT</p>
+                )}
                 <div className="flex gap-2 mt-auto">
                   <a
                     href={affiliate?.whatsapp ? `https://wa.me/${affiliate.whatsapp.replace(/\D/g, '')}?text=Hola!%20Quiero%20info%20de%20${encodeURIComponent(item.title)}` : (affiliate?.telegram_link || '#')}
