@@ -101,7 +101,8 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight gold-text mb-6 leading-[1.1]">
+            className="font-display text-5xl md:text-7xl lg:text-8xl gold-text mb-6 leading-[1.1] tracking-tight"
+            style={{ fontWeight: 700, letterSpacing: '-0.02em' }}>
             Global Dorado
           </motion.h1>
 
@@ -161,7 +162,7 @@ export default function LandingPage() {
       <AnimatedSection id="info" className="relative py-24 md:py-32 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div className="text-center mb-16" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-extrabold mb-4 gold-text">¿Que es Global Dorado?</motion.h2>
+            <motion.h2 variants={itemVariants} className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}>¿Que es Global Dorado?</motion.h2>
             <motion.p variants={itemVariants} className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
               Es una plataforma que ofrece oportunidades reales como promotor de ventas. Los <strong className="text-[#FFD700]">socios ganan el 80% de comision directa</strong> por cada venta del acceso vitalicio al sistema.
             </motion.p>
@@ -203,7 +204,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4"><IconEducation className="w-7 h-7 text-[#FFD700] inline mr-2" />Sistema de Capacitacion</h2>
+            <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconEducation className="w-7 h-7 text-[#FFD700] inline mr-2" />Sistema de Capacitacion</h2>
             <p className="text-xl text-gray-400">El Metodo Global Dorado</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -232,7 +233,7 @@ export default function LandingPage() {
       <AnimatedSection className="relative py-24 md:py-32 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4"><IconTools className="w-7 h-7 text-[#FFD700] inline mr-2" />El Arsenal Digital</h2>
+            <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconTools className="w-7 h-7 text-[#FFD700] inline mr-2" />El Arsenal Digital</h2>
             <p className="text-xl text-gray-400">La biblioteca de software y servicios digitales mas grande del mercado</p>
           </motion.div>
           <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
@@ -283,7 +284,7 @@ export default function LandingPage() {
                 className="w-16 h-16 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#FFD700]/20">
                 <IconChat className="w-8 h-8 text-white" />
               </motion.div>
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-4"><IconRobot className="w-7 h-7 text-[#FFD700] inline mr-2" />Chat con IA Integrado</h2>
+              <h2 className="font-display text-3xl md:text-4xl gold-text mb-4" style={{ fontWeight: 600 }}><IconRobot className="w-7 h-7 text-[#FFD700] inline mr-2" />Chat con IA Integrado</h2>
               <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
                 Conecta con multiples proveedores de IA desde un solo lugar. <strong className="text-[#FFD700]">ChatGPT Plus, Gemini, Perplexity, Claude</strong> y mas — incluido en tu acceso vitalicio.
               </p>
@@ -297,7 +298,7 @@ export default function LandingPage() {
         <AnimatedSection className="relative py-24 md:py-32 z-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-4"><IconVideo className="w-7 h-7 text-[#FFD700] inline mr-2" />Contenido Exclusivo</h2>
+              <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconVideo className="w-7 h-7 text-[#FFD700] inline mr-2" />Contenido Exclusivo</h2>
               <p className="text-xl text-gray-400">Descubre nuestro contenido en video</p>
             </motion.div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -336,7 +337,7 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-4"><IconUsers className="w-7 h-7 text-[#FFD700] inline mr-2" />Nuestros Socios</h2>
+              <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconUsers className="w-7 h-7 text-[#FFD700] inline mr-2" />Nuestros Socios</h2>
               <p className="text-xl text-gray-400">Conoce al equipo que transforma el internet en dinero</p>
             </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -367,7 +368,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/10 via-[#FFD700]/5 to-transparent" />
         <motion.div animate={{ scale: [1, 1.02, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-          <h2 className="text-4xl md:text-6xl font-extrabold mb-6 gold-text">¿Listo para transformar el internet en dinero?</h2>
+          <h2 className="font-display text-4xl md:text-6xl gold-text mb-6" style={{ fontWeight: 600 }}>¿Listo para transformar el internet en dinero?</h2>
           <p className="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
             Unete a Global Dorado y accede al arsenal digital mas completo, capacitacion elite y oportunidades reales de ingresos.
           </p>
