@@ -55,6 +55,7 @@ export default function AffiliateDashboard() {
   const [myPrices, setMyPrices] = useState<Record<string, number>>({});
   const [catalogItems, setCatalogItems] = useState<Array<{ id: string; title: string; category_slug: string }>>([]);
   const [savingPrices, setSavingPrices] = useState(false);
+  const [priceSearch, setPriceSearch] = useState('');
 
   useEffect(() => { fetchDashboard(); fetchPrices(); }, []);
 
@@ -431,8 +432,16 @@ export default function AffiliateDashboard() {
         </div>
         <p className="text-gray-500 text-xs mb-3">Define el precio de venta para cada servicio. Los productos sin precio usaran el mensaje generico.</p>
         {catalogItems.length > 0 ? (
-          <div className="space-y-1 max-h-80 overflow-y-auto">
-            {catalogItems.map(item => (
+          <>
+            <input
+              type="text"
+              placeholder="Buscar producto..."
+              value={priceSearch}
+              onChange={(e) => setPriceSearch(e.target.value)}
+              className="w-full mb-3 px-3 py-2 bg-black/30 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
+            />
+            <div className="space-y-1 max-h-80 overflow-y-auto">
+            {catalogItems.filter(i => !priceSearch || i.title.toLowerCase().includes(priceSearch.toLowerCase())).map(item => (
               <div key={item.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
                 <span className="text-gray-300 text-xs flex-1 truncate mr-3">{item.title}</span>
                 <div className="flex items-center gap-1">
@@ -449,7 +458,8 @@ export default function AffiliateDashboard() {
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          </>
         ) : (
           <p className="text-gray-500 text-xs text-center py-4">Haz clic en "Cargar productos" para ver la lista.</p>
         )}
