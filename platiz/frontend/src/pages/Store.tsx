@@ -72,7 +72,14 @@ export default function Store() {
       if (search.trim()) params.set('search', search.trim());
       const qs = params.toString();
       const { data } = await api.get(`/store/products${qs ? '?' + qs : ''}`);
-      setProducts(data || []);
+      const sorted = (data || []).sort((a: any, b: any) => {
+        const aGood = a.image_url && a.image_url.length > 5 && !a.image_url.includes('wikimedia') && !a.image_url.includes('wikipedia');
+        const bGood = b.image_url && b.image_url.length > 5 && !b.image_url.includes('wikimedia') && !b.image_url.includes('wikipedia');
+        if (aGood && !bGood) return -1;
+        if (!aGood && bGood) return 1;
+        return 0;
+      });
+      setProducts(sorted);
     } catch (e) {
       console.error('Store fetch error:', e);
     }
