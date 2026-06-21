@@ -175,15 +175,7 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
   try {
     const refCode = req.query.ref as string;
 
-    // Items del catalogo original
-    const { data: items } = await supabase
-      .from('items')
-      .select('id, category_slug, title, description, image_url, link, video_url, sort_order')
-      .eq('active', 1)
-      .in('category_slug', ['services', 'movies', 'ia'])
-      .order('sort_order', { ascending: true });
-
-    // Productos de la tienda activos
+    // Solo productos de la tienda activos
     const { data: store } = await supabase
       .from('store_products')
       .select('id, category, title, description, image_url, vendor_name, price, delivery_type, account_type, duration_days')
@@ -201,7 +193,6 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       }
     }
 
-    // Normalizar customPrices: { id: number } o { id: [{label, price}] }
     const getCustomVariants = (id: string): { label: string; price: number }[] => {
       const v = customPrices[id];
       if (!v) return [];
@@ -211,100 +202,42 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       return [];
     };
 
-    // Crear mapa de precios desde store_products
-    const priceMap = new Map<string, { price: number; delivery_type: string; account_type: string; duration_days: number }>();
-    for (const p of (store || [])) {
-      const key = p.title.toLowerCase().trim();
-      if (!priceMap.has(key)) {
-        priceMap.set(key, {
-          price: parseFloat(p.price) || 0,
-          delivery_type: p.delivery_type || 'manual',
-          account_type: p.account_type || '',
-          duration_days: p.duration_days || 0,
-        });
-      }
-    }
-
-    // Armar lista de items con variantes
+    // Construir lista solo de store_products con precios custom
     const allItems: any[] = [];
-
-    for (const item of (items || [])) {
-      const storeInfo = priceMap.get(item.title.toLowerCase().trim());
-      const variants = getCustomVariants(item.id).length > 0 ? getCustomVariants(item.id) 
-        : getCustomVariants(`store_${item.id}`).length > 0 ? getCustomVariants(`store_${item.id}`)
-        : [];
-      
-      if (variants.length === 0) {
-        // Sin custom - usa precio del store o 0 si tiene ref
-        const finalPrice = refCode ? 0 : (storeInfo ? storeInfo.price : 0);
-        allItems.push({
-          ...item,
-          price: finalPrice,
-          price_label: '',
-          has_price: finalPrice > 0,
-          delivery_type: storeInfo?.delivery_type || 'manual',
-          account_type: storeInfo?.account_type || '',
-          duration_days: storeInfo?.duration_days || 0,
-        });
-      } else {
-        // Con variantes custom - una entrada por variante
-        for (const v of variants) {
-          allItems.push({
-            ...item,
-            id: item.id + '_' + variants.indexOf(v),
-            price: v.price,
-            price_label: v.label || '',
-            has_price: v.price > 0,
-            delivery_type: storeInfo?.delivery_type || 'manual',
-            account_type: storeInfo?.account_type || '',
-            duration_days: storeInfo?.duration_days || 0,
-          });
-        }
-      }
-    }
-
-    // Agregar productos de la tienda que no esten ya en items
-    const itemTitles = new Set(allItems.map((i: any) => i.title.toLowerCase().trim()));
-    const moreItems: any[] = [];
     for (const p of (store || [])) {
-      const t = p.title.toLowerCase().trim();
-      if (itemTitles.has(t)) continue;
       const storeId = `store_${p.id}`;
       const variants = getCustomVariants(storeId).length > 0 ? getCustomVariants(storeId) 
         : getCustomVariants(p.id).length > 0 ? getCustomVariants(p.id) : [];
       
       if (variants.length === 0) {
         const finalPrice = refCode ? 0 : (parseFloat(p.price) || 0);
-        moreItems.push({
+        allItems.push({
           id: storeId,
           category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
           title: p.title, description: p.description || '', image_url: p.image_url || '',
           link: '', video_url: '', sort_order: 0,
           price: finalPrice, price_label: '', has_price: finalPrice > 0,
-          delivery_type: p.delivery_type || 'manual', account_type: p.account_type || '', duration_days: p.duration_days || 0,
         });
       } else {
         for (const v of variants) {
-          moreItems.push({
+          allItems.push({
             id: storeId + '_' + variants.indexOf(v),
             category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
             title: p.title, description: p.description || '', image_url: p.image_url || '',
             link: '', video_url: '', sort_order: 0,
             price: v.price, price_label: v.label || '', has_price: v.price > 0,
-            delivery_type: p.delivery_type || 'manual', account_type: p.account_type || '', duration_days: p.duration_days || 0,
           });
         }
       }
     }
 
-    let merged = [...allItems, ...moreItems];
-    merged.sort((a: any, b: any) => {
+    allItems.sort((a: any, b: any) => {
       if (a.has_price && !b.has_price) return -1;
       if (!a.has_price && b.has_price) return 1;
       return 0;
     });
 
-    res.json(merged);
+    res.json(allItems);
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
