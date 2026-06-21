@@ -174,14 +174,14 @@ export async function purchaseProduct(req: AuthRequest, res: Response): Promise<
       await supabase.from('store_products').update({ stock: product.stock - 1 }).eq('id', product_id);
     }
 
-    await supabase.from('store_purchases').insert([{
+    const { data: purchase } = await supabase.from('store_purchases').insert([{
       user_id: userId,
       product_id,
       product_title: product.title,
       amount: price,
       status: 'completed',
       expires_at: expiresAt
-    }]);
+    }]).select('id').single();
 
     await supabase.from('store_transactions').insert([{
       user_id: userId,
@@ -191,8 +191,11 @@ export async function purchaseProduct(req: AuthRequest, res: Response): Promise<
       status: 'completed'
     }]);
 
+    const purchaseId = purchase?.id ? `GD-${purchase.id.substring(0, 8).toUpperCase()}` : null;
+
     res.json({
       success: true,
+      purchase_id: purchaseId,
       product_title: product.title,
       amount: price,
       new_balance: newBalance,

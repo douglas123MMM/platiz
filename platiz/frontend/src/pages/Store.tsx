@@ -24,6 +24,7 @@ interface StoreProduct {
 interface PurchaseResponse {
   success: boolean;
   message?: string;
+  purchase_id?: string;
   new_balance?: number;
   delivery_email?: string;
   delivery_password?: string;
@@ -359,7 +360,10 @@ export default function Store() {
             {purchaseResult && selectedProduct.delivery_type?.toLowerCase() === 'manual' && (
               <div className="px-5 md:px-6 pt-2">
                 <div className="p-3 md:p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                  <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual - Instrucciones</p>
+                  <p className="text-yellow-400 font-semibold text-sm mb-2">Entrega Manual</p>
+                  {purchaseResult.purchase_id && (
+                    <p className="text-[#FFD700] text-xs font-bold mb-2">ID: {purchaseResult.purchase_id}</p>
+                  )}
                   {selectedProduct.purchase_instructions ? (
                     <p className="text-gray-300 text-xs md:text-sm whitespace-pre-wrap">{selectedProduct.purchase_instructions}</p>
                   ) : selectedProduct.terms ? (
@@ -367,7 +371,7 @@ export default function Store() {
                   ) : (
                     <>
                       <p className="text-gray-300 text-xs md:text-sm">Tu pedido sera procesado por nuestro equipo.</p>
-                      <p className="text-gray-400 text-xs mt-1">Te contactaremos en las proximas 1-24 horas para entregarte las credenciales.</p>
+                      <p className="text-gray-400 text-xs mt-1">Envia tu factura a soporte para mayor rapidez en la entrega. Guarda tu ID de compra como referencia.</p>
                     </>
                   )}
                 </div>
