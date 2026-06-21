@@ -16,7 +16,7 @@ const features = [
 
 const categories = [
   { icon: SectionStreaming, title: 'Entretenimiento', desc: 'Netflix, Disney+, Spotify, YouTube Premium, gaming y mas' },
-  { icon: IconCourses, title: 'Capacitacion', desc: 'Cursos de marketing digital, estrategias de venta y cierre' },
+  { icon: IconCourses, title: 'Capacitacion', desc: 'Cursos de viralidad organica, estrategias de venta y cierre' },
   { icon: SectionBooks, title: 'Libros', desc: 'Biblioteca digital con libros de desarrollo personal y negocios' },
   { icon: SectionApps, title: 'Aplicaciones', desc: 'Apps moviles y web para potenciar tu productividad' },
   { icon: SectionTelegram, title: 'Comunidad Telegram', desc: 'Canales VIP con soporte 24/7 y contenido exclusivo' },
@@ -64,7 +64,9 @@ export default function LandingPage() {
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
   const heroRef = useRef(null);
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 800], [0, 60]);
+  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 600], [1, 0.92]);
+  const heroY = useTransform(scrollY, [0, 600], [0, 100]);
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
@@ -85,7 +87,7 @@ export default function LandingPage() {
       </div>
 
       {/* Hero */}
-      <motion.section ref={heroRef} style={{ y: heroY }}
+      <motion.section ref={heroRef} style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
         className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0 z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.10),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,180,255,0.05),transparent_50%)]" />
@@ -110,7 +112,7 @@ export default function LandingPage() {
 
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.8 }}
             className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed mb-10">
-            Ecosistema digital de alta gama con acceso vitalicio. Capacitacion especializada en marketing digital, el arsenal de software y servicios digitales mas completo del mercado, y oportunidades reales de ingresos como promotor.
+            Ecosistema digital de alta gama con acceso vitalicio. El arsenal de software y servicios digitales mas completo del mercado, y oportunidades reales de ingresos como promotor.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
@@ -168,7 +170,7 @@ export default function LandingPage() {
           <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             {[
               { title: '¿Como funciona?', desc: 'Operamos como un equipo elite de afiliados. Brindamos capacitacion maestra y recursos premium para que los miembros operen su negocio digital desde casa con efectividad absoluta.' },
-              { title: '¿Es legitimo?', desc: 'Si. El valor real reside en la capacitacion especializada y el acceso a una de las bibliotecas de software y servicios digitales mas grandes del mercado.' }
+              { title: '¿Es legitimo?', desc: 'Si. El valor real reside en la capacitacion especializada en viralidad y el acceso a una de las bibliotecas de software y servicios digitales mas grandes del mercado.' }
             ].map((item, i) => (
               <motion.div key={i} variants={itemVariants} whileHover={cardHover}
                 className="group rounded-3xl p-8 md:p-10 bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-[#FFD700]/20 transition-all duration-300 shadow-[0_2px_12px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.03)]">
@@ -206,7 +208,7 @@ export default function LandingPage() {
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
-              { icon: IconLightning, title: 'Marketing Digital', desc: 'Te ensenamos a dominar las redes sociales y plataformas digitales para atraer clientes sin gastar en publicidad.' },
+              { icon: IconLightning, title: 'Cursos de Viralidad Organica', desc: 'Te ensenamos a dominar los algoritmos de TikTok, Instagram Reels y YouTube para atraer clientes en masa sin gastar un centavo en publicidad.' },
               { icon: IconStar, title: 'Estrategias de Venta y Cierre', desc: 'Proporcionamos guiones, psicologia de venta y tecnicas de cierre de alto impacto para comercializar el acceso a la comunidad de forma infalible.' }
             ].map((item, i) => {
               const Icon = item.icon;
@@ -329,14 +331,14 @@ export default function LandingPage() {
       )}
 
       {/* Partners */}
-      <AnimatedSection className="relative py-24 md:py-32 z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4"><IconUsers className="w-7 h-7 text-[#FFD700] inline mr-2" />Nuestros Socios</h2>
-            <p className="text-xl text-gray-400">Conoce al equipo que transforma el internet en dinero</p>
-          </motion.div>
-          {partners.length > 0 ? (
+      {partners.length > 0 && (
+        <AnimatedSection className="relative py-24 md:py-32 z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-4"><IconUsers className="w-7 h-7 text-[#FFD700] inline mr-2" />Nuestros Socios</h2>
+              <p className="text-xl text-gray-400">Conoce al equipo que transforma el internet en dinero</p>
+            </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {partners.map((p: any, i: number) => (
                 <motion.div key={p.id} initial={{ opacity: 0, y: 30, scale: 0.9 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }}
@@ -356,48 +358,9 @@ export default function LandingPage() {
                 </motion.div>
               ))}
             </div>
-          ) : (
-            <p className="text-gray-500 text-center">Proximamente...</p>
-          )}
-        </div>
-      </AnimatedSection>
-
-      {/* Testimonials */}
-      <AnimatedSection className="relative py-24 md:py-32 z-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 gold-text">Lo Que Dicen Nuestros Socios</h2>
-            <p className="text-xl text-gray-400">Testimonios reales de personas que ya estan generando ingresos</p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: 'Maria G.', role: 'Socia Activa', text: 'Con Global Dorado aprendi a vender servicios digitales. Ya tengo 15 clientes fijos y gano en dolares desde casa.' },
-              { name: 'Carlos R.', role: 'Afiliado VIP', text: 'La capacitacion me ayudo a entender el negocio. El soporte 24/7 es real, siempre me resuelven las dudas.' },
-              { name: 'Ana L.', role: 'Lider de Equipo', text: 'Empece sin saber nada y hoy tengo mi propio equipo de 8 personas. Global Dorado cambio mi vida financiera.' }
-            ].map((t, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }} whileHover={cardHover}
-                className="glass rounded-2xl p-6 border border-[#FFD700]/10 hover:border-[#FFD700]/20 transition-all">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFD700] to-[#B8860B] flex items-center justify-center text-sm font-bold text-black">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold text-sm">{t.name}</p>
-                    <p className="text-[#FFD700]/60 text-xs">{t.role}</p>
-                  </div>
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed">"{t.text}"</p>
-                <div className="flex gap-0.5 mt-3">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-[#FFD700] text-sm">★</span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
+      )}
 
       {/* CTA Final */}
       <AnimatedSection className="relative py-32 md:py-40 z-10">
