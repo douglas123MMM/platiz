@@ -232,7 +232,7 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       const storeInfo = priceMap.get(item.title.toLowerCase().trim());
       const titleKey = item.title.toLowerCase().trim();
       const customPrice = customPrices[item.id] ?? customPrices[`store_${item.id}`] ?? customByTitle[titleKey];
-      const finalPrice = customPrice ?? (storeInfo ? storeInfo.price : 0);
+      const finalPrice = refCode ? (customPrice ?? 0) : (customPrice ?? (storeInfo ? storeInfo.price : 0));
       return {
         ...item,
         price: finalPrice,
@@ -250,7 +250,7 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       .map((p: any) => {
         const storeId = `store_${p.id}`;
         const customPrice = customPrices[storeId] ?? customPrices[p.id];
-        const finalPrice = customPrice ?? (parseFloat(p.price) || 0);
+        const finalPrice = refCode ? (customPrice ?? 0) : (customPrice ?? (parseFloat(p.price) || 0));
         return {
           id: storeId,
           category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
