@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { uploadVideoToStorage, deleteVideoFromStorage } from '../../services/supabase';
 import toast from 'react-hot-toast';
-import { HiSave, HiVideoCamera, HiTrash, HiPlus, HiGlobe, HiRefresh } from 'react-icons/hi';
+import { HiSave, HiVideoCamera, HiTrash, HiPlus, HiGlobe, HiRefresh, HiPhotograph } from 'react-icons/hi';
 
 interface PageConfig {
   title: string;
@@ -27,6 +27,8 @@ const PAGE_LABELS: Record<string, string> = {
 export default function LandingConfigAdmin() {
   const [configs, setConfigs] = useState<Record<string, PageConfig>>({});
   const [activePage, setActivePage] = useState('landing');
+  const [logoUrl, setLogoUrl] = useState('');
+  const [logoUploading, setLogoUploading] = useState(false);
   const [form, setForm] = useState<PageConfig>({ title: '', subtitle: '', video_url: '', video_type: '', text: '', bullets: [], price: '', cta_text: '', show_form: true });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -142,6 +144,38 @@ export default function LandingConfigAdmin() {
         <button onClick={() => switchPage(activePage)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111] text-gray-400 hover:text-white border border-[#FFD700]/10 text-sm transition-colors">
           <HiRefresh className="w-4 h-4" /> Recargar
         </button>
+      </div>
+
+      {/* Logo de la Plataforma */}
+      <div className="glass rounded-2xl border border-[#FFD700]/10 p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <HiPhotograph className="w-6 h-6 text-[#FFD700]" />
+          <span className="text-white font-medium">Logo de la Plataforma</span>
+        </div>
+        <div className="flex items-center gap-4">
+          {logoUrl ? (
+            <img src={logoUrl} alt="Logo" className="w-16 h-16 object-contain rounded-xl bg-[#111] p-2 border border-[#FFD700]/10" />
+          ) : (
+            <div className="w-16 h-16 rounded-xl bg-[#111] border border-[#FFD700]/10 flex items-center justify-center text-2xl text-[#FFD700]">G</div>
+          )}
+          <div>
+            <p className="text-gray-400 text-xs mb-2">Sube el logo original de Global Dorado</p>
+            <input type="file" accept="image/*" disabled={logoUploading}
+              onChange={async (e) => {
+                const file = e.target.files?.[0]; if (!file) return;
+                setLogoUploading(true);
+                try {
+                  const { uploadVideoToStorage } = await import('../../services/supabase');
+                  const url = await (uploadVideoToStorage as any)(file);
+                  await api.put('/settings', { logo_url: url });
+                  setLogoUrl(url);
+                  toast.success('Logo actualizado');
+                } catch { toast.error('Error al subir'); }
+                setLogoUploading(false);
+              }}
+              className="text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20" />
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
