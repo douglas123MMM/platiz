@@ -1,72 +1,60 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import Logo from '../components/Logo';
 import FloatingButtons from '../components/FloatingButtons';
-import { IconArrowRight, IconChevronDown, IconPlay, IconLightning, IconStar, IconShield, IconGlobe, IconCheck } from '../icons/PremiumIcons';
-import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat, IconEducation, IconTools, IconRobot, IconVideo, IconUsers } from '../icons/PremiumIcons';
+import { IconArrowRight, IconChevronDown, IconPlay, IconLightning, IconStar, IconShield, IconGlobe, IconCheck, IconUsers } from '../icons/PremiumIcons';
+import { SectionStreaming, SectionBooks, SectionApps, SectionTelegram, SectionServices, SectionAcademy, SectionAffiliate, IconCourses, IconChat, IconEducation, IconTools, IconRobot, IconVideo } from '../icons/PremiumIcons';
 
-const features = [
-  { title: '80% Comision Directa', desc: 'Gana el 80% por cada venta del acceso vitalicio al sistema.', icon: IconLightning, color: '#FFD700' },
-  { title: 'Acceso Vitalicio', desc: 'Un solo pago para toda la vida. Sin mensualidades ni cuotas ocultas.', icon: IconStar, color: '#FFD700' },
-  { title: 'Soporte VIP 24/7', desc: 'Asistencia directa y personalizada cuando la necesites, sin limites.', icon: IconShield, color: '#FFD700' },
-  { title: 'Actualizaciones Perpetuas', desc: 'Acceso gratuito a cada nuevo servicio que se anexe al sistema.', icon: IconGlobe, color: '#FFD700' },
-];
-
-const categories = [
-  { icon: SectionStreaming, title: 'Entretenimiento', desc: 'Netflix, Disney+, Spotify, YouTube Premium, gaming y mas' },
-  { icon: IconCourses, title: 'Capacitacion', desc: 'Cursos de viralidad organica, estrategias de venta y cierre' },
-  { icon: SectionBooks, title: 'Libros', desc: 'Biblioteca digital con libros de desarrollo personal y negocios' },
-  { icon: SectionApps, title: 'Aplicaciones', desc: 'Apps moviles y web para potenciar tu productividad' },
-  { icon: SectionTelegram, title: 'Comunidad Telegram', desc: 'Canales VIP con soporte 24/7 y contenido exclusivo' },
-  { icon: SectionServices, title: 'Arsenal Digital', desc: 'Office 365, Adobe, Solidworks, AutoCAD, ChatGPT Plus y mas' },
-  { icon: SectionAcademy, title: 'Academia Global', desc: 'El Metodo: capacitacion maestra para tu negocio digital' },
-  { icon: SectionAffiliate, title: 'Afiliacion', desc: 'Instrucciones y enlaces para promover Global Dorado' },
-];
-
-const arsenalItems = [
-  'Office 365 Premium / Personal / Pro', 'Windows 10 & 11 Pro', 'Adobe Creative Cloud 1 ano',
-  'AutoCAD, Civil 3D, Revit, Inventor', 'Solidworks 2016-2024', 'SketchUp 2021-2025',
-  'ChatGPT Plus', 'Gemini IA', 'Perplexity Pro', 'Netflix, Disney+, MAX, YouTube Premium',
-  'Spotify Premium, Apple Music, Tidal', 'CapCut Pro, Canva Pro',
-  'Eset Nod32 / Internet Security', 'CorelDraw 2021-2025', 'Photoshop e Illustrator',
-  'Nitro PDF 14 Pro', 'Camtasia, Filmora', 'PlayStation 4/5, Nintendo Switch',
-];
-
-const easeOut: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" as const } }
-};
-
-const cardHover = { scale: 1.02, y: -4, transition: { duration: 0.3 } };
-
-function AnimatedSection({ children, className = '', delay = 0, ...props }: { children: React.ReactNode; className?: string; delay?: number; id?: string }) {
+function SectionReveal({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 60 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, delay, ease: "easeOut" }} className={className}>
+    <motion.div ref={ref} initial={{ opacity: 0, y: 60 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: "easeOut" }} className={className}>
       {children}
     </motion.div>
   );
 }
 
+const stats = [
+  { value: '170+', label: 'Servicios' },
+  { value: '80%', label: 'Comision' },
+  { value: '24/7', label: 'Soporte' },
+  { value: '1', label: 'Pago Unico' },
+];
+
+const features = [
+  { icon: IconShield, title: 'Acceso Vitalicio', desc: 'Un solo pago. Sin mensualidades ni costos ocultos.' },
+  { icon: IconLightning, title: '80% Comision', desc: 'Gana el 80% por cada venta como promotor.' },
+  { icon: IconGlobe, title: 'Actualizaciones', desc: 'Cada nuevo servicio se agrega sin costo adicional.' },
+  { icon: IconStar, title: 'Soporte VIP', desc: 'Asistencia directa cuando la necesites.' },
+];
+
+const catalog = [
+  { icon: SectionStreaming, title: 'Streaming', desc: 'Netflix, Disney+, HBO Max, Prime Video, Spotify y mas' },
+  { icon: IconCourses, title: 'Capacitacion', desc: 'Cursos de marketing digital y estrategias de venta' },
+  { icon: SectionServices, title: 'Software', desc: 'Office 365, Adobe CC, AutoCAD, Solidworks, ChatGPT Plus' },
+  { icon: SectionBooks, title: 'Libros', desc: 'Biblioteca digital de desarrollo personal y negocios' },
+  { icon: SectionApps, title: 'Apps', desc: 'Aplicaciones premium para productividad y diseno' },
+  { icon: SectionAcademy, title: 'Academia', desc: 'El Metodo Global Dorado de capacitacion' },
+];
+
+const arsenalItems = [
+  'Netflix, Disney+, MAX, YouTube Premium', 'Spotify Premium, Apple Music, Tidal',
+  'Office 365 Premium / Pro', 'Adobe Creative Cloud', 'ChatGPT Plus, Gemini IA, Perplexity',
+  'Windows 10 & 11 Pro', 'AutoCAD, Civil 3D, Revit, Inventor', 'Solidworks, SketchUp',
+  'CapCut Pro, Canva Pro', 'CorelDraw, Photoshop, Illustrator',
+  'Eset Nod32, Antivirus', 'Nitro PDF 14 Pro', 'Camtasia, Filmora',
+  'PlayStation, Nintendo, Xbox', 'Y mucho mas...',
+];
+
 export default function LandingPage() {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   const [partners, setPartners] = useState<any[]>([]);
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
-  const heroRef = useRef(null);
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 600], [1, 0.92]);
-  const heroY = useTransform(scrollY, [0, 600], [0, 100]);
+  const heroY = useTransform(scrollY, [0, 800], [0, 80]);
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
@@ -74,334 +62,299 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-[#0a0a0f] text-white overflow-hidden">
-      {/* Floating particles background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {[...Array(20)].map((_, i) => (
-          <motion.div key={i} className="absolute w-1 h-1 bg-[#FFD700]/20 rounded-full"
-            initial={{ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight }}
-            animate={{ y: [null, -100], opacity: [0, 0.5, 0] }}
-            transition={{ duration: 3 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 5, ease: "easeInOut" }}
-          />
-        ))}
-      </div>
+    <div className="bg-[#0a0a0f] text-white">
+      {/* HERO */}
+      <motion.section style={{ y: heroY }} className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.08),transparent_60%)]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#FFD700]/[0.04] rounded-full blur-[150px]" />
 
-      {/* Hero */}
-      <motion.section ref={heroRef} style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-        className="relative min-h-screen flex items-center justify-center pt-16 pb-8 md:pb-0 z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,215,0,0.10),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,180,255,0.05),transparent_50%)]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-[#FFD700]/[0.06] rounded-full blur-[140px] animate-pulse" />
-        <div className="absolute bottom-0 left-0 right-0 h-64" style={{ background: 'linear-gradient(to top,#0a0a0f,transparent)' }} />
-
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }}
-          className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }}>
-            <Logo size={80} className="mx-auto mb-8 drop-shadow-[0_0_40px_rgba(255,215,0,0.5)]" />
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring" }}>
+            <Logo size={72} className="mx-auto mb-6 drop-shadow-[0_0_30px_rgba(255,215,0,0.4)]" />
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl gold-text mb-6 leading-[1.1] tracking-tight"
-            style={{ fontWeight: 700, letterSpacing: '-0.02em' }}>
-            Global Dorado
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            className="text-[#FFD700]/60 text-sm tracking-[0.4em] uppercase mb-4">Plataforma Digital Todo en Uno</motion.p>
+
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}
+            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.1]"
+            style={{ fontFamily: "'Bodoni Moda', Georgia, serif", fontWeight: 700 }}>
+            <span className="gold-text">Global Dorado</span>
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-xl md:text-3xl lg:text-4xl font-light text-[#FFD700]/80 tracking-[0.3em] md:tracking-[0.5em] uppercase mb-6">
-            Transforma el Internet en Dinero
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
+            className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed">
+            Ecosistema digital con acceso vitalicio. El arsenal de software y servicios digitales mas completo del mercado con oportunidades reales de ingresos.
           </motion.p>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed mb-10">
-            Ecosistema digital de alta gama con acceso vitalicio. El arsenal de software y servicios digitales mas completo del mercado, y oportunidades reales de ingresos como promotor.
-          </motion.p>
-
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/register" className="group relative inline-flex items-center gap-2 px-10 py-4 bg-[#FFD700] text-black font-bold rounded-2xl text-lg hover:bg-[#FFE44D] active:scale-[0.98] transition-all duration-200 shadow-[0_8px_32px_rgba(255,215,0,0.3)] hover:shadow-[0_12px_40px_rgba(255,215,0,0.45)] min-h-[56px] overflow-hidden">
-              <span className="relative z-10">Comenzar ahora</span>
-              <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-              <motion.div className="absolute inset-0 bg-white/20" initial={{ x: "-100%" }} whileHover={{ x: 0 }} transition={{ duration: 0.3 }} />
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link to="/register" className="group px-8 py-3.5 bg-[#FFD700] text-black font-bold rounded-xl text-base hover:bg-[#FFE44D] transition-all shadow-[0_4px_20px_rgba(255,215,0,0.25)] inline-flex items-center gap-2">
+              Comenzar Ahora <IconArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <button onClick={() => scrollTo('info')} className="group inline-flex items-center gap-2 px-10 py-4 border border-white/10 text-gray-300 font-semibold rounded-2xl text-lg hover:bg-white/5 hover:border-white/20 hover:text-white active:scale-[0.98] transition-all duration-200 backdrop-blur-sm min-h-[56px]">
-              Conocer mas
-              <IconChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
-            </button>
+            <Link to="/login" className="px-8 py-3.5 border border-white/10 text-gray-400 font-medium rounded-xl text-base hover:border-white/30 hover:text-white transition-all inline-flex items-center gap-2">
+              Iniciar Sesion
+            </Link>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1.5 }}
-            className="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
-            {[{ text: 'Acceso Vitalicio', active: true }, { text: '80% Comision', active: true }, { text: 'Soporte 24/7', active: true }].map((item, i) => (
-              <motion.span key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.6 + i * 0.15 }} className="flex items-center gap-2">
-                <IconCheck className="w-4 h-4 text-[#FFD700]" /> {item.text}
-              </motion.span>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {stats.map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 + i * 0.1 }}
+                className="text-center p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                <p className="text-2xl md:text-3xl font-bold text-[#FFD700]">{s.value}</p>
+                <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+              </motion.div>
             ))}
           </motion.div>
 
           {landingVideos.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.8 }}
-              className="mt-10 md:mt-14 w-full max-w-3xl mx-auto px-2 md:px-0">
-              <div className="rounded-2xl overflow-hidden border border-white/5 shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }}
+              className="mt-10 max-w-2xl mx-auto">
+              <div className="rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
                 <div className="relative aspect-video">
                   <iframe src={(() => { const v = landingVideos[0]; if (v.video_type === 'youtube') { const id = v.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/); return id ? `https://www.youtube.com/embed/${id[1]}` : v.video_url; } if (v.video_type === 'vimeo') { const id = v.video_url.match(/vimeo\.com\/(\d+)/); return id ? `https://player.vimeo.com/video/${id[1]}` : v.video_url; } return v.video_url; })()}
-                    className="absolute inset-0 w-full h-full" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen title={landingVideos[0]?.title} />
+                    className="absolute inset-0 w-full h-full" allow="autoplay; fullscreen" allowFullScreen title={landingVideos[0]?.title} />
                 </div>
               </div>
             </motion.div>
           )}
-        </motion.div>
-
-        <motion.div animate={{ y: [0, 12, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer" onClick={() => scrollTo('info')}>
-          <IconChevronDown className="w-8 h-8 text-[#FFD700]/40" />
-        </motion.div>
+        </div>
       </motion.section>
 
-      {/* Info Section */}
-      <AnimatedSection id="info" className="relative py-24 md:py-32 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div className="text-center mb-16" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <motion.h2 variants={itemVariants} className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}>¿Que es Global Dorado?</motion.h2>
-            <motion.p variants={itemVariants} className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
-              Es una plataforma que ofrece oportunidades reales como promotor de ventas. Los <strong className="text-[#FFD700]">socios ganan el 80% de comision directa</strong> por cada venta del acceso vitalicio al sistema.
-            </motion.p>
-          </motion.div>
+      {/* FEATURES */}
+      <SectionReveal className="py-24 md:py-32">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <p className="text-[#FFD700]/60 text-xs tracking-[0.3em] uppercase mb-3">¿Por que Global Dorado?</p>
+            <h2 className="text-3xl md:text-5xl font-bold gold-text mb-4" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+              Todo lo que necesitas en un solo lugar
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto">Acceso ilimitado a software, streaming, capacitacion y oportunidades de ingreso.</p>
+          </div>
 
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            {[
-              { title: '¿Como funciona?', desc: 'Operamos como un equipo elite de afiliados. Brindamos capacitacion maestra y recursos premium para que los miembros operen su negocio digital desde casa con efectividad absoluta.' },
-              { title: '¿Es legitimo?', desc: 'Si. El valor real reside en la capacitacion especializada en viralidad y el acceso a una de las bibliotecas de software y servicios digitales mas grandes del mercado.' }
-            ].map((item, i) => (
-              <motion.div key={i} variants={itemVariants} whileHover={cardHover}
-                className="group rounded-3xl p-8 md:p-10 bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-[#FFD700]/20 transition-all duration-300 shadow-[0_2px_12px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <h3 className="text-2xl font-bold gold-text mb-4">{item.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {features.map((f, i) => {
               const Icon = f.icon;
               return (
-                <motion.div key={i} variants={itemVariants} whileHover={{ y: -6, borderColor: 'rgba(255,215,0,0.2)' }}
-                  className="group rounded-2xl p-6 text-center bg-white/[0.02] border border-white/[0.04] transition-all duration-300">
-                  <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}>
-                    <Icon className="w-8 h-8 text-[#FFD700] mx-auto mb-3" />
-                  </motion.div>
-                  <h4 className="font-bold text-white text-sm mb-1">{f.title}</h4>
-                  <p className="text-gray-500 text-xs">{f.desc}</p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </AnimatedSection>
-
-      {/* Method Section */}
-      <AnimatedSection className="relative py-24 md:py-32 z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconEducation className="w-7 h-7 text-[#FFD700] inline mr-2" />Sistema de Capacitacion</h2>
-            <p className="text-xl text-gray-400">El Metodo Global Dorado</p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              { icon: IconLightning, title: 'Cursos de Viralidad Organica', desc: 'Te ensenamos a dominar los algoritmos de TikTok, Instagram Reels y YouTube para atraer clientes en masa sin gastar un centavo en publicidad.' },
-              { icon: IconStar, title: 'Estrategias de Venta y Cierre', desc: 'Proporcionamos guiones, psicologia de venta y tecnicas de cierre de alto impacto para comercializar el acceso a la comunidad de forma infalible.' }
-            ].map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div key={i} initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.2 }} whileHover={cardHover}
-                  className="glass rounded-3xl p-8 md:p-10 border border-[#FFD700]/10 group hover:border-[#FFD700]/20 transition-all">
-                  <motion.div whileHover={{ scale: 1.1, rotate: 5 }} className="w-14 h-14 bg-gradient-to-br from-[#FFD700]/15 to-[#DAA520]/10 rounded-2xl flex items-center justify-center mb-5">
-                    <Icon className="w-7 h-7 text-[#FFD700]" />
-                  </motion.div>
-                  <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{item.desc}</p>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -4 }} className="group p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:border-[#FFD700]/20 hover:bg-white/[0.04] transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-[#FFD700]/10 flex items-center justify-center mb-4 group-hover:bg-[#FFD700]/20 transition-colors">
+                    <Icon className="w-5 h-5 text-[#FFD700]" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">{f.title}</h3>
+                  <p className="text-gray-500 text-sm">{f.desc}</p>
                 </motion.div>
               );
             })}
           </div>
         </div>
-      </AnimatedSection>
+      </SectionReveal>
 
-      {/* Catalog Preview */}
-      <AnimatedSection className="relative py-24 md:py-32 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconTools className="w-7 h-7 text-[#FFD700] inline mr-2" />El Arsenal Digital</h2>
-            <p className="text-xl text-gray-400">La biblioteca de software y servicios digitales mas grande del mercado</p>
-          </motion.div>
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            {categories.map((cat, i) => {
+      {/* CATALOG */}
+      <SectionReveal className="py-24 md:py-32 bg-white/[0.01]">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <p className="text-[#FFD700]/60 text-xs tracking-[0.3em] uppercase mb-3">Catalogo</p>
+            <h2 className="text-3xl md:text-5xl font-bold gold-text mb-4" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+              Arsenal Digital Completo
+            </h2>
+            <p className="text-gray-400 max-w-xl mx-auto">170+ servicios en streaming, software, IA, diseno y mas.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            {catalog.map((cat, i) => {
               const Icon = cat.icon;
               return (
-                <motion.div key={i} variants={itemVariants} whileHover={cardHover}
-                  className="glass rounded-2xl p-6 border border-[#FFD700]/5 hover:border-[#FFD700]/20 transition-all duration-300 group">
-                  <motion.div whileHover={{ scale: 1.15, rotate: -5 }} transition={{ duration: 0.3 }}>
-                    <Icon className="w-8 h-8 text-[#FFD700] mb-3" />
-                  </motion.div>
-                  <h3 className="text-lg font-bold text-white mb-2">{cat.title}</h3>
-                  <p className="text-gray-400 text-sm">{cat.desc}</p>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                  whileHover={{ y: -2 }} className="flex items-start gap-4 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:border-[#FFD700]/10 transition-all group">
+                  <div className="w-10 h-10 rounded-xl bg-[#FFD700]/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[#FFD700]/10 transition-colors">
+                    <Icon className="w-5 h-5 text-[#FFD700]" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold mb-1">{cat.title}</h3>
+                    <p className="text-gray-500 text-sm">{cat.desc}</p>
+                  </div>
                 </motion.div>
               );
             })}
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="glass rounded-3xl p-8 md:p-10 border border-[#FFD700]/10">
-            <h3 className="text-xl font-bold text-white mb-6 text-center">Algunos de los recursos incluidos:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          </div>
+
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+            className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04]">
+            <p className="text-gray-500 text-xs text-center mb-3">SERVICIOS INCLUIDOS</p>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
               {arsenalItems.map((item, i) => (
-                <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.03 }} className="flex items-center gap-2 text-sm text-gray-400">
-                  <IconCheck className="w-4 h-4 text-[#FFD700] flex-shrink-0" />
-                  <span>{item}</span>
-                </motion.div>
+                <span key={i} className="text-gray-400 text-xs flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-[#FFD700]/40" /> {item}
+                </span>
               ))}
             </div>
-            <p className="text-center text-gray-500 text-sm mt-8 border-t border-[#FFD700]/10 pt-6">
-              ...y muchos mas. <strong className="text-[#FFD700]">Siempre se anaden nuevos servicios</strong> y maneras de generar ingresos adicionales.
-            </p>
           </motion.div>
         </div>
-      </AnimatedSection>
+      </SectionReveal>
 
-      {/* AI Chat */}
-      <AnimatedSection className="relative py-24 md:py-32 z-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }} className="glass rounded-3xl p-10 md:p-16 border border-[#FFD700]/10 relative overflow-hidden">
-            <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute top-0 right-0 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl" />
-            <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              className="absolute bottom-0 left-0 w-64 h-64 bg-[#00D4FF]/5 rounded-full blur-3xl" />
-            <div className="relative z-10">
-              <motion.div whileHover={{ scale: 1.1, rotate: 10 }}
-                className="w-16 h-16 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#FFD700]/20">
-                <IconChat className="w-8 h-8 text-white" />
-              </motion.div>
-              <h2 className="font-display text-3xl md:text-4xl gold-text mb-4" style={{ fontWeight: 600 }}><IconRobot className="w-7 h-7 text-[#FFD700] inline mr-2" />Chat con IA Integrado</h2>
-              <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
-                Conecta con multiples proveedores de IA desde un solo lugar. <strong className="text-[#FFD700]">ChatGPT Plus, Gemini, Perplexity, Claude</strong> y mas — incluido en tu acceso vitalicio.
+      {/* CAPACITACION */}
+      <SectionReveal className="py-24 md:py-32">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-[#FFD700]/60 text-xs tracking-[0.3em] uppercase mb-3">Capacitacion</p>
+              <h2 className="text-3xl md:text-5xl font-bold gold-text mb-6" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+                Aprende a generar ingresos
+              </h2>
+              <p className="text-gray-400 leading-relaxed mb-6">
+                Te ensenamos a dominar las redes sociales, estrategias de venta y tecnicas de cierre para comercializar servicios digitales de forma efectiva.
               </p>
+              <div className="space-y-3">
+                {['Estrategias de venta y cierre', 'Marketing en redes sociales', 'Guiones de persuasion', 'Soporte y mentoria personalizada'].map((item, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                    className="flex items-center gap-3 text-gray-300">
+                    <div className="w-5 h-5 rounded-full bg-[#FFD700]/10 flex items-center justify-center flex-shrink-0">
+                      <IconCheck className="w-3 h-3 text-[#FFD700]" />
+                    </div>
+                    <span className="text-sm">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </motion.div>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+              className="relative p-8 rounded-3xl bg-gradient-to-br from-[#FFD700]/5 to-transparent border border-[#FFD700]/10">
+              <div className="text-center">
+                <IconEducation className="w-16 h-16 text-[#FFD700] mx-auto mb-4" />
+                <p className="text-[#FFD700] font-bold text-lg mb-1">El Metodo</p>
+                <p className="text-gray-400 text-sm">Global Dorado</p>
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </AnimatedSection>
+      </SectionReveal>
 
-      {/* Landing Videos */}
-      {landingVideos.length > 0 && (
-        <AnimatedSection className="relative py-24 md:py-32 z-10">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconVideo className="w-7 h-7 text-[#FFD700] inline mr-2" />Contenido Exclusivo</h2>
-              <p className="text-xl text-gray-400">Descubre nuestro contenido en video</p>
-            </motion.div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {landingVideos.map((v: any, i: number) => (
-                <motion.div key={v.id} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.2 }} whileHover={cardHover}
-                  className="glass rounded-2xl overflow-hidden border border-[#FFD700]/10 hover:border-[#FFD700]/20 transition-all group">
-                  <div className="relative aspect-video">
-                    {v.thumbnail_url ? (
-                      <img loading="lazy" src={v.thumbnail_url} alt={v.title} className="absolute inset-0 w-full h-full object-cover" />
-                    ) : (
-                      <div className="absolute inset-0 bg-[#111] flex items-center justify-center">
-                        <IconPlay className="w-16 h-16 text-[#FFD700]/30 group-hover:text-[#FFD700]/60 transition-colors" />
-                      </div>
-                    )}
-                    <motion.div whileHover={{ scale: 1.1 }} className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-[#FFD700]/20 backdrop-blur flex items-center justify-center">
-                        <IconPlay className="w-8 h-8 text-white ml-1" />
-                      </div>
-                    </motion.div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-white mb-2">{v.title}</h3>
-                    {v.description && <p className="text-gray-400 text-sm">{v.description}</p>}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </AnimatedSection>
-      )}
-
-      {/* Partners */}
-      {partners.length > 0 && (
-        <AnimatedSection className="relative py-24 md:py-32 z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-transparent" />
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="font-display text-4xl md:text-5xl gold-text mb-4" style={{ fontWeight: 600 }}><IconUsers className="w-7 h-7 text-[#FFD700] inline mr-2" />Nuestros Socios</h2>
-              <p className="text-xl text-gray-400">Conoce al equipo que transforma el internet en dinero</p>
-            </motion.div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {partners.map((p: any, i: number) => (
-                <motion.div key={p.id} initial={{ opacity: 0, y: 30, scale: 0.9 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }} whileHover={{ y: -8, borderColor: 'rgba(255,215,0,0.3)' }}
-                  className="glass rounded-2xl p-6 text-center border border-[#FFD700]/10 transition-all group">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden ring-2 ring-[#FFD700]/20 group-hover:ring-[#FFD700]/40 transition-all">
-                    {p.photo_url ? (
-                      <img loading="lazy" src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center text-2xl font-bold text-black">
-                        {p.name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-white mb-1">{p.name}</h3>
-                  {p.role && <p className="text-[#FFD700]/70 text-sm">{p.role}</p>}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </AnimatedSection>
-      )}
-
-      {/* CTA Final */}
-      <AnimatedSection className="relative py-32 md:py-40 z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/10 via-[#FFD700]/5 to-transparent" />
-        <motion.div animate={{ scale: [1, 1.02, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-          <h2 className="font-display text-4xl md:text-6xl gold-text mb-6" style={{ fontWeight: 600 }}>¿Listo para transformar el internet en dinero?</h2>
-          <p className="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-            Unete a Global Dorado y accede al arsenal digital mas completo, capacitacion elite y oportunidades reales de ingresos.
+      {/* AI */}
+      <SectionReveal className="py-24 md:py-32 bg-white/[0.01]">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <p className="text-[#FFD700]/60 text-xs tracking-[0.3em] uppercase mb-3">Inteligencia Artificial</p>
+          <h2 className="text-3xl md:text-5xl font-bold gold-text mb-6" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+            Chat con IA Integrado
+          </h2>
+          <p className="text-gray-400 max-w-xl mx-auto mb-8">
+            Conecta con ChatGPT Plus, Gemini, Perplexity y Claude desde un solo lugar. Incluido en tu acceso vitalicio.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/register" className="btn-primary text-lg px-12 py-5 inline-flex items-center gap-3 group">
-              Crear cuenta gratis <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link to="/login" className="btn-secondary text-lg px-12 py-5 inline-flex items-center gap-2">
-              Iniciar sesion
-            </Link>
+          <div className="flex justify-center gap-4 flex-wrap">
+            {['ChatGPT Plus', 'Gemini AI', 'Perplexity Pro', 'Claude AI'].map((name, i) => (
+              <motion.span key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="px-5 py-2 rounded-full bg-[#FFD700]/5 border border-[#FFD700]/10 text-[#FFD700] text-sm font-medium">
+                {name}
+              </motion.span>
+            ))}
           </div>
-        </motion.div>
-      </AnimatedSection>
+        </div>
+      </SectionReveal>
 
-      {/* Footer */}
-      <footer className="border-t border-[#FFD700]/10 py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <Logo size={24} />
-              <span className="text-sm text-gray-500">© 2026 Global Dorado</span>
+      {/* TESTIMONIALS */}
+      <SectionReveal className="py-24 md:py-32">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-[#FFD700]/60 text-xs tracking-[0.3em] uppercase mb-3">Testimonios</p>
+            <h2 className="text-3xl md:text-5xl font-bold gold-text mb-4" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+              Lo que dicen nuestros socios
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { name: 'Maria G.', role: 'Socia Activa', text: 'Con Global Dorado aprendi a vender servicios digitales. Ya tengo 15 clientes fijos y gano en dolares desde casa.' },
+              { name: 'Carlos R.', role: 'Afiliado', text: 'La capacitacion me ayudo a entender el negocio. El soporte 24/7 es real, siempre me resuelven las dudas.' },
+              { name: 'Ana L.', role: 'Lider', text: 'Empece sin saber nada y hoy tengo mi propio equipo. Global Dorado cambio mi vida financiera.' }
+            ].map((t, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04]">
+                <div className="flex gap-1 mb-3">
+                  {[1,2,3,4,5].map(n => <span key={n} className="text-[#FFD700] text-sm">★</span>)}
+                </div>
+                <p className="text-gray-300 text-sm mb-4 leading-relaxed">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-xs font-bold text-[#FFD700]">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">{t.name}</p>
+                    <p className="text-gray-500 text-xs">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </SectionReveal>
+
+      {/* SOCIOS */}
+      {partners.length > 0 && (
+        <SectionReveal className="py-24 md:py-32 bg-white/[0.01]">
+          <div className="max-w-5xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <p className="text-[#FFD700]/60 text-xs tracking-[0.3em] uppercase mb-3">Equipo</p>
+              <h2 className="text-3xl md:text-5xl font-bold gold-text mb-4" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+                Nuestros Socios
+              </h2>
             </div>
-            <div className="flex items-center gap-6 text-sm text-gray-500">
-              <span>Acceso Vitalicio</span>
-              <span className="text-[#FFD700]/30">•</span>
-              <span>80% Comision</span>
-              <span className="text-[#FFD700]/30">•</span>
-              <span>Soporte VIP 24/7</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {partners.map((p: any, i: number) => (
+                <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                  className="text-center p-4 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:border-[#FFD700]/10 transition-all">
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden ring-1 ring-[#FFD700]/20">
+                    {p.photo_url ? (
+                      <img src={p.photo_url} alt={p.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-[#FFD700]/10 flex items-center justify-center text-lg font-bold text-[#FFD700]">
+                        {p.name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-white text-sm font-medium">{p.name}</p>
+                  {p.role && <p className="text-[#FFD700]/60 text-xs">{p.role}</p>}
+                </motion.div>
+              ))}
             </div>
           </div>
-          <p className="text-center text-xs text-gray-600 mt-6">Global Dorado — Transforma el Internet en Dinero.</p>
+        </SectionReveal>
+      )}
+
+      {/* CTA */}
+      <SectionReveal className="py-32 md:py-40 text-center">
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-3xl md:text-6xl font-bold gold-text mb-6" style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
+            ¿Listo para empezar?
+          </h2>
+          <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto">
+            Unete a Global Dorado y accede al arsenal digital mas completo con oportunidades reales de ingresos.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link to="/register" className="px-10 py-4 bg-[#FFD700] text-black font-bold rounded-xl text-lg hover:bg-[#FFE44D] transition-all shadow-[0_4px_24px_rgba(255,215,0,0.25)] inline-flex items-center gap-2">
+              Crear Cuenta Gratis <IconArrowRight className="w-5 h-5" />
+            </Link>
+            <Link to="/login" className="px-10 py-4 border border-white/10 text-gray-400 font-medium rounded-xl text-lg hover:border-white/30 hover:text-white transition-all">
+              Iniciar Sesion
+            </Link>
+          </div>
+        </div>
+      </SectionReveal>
+
+      <footer className="border-t border-white/[0.04] py-8">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Logo size={20} />
+            <span className="text-xs text-gray-600">© 2026 Global Dorado</span>
+          </div>
+          <div className="flex items-center gap-4 text-xs text-gray-600">
+            <span>Acceso Vitalicio</span>
+            <span>·</span>
+            <span>80% Comision</span>
+            <span>·</span>
+            <span>Soporte 24/7</span>
+          </div>
         </div>
       </footer>
+
       <FloatingButtons />
     </div>
   );
