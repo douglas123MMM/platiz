@@ -11,7 +11,7 @@ export default {
         emerald: { 400: '#34D399', 500: '#10B981' },
       },
       fontFamily: {
-        sans: ['Jost', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Bodoni Moda', 'Georgia', 'serif'],
       },
       animation: {
