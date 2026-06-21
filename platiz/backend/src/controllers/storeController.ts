@@ -62,7 +62,7 @@ export async function getStoreProductById(req: AuthRequest, res: Response): Prom
 
 export async function createStoreProduct(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { category, title, description, terms, purchase_instructions, price, image_url, support_number, delivery_email, delivery_password, stock, account_type, duration_days, delivery_type, renewable, vendor_name } = req.body;
+    const { category, title, description, terms, purchase_instructions, price, image_url, support_number, delivery_email, delivery_password, stock, account_type, duration_days, delivery_type, renewable, vendor_name, variants } = req.body;
 
     if (!category || !title || price === undefined) {
       res.status(400).json({ error: 'Categoria, titulo y precio son obligatorios' });
@@ -84,7 +84,8 @@ export async function createStoreProduct(req: AuthRequest, res: Response): Promi
       duration_days: parseInt(duration_days) || 0,
       delivery_type: delivery_type || 'manual',
       renewable: renewable || false,
-      vendor_name: vendor_name || ''
+      vendor_name: vendor_name || '',
+      variants: variants || [],
     }]).select().single();
 
     if (error) throw error;
@@ -104,6 +105,7 @@ export async function updateStoreProduct(req: AuthRequest, res: Response): Promi
     stringFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
     numberFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = parseFloat(req.body[f]) || 0; });
     booleanFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = Boolean(req.body[f]); });
+    if (req.body.variants !== undefined) updates.variants = req.body.variants;
 
     updates.updated_at = new Date().toISOString();
 
