@@ -42,7 +42,7 @@ export default function LandingPage() {
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring", stiffness: 200 }}>
-            <Logo size={64} className="mx-auto mb-6 drop-shadow-[0_0_30px_rgba(255,215,0,0.5)]" />
+            <Logo size={64} className="mx-auto mb-6" />
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -52,7 +52,7 @@ export default function LandingPage() {
             className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 leading-[0.95]"
             style={{ fontFamily: "'Bodoni Moda', Georgia, serif" }}>
             <span className="text-white">Global </span>
-            <span className="bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#FFF8DC] bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(255,215,0,0.4)]">Dorado</span>
+            <span className="bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#FFF8DC] bg-clip-text text-transparent">Dorado</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
@@ -77,7 +77,7 @@ export default function LandingPage() {
             {[{ v: '170+', l: 'Servicios para Vender' }, { v: '80%', l: 'Comision por Venta' }, { v: '0', l: 'Experiencia Necesaria' }, { v: '24/7', l: 'Sistema Automatizado' }].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + i * 0.1 }}
                 className="text-center p-5 rounded-2xl bg-[#161616] border border-[#2A2A2A]">
-                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#FFF8DC] bg-clip-text text-transparent" style={{ filter: 'drop-shadow(0 0 15px rgba(255,215,0,0.35))' }}>
+                <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#FFF8DC] bg-clip-text text-transparent">
                   {s.v}
                 </p>
                 <p className="text-xs text-[#A0A0A0] mt-1.5">{s.l}</p>
