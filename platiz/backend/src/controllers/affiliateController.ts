@@ -232,6 +232,9 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
     }
 
     allItems.sort((a: any, b: any) => {
+      const aImg = a.image_url && a.image_url.length > 5 ? 1 : 0;
+      const bImg = b.image_url && b.image_url.length > 5 ? 1 : 0;
+      if (aImg !== bImg) return bImg - aImg;
       if (a.has_price && !b.has_price) return -1;
       if (!a.has_price && b.has_price) return 1;
       return 0;
