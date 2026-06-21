@@ -120,7 +120,8 @@ export default function ProductDetailPage() {
               Comprar por WhatsApp
             </button>
 
-            {/* Purchase Info */}
+            {/* Purchase Info - solo despues de comprar */}
+            {purchaseRegistered && (
             <div className="mt-4 p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
               <p className="text-[#FFD700] text-xs font-bold mb-2">ID de Compra: {purchaseId}</p>
               {product.price > 0 && (
@@ -136,6 +137,7 @@ export default function ProductDetailPage() {
                 <p className="text-yellow-400/70 text-[10px] mt-0.5">Envia tu factura/comprobante a soporte para mayor rapidez en la entrega. Guarda tu ID de compra como referencia.</p>
               </div>
             </div>
+            )}
           </div>
         </div>
 
