@@ -133,7 +133,7 @@ export default function Store() {
       {/* Header */}
       <div className="text-center relative">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Tienda</h1>
-        <p className="section-subtitle">Productos premium con entrega automatica</p>
+        <p className="section-subtitle">{products.length} productos disponibles</p>
         <div className="mt-3 inline-flex items-center gap-2 px-5 py-2 bg-[#FFD700]/10 rounded-full border border-[#FFD700]/20">
           <span className="text-[#FFD700] text-sm">Saldo:</span>
           <span className="text-white font-bold text-lg">${balance.toFixed(2)}</span>

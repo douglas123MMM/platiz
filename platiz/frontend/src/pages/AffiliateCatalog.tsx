@@ -144,6 +144,7 @@ export default function AffiliateCatalog() {
         )}
 
         <h1 className="text-xl font-bold text-[#FFD700] mt-2">Catalogo Digital</h1>
+        <p className="text-gray-500 text-xs">{filtered.length} de {items.length} productos</p>
       </div>
 
       {/* Modal Metodos de Pago */}
