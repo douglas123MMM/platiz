@@ -39,7 +39,8 @@ export default function AffiliateCatalog() {
   };
 
   useEffect(() => {
-    api.get('/affiliate/catalog').then(({ data }) => setItems(data)).catch(() => {});
+    const params = code ? `?ref=${code}` : '';
+    api.get(`/affiliate/catalog${params}`).then(({ data }) => setItems(data)).catch(() => {});
 
     // Cargar perfil del afiliado (endpoint publico)
     if (code) {
