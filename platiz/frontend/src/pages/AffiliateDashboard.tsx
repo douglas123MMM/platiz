@@ -62,7 +62,20 @@ export default function AffiliateDashboard() {
   const fetchPrices = async () => {
     try {
       const { data } = await api.get('/affiliate/prices');
-      setMyPrices(data || {});
+      // Normalizar: convertir formato viejo {id: number} o {id: {price, label}} a {id: [{price, label}]}
+      const normalized: Record<string, { label: string; price: number }[]> = {};
+      if (data) {
+        for (const [key, val] of Object.entries(data)) {
+          if (typeof val === 'number') {
+            normalized[key] = [{ label: '', price: val }];
+          } else if (val && typeof val === 'object' && !Array.isArray(val) && (val as any).price !== undefined) {
+            normalized[key] = [{ label: (val as any).label || '', price: (val as any).price || 0 }];
+          } else if (Array.isArray(val)) {
+            normalized[key] = val;
+          }
+        }
+      }
+      setMyPrices(normalized);
     } catch {}
     loadCatalogItems();
   };
