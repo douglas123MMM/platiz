@@ -76,9 +76,10 @@ export default function Store() {
         const score = (img: string) => {
           if (!img || img.length < 5) return 0;
           if (img.includes('wikimedia') || img.includes('wikipedia')) return 0;
-          if (img.includes('kfstreaming') || img.includes('venegift') || img.includes('cuentasfull')) return 3;
-          if (img.includes('cdnlogo') || img.includes('logodownload') || img.includes('brandlogos') || img.includes('clearbit')) return 2;
-          return 1;
+          if (img.includes('kfstreaming')) return 3;
+          if (img.includes('venegift') || img.includes('cuentasfull')) return 2;
+          if (img.includes('cdnlogo') || img.includes('logodownload') || img.includes('brandlogos')) return 1;
+          return 0;
         };
         return score(b.image_url || '') - score(a.image_url || '');
       });
