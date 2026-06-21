@@ -201,17 +201,14 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       }
     }
 
-    // Normalizar customPrices: { id: { price, label } } o { id: number }
-    const getCustomPrice = (id: string): number => {
+    // Normalizar customPrices: { id: number } o { id: [{label, price}] }
+    const getCustomVariants = (id: string): { label: string; price: number }[] => {
       const v = customPrices[id];
-      if (typeof v === 'number') return v;
-      if (v && typeof v.price === 'number') return v.price;
-      return 0;
-    };
-    const getCustomLabel = (id: string): string => {
-      const v = customPrices[id];
-      if (v && typeof v.label === 'string') return v.label;
-      return '';
+      if (!v) return [];
+      if (typeof v === 'number') return [{ label: '', price: v }];
+      if (v && typeof v.price === 'number') return [{ label: v.label || '', price: v.price }];
+      if (Array.isArray(v)) return v.filter((x: any) => x.price > 0);
+      return [];
     };
 
     // Crear mapa de precios desde store_products
@@ -228,65 +225,79 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       }
     }
 
-    // Enriquecer items con precio del store o custom
-    // Construir mapa de custom prices por titulo tambien
-    const customByTitle: Record<string, number> = {};
-    if (refCode && Object.keys(customPrices).length > 0) {
-      for (const p of (store || [])) {
-        const storeId = `store_${p.id}`;
-        const cp = getCustomPrice(storeId);
-        if (cp > 0) {
-          customByTitle[p.title.toLowerCase().trim()] = cp;
+    // Armar lista de items con variantes
+    const allItems: any[] = [];
+
+    for (const item of (items || [])) {
+      const storeInfo = priceMap.get(item.title.toLowerCase().trim());
+      const variants = getCustomVariants(item.id).length > 0 ? getCustomVariants(item.id) 
+        : getCustomVariants(`store_${item.id}`).length > 0 ? getCustomVariants(`store_${item.id}`)
+        : [];
+      
+      if (variants.length === 0) {
+        // Sin custom - usa precio del store o 0 si tiene ref
+        const finalPrice = refCode ? 0 : (storeInfo ? storeInfo.price : 0);
+        allItems.push({
+          ...item,
+          price: finalPrice,
+          price_label: '',
+          has_price: finalPrice > 0,
+          delivery_type: storeInfo?.delivery_type || 'manual',
+          account_type: storeInfo?.account_type || '',
+          duration_days: storeInfo?.duration_days || 0,
+        });
+      } else {
+        // Con variantes custom - una entrada por variante
+        for (const v of variants) {
+          allItems.push({
+            ...item,
+            id: item.id + '_' + variants.indexOf(v),
+            price: v.price,
+            price_label: v.label || '',
+            has_price: v.price > 0,
+            delivery_type: storeInfo?.delivery_type || 'manual',
+            account_type: storeInfo?.account_type || '',
+            duration_days: storeInfo?.duration_days || 0,
+          });
         }
       }
     }
 
-    const enrichedItems = (items || []).map((item: any) => {
-      const storeInfo = priceMap.get(item.title.toLowerCase().trim());
-      const titleKey = item.title.toLowerCase().trim();
-      const customPrice = getCustomPrice(item.id) || getCustomPrice(`store_${item.id}`) || customByTitle[titleKey] || 0;
-      const customLabel = getCustomLabel(item.id) || getCustomLabel(`store_${item.id}`);
-      const finalPrice = refCode ? customPrice : (customPrice || (storeInfo ? storeInfo.price : 0));
-      return {
-        ...item,
-        price: finalPrice,
-        price_label: customLabel || '',
-        has_price: finalPrice > 0,
-        delivery_type: storeInfo ? storeInfo.delivery_type : 'manual',
-        account_type: storeInfo ? storeInfo.account_type : '',
-        duration_days: storeInfo ? storeInfo.duration_days : 0,
-      };
-    });
-
     // Agregar productos de la tienda que no esten ya en items
-    const itemTitles = new Set(enrichedItems.map((i: any) => i.title.toLowerCase().trim()));
-    const storeItems = (store || [])
-      .filter((p: any) => !itemTitles.has(p.title.toLowerCase().trim()))
-      .map((p: any) => {
-        const storeId = `store_${p.id}`;
-        const cp = getCustomPrice(storeId) || getCustomPrice(p.id);
-        const cl = getCustomLabel(storeId) || getCustomLabel(p.id);
-        const finalPrice = refCode ? cp : (cp || (parseFloat(p.price) || 0));
-        return {
+    const itemTitles = new Set(allItems.map((i: any) => i.title.toLowerCase().trim()));
+    const moreItems: any[] = [];
+    for (const p of (store || [])) {
+      const t = p.title.toLowerCase().trim();
+      if (itemTitles.has(t)) continue;
+      const storeId = `store_${p.id}`;
+      const variants = getCustomVariants(storeId).length > 0 ? getCustomVariants(storeId) 
+        : getCustomVariants(p.id).length > 0 ? getCustomVariants(p.id) : [];
+      
+      if (variants.length === 0) {
+        const finalPrice = refCode ? 0 : (parseFloat(p.price) || 0);
+        moreItems.push({
           id: storeId,
           category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
-          title: p.title,
-          description: p.description || '',
-          image_url: p.image_url || '',
-          link: '',
-          video_url: '',
-          sort_order: 0,
-          price: finalPrice,
-          price_label: cl || '',
-          has_price: finalPrice > 0,
-          delivery_type: p.delivery_type || 'manual',
-          account_type: p.account_type || '',
-          duration_days: p.duration_days || 0,
-        };
-      });
+          title: p.title, description: p.description || '', image_url: p.image_url || '',
+          link: '', video_url: '', sort_order: 0,
+          price: finalPrice, price_label: '', has_price: finalPrice > 0,
+          delivery_type: p.delivery_type || 'manual', account_type: p.account_type || '', duration_days: p.duration_days || 0,
+        });
+      } else {
+        for (const v of variants) {
+          moreItems.push({
+            id: storeId + '_' + variants.indexOf(v),
+            category_slug: (p.category || 'servicios').toLowerCase().replace(/\s+/g, '-'),
+            title: p.title, description: p.description || '', image_url: p.image_url || '',
+            link: '', video_url: '', sort_order: 0,
+            price: v.price, price_label: v.label || '', has_price: v.price > 0,
+            delivery_type: p.delivery_type || 'manual', account_type: p.account_type || '', duration_days: p.duration_days || 0,
+          });
+        }
+      }
+    }
 
-    // Mezclar y ordenar: productos con precio primero, luego los demas
-    let merged = [...enrichedItems, ...storeItems];
+    let merged = [...allItems, ...moreItems];
     merged.sort((a: any, b: any) => {
       if (a.has_price && !b.has_price) return -1;
       if (!a.has_price && b.has_price) return 1;

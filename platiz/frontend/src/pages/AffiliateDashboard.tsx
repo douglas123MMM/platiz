@@ -52,7 +52,7 @@ export default function AffiliateDashboard() {
   const [facebook, setFacebook] = useState('');
   const [youtube, setYoutube] = useState('');
   const [catalogTheme, setCatalogTheme] = useState('dark');
-  const [myPrices, setMyPrices] = useState<Record<string, { price: number; label: string }>>({});
+  const [myPrices, setMyPrices] = useState<Record<string, { label: string; price: number }[]>>({});
   const [catalogItems, setCatalogItems] = useState<Array<{ id: string; title: string; category_slug: string }>>([]);
   const [savingPrices, setSavingPrices] = useState(false);
   const [priceSearch, setPriceSearch] = useState('');
@@ -169,17 +169,42 @@ export default function AffiliateDashboard() {
     setSavingPrices(false);
   };
 
-  const updatePrice = (id: string, val: string) => {
-    const num = parseFloat(val);
-    if (!isNaN(num) && num >= 0) {
-      setMyPrices(prev => ({ ...prev, [id]: { ...prev[id], price: num, label: prev[id]?.label || '' } }));
-    } else if (val === '') {
-      setMyPrices(prev => { const next = { ...prev }; delete next[id]; return next; });
-    }
+  const addVariant = (itemId: string) => {
+    setMyPrices(prev => ({
+      ...prev,
+      [itemId]: [...(prev[itemId] || []), { label: '', price: 0 }]
+    }));
   };
 
-  const updateLabel = (id: string, val: string) => {
-    setMyPrices(prev => ({ ...prev, [id]: { ...prev[id], price: prev[id]?.price || 0, label: val } }));
+  const updateVariantPrice = (itemId: string, idx: number, val: string) => {
+    const num = parseFloat(val);
+    setMyPrices(prev => {
+      const variants = [...(prev[itemId] || [])];
+      if (!isNaN(num) && num >= 0) {
+        variants[idx] = { ...variants[idx], price: num };
+      } else if (val === '') {
+        variants[idx] = { ...variants[idx], price: 0 };
+      }
+      return { ...prev, [itemId]: variants };
+    });
+  };
+
+  const updateVariantLabel = (itemId: string, idx: number, val: string) => {
+    setMyPrices(prev => {
+      const variants = [...(prev[itemId] || [])];
+      variants[idx] = { ...variants[idx], label: val };
+      return { ...prev, [itemId]: variants };
+    });
+  };
+
+  const removeVariant = (itemId: string, idx: number) => {
+    setMyPrices(prev => {
+      const variants = prev[itemId]?.filter((_, i) => i !== idx) || [];
+      if (variants.length === 0) {
+        const next = { ...prev }; delete next[itemId]; return next;
+      }
+      return { ...prev, [itemId]: variants };
+    });
   };
 
   return (
@@ -446,28 +471,31 @@ export default function AffiliateDashboard() {
             />
             <div className="space-y-1 max-h-80 overflow-y-auto">
             {catalogItems.filter(i => !priceSearch || i.title.toLowerCase().includes(priceSearch.toLowerCase())).map(item => (
-              <div key={item.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
-                <span className="text-gray-300 text-xs flex-1 truncate mr-2">{item.title}</span>
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  <input
-                    type="text"
-                    maxLength={20}
-                    placeholder="Completa/Perfil"
-                    value={myPrices[item.id]?.label || ''}
-                    onChange={(e) => updateLabel(item.id, e.target.value)}
-                    className="w-20 bg-black/50 border border-white/10 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none focus:border-[#FFD700]/40"
-                  />
-                  <span className="text-gray-500 text-[10px]">$</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    placeholder="--"
-                    value={myPrices[item.id]?.price || ''}
-                    onChange={(e) => updatePrice(item.id, e.target.value)}
-                    className="w-14 bg-black/50 border border-white/10 rounded-lg px-2 py-1 text-xs text-white text-right focus:outline-none focus:border-[#FFD700]/40"
-                  />
+              <div key={item.id} className="py-2 px-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-gray-300 text-xs font-medium truncate mr-2">{item.title}</span>
+                  <button onClick={() => addVariant(item.id)} className="text-[10px] px-2 py-0.5 rounded bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 flex-shrink-0">+ Agregar</button>
                 </div>
+                {(myPrices[item.id] || []).map((v, idx) => (
+                  <div key={idx} className="flex items-center gap-1 mt-1 ml-2">
+                    <input
+                      type="text"
+                      maxLength={20}
+                      placeholder="Completa/Perfil"
+                      value={v.label}
+                      onChange={(e) => updateVariantLabel(item.id, idx, e.target.value)}
+                      className="w-20 bg-black/50 border border-white/10 rounded px-2 py-1 text-[10px] text-white focus:outline-none focus:border-[#FFD700]/40"
+                    />
+                    <span className="text-gray-500 text-[10px]">$</span>
+                    <input
+                      type="number" min="0" step="0.5" placeholder="--"
+                      value={v.price || ''}
+                      onChange={(e) => updateVariantPrice(item.id, idx, e.target.value)}
+                      className="w-14 bg-black/50 border border-white/10 rounded px-2 py-1 text-xs text-white text-right focus:outline-none focus:border-[#FFD700]/40"
+                    />
+                    <button onClick={() => removeVariant(item.id, idx)} className="text-red-400 text-[10px] px-1 hover:text-red-300">&times;</button>
+                  </div>
+                ))}
               </div>
             ))}
             </div>
