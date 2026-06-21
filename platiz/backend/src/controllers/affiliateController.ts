@@ -237,8 +237,8 @@ export async function getCatalog(req: AuthRequest, res: Response): Promise<void>
       if (img.includes('kfstreaming')) return 5;
       if (img.includes('venegift') || img.includes('cuentasfull')) return 4;
       if (img.includes('cdnlogo') || img.includes('logodownload') || img.includes('brandlogos') || img.includes('clearbit')) return 3;
-      if (!img.includes('icons8') && !img.includes('wikipedia') && !img.includes('wikimedia')) return 2;
-      return 1;
+      if (img.includes('icons8') || img.includes('wikipedia') || img.includes('wikimedia')) return 1;
+      return 2;
     };
     return score(b.image_url || '') - score(a.image_url || '');
     });
