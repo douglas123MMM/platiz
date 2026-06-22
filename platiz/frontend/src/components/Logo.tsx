@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 type LogoProps = { size?: number; showText?: boolean; className?: string };
 
 export function CrownIcon({ size = 40, className = '' }: { size?: number; className?: string }) {
@@ -25,7 +27,42 @@ export function CrownIcon({ size = 40, className = '' }: { size?: number; classN
   );
 }
 
+let cachedLogo: string | null = null;
+
+export function getCustomLogo(): string | null {
+  return cachedLogo;
+}
+
+export function setCustomLogoFromCache(url: string | null) {
+  cachedLogo = url;
+}
+
 export default function Logo({ size = 40, showText = true, className = '' }: LogoProps) {
+  const [customUrl, setCustomUrl] = useState<string | null>(cachedLogo);
+  
+  useEffect(() => {
+    if (cachedLogo !== undefined) {
+      setCustomUrl(cachedLogo);
+      return;
+    }
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(data => {
+        if (data?.logo_url) {
+          cachedLogo = data.logo_url;
+          setCustomUrl(data.logo_url);
+        } else {
+          cachedLogo = null;
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  if (customUrl) {
+    const imgSize = Math.round(size * 2.2);
+    return <img src={customUrl} alt="Global Dorado" style={{ width: imgSize, height: 'auto', maxHeight: imgSize, objectFit: 'contain' }} className={className} />;
+  }
+
   const w = Math.round(size * 5.2);
   const h = Math.round(size * 5.2);
   return (

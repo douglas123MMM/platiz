@@ -28,14 +28,12 @@ function Reveal({ children, className = '', delay = 0 }: { children: React.React
 export default function LandingPage() {
   const [partners, setPartners] = useState<any[]>([]);
   const [landingVideos, setLandingVideos] = useState<any[]>([]);
-  const [customLogo, setCustomLogo] = useState('');
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], [0, 40]);
 
   useEffect(() => {
     api.get('/partners/active').then((r) => setPartners(r.data)).catch(() => {});
     api.get('/partners/landing-videos').then((r) => setLandingVideos(r.data)).catch(() => {});
-    api.get('/settings').then((r) => { if (r.data?.logo_url) setCustomLogo(r.data.logo_url); }).catch(() => {});
   }, []);
 
   return (
@@ -44,11 +42,7 @@ export default function LandingPage() {
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring", stiffness: 200 }}>
-            {customLogo ? (
-              <img src={customLogo} alt="Global Dorado" className="mx-auto mb-6 h-16 md:h-20 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
-            ) : (
-              <Logo size={64} className="mx-auto mb-6" />
-            )}
+            <Logo size={32} showText={false} className="mx-auto mb-6" />
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -327,11 +321,7 @@ export default function LandingPage() {
       <footer className="border-t border-[#1F2937] py-10">
         <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            {customLogo ? (
-              <img src={customLogo} alt="Global Dorado" className="h-5 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
-            ) : (
-              <Logo size={20} />
-            )}
+            <Logo size={20} />
             <span className="text-xs text-[#6B7280]">© 2026 Global Dorado</span>
           </div>
           <div className="flex items-center gap-5 text-xs text-[#6B7280]">
