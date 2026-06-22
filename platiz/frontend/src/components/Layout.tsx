@@ -17,8 +17,6 @@ const navItems = [
   { path: '/courses', label: 'Capacitación', icon: IconCourses, roles: ['client', 'admin'] },
   { path: '/books', label: 'Libros', icon: IconBooks, roles: ['client', 'admin'] },
   { path: '/apps', label: 'Aplicaciones', icon: IconApps, roles: ['client', 'admin'] },
-  { path: '/telegram', label: 'Comunidad', icon: IconTelegram, roles: ['client', 'admin'] },
-  { path: '/services', label: 'Arsenal Digital', icon: IconServices, roles: ['client', 'admin'] },
   { path: '/academy', label: 'Academia', icon: IconAcademy, roles: ['client', 'admin'] },
   { path: '/affiliate', label: 'Afiliación', icon: IconAffiliate, roles: ['client', 'admin'] },
   { path: '/programas', label: 'Programas', icon: IconGrid, roles: ['client', 'admin'] },

@@ -74,8 +74,6 @@ export default function App() {
         <Route path="/courses" element={<SectionPage />} />
         <Route path="/books" element={<SectionPage />} />
         <Route path="/apps" element={<SectionPage />} />
-        <Route path="/telegram" element={<SectionPage />} />
-        <Route path="/services" element={<SectionPage />} />
         <Route path="/academy" element={<SectionPage />} />
         <Route path="/affiliate" element={<SectionPage />} />
         <Route path="/programas" element={<SectionPage />} />
