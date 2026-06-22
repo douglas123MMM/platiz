@@ -42,6 +42,7 @@ export default function LandingConfigAdmin() {
       setForm(cfg);
       setVideoChanged(false);
     }).catch(() => toast.error('Error al cargar config')).finally(() => setLoading(false));
+    api.get('/settings').then((r) => { if (r.data?.logo_url) setLogoUrl(r.data.logo_url); }).catch(() => {});
   }, []);
 
   const switchPage = async (key: string) => {
