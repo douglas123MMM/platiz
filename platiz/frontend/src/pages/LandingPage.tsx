@@ -134,51 +134,18 @@ export default function LandingPage() {
         </div>
       </Reveal>
 
-      {/* CATALOG */}
+      {/* CATALOGO */}
       <Reveal className="py-28 md:py-36">
-        <div className="max-w-6xl mx-auto px-5">
-          <div className="text-center mb-16">
-            <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">170+ Servicios para Vender</p>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px' }}>
-              Arsenal Digital Completo
-            </h2>
-            <p className="text-[#A0A0A0] max-w-lg mx-auto">Streaming, software premium, IA, diseno, videojuegos y mucho mas. Todo listo para que lo comercialices.</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {[
-              { i: SectionStreaming, t: 'Streaming', d: 'Netflix, Disney+, HBO Max, Prime Video, Spotify y mas' },
-              { i: IconCourses, t: 'Capacitacion', d: 'Cursos de marketing digital y estrategias de venta' },
-              { i: SectionServices, t: 'Software', d: 'Office 365, Adobe CC, AutoCAD, ChatGPT Plus' },
-              { i: SectionBooks, t: 'Libros', d: 'Biblioteca digital de desarrollo personal y negocios' },
-              { i: SectionApps, t: 'Apps', d: 'Aplicaciones premium para productividad y diseno' },
-              { i: SectionAcademy, t: 'Academia', d: 'El Metodo Global Dorado de capacitacion' },
-            ].map((cat, i) => {
-              const I = cat.i;
-              return (
-                <motion.div key={i} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                  className={`${cardBase} ${cardHover} flex items-start gap-4 p-5 group`}>
-                  <div className="w-10 h-10 rounded-xl bg-[#FFD700]/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[#FFD700]/10 transition-colors">
-                    <I className="w-5 h-5 text-[#FFD700]" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm mb-1">{cat.t}</h3>
-                    <p className="text-[#A0A0A0] text-xs leading-relaxed">{cat.d}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className={`${cardBase} p-6 text-center`}>
-            <p className="text-[#FCD34D]/50 text-xs mb-4 tracking-wider uppercase">Servicios Incluidos</p>
-            <div className="flex flex-wrap justify-center gap-x-5 gap-y-2.5">
-              {['Netflix, Disney+, MAX, YouTube', 'Spotify, Apple Music, Tidal', 'Office 365 Pro', 'Adobe Creative Cloud', 'ChatGPT, Gemini, Perplexity', 'Windows 10 & 11 Pro', 'AutoCAD, Solidworks, Revit', 'CapCut Pro, Canva Pro', 'CorelDraw, Photoshop', 'Antivirus y Seguridad', 'PlayStation, Xbox, Nintendo', 'Y mucho mas...'].map((item, i) => (
-                <span key={i} className="text-[#A0A0A0] text-xs flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-[#FFD700]/40" /> {item}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+        <div className="max-w-4xl mx-auto px-5 text-center">
+          <p className="text-[#FCD34D]/50 text-xs tracking-[0.3em] uppercase mb-4">170+ Servicios Digitales</p>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight" style={{ fontFamily: "'Bodoni Moda', Georgia, serif", letterSpacing: '1px' }}>
+            Explora Nuestro Catalogo
+          </h2>
+          <p className="text-[#A0A0A0] max-w-lg mx-auto mb-8">Streaming, software premium, IA, videojuegos, diseno y mucho mas. Todo listo para que lo comercialices.</p>
+          <Link to="/store"
+            className="px-10 py-4 bg-gradient-to-r from-[#DAA520] via-[#FFD700] to-[#B8860B] text-black font-bold rounded-xl text-base hover:from-[#FFD700] hover:via-[#FFF8DC] hover:to-[#DAA520] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(255,215,0,0.4)] transition-all duration-200 inline-flex items-center gap-2">
+            Ver Catalogo Completo <IconArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </Reveal>
 
