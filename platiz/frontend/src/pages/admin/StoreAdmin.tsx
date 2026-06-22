@@ -245,7 +245,7 @@ export default function StoreAdmin() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setModalOpen(false)}>
           <div className="fixed inset-0 bg-[#0a0a0f]/95 backdrop-blur-xl" />
           <div
-            className="relative bg-[#0a0a0f] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/50"
+            className="relative bg-[#0a0a0f] border border-[#FFD700]/20 rounded-2xl p-4 md:p-6 w-full max-w-full md:max-w-2xl max-h-[95vh] overflow-y-auto shadow-2xl shadow-black/50 mx-1 md:mx-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-lg font-bold text-white mb-6">
