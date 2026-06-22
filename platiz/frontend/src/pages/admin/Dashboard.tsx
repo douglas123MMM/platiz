@@ -7,6 +7,7 @@ import { IconUsers, IconCourses, IconPhoto, IconAi, IconMovies, IconChat, IconLi
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ users: 0, items: 0, banners: 0, providers: 0, pendingUsers: 0 });
   const [loading, setLoading] = useState(true);
+  const [logoUrl, setLogoUrl] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -14,7 +15,8 @@ export default function AdminDashboard() {
       api.get('/content/items').catch(() => ({ data: [] })),
       api.get('/banners/all').catch(() => ({ data: [] })),
       api.get('/ai/providers').catch(() => ({ data: [] })),
-    ]).then(([users, items, banners, providers]) => {
+      api.get('/settings').catch(() => ({ data: {} })),
+    ]).then(([users, items, banners, providers, settings]) => {
       setStats({
         users: users.data.length,
         items: items.data.length,
@@ -22,6 +24,7 @@ export default function AdminDashboard() {
         providers: providers.data.length,
         pendingUsers: users.data.filter((u: any) => u.status === 'pending').length,
       });
+      if (settings.data?.logo_url) setLogoUrl(settings.data.logo_url);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -36,11 +39,16 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center gap-4">
-        <CrownIcon size={48} className="drop-shadow-[0_0_10px_rgba(255,215,0,0.4)]" />
+        {logoUrl ? (
+          <img src={logoUrl} alt="Logo" className="w-12 h-12 object-contain rounded-xl bg-[#111] p-1" />
+        ) : (
+          <CrownIcon size={48} className="drop-shadow-[0_0_10px_rgba(255,215,0,0.4)]" />
+        )}
         <div>
           <h1 className="section-title text-3xl">Panel Global Dorado</h1>
           <p className="section-subtitle">Gestiona tu imperio digital</p>
         </div>
+        <Link to="/admin/landing-config" className="ml-auto text-xs text-[#FFD700]/60 hover:text-[#FFD700] border border-[#FFD700]/20 rounded-lg px-3 py-1.5">Editar Logo</Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {cards.map((card) => {
