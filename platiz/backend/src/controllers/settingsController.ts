@@ -139,7 +139,7 @@ export async function uploadLogo(req: AuthRequest, res: Response): Promise<void>
   try {
     if (!req.file) { res.status(400).json({ error: 'No se envio imagen' }); return; }
     const { uploadToSupabase } = require('../utils/upload');
-    const url = await uploadToSupabase(req.file.buffer, req.file.originalname, 'images');
+    const url = await uploadToSupabase(req.file);
     const { data: existing } = await supabase.from('settings').select('id').maybeSingle();
     if (existing) {
       await supabase.from('settings').update({ logo_url: url, updated_at: new Date().toISOString() }).eq('id', existing.id);
