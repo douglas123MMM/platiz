@@ -45,7 +45,7 @@ export default function LandingPage() {
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, type: "spring", stiffness: 200 }}>
             {customLogo ? (
-              <img src={customLogo} alt="Global Dorado" className="mx-auto mb-6 h-16 md:h-20 object-contain" />
+              <img src={customLogo} alt="Global Dorado" className="mx-auto mb-6 h-16 md:h-20 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
             ) : (
               <Logo size={64} className="mx-auto mb-6" />
             )}
@@ -327,7 +327,11 @@ export default function LandingPage() {
       <footer className="border-t border-[#1F2937] py-10">
         <div className="max-w-6xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <Logo size={20} />
+            {customLogo ? (
+              <img src={customLogo} alt="Global Dorado" className="h-5 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+            ) : (
+              <Logo size={20} />
+            )}
             <span className="text-xs text-[#6B7280]">© 2026 Global Dorado</span>
           </div>
           <div className="flex items-center gap-5 text-xs text-[#6B7280]">

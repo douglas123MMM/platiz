@@ -40,7 +40,7 @@ export default function AdminDashboard() {
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center gap-4">
         {logoUrl ? (
-          <img src={logoUrl} alt="Logo" className="w-12 h-12 object-contain rounded-xl bg-[#111] p-1" />
+          <img src={logoUrl} alt="Logo" className="w-12 h-12 object-contain rounded-xl bg-[#111] p-1" style={{ filter: 'brightness(0) invert(1)' }} />
         ) : (
           <CrownIcon size={48} className="drop-shadow-[0_0_10px_rgba(255,215,0,0.4)]" />
         )}

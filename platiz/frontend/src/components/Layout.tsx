@@ -95,7 +95,7 @@ export default function Layout() {
       >
         <div className="flex flex-col items-center px-3 py-3 border-b border-[#FFD700]/10">
           {customLogo ? (
-            <img src={customLogo} alt="Global Dorado" className="h-8 object-contain" />
+            <img src={customLogo} alt="Global Dorado" className="h-8 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
           ) : (
             <Logo size={28} />
           )}
