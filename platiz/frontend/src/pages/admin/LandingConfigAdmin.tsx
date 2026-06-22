@@ -169,11 +169,11 @@ export default function LandingConfigAdmin() {
                     const file = e.target.files?.[0]; if (!file) return;
                     setLogoUploading(true);
                     try {
-                      const url = await uploadVideoToStorage(file);
-                      await api.put('/settings', { logo_url: url });
-                      setLogoUrl(url);
-                      toast.success('Logo actualizado');
-                    } catch { toast.error('Error al subir imagen'); }
+                      const fd = new FormData(); fd.append('logo', file);
+                      const { data } = await api.post('/settings/upload-logo', fd);
+                      setLogoUrl(data.url);
+                      toast.success('Logo subido');
+                    } catch { toast.error('Error al subir'); }
                     setLogoUploading(false);
                   }} />
               </label>
