@@ -159,9 +159,24 @@ export default function LandingConfigAdmin() {
             <div className="w-16 h-16 rounded-xl bg-[#111] border border-[#FFD700]/10 flex items-center justify-center text-2xl text-[#FFD700]">G</div>
           )}
           <div className="flex-1">
-            <p className="text-gray-400 text-xs mb-2">URL del logo (ej: https://ejemplo.com/logo.png)</p>
-            <div className="flex gap-2">
-              <input className="input flex-1" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="https://..." />
+            <p className="text-gray-400 text-xs mb-2">Logo de Global Dorado</p>
+            <div className="flex gap-2 flex-wrap">
+              <label className="px-4 py-2 bg-[#FFD700]/10 text-[#FFD700] rounded-xl text-sm font-medium hover:bg-[#FFD700]/20 cursor-pointer">
+                {logoUploading ? 'Subiendo...' : 'Subir Logo'}
+                <input type="file" accept="image/*" className="hidden" disabled={logoUploading}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]; if (!file) return;
+                    setLogoUploading(true);
+                    try {
+                      const url = await uploadVideoToStorage(file);
+                      await api.put('/settings', { logo_url: url });
+                      setLogoUrl(url);
+                      toast.success('Logo actualizado');
+                    } catch { toast.error('Error al subir imagen'); }
+                    setLogoUploading(false);
+                  }} />
+              </label>
+              <input className="input flex-1 min-w-[200px]" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="O pega la URL..." />
               <button onClick={async () => { await api.put('/settings', { logo_url: logoUrl }); toast.success('Logo guardado'); }}
                 className="px-4 py-2 bg-[#FFD700] text-black rounded-xl text-sm font-bold hover:bg-[#FFE44D]">Guardar</button>
             </div>
