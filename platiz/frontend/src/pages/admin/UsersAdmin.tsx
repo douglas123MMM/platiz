@@ -1,26 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { User } from '../../types';
 import toast from 'react-hot-toast';
 import { HiCheck, HiX, HiRefresh, HiUserGroup, HiSearch, HiFilm } from 'react-icons/hi';
 
 export default function UsersAdmin() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const topRef = useRef<HTMLDivElement>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    if (scrollRef.current && topRef.current) {
-      const child = topRef.current.firstElementChild as HTMLElement;
-      if (child) child.style.width = scrollRef.current.scrollWidth + 'px';
-    }
-  }, [users]);
-
-  const handleScroll = (source: HTMLDivElement, target: HTMLDivElement | null) => {
-    if (target) target.scrollLeft = source.scrollLeft;
-  };
   const [passModal, setPassModal] = useState<string | null>(null);
   const [newPass, setNewPass] = useState('');
 
@@ -93,31 +80,31 @@ export default function UsersAdmin() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={toggleMoviesAll} className="btn-secondary flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20">🎬 Activar peliculas para todos</button>
-          <button onClick={deactivateMoviesAll} className="btn-secondary flex items-center gap-2 bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20">🎬 Desactivar peliculas para todos</button>
+          <button onClick={toggleMoviesAll} className="btn-secondary flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20">­ƒÄ¼ Activar peliculas para todos</button>
+          <button onClick={deactivateMoviesAll} className="btn-secondary flex items-center gap-2 bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20">­ƒÄ¼ Desactivar peliculas para todos</button>
           <button onClick={() => loadUsers(search)} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
         </div>
       </div>
 
       <div className="flex items-center gap-3 px-4 py-3 glass rounded-2xl border border-[#FFD700]/10 max-w-md">
         <HiSearch className="w-5 h-5 text-gray-500 flex-shrink-0" />
-        <input type="text" placeholder="Buscar por nombre, email o teléfono..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
+        <input type="text" placeholder="Buscar por nombre, email o tel├®fono..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
-        <div ref={topRef} style={{ overflowX: 'scroll', height: '14px', scrollbarWidth: 'thin' }} onScroll={(e) => handleScroll(e.currentTarget, scrollRef.current)}><div style={{ height: '1px' }}></div></div>
-        <div ref={scrollRef} className="overflow-x-auto" style={{ overflowX: 'scroll', scrollbarWidth: 'thin' }} onScroll={(e) => handleScroll(e.currentTarget, topRef.current)}>
+      <div className="glass rounded-2xl border border-[#FFD700]/10">
+        <div style={{ overflowX: 'auto', transform: 'rotateX(180deg)', scrollbarWidth: 'thin' }}>
+          <div style={{ transform: 'rotateX(180deg)' }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#FFD700]/10">
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Socio</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Email</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Teléfono</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Tel├®fono</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Rol</th>
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
                  <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Peliculas</th>
                  <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Registro</th>
-                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acción</th>
+                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acci├│n</th>
               </tr>
             </thead>
             <tbody>
@@ -134,7 +121,7 @@ export default function UsersAdmin() {
                     </div>
                   </td>
                   <td className="p-4 text-gray-400 text-sm">{user.email}</td>
-                  <td className="p-4 text-gray-400 text-sm">{user.phone || '—'}</td>
+                  <td className="p-4 text-gray-400 text-sm">{user.phone || 'ÔÇö'}</td>
                   <td className="p-4"><span className={`badge ${user.role === 'admin' ? 'badge-gold' : 'badge-info'}`}>{user.role === 'admin' ? 'Admin' : 'Socio'}</span></td>
                   <td className="p-4">
                     <span className={`badge ${user.status === 'approved' ? 'badge-success' : user.status === 'rejected' ? 'badge-danger' : 'badge-warning'}`}>
@@ -159,12 +146,13 @@ export default function UsersAdmin() {
                       </div>
                     )}
                     <button onClick={() => { setPassModal(user.id); setNewPass(''); }} className="ml-2 px-3 py-1.5 rounded-lg bg-[#FFD700] text-black text-xs font-bold hover:bg-[#FFE44D] transition-colors" title="Cambiar contrasena">Clave</button>
-                    {user.role === 'admin' && <span className="text-xs text-[#FFD700]/60">—</span>}
+                    {user.role === 'admin' && <span className="text-xs text-[#FFD700]/60">ÔÇö</span>}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
       {passModal && (
