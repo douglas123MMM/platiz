@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
+
 import { Banner, Category, Stream } from '../types';
 import { IconMovies, IconCourses, IconBooks, IconApps, IconTelegram, IconServices, IconAcademy, IconAffiliate, IconChat, IconLightning, IconStar, IconShield, IconGlobe, IconArrowRight, IconPlay } from '../icons/PremiumIcons';
 import ScrollReveal from '../components/ScrollReveal';
@@ -33,17 +33,7 @@ export default function DashboardHome() {
     api.get('/streams').then((r) => setStreams(r.data.filter((s: Stream) => s.active))).catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-    api.get('/store/purchases').then(r => {
-      const expiring = (r.data || []).filter((p: any) => p.expiring_soon);
-      if (expiring.length > 0) {
-        expiring.forEach((p: any) => {
-          toast(`Tu servicio "${p.product_title}" vence en ${p.days_left} dias. Renuevalo!`, { icon: <IconStar className="text-[#FFD700]" size={18} />, duration: 8000 });
-        });
-      }
-    }).catch(() => {});
-  }, [user]);
+  /* aviso de vencimiento desactivado */
 
   useEffect(() => {
     if (banners.length <= 1) return;
