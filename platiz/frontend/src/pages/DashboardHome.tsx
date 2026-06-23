@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import Logo from '../components/Logo';
@@ -14,7 +14,7 @@ const iconMap: Record<string, any> = { 'movie': IconMovies, 'book': IconCourses,
 
 const featureItems = [
   { title: 'Acceso Vitalicio', desc: 'Un solo pago para toda la vida. Sin mensualidades ni renovaciones.', icon: IconStar },
-  { title: '80% Comisión Directa', desc: 'Gana el 80% por cada venta del acceso vitalicio al sistema.', icon: IconLightning },
+  { title: '80% Comisi├│n Directa', desc: 'Gana el 80% por cada venta del acceso vitalicio al sistema.', icon: IconLightning },
   { title: 'Soporte VIP 24/7', desc: 'Asistencia directa y personalizada cuando la necesites.', icon: IconShield },
   { title: 'Actualizaciones Perpetuas', desc: 'Acceso gratuito a cada nuevo servicio que se anexe al sistema.', icon: IconGlobe },
 ];
@@ -66,13 +66,13 @@ export default function DashboardHome() {
         <div className="relative z-10">
           <Logo size={56} className="mx-auto mb-6 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]" />
           <p className="text-2xl md:text-3xl font-light text-[#FFD700]/80 tracking-wide mb-4">TRANSFORMA EL INTERNET EN DINERO</p>
-          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg">Ecosistema digital de alta gama con acceso vitalicio. Capacitación en viralidad, arsenal de software premium y oportunidades reales de ingresos.</p>
+          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg">Ecosistema digital de alta gama con acceso vitalicio. Capacitaci├│n en viralidad, arsenal de software premium y oportunidades reales de ingresos.</p>
           <div className="flex items-center justify-center gap-4 mt-8">
             <Link to="/courses" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FFD700] text-black font-bold rounded-2xl text-base hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_20px_rgba(255,215,0,0.2)] hover:shadow-[0_6px_28px_rgba(255,215,0,0.3)] min-h-[52px]">
               Comenzar ahora <IconArrowRight className="w-5 h-5" />
             </Link>
-            <Link to="/store" className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/10 text-gray-300 font-semibold rounded-2xl text-base hover:bg-white/[0.04] hover:border-white/20 hover:text-white active:scale-[0.98] transition-colors duration-200 min-h-[52px]">
-              Ver catálogo
+            <Link to="/services" className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/10 text-gray-300 font-semibold rounded-2xl text-base hover:bg-white/[0.04] hover:border-white/20 hover:text-white active:scale-[0.98] transition-colors duration-200 min-h-[52px]">
+              Ver cat├ílogo
             </Link>
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function DashboardHome() {
         <section>
           <div className="text-center mb-8">
             <h2 className="section-title">Transmisiones en Vivo</h2>
-            <p className="section-subtitle">Contenido multimedia desde múltiples plataformas</p>
+            <p className="section-subtitle">Contenido multimedia desde m├║ltiples plataformas</p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
@@ -212,7 +212,7 @@ export default function DashboardHome() {
         </ScrollReveal>
       )}
 
-      {/* Categorías */}
+      {/* Categor├¡as */}
       <ScrollReveal>
       <section>
         <div className="text-center mb-10">
@@ -250,7 +250,7 @@ export default function DashboardHome() {
             <IconChat className="w-7 h-7" />
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold gold-text mb-3">Chat con IA Integrado</h2>
-          <p className="text-gray-400 max-w-xl mx-auto mb-8 text-base">Conecta con múltiples proveedores de IA: ChatGPT Plus, Gemini, Perplexity, Claude y más. Todo desde un solo lugar, incluido en tu acceso vitalicio.</p>
+          <p className="text-gray-400 max-w-xl mx-auto mb-8 text-base">Conecta con m├║ltiples proveedores de IA: ChatGPT Plus, Gemini, Perplexity, Claude y m├ís. Todo desde un solo lugar, incluido en tu acceso vitalicio.</p>
           <Link to="/chat" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FFD700] text-black font-bold rounded-2xl text-base hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_20px_rgba(255,215,0,0.2)] min-h-[52px]">
             Ir al chat <IconArrowRight className="w-5 h-5" />
           </Link>
@@ -261,7 +261,7 @@ export default function DashboardHome() {
       <ScrollReveal>
       <section className="text-center py-8 border-t border-[#FFD700]/10">
         <p className="text-[#FFD700]/40 text-xs uppercase tracking-widest font-medium">Global Dorado &mdash; Transforma el Internet en Dinero</p>
-        <p className="text-gray-400 text-xs mt-2">Acceso Vitalicio &bull; 80% Comisión &bull; Soporte VIP 24/7</p>
+        <p className="text-gray-400 text-xs mt-2">Acceso Vitalicio &bull; 80% Comisi├│n &bull; Soporte VIP 24/7</p>
       </section>
       </ScrollReveal>
     </div>
