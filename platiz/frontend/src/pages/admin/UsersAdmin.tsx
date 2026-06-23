@@ -103,7 +103,7 @@ export default function UsersAdmin() {
                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
                  <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Peliculas</th>
                  <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Registro</th>
-                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60 sticky right-0 bg-[#0a0a0f] z-10 before:absolute before:left-0 before:top-0 before:h-full before:w-4 before:bg-gradient-to-r before:from-transparent before:to-[#0a0a0f] before:pointer-events-none">Acción</th>
+                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60 sticky right-0 bg-[#0a0a0f] z-10" style={{boxShadow:'-4px 0 6px -4px rgba(0,0,0,0.5)'}}>Acción</th>
               </tr>
             </thead>
             <tbody>
@@ -137,7 +137,7 @@ export default function UsersAdmin() {
                     </button>
                   </td>
                   <td className="p-4 text-gray-400 text-sm">{new Date(user.created_at).toLocaleDateString()}</td>
-                  <td className="p-4 text-right sticky right-0 bg-[#0a0a0f] z-10 before:absolute before:left-0 before:top-0 before:h-full before:w-4 before:bg-gradient-to-r before:from-transparent before:to-[#0a0a0f] before:pointer-events-none">
+                  <td className="p-4 text-right sticky right-0 bg-[#0a0a0f] z-10" style={{boxShadow:'-4px 0 6px -4px rgba(0,0,0,0.5)'}}
                     {user.role !== 'admin' && user.status !== 'approved' && (
                       <div className="flex items-center justify-end gap-2">
                         <button onClick={() => updateStatus(user.id, 'approved')} className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors" title="Aprobar socio"><HiCheck className="w-4 h-4" /></button>
