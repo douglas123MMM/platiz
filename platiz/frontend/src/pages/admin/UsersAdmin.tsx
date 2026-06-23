@@ -14,6 +14,15 @@ export default function UsersAdmin() {
   const syncScroll = (source: HTMLDivElement, target: HTMLDivElement) => {
     target.scrollLeft = source.scrollLeft;
   };
+
+  useEffect(() => {
+    if (scrollRef.current && topScrollRef.current) {
+      const w = scrollRef.current.scrollWidth;
+      const child = topScrollRef.current.firstElementChild as HTMLElement;
+      if (child) child.style.width = w + 'px';
+    }
+  }, [users]);
+
   const [passModal, setPassModal] = useState<string | null>(null);
   const [newPass, setNewPass] = useState('');
 
@@ -98,7 +107,7 @@ export default function UsersAdmin() {
       </div>
 
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
-        <div ref={topScrollRef} className="overflow-x-scroll" style={{ overflowX: 'scroll', height: '10px', scrollbarWidth: 'thin' }} onScroll={(e) => { if (scrollRef.current) scrollRef.current.scrollLeft = (e.target as HTMLDivElement).scrollLeft; }}></div>
+        <div ref={topScrollRef} className="overflow-x-scroll" style={{ overflowX: 'scroll', height: '12px', scrollbarWidth: 'thin' }} onScroll={(e) => { if (scrollRef.current) scrollRef.current.scrollLeft = (e.target as HTMLDivElement).scrollLeft; }}><div style={{ height: '1px' }}></div></div>
         <div ref={scrollRef} className="overflow-x-auto" style={{ overflowX: 'scroll', scrollbarWidth: 'thin' }} onScroll={(e) => { if (topScrollRef.current) topScrollRef.current.scrollLeft = (e.target as HTMLDivElement).scrollLeft; }}>
           <table className="w-full">
             <thead>
