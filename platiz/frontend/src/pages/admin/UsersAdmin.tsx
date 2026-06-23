@@ -91,8 +91,8 @@ export default function UsersAdmin() {
         <input type="text" placeholder="Buscar por nombre, email o teléfono..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10">
-        <div style={{ overflow: 'auto', maxHeight: '75vh', scrollbarWidth: 'thin' }}>
+      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+        <div className="overflow-x-auto" style={{ overflowX: 'scroll', scrollbarWidth: 'thin' }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#FFD700]/10">
