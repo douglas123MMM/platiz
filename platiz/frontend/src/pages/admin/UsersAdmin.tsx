@@ -92,7 +92,7 @@ export default function UsersAdmin() {
       </div>
 
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" style={{ overflowX: 'scroll', scrollbarWidth: 'thin' }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#FFD700]/10">
