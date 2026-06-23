@@ -71,7 +71,7 @@ export default function DashboardHome() {
             <Link to="/courses" className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FFD700] text-black font-bold rounded-2xl text-base hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_20px_rgba(255,215,0,0.2)] hover:shadow-[0_6px_28px_rgba(255,215,0,0.3)] min-h-[52px]">
               Comenzar ahora <IconArrowRight className="w-5 h-5" />
             </Link>
-            <Link to="/services" className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/10 text-gray-300 font-semibold rounded-2xl text-base hover:bg-white/[0.04] hover:border-white/20 hover:text-white active:scale-[0.98] transition-colors duration-200 min-h-[52px]">
+            <Link to="/store" className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/10 text-gray-300 font-semibold rounded-2xl text-base hover:bg-white/[0.04] hover:border-white/20 hover:text-white active:scale-[0.98] transition-colors duration-200 min-h-[52px]">
               Ver catálogo
             </Link>
           </div>

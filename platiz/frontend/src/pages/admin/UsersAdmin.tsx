@@ -44,6 +44,15 @@ export default function UsersAdmin() {
     } catch { toast.error('Error al activar'); }
   };
 
+  const deactivateMoviesAll = async () => {
+    if (!confirm('Desactivar peliculas para TODOS los usuarios?')) return;
+    try {
+      const r = await api.post('/auth/users/deactivate-movies-all');
+      toast.success(`Peliculas desactivadas para ${r.data.count} usuarios`);
+      loadUsers(search);
+    } catch { toast.error('Error al desactivar'); }
+  };
+
   const toggleMovies = async (id: string) => {
     try {
       const r = await api.patch(`/auth/users/${id}/movies-access`);
@@ -72,6 +81,7 @@ export default function UsersAdmin() {
         </div>
         <div className="flex gap-2">
           <button onClick={toggleMoviesAll} className="btn-secondary flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20">🎬 Activar peliculas para todos</button>
+          <button onClick={deactivateMoviesAll} className="btn-secondary flex items-center gap-2 bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20">🎬 Desactivar peliculas para todos</button>
           <button onClick={() => loadUsers(search)} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
         </div>
       </div>

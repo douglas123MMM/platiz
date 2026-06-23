@@ -156,6 +156,15 @@ export async function activateMoviesForAll(req: AuthRequest, res: Response): Pro
   }
 }
 
+export async function deactivateMoviesForAll(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { data: updated } = await supabase.from('users').update({ movies_access: false }).neq('role', 'admin').select('id');
+    res.json({ message: 'Peliculas desactivadas para todos los usuarios', count: updated?.length || 0 });
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 export async function toggleMoviesAccess(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;

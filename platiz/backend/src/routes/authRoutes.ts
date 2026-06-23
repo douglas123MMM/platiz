@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, logout, getProfile, getUsers, approveUser, adminResetPassword, toggleMoviesAccess, activateMoviesForAll } from '../controllers/authController';
+import { register, login, logout, getProfile, getUsers, approveUser, adminResetPassword, toggleMoviesAccess, activateMoviesForAll, deactivateMoviesForAll } from '../controllers/authController';
 import { authenticate, requireAdmin } from '../middleware/auth';
 
 const router = Router();
@@ -13,5 +13,6 @@ router.patch('/users/:id/status', authenticate, requireAdmin, approveUser);
 router.patch('/users/:id/password', authenticate, requireAdmin, adminResetPassword);
 router.patch('/users/:id/movies-access', authenticate, requireAdmin, toggleMoviesAccess);
 router.post('/users/activate-movies-all', authenticate, requireAdmin, activateMoviesForAll);
+router.post('/users/deactivate-movies-all', authenticate, requireAdmin, deactivateMoviesForAll);
 
 export default router;
