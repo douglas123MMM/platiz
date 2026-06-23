@@ -2,11 +2,9 @@
   "installCommand": "cd platiz && npm install && cd frontend && npm install",
   "buildCommand": "cd platiz/frontend && npm run build",
   "outputDirectory": "platiz/frontend/dist",
-  "build": {
-    "env": {
-      "VITE_SUPABASE_URL": "https://vhgxevfrgnzbebffejnz.supabase.co",
-      "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZ3hldmZyZ256YmViZmZlam56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxOTQ0MDcsImV4cCI6MjA5NTc3MDQwN30.2qRTVelHJyxKtxgHnbfHOmAcVYcwLnGBbNXC2mSzDSo"
-    }
+  "env": {
+    "VITE_SUPABASE_URL": "https://vhgxevfrgnzbebffejnz.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZ3hldmZyZ256YmViZmZlam56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxOTQ0MDcsImV4cCI6MjA5NTc3MDQwN30.2qRTVelHJyxKtxgHnbfHOmAcVYcwLnGBbNXC2mSzDSo"
   },
   "headers": [
     {
