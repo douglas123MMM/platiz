@@ -1,13 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../../services/api';
 import { User } from '../../types';
 import toast from 'react-hot-toast';
 import { HiCheck, HiX, HiRefresh, HiUserGroup, HiSearch, HiFilm } from 'react-icons/hi';
 
 export default function UsersAdmin() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (scrollRef.current && topRef.current) {
+      const child = topRef.current.firstElementChild as HTMLElement;
+      if (child) child.style.width = scrollRef.current.scrollWidth + 'px';
+    }
+  }, [users]);
+
+  const handleScroll = (source: HTMLDivElement, target: HTMLDivElement | null) => {
+    if (target) target.scrollLeft = source.scrollLeft;
+  };
   const [passModal, setPassModal] = useState<string | null>(null);
   const [newPass, setNewPass] = useState('');
 
@@ -92,7 +105,8 @@ export default function UsersAdmin() {
       </div>
 
       <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
-        <div className="overflow-x-auto" style={{ overflowX: 'scroll', scrollbarWidth: 'thin' }}>
+        <div ref={topRef} style={{ overflowX: 'scroll', height: '14px', scrollbarWidth: 'thin' }} onScroll={(e) => handleScroll(e.currentTarget, scrollRef.current)}><div style={{ height: '1px' }}></div></div>
+        <div ref={scrollRef} className="overflow-x-auto" style={{ overflowX: 'scroll', scrollbarWidth: 'thin' }} onScroll={(e) => handleScroll(e.currentTarget, topRef.current)}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#FFD700]/10">
