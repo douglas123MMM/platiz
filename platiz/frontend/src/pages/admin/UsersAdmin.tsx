@@ -8,6 +8,7 @@ export default function UsersAdmin() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [moviesForAll, setMoviesForAll] = useState(false);
   const [passModal, setPassModal] = useState<string | null>(null);
   const [newPass, setNewPass] = useState('');
 
@@ -35,22 +36,16 @@ export default function UsersAdmin() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const toggleMoviesAll = async () => {
-    if (!confirm('Activar peliculas para TODOS los usuarios?')) return;
+  const handleToggleAll = async () => {
+    const action = moviesForAll ? 'desactivar' : 'activar';
+    if (!confirm(`¿${action} peliculas para TODOS los usuarios?`)) return;
     try {
-      const r = await api.post('/auth/users/activate-movies-all');
-      toast.success(`Peliculas activadas para ${r.data.count} usuarios`);
+      const endpoint = moviesForAll ? '/auth/users/deactivate-movies-all' : '/auth/users/activate-movies-all';
+      const r = await api.post(endpoint);
+      toast.success(`Peliculas ${action === 'activar' ? 'activadas' : 'desactivadas'} para ${r.data.count} usuarios`);
+      setMoviesForAll(!moviesForAll);
       loadUsers(search);
-    } catch { toast.error('Error al activar'); }
-  };
-
-  const deactivateMoviesAll = async () => {
-    if (!confirm('Desactivar peliculas para TODOS los usuarios?')) return;
-    try {
-      const r = await api.post('/auth/users/deactivate-movies-all');
-      toast.success(`Peliculas desactivadas para ${r.data.count} usuarios`);
-      loadUsers(search);
-    } catch { toast.error('Error al desactivar'); }
+    } catch { toast.error('Error al actualizar'); }
   };
 
   const toggleMovies = async (id: string) => {
@@ -80,8 +75,10 @@ export default function UsersAdmin() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={toggleMoviesAll} className="btn-secondary flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20">🎬 Activar peliculas para todos</button>
-          <button onClick={deactivateMoviesAll} className="btn-secondary flex items-center gap-2 bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20">🎬 Desactivar peliculas para todos</button>
+          <button onClick={handleToggleAll} className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${moviesForAll ? 'bg-emerald-500' : 'bg-gray-700'}`}>
+            <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${moviesForAll ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+          <span className="text-xs text-gray-400">{moviesForAll ? 'Películas ON' : 'Películas OFF'}</span>
           <button onClick={() => loadUsers(search)} className="btn-secondary flex items-center gap-2"><HiRefresh className="w-4 h-4" /> Actualizar</button>
         </div>
       </div>
