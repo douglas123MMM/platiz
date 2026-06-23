@@ -12,7 +12,7 @@
   h2 { @apply text-3xl md:text-4xl leading-[1.15]; }
   h3 { @apply text-xl md:text-2xl font-semibold leading-[1.2]; }
   p { @apply leading-relaxed; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; font-size: 16px; }
   body { min-height: 100vh; min-height: 100dvh; }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { @apply bg-[#0a0a0f]; }
