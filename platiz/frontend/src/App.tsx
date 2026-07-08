@@ -36,13 +36,21 @@ import Purchases from './pages/Purchases';
 import RechargesAdmin from './pages/admin/RechargesAdmin';
 import PurchasesAdmin from './pages/admin/PurchasesAdmin';
 import LandingConfigAdmin from './pages/admin/LandingConfigAdmin';
+import SuiteDashboard from './pages/suite/SuiteDashboard';
+import TenantNew from './pages/suite/TenantNew';
+import TenantConfig from './pages/suite/TenantConfig';
+import TenantBookings from './pages/suite/TenantBookings';
+import TenantClients from './pages/suite/TenantClients';
+import TenantServices from './pages/suite/TenantServices';
+import TenantInvoices from './pages/suite/TenantInvoices';
+import PublicLanding from './pages/suite/PublicLanding';
 
 function LoadingScreen() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <CrownIcon size={64} className="animate-pulse" />
-        <div className="w-8 h-8 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
       </div>
     </div>
   );
@@ -74,6 +82,7 @@ export default function App() {
         <Route path="/courses" element={<SectionPage />} />
         <Route path="/books" element={<SectionPage />} />
         <Route path="/apps" element={<SectionPage />} />
+        <Route path="/telegram" element={<SectionPage />} />
         <Route path="/academy" element={<SectionPage />} />
         <Route path="/affiliate" element={<SectionPage />} />
         <Route path="/programas" element={<SectionPage />} />
@@ -89,6 +98,13 @@ export default function App() {
         <Route path="/recharge" element={<Recharge />} />
         <Route path="/purchases" element={<Purchases />} />
         <Route path="/membresias" element={<MembershipsAdmin />} />
+        <Route path="/suite" element={<SuiteDashboard />} />
+        <Route path="/suite/tenants/nuevo" element={<TenantNew />} />
+        <Route path="/suite/tenants/:slug" element={<TenantConfig />} />
+        <Route path="/suite/tenants/:slug/citas" element={<TenantBookings />} />
+        <Route path="/suite/tenants/:slug/clientes" element={<TenantClients />} />
+        <Route path="/suite/tenants/:slug/servicios" element={<TenantServices />} />
+        <Route path="/suite/tenants/:slug/facturacion" element={<TenantInvoices />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
         <Route path="/admin" element={<AdminDashboard />} />
@@ -108,6 +124,7 @@ export default function App() {
         <Route path="/admin/purchases" element={<PurchasesAdmin />} />
         <Route path="/admin/landing-config" element={<LandingConfigAdmin />} />
       </Route>
+      <Route path="/suite/:slug" element={<PublicLanding />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
