@@ -143,69 +143,54 @@ export default function PublicStore() {
     <div className="min-h-screen" style={{ backgroundColor: '#f9f8f5', fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif", fontVariantNumeric: 'lining-nums', WebkitFontSmoothing: 'antialiased' }}>
       <style>{CSS}</style>
 
-      {/* HERO / BANNER */}
+      {/* HERO */}
       {store.banner_url && !bannerError ? (
-        <div className="w-full relative bg-stone-900">
-          <img
-            src={store.banner_url}
-            alt=""
-            className="w-full block"
-            style={{ maxHeight: '360px', objectFit: 'cover', objectPosition: 'center' }}
-            loading="eager"
-            fetchPriority="high"
-            onError={() => setBannerError(true)}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/5 pointer-events-none" aria-hidden="true" />
-          <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-            <div className="max-w-3xl mx-auto flex items-end gap-3 sm:gap-4">
+        <div className="w-full relative" style={{ height: '280px' }}>
+          <img src={store.banner_url} alt="" className="w-full h-full object-cover absolute inset-0"
+            loading="eager" fetchPriority="high" onError={() => setBannerError(true)} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-black/5" aria-hidden="true" />
+          <div className="absolute inset-x-0 bottom-0 p-5">
+            <div className="max-w-3xl mx-auto flex items-end gap-3">
               {store.logo_url ? (
-                <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="64" height="64"
-                  className="w-16 h-16 sm:w-18 sm:h-18 rounded-xl object-cover shadow-xl ring-2 ring-white/40 flex-shrink-0"
+                <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="60" height="60"
+                  className="w-16 h-16 rounded-xl object-cover shadow-xl ring-2 ring-white/40 flex-shrink-0"
                   onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               ) : (
-                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl ring-2 ring-white/40 flex-shrink-0"
-                  style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
+                <div className="w-16 h-16 rounded-xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl ring-2 ring-white/40 flex-shrink-0"
+                  style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -20)})` }} aria-hidden="true">
                   {store.store_name.charAt(0)}
                 </div>
               )}
-              <div className="pb-0.5">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight drop-shadow-md">{store.store_name}</h1>
-                {store.description && <p className="text-white/80 text-xs sm:text-sm mt-1 max-w-md drop-shadow line-clamp-2">{store.description}</p>}
+              <div>
+                <h1 className="text-xl font-extrabold text-white tracking-tight drop-shadow-lg">{store.store_name}</h1>
+                {store.description && <p className="text-white/80 text-xs mt-0.5 max-w-md drop-shadow line-clamp-1">{store.description}</p>}
                 <a href={wa()} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 mt-2 px-3.5 py-2 rounded-full bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-black/20 hover:bg-emerald-600 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 focus-visible:outline-none">
-                  <span className="w-4 h-4">{I.wa}</span> WhatsApp
+                  className="inline-flex items-center gap-1 mt-1.5 px-3 py-1.5 rounded-full bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-black/20 hover:bg-emerald-600 transition-all focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 focus-visible:outline-none">
+                  <span className="w-3.5 h-3.5">{I.wa}</span> WhatsApp
                 </a>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="relative border-b border-stone-200/40" style={{ background: `linear-gradient(170deg, ${accent}12 0%, ${accent}04 50%, #f9f8f5 100%)` }}>
-          {store.banner_url && bannerError && (
-            <div className="w-full" style={{ maxHeight: '200px', overflow: 'hidden' }}>
-              <img src={store.banner_url} alt="" className="w-full object-cover opacity-10 pointer-events-none blur-sm" style={{ maxHeight: '200px' }} aria-hidden="true" />
+        <div className="py-14 px-6 text-center" style={{ background: `linear-gradient(160deg, ${accent}14, ${accent}06 50%, #f9f8f5)` }}>
+          {store.logo_url ? (
+            <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="80" height="80"
+              className="w-20 h-20 rounded-2xl object-cover shadow-lg mx-auto mb-4 a-fade-up ring-1 ring-black/5"
+              onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          ) : (
+            <div className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-extrabold shadow-lg mb-4 a-fade-up ring-1 ring-black/5"
+              style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
+              {store.store_name.charAt(0)}
             </div>
           )}
-          <div className={`px-6 text-center ${store.banner_url && bannerError ? 'py-10' : 'py-12'}`}>
-            {store.logo_url ? (
-              <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="88" height="88"
-                className="w-22 h-22 rounded-2xl object-cover shadow-lg mx-auto mb-5 a-fade-up ring-1 ring-black/5"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-            ) : (
-              <div className="w-22 h-22 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-extrabold shadow-lg mb-5 a-fade-up ring-1 ring-black/5"
-                style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
-                {store.store_name.charAt(0)}
-              </div>
-            )}
-            <h1 className="text-2xl font-extrabold text-stone-900 tracking-tight a-fade-up">{store.store_name}</h1>
-            {store.description && <p className="text-stone-500 mt-2 text-sm max-w-md mx-auto a-fade-up leading-relaxed" style={{ animationDelay: '0.08s' }}>{store.description}</p>}
-            <a href={wa()} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-full bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-200/60 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 a-fade-up focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:outline-none"
-              style={{ animationDelay: '0.16s' }}
-              aria-label="Contactar por WhatsApp">
-              <span className="w-4 h-4">{I.wa}</span> WhatsApp
-            </a>
-          </div>
+          <h1 className="text-2xl font-extrabold text-stone-900 tracking-tight a-fade-up">{store.store_name}</h1>
+          {store.description && <p className="text-stone-500 mt-1.5 text-sm max-w-md mx-auto a-fade-up" style={{ animationDelay: '0.06s' }}>{store.description}</p>}
+          <a href={wa()} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-full bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-200/50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 a-fade-up focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:outline-none"
+            style={{ animationDelay: '0.12s' }} aria-label="Contactar por WhatsApp">
+            <span className="w-4 h-4">{I.wa}</span> WhatsApp
+          </a>
         </div>
       )}
 
