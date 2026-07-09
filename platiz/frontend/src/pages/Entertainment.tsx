@@ -155,7 +155,7 @@ export default function Entertainment() {
               </div>
             </div>
             <p className="text-white text-xs mt-1 truncate">{m.title || m.name}</p>
-            {m.vote_average && <p className="text-[#FFD700] text-xs">★ {m.vote_average.toFixed(1)}</p>}
+            {m.vote_average && <p className="text-[#E5C158] text-xs">★ {m.vote_average.toFixed(1)}</p>}
           </div>
         ))}
       </div>
@@ -165,8 +165,8 @@ export default function Entertainment() {
   if (!hasAccess) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8">
-        <div className="w-20 h-20 bg-[#FFD700]/10 rounded-full flex items-center justify-center mb-6">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#FFD700]"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+        <div className="w-20 h-20 bg-[#E5C158]/10 rounded-full flex items-center justify-center mb-6">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#E5C158]"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
         </div>
         <h2 className="text-2xl font-bold text-white mb-3">Acceso Restringido</h2>
         <p className="text-gray-400 max-w-md">El apartado de peliculas no esta disponible para tu cuenta. Contacta al administrador para activarlo.</p>
@@ -178,10 +178,10 @@ export default function Entertainment() {
     <div className="min-h-screen bg-[#0a0a0f] pb-12 animate-fade-in">
       {/* Tabs */}
       <div className="flex justify-center gap-2 mb-6 px-4 pt-4">
-        <button onClick={() => setTab('tmdb')} className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${tab === 'tmdb' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+        <button onClick={() => setTab('tmdb')} className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${tab === 'tmdb' ? 'bg-[#E5C158] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
           Cartelera TMDB
         </button>
-        <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${tab === 'catalog' ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+        <button onClick={() => setTab('catalog')} className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${tab === 'catalog' ? 'bg-[#E5C158] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
           Cat&aacute;logo
         </button>
       </div>
@@ -197,7 +197,7 @@ export default function Entertainment() {
                 <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-3">{hero.title || hero.name}</h1>
                 <p className="text-gray-300 text-sm md:text-base line-clamp-3 mb-4">{hero.overview}</p>
                 <div className="flex gap-3">
-                  <button onClick={() => openTrailer(hero)} className="px-8 py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] transition-colors flex items-center gap-2">
+                  <button onClick={() => openTrailer(hero)} className="px-8 py-3 bg-[#E5C158] text-black font-bold rounded-xl hover:bg-[#F0D78C] transition-colors flex items-center gap-2">
                     ▶ Ver Trailer
                   </button>
                 </div>
@@ -206,7 +206,7 @@ export default function Entertainment() {
           )}
 
           <div className="px-4 mb-6">
-            <input className="w-full max-w-md bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
+            <input className="w-full max-w-md bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#E5C158]/30"
               placeholder="Buscar peliculas..." value={search} onChange={e => handleSearch(e.target.value)} />
           </div>
 
@@ -239,10 +239,10 @@ export default function Entertainment() {
       {tab === 'catalog' && (
         <div className="px-4">
           <div className="flex flex-col md:flex-row gap-3 mb-4">
-            <input className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
+            <input className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#E5C158]/30"
               placeholder="Buscar..." value={catalogSearch} onChange={e => handleCatalogSearch(e.target.value)} />
             <select value={catalogCat} onChange={e => { setCatalogCat(e.target.value); setCatalogPage(1); }}
-              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-[#FFD700]/30">
+              className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-[#E5C158]/30">
               <option value="">Todas</option>
               {catalogCategories.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -271,7 +271,7 @@ export default function Entertainment() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-white text-xs leading-tight line-clamp-2 group-hover:text-[#FFD700] transition-colors">{m.name}</p>
+                  <p className="text-white text-xs leading-tight line-clamp-2 group-hover:text-[#E5C158] transition-colors">{m.name}</p>
                   {m.category && <p className="text-gray-500 text-[10px] mt-0.5">{m.category}</p>}
                 </div>
               ))}
@@ -351,7 +351,7 @@ function CatalogImage({ src, alt }: { src: string; alt: string }) {
   if (!imgSrc) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center bg-white/[0.03] gap-2">
-        <div className="w-7 h-7 border-2 border-[#FFD700]/20 border-t-[#FFD700] rounded-full animate-spin" />
+        <div className="w-7 h-7 border-2 border-[#E5C158]/20 border-t-[#E5C158] rounded-full animate-spin" />
         {isGeneric && <span className="text-[9px] text-gray-600">TMDB</span>}
       </div>
     );

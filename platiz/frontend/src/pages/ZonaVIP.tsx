@@ -79,14 +79,14 @@ export default function ZonaVIP() {
 
   if (!logged) return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-      <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-[#FFD700] text-center mb-2">ZONA VIP</h1>
+      <div className="bg-[#111] border border-[#E5C158]/20 rounded-2xl p-8 w-full max-w-sm">
+        <h1 className="text-2xl font-bold text-[#E5C158] text-center mb-2">ZONA VIP</h1>
         <p className="text-gray-400 text-xs text-center mb-6">Ingresa tus credenciales IPTV</p>
         <div className="space-y-3">
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white" placeholder="URL del servidor" value={server} onChange={e => setServer(e.target.value)} />
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white" placeholder="Usuario" value={username} onChange={e => setUsername(e.target.value)} />
-          <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2.5 text-sm text-white" type="password" placeholder="Contrasena" value={password} onChange={e => setPassword(e.target.value)} />
-          <button onClick={login} disabled={loading} className="w-full py-3 bg-[#FFD700] text-black rounded-xl font-bold hover:bg-[#FFE44D] disabled:opacity-50">
+          <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2.5 text-sm text-white" placeholder="URL del servidor" value={server} onChange={e => setServer(e.target.value)} />
+          <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2.5 text-sm text-white" placeholder="Usuario" value={username} onChange={e => setUsername(e.target.value)} />
+          <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2.5 text-sm text-white" type="password" placeholder="Contrasena" value={password} onChange={e => setPassword(e.target.value)} />
+          <button onClick={login} disabled={loading} className="w-full py-3 bg-[#E5C158] text-black rounded-xl font-bold hover:bg-[#F0D78C] disabled:opacity-50">
             {loading ? 'Conectando...' : 'Conectar'}
           </button>
         </div>
@@ -99,8 +99,8 @@ export default function ZonaVIP() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex flex-col animate-fade-in">
       {/* Header */}
-      <div className="bg-[#111] border-b border-[#FFD700]/10 p-3 flex items-center gap-3">
-        <h1 className="text-[#FFD700] font-bold text-lg flex-shrink-0">ZONA VIP</h1>
+      <div className="bg-[#111] border-b border-[#E5C158]/10 p-3 flex items-center gap-3">
+        <h1 className="text-[#E5C158] font-bold text-lg flex-shrink-0">ZONA VIP</h1>
         <div className="flex gap-1 flex-1 justify-center">
           {[
             { key: 'live', label: 'TV en Vivo' },
@@ -108,7 +108,7 @@ export default function ZonaVIP() {
             { key: 'series', label: 'Series' },
           ].map(t => (
             <button key={t.key} onClick={() => { setTab(t.key); setSelCat('all'); setSearch(''); }}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold ${tab === t.key ? 'bg-[#FFD700] text-black' : 'bg-white/5 text-gray-400'}`}>
+              className={`px-4 py-1.5 rounded-full text-xs font-bold ${tab === t.key ? 'bg-[#E5C158] text-black' : 'bg-white/5 text-gray-400'}`}>
               {t.label}
             </button>
           ))}
@@ -122,12 +122,12 @@ export default function ZonaVIP() {
             <input className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
-            <button onClick={() => setSelCat('all')} className={`w-full text-left px-3 py-2 rounded-lg text-xs ${selCat === 'all' ? 'bg-[#FFD700]/10 text-[#FFD700]' : 'text-gray-400 hover:bg-white/5'}`}>
+            <button onClick={() => setSelCat('all')} className={`w-full text-left px-3 py-2 rounded-lg text-xs ${selCat === 'all' ? 'bg-[#E5C158]/10 text-[#E5C158]' : 'text-gray-400 hover:bg-white/5'}`}>
               Todos ({list.length})
             </button>
             {catList.map((c: any) => (
               <button key={c.category_id} onClick={() => setSelCat(c.category_id)}
-                className={`w-full text-left px-3 py-2 rounded-lg text-xs truncate ${selCat === c.category_id ? 'bg-[#FFD700]/10 text-[#FFD700]' : 'text-gray-400 hover:bg-white/5'}`}>
+                className={`w-full text-left px-3 py-2 rounded-lg text-xs truncate ${selCat === c.category_id ? 'bg-[#E5C158]/10 text-[#E5C158]' : 'text-gray-400 hover:bg-white/5'}`}>
                 {c.category_name}
               </button>
             ))}
@@ -152,7 +152,7 @@ export default function ZonaVIP() {
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
               {list.slice(0, 200).map((ch: any) => (
                 <button key={ch.stream_id} onClick={() => play(ch.stream_id, ch.name, tab === 'vod' ? 'vod' : tab === 'series' ? 'series' : 'live')}
-                  className="bg-[#111] border border-white/5 hover:border-[#FFD700]/20 rounded-lg p-2 text-left transition-colors group">
+                  className="bg-[#111] border border-white/5 hover:border-[#E5C158]/20 rounded-lg p-2 text-left transition-colors group">
                   {ch.stream_icon ? (
                     <img src={ch.stream_icon} alt="" className="w-full h-20 object-contain mb-1 rounded bg-black/50 group-hover:scale-105 transition-transform" loading="lazy" onError={e => { e.currentTarget.style.display = 'none'; }} />
                   ) : (

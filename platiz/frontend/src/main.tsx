@@ -22,6 +22,6 @@ if (!rootEl) {
       </React.StrictMode>
     );
   } catch (e: any) {
-    rootEl.innerHTML = '<div style="color:#FFD700;background:#111;padding:20px;font-family:monospace"><h2>React Error</h2><pre>' + (e?.message || e) + '</pre></div>';
+    rootEl.innerHTML = '<div style="color:#E5C158;background:#111;padding:20px;font-family:monospace"><h2>React Error</h2><pre>' + (e?.message || e) + '</pre></div>';
   }
 }

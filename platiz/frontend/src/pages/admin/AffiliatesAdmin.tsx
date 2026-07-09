@@ -113,7 +113,7 @@ export default function AffiliatesAdmin() {
         ].map(t => (
           <button key={t.key} onClick={() => switchTab(t.key)}
             className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
-              tab === t.key ? 'bg-[#FFD700] text-black' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}>
+              tab === t.key ? 'bg-[#E5C158] text-black' : 'bg-[#111] text-gray-400 border border-[#E5C158]/10'}`}>
             {t.label}
           </button>
         ))}
@@ -124,13 +124,13 @@ export default function AffiliatesAdmin() {
         <>
           <div className="relative mb-4">
             <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
-            <input className="w-full bg-[#111] border border-[#FFD700]/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-[#111] border border-[#E5C158]/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-600"
               placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl overflow-hidden">
+          <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead><tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+                <thead><tr className="text-gray-500 text-xs border-b border-[#E5C158]/10">
                   <th className="text-left py-3 px-3">Usuario</th>
                   <th className="text-left py-3 px-3 hidden md:table-cell">Contacto</th>
                   <th className="text-center py-3 px-3">Creditos</th>
@@ -139,23 +139,23 @@ export default function AffiliatesAdmin() {
                 </tr></thead>
                 <tbody>
                   {filtered.map((a: any) => (
-                    <tr key={a.id} className="border-b border-[#FFD700]/5 hover:bg-white/5">
+                    <tr key={a.id} className="border-b border-[#E5C158]/5 hover:bg-white/5">
                       <td className="py-2 px-3"><p className="text-white text-sm">{a.username}</p>{a.display_name && <p className="text-gray-500 text-xs">{a.display_name}</p>}</td>
                       <td className="py-2 px-3 hidden md:table-cell text-gray-400 text-xs">{a.email}<br />{a.phone}</td>
                       <td className="py-2 px-3 text-center">
                         {editingCredits === a.id ? (
                           <div className="flex items-center justify-center gap-1">
-                            <input type="number" min="0" className="w-16 bg-black border border-[#FFD700]/20 rounded px-2 py-1 text-white text-xs text-center"
+                            <input type="number" min="0" className="w-16 bg-black border border-[#E5C158]/20 rounded px-2 py-1 text-white text-xs text-center"
                               value={creditValue} onChange={e => setCreditValue(parseInt(e.target.value) || 0)} />
-                            <button onClick={() => updateCredits(a.id)} className="text-[#FFD700] text-xs px-2">OK</button>
+                            <button onClick={() => updateCredits(a.id)} className="text-[#E5C158] text-xs px-2">OK</button>
                             <button onClick={() => setEditingCredits(null)} className="text-gray-500 text-xs">X</button>
                           </div>
-                        ) : <span className="text-[#FFD700] font-bold">{a.credits}</span>}
+                        ) : <span className="text-[#E5C158] font-bold">{a.credits}</span>}
                       </td>
                       <td className="py-2 px-3 hidden md:table-cell text-gray-400 text-xs font-mono">{a.referral_code}</td>
                       <td className="py-2 px-3 text-right">
                         <button onClick={() => { setEditingCredits(a.id); setCreditValue(a.credits); }}
-                          className="text-xs px-3 py-1 bg-[#FFD700] text-black rounded-lg font-bold hover:bg-[#FFE44D]">Creditos</button>
+                          className="text-xs px-3 py-1 bg-[#E5C158] text-black rounded-lg font-bold hover:bg-[#F0D78C]">Creditos</button>
                       </td>
                     </tr>
                   ))}
@@ -168,10 +168,10 @@ export default function AffiliatesAdmin() {
 
       {/* TAB: Historial */}
       {tab === 'history' && (
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl overflow-hidden">
+        <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+              <thead><tr className="text-gray-500 text-xs border-b border-[#E5C158]/10">
                 <th className="text-left py-3 px-3">Afiliado</th>
                 <th className="text-left py-3 px-3">Referido</th>
                 <th className="text-left py-3 px-3 hidden md:table-cell">Fecha</th>
@@ -179,7 +179,7 @@ export default function AffiliatesAdmin() {
               </tr></thead>
               <tbody>
                 {history.map((h: any) => (
-                  <tr key={h.id} className="border-b border-[#FFD700]/5">
+                  <tr key={h.id} className="border-b border-[#E5C158]/5">
                     <td className="py-2 px-3 text-white text-sm">{h.affiliate?.username}</td>
                     <td className="py-2 px-3 text-gray-400 text-sm">{h.referred_user?.username}</td>
                     <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{new Date(h.created_at).toLocaleDateString()}</td>
@@ -204,20 +204,20 @@ export default function AffiliatesAdmin() {
             {PAGE_TYPES.map(pt => (
               <button key={pt.key} onClick={() => setLcTab(pt.key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                  lcTab === pt.key ? 'bg-[#FFD700] text-black' : 'bg-[#111] text-gray-400 border border-[#FFD700]/10'}`}>
+                  lcTab === pt.key ? 'bg-[#E5C158] text-black' : 'bg-[#111] text-gray-400 border border-[#E5C158]/10'}`}>
                 {pt.label}
               </button>
             ))}
           </div>
 
           {/* Formulario de config */}
-          <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 space-y-3">
+          <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 space-y-3">
             <h3 className="text-white font-bold text-sm">Editar: {PAGE_TYPES.find(p => p.key === lcTab)?.label}</h3>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="Titulo" value={lcTitle} onChange={e => setLcTitle(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="Subtitulo" value={lcSubtitle} onChange={e => setLcSubtitle(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="URL del video (YouTube, Vimeo, Drive)" value={lcVideoUrl} onChange={e => setLcVideoUrl(e.target.value)} />
             <div>
               <label className="text-xs text-gray-500 mb-1 block" htmlFor="landing-video-file">O subir video desde el ordenador (MP4 H.264 - max 200MB)</label>
@@ -234,24 +234,24 @@ export default function AffiliatesAdmin() {
                     toast.success('Guardado');
                   } catch { toast.error('Error al subir video'); }
                   setUploadingVideo(false);
-                }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
-                {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
+                }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#E5C158]/10 file:text-[#E5C158] hover:file:bg-[#E5C158]/20 flex-1" />
+                {uploadingVideo && <span className="text-[#E5C158] text-xs animate-pulse">Subiendo...</span>}
               </div>
             </div>
-            <textarea className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[100px]"
+            <textarea className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[100px]"
               placeholder="Texto principal" value={lcText} onChange={e => setLcText(e.target.value)} />
-            <textarea className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[80px]"
+            <textarea className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white min-h-[80px]"
               placeholder="Beneficios (uno por linea)" value={lcBullets} onChange={e => setLcBullets(e.target.value)} />
             <p className="text-xs text-gray-500">Cada linea se convierte en un bullet point</p>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="Precio (ej: $25 USDT)" value={lcPrice} onChange={e => setLcPrice(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white"
               placeholder="Texto del boton (ej: Quiero Registrarme)" value={lcCta} onChange={e => setLcCta(e.target.value)} />
             <label className="flex items-center gap-2 text-sm text-gray-400" htmlFor="landing-show-form">
               <input id="landing-show-form" type="checkbox" checked={lcShowForm} onChange={e => setLcShowForm(e.target.checked)} />
               Mostrar formulario de registro
             </label>
-            <button onClick={saveLandingConfig} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
+            <button onClick={saveLandingConfig} className="w-full py-2 bg-[#E5C158] text-black rounded-lg font-bold text-sm hover:bg-[#F0D78C]">
               Guardar Configuracion
             </button>
           </div>
@@ -260,10 +260,10 @@ export default function AffiliatesAdmin() {
 
       {/* TAB: Comprobantes */}
       {tab === 'proofs' && (
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl overflow-hidden">
+        <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="text-gray-500 text-xs border-b border-[#FFD700]/10">
+              <thead><tr className="text-gray-500 text-xs border-b border-[#E5C158]/10">
                 <th className="text-left py-3 px-3">Usuario</th>
                 <th className="text-left py-3 px-3">Servicio</th>
                 <th className="text-left py-3 px-3 hidden md:table-cell">Monto</th>
@@ -273,7 +273,7 @@ export default function AffiliatesAdmin() {
               </tr></thead>
               <tbody>
                 {proofs.map((p: any) => (
-                  <tr key={p.id} className="border-b border-[#FFD700]/5 hover:bg-white/5">
+                  <tr key={p.id} className="border-b border-[#E5C158]/5 hover:bg-white/5">
                     <td className="py-2 px-3 text-white text-sm">{p.user?.username} <span className="text-gray-500 text-xs">{p.user?.email}</span></td>
                     <td className="py-2 px-3 text-gray-300 text-xs">{p.service}</td>
                     <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{p.amount || '-'}</td>
@@ -281,7 +281,7 @@ export default function AffiliatesAdmin() {
                     <td className="py-2 px-3 text-gray-400 text-xs">
                       {p.proof_message || '-'}
                       {p.proof_image && ' '}
-                      {p.proof_image && <a href={p.proof_image} target="_blank" rel="noopener noreferrer" className="text-[#FFD700] underline text-xs">Ver foto</a>}
+                      {p.proof_image && <a href={p.proof_image} target="_blank" rel="noopener noreferrer" className="text-[#E5C158] underline text-xs">Ver foto</a>}
                     </td>
                     <td className="py-2 px-3 text-gray-400 text-xs hidden md:table-cell">{new Date(p.created_at).toLocaleString()}</td>
                     <td className="py-2 px-3">

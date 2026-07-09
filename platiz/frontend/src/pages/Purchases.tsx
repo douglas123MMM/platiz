@@ -76,41 +76,41 @@ export default function Purchases() {
 
   if (loading) return (
     <div className="flex justify-center py-12">
-      <div className="w-8 h-8 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
     </div>
   );
 
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl mx-auto">
-      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[400px] h-[400px] bg-[#FFD700]/5 rounded-full blur-[80px] pointer-events-none" aria-hidden="true" />
-      <div className="absolute top-0 right-1/4 translate-x-1/2 w-[400px] h-[400px] bg-[#FFD700]/5 rounded-full blur-[80px] pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[400px] h-[400px] bg-[#E5C158]/5 rounded-full blur-[80px] pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-0 right-1/4 translate-x-1/2 w-[400px] h-[400px] bg-[#E5C158]/5 rounded-full blur-[80px] pointer-events-none" aria-hidden="true" />
 
       <div className="relative z-10">
         <h1 className="section-title text-2xl">Mis Compras</h1>
-        <Link to="/store" className="inline-flex items-center gap-1 text-sm text-[#FFD700]/70 hover:text-[#FFD700] transition-colors mt-2">
+        <Link to="/store" className="inline-flex items-center gap-1 text-sm text-[#E5C158]/70 hover:text-[#E5C158] transition-colors mt-2">
           <IconChevronLeft className="w-4 h-4" />
           Volver a la tienda
         </Link>
       </div>
 
       {purchases.length === 0 && catalogPurchases.length === 0 ? (
-        <div className="relative z-10 glass rounded-2xl border border-[#FFD700]/10 p-12 text-center">
+        <div className="relative z-10 glass rounded-2xl border border-[#E5C158]/10 p-12 text-center">
           <p className="text-gray-400 text-sm">No has realizado compras aun</p>
-          <Link to="/store" className="inline-flex items-center gap-1 mt-3 text-sm text-[#FFD700] hover:underline">Ir a la tienda</Link>
+          <Link to="/store" className="inline-flex items-center gap-1 mt-3 text-sm text-[#E5C158] hover:underline">Ir a la tienda</Link>
         </div>
       ) : (
         <>
           <ScrollReveal>
           <div className="relative z-10 space-y-3">
             {purchases.map((p) => (
-            <div key={p.id} className="glass rounded-2xl border border-[#FFD700]/10 p-5 space-y-3">
+            <div key={p.id} className="glass rounded-2xl border border-[#E5C158]/10 p-5 space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-white font-semibold text-lg">{p.product_title}</h3>
-                  {p.purchase_id && <p className="text-[#FFD700] text-xs font-mono mt-0.5">ID: {p.purchase_id}</p>}
+                  {p.purchase_id && <p className="text-[#E5C158] text-xs font-mono mt-0.5">ID: {p.purchase_id}</p>}
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-gray-400">
                     <span>{formatDate(p.created_at)}</span>
-                    <span className="text-[#FFD700] font-bold font-mono">{formatAmount(p.amount)}</span>
+                    <span className="text-[#E5C158] font-bold font-mono">{formatAmount(p.amount)}</span>
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${statusStyle(p.status_display)}`}>
                       {p.status_display}
                     </span>
@@ -137,7 +137,7 @@ export default function Purchases() {
                       <span className="text-sm text-gray-300 truncate">Email: {p.delivery_email}</span>
                       <button
                         onClick={() => handleCopy(p.delivery_email!)}
-                        className="text-xs px-2 py-1 rounded bg-white/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0"
+                        className="text-xs px-2 py-1 rounded bg-white/5 text-gray-400 hover:text-[#E5C158] transition-colors flex-shrink-0"
                       >
                         Copiar
                       </button>
@@ -148,7 +148,7 @@ export default function Purchases() {
                       <span className="text-sm text-gray-300 truncate">Clave: {p.delivery_password}</span>
                       <button
                         onClick={() => handleCopy(p.delivery_password!)}
-                        className="text-xs px-2 py-1 rounded bg-white/5 text-gray-400 hover:text-[#FFD700] transition-colors flex-shrink-0"
+                        className="text-xs px-2 py-1 rounded bg-white/5 text-gray-400 hover:text-[#E5C158] transition-colors flex-shrink-0"
                       >
                         Copiar
                       </button>
@@ -162,7 +162,7 @@ export default function Purchases() {
                   <button
                     onClick={() => handleRenew(p.id)}
                     disabled={renewingId === p.id}
-                    className="w-full py-2.5 rounded-xl bg-[#FFD700] text-black font-bold text-sm hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 disabled:opacity-50 shadow-[0_2px_8px_rgba(255,215,0,0.15)]"
+                    className="w-full py-2.5 rounded-xl bg-[#E5C158] text-black font-bold text-sm hover:bg-[#F0D78C] active:scale-[0.98] transition-colors duration-200 disabled:opacity-50 shadow-[0_2px_8px_rgba(255,215,0,0.15)]"
                   >
                     {renewingId === p.id ? 'Renovando...' : 'Renovar'}
                   </button>
@@ -178,14 +178,14 @@ export default function Purchases() {
               <h2 className="text-white font-bold text-lg mb-3">Compras del Catalogo</h2>
               <div className="space-y-3">
                 {catalogPurchases.map((p: any) => (
-                  <div key={p.id} className="glass rounded-2xl border border-[#FFD700]/10 p-4">
+                  <div key={p.id} className="glass rounded-2xl border border-[#E5C158]/10 p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-white font-medium text-sm">{p.description?.replace('Catalogo: ', '')}</p>
                         <p className="text-gray-500 text-xs mt-0.5">{formatDate(p.created_at)}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[#FFD700] font-bold">${parseFloat(p.amount).toFixed(2)}</p>
+                        <p className="text-[#E5C158] font-bold">${parseFloat(p.amount).toFixed(2)}</p>
                         <span className={`text-[10px] px-2 py-0.5 rounded-full ${p.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
                           {p.status === 'completed' ? 'Completada' : 'Pendiente'}
                         </span>

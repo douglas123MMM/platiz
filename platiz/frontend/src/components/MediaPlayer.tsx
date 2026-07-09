@@ -59,7 +59,7 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
 
   if (!videoUrl) {
     return (
-      <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#FFD700]/10 p-12 ${className}`}>
+      <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#E5C158]/10 p-12 ${className}`}>
         <div className="text-center">
           <HiExclamation className="w-12 h-12 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-500">No hay enlace de video disponible</p>
@@ -75,12 +75,12 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
 
   if (error) {
     return (
-      <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#FFD700]/10 p-12 ${className}`}>
+      <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#E5C158]/10 p-12 ${className}`}>
         <div className="text-center">
           <HiExclamation className="w-12 h-12 text-red-400/60 mx-auto mb-4" />
           <p className="text-gray-400 font-medium mb-1">Error al cargar el video</p>
           <p className="text-gray-500 text-sm">El enlace no es válido o no permite reproducción embebida.</p>
-          <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium">Abrir enlace externo</a>
+          <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 text-[#E5C158] hover:text-[#F0D78C] text-sm font-medium">Abrir enlace externo</a>
         </div>
       </div>
     );
@@ -90,7 +90,7 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
     const ytId = getYouTubeId(videoUrl);
     if (!ytId) {
       return (
-        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#FFD700]/10 ${className}`} style={{ minHeight: 360 }}>
+        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#E5C158]/10 ${className}`} style={{ minHeight: 360 }}>
           <div className="text-center p-8">
             <HiExclamation className="w-12 h-12 text-yellow-500/60 mx-auto mb-4" />
             <p className="text-gray-400">URL de YouTube no válida</p>
@@ -111,7 +111,7 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
     const vId = getVimeoId(videoUrl);
     if (!vId) {
       return (
-        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#FFD700]/10 ${className}`} style={{ minHeight: 360 }}>
+        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#E5C158]/10 ${className}`} style={{ minHeight: 360 }}>
           <p className="text-gray-400">URL de Vimeo no válida</p>
         </div>
       );
@@ -128,7 +128,7 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
     const channel = getTwitchChannel(videoUrl);
     if (!channel) {
       return (
-        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#FFD700]/10 ${className}`} style={{ minHeight: 360 }}>
+        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#E5C158]/10 ${className}`} style={{ minHeight: 360 }}>
           <p className="text-gray-400">URL de Twitch no válida</p>
         </div>
       );
@@ -145,7 +145,7 @@ export default function MediaPlayer({ videoUrl, videoType, title, thumbnail, cla
     const gdId = getGoogleDriveId(videoUrl);
     if (!gdId) {
       return (
-        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#FFD700]/10 ${className}`} style={{ minHeight: 360 }}>
+        <div className={`flex items-center justify-center bg-[#0a0a0f] rounded-2xl border border-[#E5C158]/10 ${className}`} style={{ minHeight: 360 }}>
           <p className="text-gray-400">URL de Google Drive no válida</p>
         </div>
       );

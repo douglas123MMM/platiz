@@ -107,13 +107,13 @@ export default function MembershipsAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <HiOutlineDevicePhoneMobile className="w-8 h-8 text-[#FFD700]" />
+          <HiOutlineDevicePhoneMobile className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="text-2xl font-bold text-white">Membresias</h1>
             <p className="text-sm text-gray-500">{memberships.length} registros &middot; Total ganado: <span className="text-green-400 font-bold">${totalEarnings.toFixed(2)}</span></p>
           </div>
         </div>
-        <button onClick={() => { if (showForm) resetForm(); else setShowForm(true); }} className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-colors duration-200 ${showForm ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20' : 'bg-[#FFD700] text-black hover:bg-[#FFE44D] shadow-[0_4px_16px_rgba(255,215,0,0.15)]'}`}>
+        <button onClick={() => { if (showForm) resetForm(); else setShowForm(true); }} className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-colors duration-200 ${showForm ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20' : 'bg-[#E5C158] text-black hover:bg-[#F0D78C] shadow-[0_4px_16px_rgba(255,215,0,0.15)]'}`}>
           {showForm ? 'Cancelar' : <><HiPlus className="w-5 h-5" /> Nueva Membresia</>}
         </button>
       </div>
@@ -121,21 +121,21 @@ export default function MembershipsAdmin() {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 md:pt-20 p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={() => resetForm()}>
           <div className="w-full max-w-4xl my-auto" onClick={(e) => e.stopPropagation()}>
-          <form onSubmit={handleSubmit} className="rounded-2xl p-6 bg-[#0a0a0f] border border-[#FFD700]/10 space-y-5 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+          <form onSubmit={handleSubmit} className="rounded-2xl p-6 bg-[#0a0a0f] border border-[#E5C158]/10 space-y-5 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-service">Servicio *</label>
-              <input id="memb-service" type="text" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Ej: Netflix, Canva Pro, ChatGPT Plus..." list="service-list" required />
+              <input id="memb-service" type="text" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors" placeholder="Ej: Netflix, Canva Pro, ChatGPT Plus..." list="service-list" required />
               <datalist id="service-list">{SERVICES.map((s) => <option key={s} value={s} />)}</datalist>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-account-email">Credenciales de la cuenta</label>
-              <input id="memb-account-email" type="text" value={form.account_email} onChange={(e) => setForm({ ...form, account_email: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Usuario, correo o codigo" />
+              <input id="memb-account-email" type="text" value={form.account_email} onChange={(e) => setForm({ ...form, account_email: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors" placeholder="Usuario, correo o codigo" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-account-password">Contraseña *</label>
               <div className="relative">
-                <input id="memb-account-password" type={showPassword ? 'text' : 'password'} value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="w-full px-4 py-2.5 pr-12 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Clave de acceso" required />
+                <input id="memb-account-password" type={showPassword ? 'text' : 'password'} value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="w-full px-4 py-2.5 pr-12 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors" placeholder="Clave de acceso" required />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/[0.05] transition-colors text-xs">
                   {showPassword ? 'Ocultar' : 'Mostrar'}
                 </button>
@@ -143,21 +143,21 @@ export default function MembershipsAdmin() {
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-profile">Perfil</label>
-              <select id="memb-profile" value={form.profile} onChange={(e) => setForm({ ...form, profile: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors">
+              <select id="memb-profile" value={form.profile} onChange={(e) => setForm({ ...form, profile: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors">
                 {PROFILES.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-client-name">Nombre del Cliente *</label>
-              <input id="memb-client-name" type="text" value={form.client_name} onChange={(e) => setForm({ ...form, client_name: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="Nombre completo" required />
+              <input id="memb-client-name" type="text" value={form.client_name} onChange={(e) => setForm({ ...form, client_name: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors" placeholder="Nombre completo" required />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-client-phone">Telefono *</label>
-              <input id="memb-client-phone" type="tel" value={formatPhone(form.client_phone)} onChange={(e) => setForm({ ...form, client_phone: e.target.value.replace(/[^\d+]/g, '') })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="+58 414 1234567" maxLength={15} required />
+              <input id="memb-client-phone" type="tel" value={formatPhone(form.client_phone)} onChange={(e) => setForm({ ...form, client_phone: e.target.value.replace(/[^\d+]/g, '') })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors" placeholder="+58 414 1234567" maxLength={15} required />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-cost">Costo ($)</label>
-              <input id="memb-cost" type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors" placeholder="0.00" step="0.01" min="0" />
+              <input id="memb-cost" type="number" value={form.cost} onChange={(e) => setForm({ ...form, cost: e.target.value })} className="w-full px-4 py-2.5 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="memb-purchase-date">Fecha de Compra</label>
@@ -175,7 +175,7 @@ export default function MembershipsAdmin() {
               </div>
             </div>
           </div>
-          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-[#FFD700] text-black font-bold rounded-xl text-sm hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 min-h-[50px]">
+          <button type="submit" className="w-full md:w-auto px-8 py-3 bg-[#E5C158] text-black font-bold rounded-xl text-sm hover:bg-[#F0D78C] active:scale-[0.98] transition-colors duration-200 min-h-[50px]">
             {editing ? 'Actualizar Membresia' : 'Registrar Membresia'}
           </button>
         </form>
@@ -186,11 +186,11 @@ export default function MembershipsAdmin() {
       <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
         <HiSearch className="w-5 h-5 text-gray-500 flex-shrink-0" />
         <input type="text" placeholder="Buscar por nombre, servicio, email o telefono..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
-        <button onClick={() => load(search)} className="p-2 rounded-lg hover:bg-[#FFD700]/5 text-gray-400 hover:text-[#FFD700] transition-colors"><HiRefresh className="w-4 h-4" /></button>
+        <button onClick={() => load(search)} className="p-2 rounded-lg hover:bg-[#E5C158]/5 text-gray-400 hover:text-[#E5C158] transition-colors"><HiRefresh className="w-4 h-4" /></button>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-16"><div className="w-8 h-8 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" /></div>
+        <div className="flex justify-center py-16"><div className="w-8 h-8 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" /></div>
       ) : memberships.length === 0 ? (
         <div className="text-center py-16 text-gray-500">
           <HiShieldCheck className="w-12 h-12 mx-auto mb-4 text-gray-600" />
@@ -202,7 +202,7 @@ export default function MembershipsAdmin() {
           {memberships.map((m) => {
             const isExpired = new Date(m.expiry_date + 'T12:00:00') < new Date();
             return (
-              <div key={m.id} className="rounded-2xl bg-white/[0.02] border border-white/[0.04] p-4 sm:p-5 hover:border-[#FFD700]/10 transition-colors duration-200 space-y-3">
+              <div key={m.id} className="rounded-2xl bg-white/[0.02] border border-white/[0.04] p-4 sm:p-5 hover:border-[#E5C158]/10 transition-colors duration-200 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -216,7 +216,7 @@ export default function MembershipsAdmin() {
                     </div>
                     <div className="flex items-center gap-3 mt-1.5 text-xs">
                       <span className={`${isExpired ? 'text-red-400 font-semibold' : 'text-gray-500'}`}>Vence: {new Date(m.expiry_date + 'T12:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                      <span className="text-[#FFD700] font-bold">${(m.cost || 0).toFixed(2)}</span>
+                      <span className="text-[#E5C158] font-bold">${(m.cost || 0).toFixed(2)}</span>
                       <button onClick={() => { const newStatus = m.status === 'active' ? 'inactive' : 'active'; api.put(`/memberships/${m.id}`, { status: newStatus }).then(() => setMemberships((p) => p.map((x) => x.id === m.id ? { ...x, status: newStatus } : x))).catch(() => toast.error('Error')); }} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-colors duration-200 ${m.status === 'active' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-red-500/15 text-red-400 border border-red-500/25'}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${m.status === 'active' ? 'bg-green-400 shadow-[0_0_6px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-red-400 shadow-[0_0_6px_rgba(239,68,68,0.8)]'}`} />
                         {m.status === 'active' ? 'Activo' : 'Inactivo'}
@@ -228,7 +228,7 @@ export default function MembershipsAdmin() {
                   <button onClick={() => openReminder(m)} className="flex-1 py-2.5 rounded-xl text-xs font-bold bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/15 transition-colors duration-200 flex items-center justify-center gap-1.5 active:scale-[0.97]">
                     <HiPhone className="w-4 h-4" /> Recordatorio
                   </button>
-                  <button onClick={() => handleEdit(m)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10 border border-white/[0.04] transition-colors duration-200 active:scale-[0.97]">
+                  <button onClick={() => handleEdit(m)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-[#E5C158] hover:bg-[#E5C158]/10 border border-white/[0.04] transition-colors duration-200 active:scale-[0.97]">
                     <HiPencil className="w-4 h-4" />
                   </button>
                   <button onClick={() => handleDelete(m.id)} className="py-2.5 px-4 rounded-xl text-xs font-semibold bg-white/[0.03] text-gray-400 hover:text-red-400 hover:bg-red-500/10 border border-white/[0.04] transition-colors duration-200 active:scale-[0.97]">
@@ -245,7 +245,7 @@ export default function MembershipsAdmin() {
         <>
           <div className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm" onClick={() => setReminder({ show: false, membership: null, message: '' })} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6 animate-slide-down" role="dialog" aria-modal="true" aria-label="Enviar Recordatorio">
+            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#E5C158]/15 rounded-2xl shadow-2xl shadow-black/60 p-6 animate-slide-down" role="dialog" aria-modal="true" aria-label="Enviar Recordatorio">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-bold text-white">Enviar Recordatorio</h3>
                 <button onClick={() => setReminder({ show: false, membership: null, message: '' })} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors">
@@ -272,7 +272,7 @@ export default function MembershipsAdmin() {
                 </div>
                 <div className="bg-white/[0.02] rounded-xl p-3 border border-white/[0.04]">
                   <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Costo</p>
-                  <p className="text-[#FFD700] font-bold">${(reminder.membership.cost || 0).toFixed(2)}</p>
+                  <p className="text-[#E5C158] font-bold">${(reminder.membership.cost || 0).toFixed(2)}</p>
                 </div>
               </div>
 
@@ -281,7 +281,7 @@ export default function MembershipsAdmin() {
                 id="reminder-message"
                 value={reminder.message}
                 onChange={(e) => setReminder({ ...reminder, message: e.target.value })}
-                className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors resize-none"
                 rows={4}
               />
 

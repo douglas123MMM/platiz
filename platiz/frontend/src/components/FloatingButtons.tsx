@@ -49,7 +49,7 @@ export default function FloatingButtons() {
         {currentGuide && guideText && (
           <button
             onClick={() => setGuideOpen(!guideOpen)}
-            className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FFD700] flex items-center justify-center shadow-lg shadow-[#FFD700]/40 hover:shadow-[#FFD700]/60 active:scale-95 transition-colors duration-200"
+            className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#E5C158] flex items-center justify-center shadow-lg shadow-[#E5C158]/40 hover:shadow-[#E5C158]/60 active:scale-95 transition-colors duration-200"
             title={currentGuide.title}
             aria-label="Abrir guia"
           >
@@ -90,15 +90,15 @@ export default function FloatingButtons() {
       {guideOpen && currentGuide && guideText && (
         <>
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:bg-black/40" onClick={() => setGuideOpen(false)} />
-          <div className="fixed inset-0 z-50 md:inset-y-0 md:right-0 md:left-auto md:w-full md:max-w-md flex flex-col bg-[#0a0a0f] md:border-l border-[#FFD700]/20 shadow-2xl animate-slide-in">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#FFD700]/10 flex-shrink-0">
+          <div className="fixed inset-0 z-50 md:inset-y-0 md:right-0 md:left-auto md:w-full md:max-w-md flex flex-col bg-[#0a0a0f] md:border-l border-[#E5C158]/20 shadow-2xl animate-slide-in">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#E5C158]/10 flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#E5C158] flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-black"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
                 </div>
                 <div>
                   <h3 className="text-white font-bold text-sm">{currentGuide.title}</h3>
-                  <p className="text-[#FFD700]/60 text-xs">Familia Global Dorado</p>
+                  <p className="text-[#E5C158]/60 text-xs">Familia Global Dorado</p>
                 </div>
               </div>
               <button onClick={() => setGuideOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white text-lg transition-colors">&times;</button>
@@ -106,14 +106,14 @@ export default function FloatingButtons() {
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{guideText}</div>
             </div>
-            <div className="px-5 py-4 border-t border-[#FFD700]/10 flex-shrink-0 flex flex-col gap-2">
+            <div className="px-5 py-4 border-t border-[#E5C158]/10 flex-shrink-0 flex flex-col gap-2">
               <button
                 onClick={() => setGuideOpen(false)}
-                className="w-full py-3 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] transition-colors text-sm"
+                className="w-full py-3 bg-[#E5C158] text-black font-bold rounded-xl hover:bg-[#F0D78C] transition-colors text-sm"
               >
                 Cerrar Guia
               </button>
-              <p className="text-[#FFD700]/30 text-xs text-center">Transformamos Internet en Dinero</p>
+              <p className="text-[#E5C158]/30 text-xs text-center">Transformamos Internet en Dinero</p>
             </div>
           </div>
         </>

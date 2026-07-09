@@ -81,7 +81,7 @@ export default function PurchasesAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <IconGrid className="w-8 h-8 text-[#FFD700]" />
+          <IconGrid className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Compras</h1>
             <p className="section-subtitle">Historial de compras de la tienda</p>
@@ -94,7 +94,7 @@ export default function PurchasesAdmin() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') loadPurchases(search); }}
-            className="px-3 py-1.5 bg-black/30 border border-[#FFD700]/10 rounded-xl text-sm text-white placeholder-gray-500 w-48 focus:outline-none focus:border-[#FFD700]/40"
+            className="px-3 py-1.5 bg-black/30 border border-[#E5C158]/10 rounded-xl text-sm text-white placeholder-gray-500 w-48 focus:outline-none focus:border-[#E5C158]/40"
           />
           <button onClick={() => { setSearch(''); loadPurchases(''); }} className="btn-secondary flex items-center gap-2">
             <IconRefresh className="w-4 h-4" /> Actualizar
@@ -102,21 +102,21 @@ export default function PurchasesAdmin() {
         </div>
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#FFD700]/10">
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">ID</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Cliente</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Email</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Telefono</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Servicio</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Monto</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Credenciales</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Vencimiento</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acciones</th>
+              <tr className="border-b border-[#E5C158]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">ID</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Cliente</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Email</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Telefono</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Servicio</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Monto</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Credenciales</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Estado</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Vencimiento</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -125,13 +125,13 @@ export default function PurchasesAdmin() {
               ) : purchases.length === 0 ? (
                 <tr><td colSpan={10} className="p-12 text-center text-gray-500">Sin compras registradas</td></tr>
               ) : purchases.map((p) => (
-                <tr key={p.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                <tr key={p.id} className="border-b border-[#E5C158]/5 hover:bg-[#E5C158]/5 transition-colors">
                   <td className="p-4">
-                    <span className="text-xs font-mono text-[#FFD700]/70">{p.purchase_id || '-'}</span>
+                    <span className="text-xs font-mono text-[#E5C158]/70">{p.purchase_id || '-'}</span>
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-xs font-bold text-[#FFD700] flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-[#E5C158]/20 flex items-center justify-center text-xs font-bold text-[#E5C158] flex-shrink-0">
                         {getAvatarLetter(p.user?.username || '')}
                       </div>
                       <span className="text-white text-sm font-medium">{p.user?.username || 'N/A'}</span>
@@ -140,13 +140,13 @@ export default function PurchasesAdmin() {
                   <td className="p-4 text-gray-400 text-sm">{p.user?.email || 'N/A'}</td>
                   <td className="p-4 text-gray-400 text-sm">{p.user?.phone || '-'}</td>
                   <td className="p-4 text-white text-sm font-medium">{p.product_title}</td>
-                  <td className="p-4 text-[#FFD700] text-sm font-bold">${Number(p.amount).toFixed(2)}</td>
+                  <td className="p-4 text-[#E5C158] text-sm font-bold">${Number(p.amount).toFixed(2)}</td>
                   <td className="p-4">
                     <div className="space-y-1.5">
                       {p.delivery_email && (
                         <div className="flex items-center gap-1">
                           <span className="text-gray-300 text-xs truncate max-w-[110px]">{p.delivery_email}</span>
-                          <button onClick={() => handleCopy(p.delivery_email!)} className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-[#FFD700] transition-colors flex-shrink-0" title="Copiar email">
+                          <button onClick={() => handleCopy(p.delivery_email!)} className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-[#E5C158] transition-colors flex-shrink-0" title="Copiar email">
                             <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                           </button>
                         </div>
@@ -154,7 +154,7 @@ export default function PurchasesAdmin() {
                       {p.delivery_password && (
                         <div className="flex items-center gap-1">
                           <span className="text-gray-300 text-xs truncate max-w-[110px]">{p.delivery_password}</span>
-                          <button onClick={() => handleCopy(p.delivery_password!)} className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-[#FFD700] transition-colors flex-shrink-0" title="Copiar clave">
+                          <button onClick={() => handleCopy(p.delivery_password!)} className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-[#E5C158] transition-colors flex-shrink-0" title="Copiar clave">
                             <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                           </button>
                         </div>
@@ -205,7 +205,7 @@ export default function PurchasesAdmin() {
         <>
           <div className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm" onClick={() => setReminder({ show: false, purchase: null, message: '' })} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#FFD700]/15 rounded-2xl shadow-2xl shadow-black/60 p-6" role="dialog" aria-modal="true" aria-label="Enviar Recordatorio">
+            <div className="w-full max-w-lg bg-[#0a0a0f] border border-[#E5C158]/15 rounded-2xl shadow-2xl shadow-black/60 p-6" role="dialog" aria-modal="true" aria-label="Enviar Recordatorio">
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-bold text-white">Enviar Recordatorio</h3>
                 <button onClick={() => setReminder({ show: false, purchase: null, message: '' })} className="p-1.5 rounded-lg hover:bg-white/[0.05] text-gray-400 hover:text-white transition-colors">
@@ -239,7 +239,7 @@ export default function PurchasesAdmin() {
                 id="purchase-reminder-message"
                 value={reminder.message}
                 onChange={(e) => setReminder({ ...reminder, message: e.target.value })}
-                className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#FFD700]/40 focus:outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/10 rounded-xl text-white text-sm focus:border-[#E5C158]/40 focus:outline-none transition-colors resize-none"
                 rows={4}
               />
 

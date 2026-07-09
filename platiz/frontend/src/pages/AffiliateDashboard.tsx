@@ -225,25 +225,25 @@ export default function AffiliateDashboard() {
       <h1 className="text-xl font-bold text-white mb-6">Mi Dashboard de Afiliado</h1>
 
       {msg && (
-        <div className="mb-4 p-3 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-xl text-[#FFD700] text-sm text-center">
+        <div className="mb-4 p-3 bg-[#E5C158]/10 border border-[#E5C158]/20 rounded-xl text-[#E5C158] text-sm text-center">
           {msg}
         </div>
       )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center cursor-pointer">
-          <IconDiamond className="text-[#FFD700] mx-auto" size={28} />
+        <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 text-center cursor-pointer">
+          <IconDiamond className="text-[#E5C158] mx-auto" size={28} />
           <p className="text-2xl font-bold text-white">{credits}</p>
           <p className="text-xs text-gray-400">Créditos</p>
         </div>
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center cursor-pointer">
-          <IconUserAdd className="text-[#FFD700] mx-auto" size={28} />
+        <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 text-center cursor-pointer">
+          <IconUserAdd className="text-[#E5C158] mx-auto" size={28} />
           <p className="text-2xl font-bold text-white">{stats.pendientes}</p>
           <p className="text-xs text-gray-400">Pendientes</p>
         </div>
-        <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 text-center cursor-pointer">
-          <IconChart className="text-[#FFD700] mx-auto" size={28} />
+        <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 text-center cursor-pointer">
+          <IconChart className="text-[#E5C158] mx-auto" size={28} />
           <p className="text-2xl font-bold text-white">{stats.activos}</p>
           <p className="text-xs text-gray-400">Activos</p>
         </div>
@@ -256,17 +256,17 @@ export default function AffiliateDashboard() {
       )}
 
       {/* Links Section */}
-      <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 mb-6">
+      <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 mb-6">
         <h2 className="text-white font-bold mb-3 text-sm">Mis Enlaces</h2>
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
             <div className="flex-1 min-w-0">
               <p className="text-xs text-gray-400 mb-0.5">Link de Captacion de Prospecto</p>
-              <p className="text-sm text-[#FFD700] truncate">{window.location.origin}{links.landing}</p>
+              <p className="text-sm text-[#E5C158] truncate">{window.location.origin}{links.landing}</p>
             </div>
             <button
               onClick={() => copyLink(links.landing)}
-              className="ml-3 p-2 rounded-lg bg-[#FFD700]/10 hover:bg-[#FFD700]/20 text-[#FFD700] flex-shrink-0"
+              className="ml-3 p-2 rounded-lg bg-[#E5C158]/10 hover:bg-[#E5C158]/20 text-[#E5C158] flex-shrink-0"
             >
               {copied === links.landing ? <IconCheck /> : <IconCopy />}
             </button>
@@ -274,11 +274,11 @@ export default function AffiliateDashboard() {
           <div className="flex items-center justify-between bg-black/30 rounded-lg p-3">
             <div className="flex-1 min-w-0">
               <p className="text-xs text-gray-400 mb-0.5">Link de Catalogo</p>
-              <p className="text-sm text-[#FFD700] truncate">{window.location.origin}{links.catalog}</p>
+              <p className="text-sm text-[#E5C158] truncate">{window.location.origin}{links.catalog}</p>
             </div>
             <button
               onClick={() => copyLink(links.catalog)}
-              className="ml-3 p-2 rounded-lg bg-[#FFD700]/10 hover:bg-[#FFD700]/20 text-[#FFD700] flex-shrink-0"
+              className="ml-3 p-2 rounded-lg bg-[#E5C158]/10 hover:bg-[#E5C158]/20 text-[#E5C158] flex-shrink-0"
             >
               {copied === links.catalog ? <IconCheck /> : <IconCopy />}
             </button>
@@ -287,12 +287,12 @@ export default function AffiliateDashboard() {
       </div>
 
       {/* Profile Section */}
-      <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 mb-6">
+      <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-white font-bold text-sm">Mi Perfil (visible en Catalogo)</h2>
           <button
             onClick={() => setEditing(!editing)}
-            className="text-xs px-3 py-1 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20"
+            className="text-xs px-3 py-1 rounded-lg bg-[#E5C158]/10 text-[#E5C158] hover:bg-[#E5C158]/20"
           >
             {editing ? 'Cancelar' : (displayName || whatsapp || telegram ? 'Editar' : 'Completar Perfil')}
           </button>
@@ -302,7 +302,7 @@ export default function AffiliateDashboard() {
           <div className="space-y-3">
             {/* Foto */}
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-full bg-[#FFD700]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-[#E5C158]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                 {avatarPreview ? (
                   <img src={avatarPreview} alt="" className="w-full h-full object-cover" />
                 ) : (
@@ -318,86 +318,86 @@ export default function AffiliateDashboard() {
                       setAvatarPreview(URL.createObjectURL(e.target.files[0]));
                     }
                   }} />
-                <button onClick={() => fileRef.current?.click()} className="text-xs px-3 py-1.5 bg-[#FFD700]/10 text-[#FFD700] rounded-lg hover:bg-[#FFD700]/20">
+                <button onClick={() => fileRef.current?.click()} className="text-xs px-3 py-1.5 bg-[#E5C158]/10 text-[#E5C158] rounded-lg hover:bg-[#E5C158]/20">
                   {avatarPreview ? 'Cambiar foto' : 'Subir foto'}
                 </button>
               </div>
             </div>
 
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Nombre de usuario / Marca" value={displayName}
               onChange={(e) => setDisplayName(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="WhatsApp (ej: 584149132366 o https://wa.me/584149132366)" value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Link de Telegram (ej: https://t.me/tuusuario)" value={telegram}
               onChange={(e) => setTelegram(e.target.value)} />
 
-            <h3 className="text-[#FFD700] text-xs font-bold pt-2">Redes Sociales</h3>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <h3 className="text-[#E5C158] text-xs font-bold pt-2">Redes Sociales</h3>
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Instagram (ej: @tucuenta)" value={instagram}
               onChange={(e) => setInstagram(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="TikTok (ej: @tucuenta)" value={tiktok}
               onChange={(e) => setTiktok(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Facebook (ej: /tuperfil)" value={facebook}
               onChange={(e) => setFacebook(e.target.value)} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="YouTube (ej: @tucanal)" value={youtube}
               onChange={(e) => setYoutube(e.target.value)} />
 
-            <h3 className="text-[#FFD700] text-xs font-bold pt-2">Tema del Catalogo</h3>
+            <h3 className="text-[#E5C158] text-xs font-bold pt-2">Tema del Catalogo</h3>
             <div className="flex gap-2">
               <button type="button" onClick={() => setCatalogTheme('dark')}
-                className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'dark' ? 'bg-[#FFD700] text-black' : 'bg-black/30 text-gray-400 border border-[#FFD700]/10'}`}>
+                className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'dark' ? 'bg-[#E5C158] text-black' : 'bg-black/30 text-gray-400 border border-[#E5C158]/10'}`}>
                 <IconMoon className="inline mr-1" size={14} /> Oscuro
               </button>
               <button type="button" onClick={() => setCatalogTheme('light')}
-                className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'light' ? 'bg-[#FFD700] text-black' : 'bg-black/30 text-gray-400 border border-[#FFD700]/10'}`}>
+                className={`flex-1 py-2 rounded-lg text-xs font-bold ${catalogTheme === 'light' ? 'bg-[#E5C158] text-black' : 'bg-black/30 text-gray-400 border border-[#E5C158]/10'}`}>
                 <IconSun className="inline mr-1" size={14} /> Claro
               </button>
             </div>
 
-            <h3 className="text-[#FFD700] text-xs font-bold pt-2">Metodos de Pago</h3>
+            <h3 className="text-[#E5C158] text-xs font-bold pt-2">Metodos de Pago</h3>
             <label htmlFor="binance_id" className="text-gray-400 text-xs">Binance</label>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="ID Binance" value={paymentMethods.binance_id}
               id="binance_id"
               onChange={(e) => setPaymentMethods({...paymentMethods, binance_id: e.target.value})} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Correo Binance" value={paymentMethods.binance_email}
               onChange={(e) => setPaymentMethods({...paymentMethods, binance_email: e.target.value})} />
 
             <label htmlFor="pago_movil_bank" className="text-gray-400 text-xs">Pago Movil</label>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Banco" value={paymentMethods.pago_movil_bank}
               id="pago_movil_bank"
               onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_bank: e.target.value})} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Telefono" value={paymentMethods.pago_movil_phone}
               onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_phone: e.target.value})} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="CI / ID" value={paymentMethods.pago_movil_id}
               onChange={(e) => setPaymentMethods({...paymentMethods, pago_movil_id: e.target.value})} />
 
             <label htmlFor="zelle" className="text-gray-400 text-xs">Zelle / Otro</label>
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Zelle" value={paymentMethods.zelle}
               id="zelle"
               onChange={(e) => setPaymentMethods({...paymentMethods, zelle: e.target.value})} />
-            <input className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
+            <input className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600"
               placeholder="Otro metodo" value={paymentMethods.otro}
               onChange={(e) => setPaymentMethods({...paymentMethods, otro: e.target.value})} />
-            <button onClick={saveProfile} className="w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm hover:bg-[#FFE44D]">
+            <button onClick={saveProfile} className="w-full py-2 bg-[#E5C158] text-black rounded-lg font-bold text-sm hover:bg-[#F0D78C]">
               Guardar Informacion
             </button>
           </div>
         ) : (
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-14 h-14 rounded-full bg-[#FFD700]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-[#E5C158]/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                 {avatarPreview ? (
                   <img src={avatarPreview} alt="" className="w-full h-full object-cover" />
                 ) : (
@@ -462,12 +462,12 @@ export default function AffiliateDashboard() {
       </div>
 
       {/* Prices Section */}
-      <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4 mb-6">
+      <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-white font-bold text-sm">Mis Precios (USD)</h2>
           <div className="flex gap-2">
             <button onClick={loadCatalogItems} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">Cargar productos</button>
-            <button onClick={savePrices} disabled={savingPrices} className="text-xs px-3 py-1.5 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 disabled:opacity-50 transition-colors flex items-center gap-1">
+            <button onClick={savePrices} disabled={savingPrices} className="text-xs px-3 py-1.5 rounded-lg bg-[#E5C158]/10 text-[#E5C158] hover:bg-[#E5C158]/20 disabled:opacity-50 transition-colors flex items-center gap-1">
               <IconSave /> {savingPrices ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
@@ -480,14 +480,14 @@ export default function AffiliateDashboard() {
               placeholder="Buscar producto..."
               value={priceSearch}
               onChange={(e) => setPriceSearch(e.target.value)}
-              className="w-full mb-3 px-3 py-2 bg-black/30 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30"
+              className="w-full mb-3 px-3 py-2 bg-black/30 border border-white/10 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#E5C158]/30"
             />
             <div className="space-y-1 max-h-80 overflow-y-auto">
             {catalogItems.filter(i => !priceSearch || i.title.toLowerCase().includes(priceSearch.toLowerCase())).map(item => (
               <div key={item.id} className="py-2 px-3 rounded-lg bg-black/20 hover:bg-black/30 transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-gray-300 text-sm font-medium truncate mr-2">{item.title}</span>
-                  <button onClick={() => addVariant(item.id)} className="text-xs px-3 py-1 rounded bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 flex-shrink-0">+ Agregar</button>
+                  <button onClick={() => addVariant(item.id)} className="text-xs px-3 py-1 rounded bg-[#E5C158]/10 text-[#E5C158] hover:bg-[#E5C158]/20 flex-shrink-0">+ Agregar</button>
                 </div>
                 {(myPrices[item.id] || []).map((v, idx) => (
                   <div key={idx} className="flex items-center gap-1 mt-1 ml-2">
@@ -497,14 +497,14 @@ export default function AffiliateDashboard() {
                       placeholder="Completa/Perfil"
                       value={v.label}
                       onChange={(e) => updateVariantLabel(item.id, idx, e.target.value)}
-                      className="w-24 bg-black/50 border border-white/10 rounded px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#FFD700]/40"
+                      className="w-24 bg-black/50 border border-white/10 rounded px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#E5C158]/40"
                     />
                     <span className="text-gray-500 text-xs">$</span>
                     <input
                       type="number" min="0" step="0.5" placeholder="--"
                       value={v.price || ''}
                       onChange={(e) => updateVariantPrice(item.id, idx, e.target.value)}
-                      className="w-16 bg-black/50 border border-white/10 rounded px-2 py-1.5 text-sm text-white text-right focus:outline-none focus:border-[#FFD700]/40"
+                      className="w-16 bg-black/50 border border-white/10 rounded px-2 py-1.5 text-sm text-white text-right focus:outline-none focus:border-[#E5C158]/40"
                     />
                     <button onClick={() => removeVariant(item.id, idx)} className="text-red-400 text-[10px] px-1 hover:text-red-300">&times;</button>
                   </div>
@@ -519,7 +519,7 @@ export default function AffiliateDashboard() {
       </div>
 
       {/* Referrals Table */}
-      <div className="bg-[#111] border border-[#FFD700]/10 rounded-xl p-4">
+      <div className="bg-[#111] border border-[#E5C158]/10 rounded-xl p-4">
         <h2 className="text-white font-bold mb-3 text-sm">Mis Referidos ({stats.total})</h2>
         {referrals.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-4">Aun no tienes referidos. Comparte tu link de ventas.</p>
@@ -527,7 +527,7 @@ export default function AffiliateDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-gray-400 text-xs border-b border-[#FFD700]/10">
+                <tr className="text-gray-400 text-xs border-b border-[#E5C158]/10">
                   <th className="text-left py-2">Usuario</th>
                   <th className="text-left py-2 hidden md:table-cell">Contacto</th>
                   <th className="text-left py-2 hidden md:table-cell">Fecha</th>
@@ -537,7 +537,7 @@ export default function AffiliateDashboard() {
               </thead>
               <tbody>
                 {referrals.map((ref) => (
-                  <tr key={ref.id} className="border-b border-[#FFD700]/5">
+                  <tr key={ref.id} className="border-b border-[#E5C158]/5">
                     <td className="py-2 text-white">{ref.referred_user?.username || 'N/A'}</td>
                     <td className="py-2 text-gray-400 text-xs hidden md:table-cell">
                       {ref.referred_user?.email}<br />
@@ -561,7 +561,7 @@ export default function AffiliateDashboard() {
                           className={`text-xs px-3 py-1 rounded-lg font-bold ${
                             credits <= 0
                               ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                              : 'bg-[#FFD700] text-black hover:bg-[#FFE44D]'
+                              : 'bg-[#E5C158] text-black hover:bg-[#F0D78C]'
                           }`}
                         >
                           {approving === ref.id ? '...' : 'Aprobar'}

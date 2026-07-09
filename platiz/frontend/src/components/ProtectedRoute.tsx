@@ -11,7 +11,7 @@ export function ProtectedRoute({ children, requireAdmin = false }: { children: J
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <CrownIcon size={64} className="animate-pulse" />
-          <div className="w-8 h-8 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
           <p className="text-gray-500 text-sm">Cargando Global Dorado...</p>
         </div>
       </div>
@@ -23,8 +23,8 @@ export function ProtectedRoute({ children, requireAdmin = false }: { children: J
   if (user.role !== 'admin' && user.status !== 'approved') {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4">
-        <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#FFD700]/10">
-          <div className="w-16 h-16 bg-[#FFD700]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="glass rounded-3xl p-8 md:p-12 text-center max-w-md border border-[#E5C158]/10">
+          <div className="w-16 h-16 bg-[#E5C158]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <CrownIcon size={36} />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Cuenta pendiente</h2>

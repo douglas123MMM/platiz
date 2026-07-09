@@ -43,7 +43,7 @@ export default function AIAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <HiChip className="w-8 h-8 text-[#FFD700]" />
+          <HiChip className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Proveedores de IA</h1>
             <p className="section-subtitle">Conecta ChatGPT Plus, Gemini, Claude, Perplexity y más</p>
@@ -54,7 +54,7 @@ export default function AIAdmin() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
-          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={editId ? 'Editar Proveedor IA' : 'Conectar Proveedor IA'}>
+          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#E5C158]/10" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={editId ? 'Editar Proveedor IA' : 'Conectar Proveedor IA'}>
             <h2 className="text-xl font-bold text-white mb-6">{editId ? 'Editar' : 'Conectar'} Proveedor IA</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -91,7 +91,7 @@ export default function AIAdmin() {
           <div key={p.id} className={`card ${!p.active ? 'opacity-50' : ''}`}>
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#FFD700]/15 to-[#DAA520]/10 rounded-2xl flex items-center justify-center"><HiChip className="w-6 h-6 text-[#FFD700]" /></div>
+                <div className="w-12 h-12 bg-gradient-to-br from-[#E5C158]/15 to-[#C4A44A]/10 rounded-2xl flex items-center justify-center"><HiChip className="w-6 h-6 text-[#E5C158]" /></div>
                 <div>
                   <h3 className="font-semibold text-white">{p.name}</h3>
                   <span className={`badge ${p.active ? 'badge-success' : 'badge-danger'}`}>{p.active ? 'Activo' : 'Inactivo'}</span>
@@ -99,7 +99,7 @@ export default function AIAdmin() {
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => toggleActive(p)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-white transition-colors">{p.active ? <HiEyeOff className="w-4 h-4" /> : <HiEye className="w-4 h-4" />}</button>
-                <button onClick={() => { setForm({ name: p.name, api_url: p.api_url, api_key: p.api_key || '', model: p.model || '', system_prompt: (p as any).system_prompt || '' }); setEditId(p.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#FFD700]"><HiPencil className="w-4 h-4" /></button>
+                <button onClick={() => { setForm({ name: p.name, api_url: p.api_url, api_key: p.api_key || '', model: p.model || '', system_prompt: (p as any).system_prompt || '' }); setEditId(p.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#E5C158]"><HiPencil className="w-4 h-4" /></button>
                 <button onClick={() => deleteProvider(p.id)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-red-400"><HiTrash className="w-4 h-4" /></button>
               </div>
             </div>

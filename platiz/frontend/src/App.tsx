@@ -36,14 +36,6 @@ import Purchases from './pages/Purchases';
 import RechargesAdmin from './pages/admin/RechargesAdmin';
 import PurchasesAdmin from './pages/admin/PurchasesAdmin';
 import LandingConfigAdmin from './pages/admin/LandingConfigAdmin';
-import SuiteDashboard from './pages/suite/SuiteDashboard';
-import TenantNew from './pages/suite/TenantNew';
-import TenantConfig from './pages/suite/TenantConfig';
-import TenantBookings from './pages/suite/TenantBookings';
-import TenantClients from './pages/suite/TenantClients';
-import TenantServices from './pages/suite/TenantServices';
-import TenantInvoices from './pages/suite/TenantInvoices';
-import PublicLanding from './pages/suite/PublicLanding';
 
 function LoadingScreen() {
   return (
@@ -98,13 +90,6 @@ export default function App() {
         <Route path="/recharge" element={<Recharge />} />
         <Route path="/purchases" element={<Purchases />} />
         <Route path="/membresias" element={<MembershipsAdmin />} />
-        <Route path="/suite" element={<SuiteDashboard />} />
-        <Route path="/suite/tenants/nuevo" element={<TenantNew />} />
-        <Route path="/suite/tenants/:slug" element={<TenantConfig />} />
-        <Route path="/suite/tenants/:slug/citas" element={<TenantBookings />} />
-        <Route path="/suite/tenants/:slug/clientes" element={<TenantClients />} />
-        <Route path="/suite/tenants/:slug/servicios" element={<TenantServices />} />
-        <Route path="/suite/tenants/:slug/facturacion" element={<TenantInvoices />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
         <Route path="/admin" element={<AdminDashboard />} />
@@ -124,7 +109,6 @@ export default function App() {
         <Route path="/admin/purchases" element={<PurchasesAdmin />} />
         <Route path="/admin/landing-config" element={<LandingConfigAdmin />} />
       </Route>
-      <Route path="/suite/:slug" element={<PublicLanding />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

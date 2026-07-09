@@ -138,13 +138,13 @@ export default function Recharge() {
       <div className="text-center relative">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Recargar Saldo</h1>
         <p className="text-gray-400 text-sm mt-1">Via Binance Pay (USDT)</p>
-        <div className="mt-3 inline-flex items-center gap-2 px-5 py-2 bg-[#FFD700]/10 rounded-full border border-[#FFD700]/20">
-          <span className="text-[#FFD700] text-sm">Saldo:</span>
+        <div className="mt-3 inline-flex items-center gap-2 px-5 py-2 bg-[#E5C158]/10 rounded-full border border-[#E5C158]/20">
+          <span className="text-[#E5C158] text-sm">Saldo:</span>
           <span className="text-white font-bold text-lg">${balance.toFixed(2)}</span>
         </div>
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 p-5 md:p-8">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 p-5 md:p-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
           {binanceQr && (
             <div className="flex-shrink-0 flex flex-col items-center gap-3">
@@ -164,13 +164,13 @@ export default function Recharge() {
                 <span className="text-white font-mono text-sm md:text-base truncate flex-1">{binanceId || '355976674'}</span>
                 <button
                   onClick={() => copyToClipboard(binanceId || '355976674', 'id')}
-                  className="flex-shrink-0 p-2 rounded-lg bg-[#FFD700]/10 hover:bg-[#FFD700]/20 transition-colors"
+                  className="flex-shrink-0 p-2 rounded-lg bg-[#E5C158]/10 hover:bg-[#E5C158]/20 transition-colors"
                   title="Copiar ID"
                 >
                   {copied === 'id' ? (
                     <IconCheck className="w-4 h-4 text-emerald-400" />
                   ) : (
-                    <IconCopy className="w-4 h-4 text-[#FFD700]" />
+                    <IconCopy className="w-4 h-4 text-[#E5C158]" />
                   )}
                 </button>
               </div>
@@ -182,30 +182,30 @@ export default function Recharge() {
                 <span className="text-white text-sm md:text-base truncate flex-1">{binanceEmail || 'jcespinoza2011@gmail.com'}</span>
                 <button
                   onClick={() => copyToClipboard(binanceEmail || 'jcespinoza2011@gmail.com', 'email')}
-                  className="flex-shrink-0 p-2 rounded-lg bg-[#FFD700]/10 hover:bg-[#FFD700]/20 transition-colors"
+                  className="flex-shrink-0 p-2 rounded-lg bg-[#E5C158]/10 hover:bg-[#E5C158]/20 transition-colors"
                   title="Copiar Email"
                 >
                   {copied === 'email' ? (
                     <IconCheck className="w-4 h-4 text-emerald-400" />
                   ) : (
-                    <IconCopy className="w-4 h-4 text-[#FFD700]" />
+                    <IconCopy className="w-4 h-4 text-[#E5C158]" />
                   )}
                 </button>
               </div>
             </div>
 
-            <div className="p-3 md:p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
+            <div className="p-3 md:p-4 rounded-xl bg-[#E5C158]/5 border border-[#E5C158]/10">
               <div className="text-gray-300 text-xs md:text-sm space-y-1">
                 <p className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold flex-shrink-0">1</span>
+                  <span className="w-5 h-5 rounded-full bg-[#E5C158]/20 flex items-center justify-center text-[#E5C158] text-xs font-bold flex-shrink-0">1</span>
                   Transfiere USDT a la cuenta de arriba
                 </p>
                 <p className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold flex-shrink-0">2</span>
+                  <span className="w-5 h-5 rounded-full bg-[#E5C158]/20 flex items-center justify-center text-[#E5C158] text-xs font-bold flex-shrink-0">2</span>
                   Ingresa el monto y referencia abajo
                 </p>
                 <p className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold flex-shrink-0">3</span>
+                  <span className="w-5 h-5 rounded-full bg-[#E5C158]/20 flex items-center justify-center text-[#E5C158] text-xs font-bold flex-shrink-0">3</span>
                   Sube la captura y presiona "Enviar comprobante"
                 </p>
               </div>
@@ -214,13 +214,13 @@ export default function Recharge() {
         </div>
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 p-5 md:p-8 space-y-5" aria-label="Formulario de recarga">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 p-5 md:p-8 space-y-5" aria-label="Formulario de recarga">
         <h3 className="text-white font-semibold text-lg">Completar Recarga</h3>
 
         <div>
           <label htmlFor="amount" className="text-gray-400 text-sm block mb-2">Monto (USDT)</label>
           <div className="flex items-center gap-2 p-3 rounded-xl bg-white/[0.03] border border-white/5">
-            <span className="text-[#FFD700] font-bold text-lg">$</span>
+            <span className="text-[#E5C158] font-bold text-lg">$</span>
             <input
               id="amount"
               type="number"
@@ -241,8 +241,8 @@ export default function Recharge() {
               onClick={() => setAmount(v.toString())}
               className={`py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200 ${
                 amount === v.toString()
-                  ? 'bg-[#FFD700] text-black shadow-[0_2px_12px_rgba(255,215,0,0.25)]'
-                  : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:border-[#FFD700]/30 hover:text-[#FFD700]'
+                  ? 'bg-[#E5C158] text-black shadow-[0_2px_12px_rgba(255,215,0,0.25)]'
+                  : 'bg-white/[0.03] text-gray-400 border border-[#E5C158]/15 hover:border-[#E5C158]/30 hover:text-[#E5C158]'
               }`}
             >
               ${v}
@@ -258,15 +258,15 @@ export default function Recharge() {
             placeholder="N° de transaccion o referencia"
             value={reference}
             onChange={(e) => setReference(e.target.value)}
-            className="w-full p-3 rounded-xl bg-white/[0.03] border border-white/5 text-white placeholder-gray-600 outline-none focus:border-[#FFD700]/30 transition-colors"
+            className="w-full p-3 rounded-xl bg-white/[0.03] border border-white/5 text-white placeholder-gray-600 outline-none focus:border-[#E5C158]/30 transition-colors"
           />
         </div>
 
         <div>
           <label htmlFor="proof" className="text-gray-400 text-sm block mb-2">Comprobante de pago (captura)</label>
           {!proofPreview ? (
-            <label className="flex items-center justify-center gap-3 p-6 bg-white/[0.02] border-2 border-dashed border-[#FFD700]/10 rounded-2xl cursor-pointer hover:border-[#FFD700]/30 hover:bg-white/[0.04] transition-colors group">
-              <svg className="w-8 h-8 text-[#FFD700]/30 group-hover:text-[#FFD700]/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <label className="flex items-center justify-center gap-3 p-6 bg-white/[0.02] border-2 border-dashed border-[#E5C158]/10 rounded-2xl cursor-pointer hover:border-[#E5C158]/30 hover:bg-white/[0.04] transition-colors group">
+              <svg className="w-8 h-8 text-[#E5C158]/30 group-hover:text-[#E5C158]/60 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span className="text-sm text-gray-400 group-hover:text-gray-400 transition-colors">Toca para subir captura</span>
@@ -274,7 +274,7 @@ export default function Recharge() {
             </label>
           ) : (
             <div className="space-y-3">
-              <div className="relative rounded-2xl overflow-hidden border border-[#FFD700]/10 bg-black/20">
+              <div className="relative rounded-2xl overflow-hidden border border-[#E5C158]/10 bg-black/20">
                 <img src={proofPreview} alt="Comprobante" className="w-full max-h-64 object-contain" />
                 <button
                   onClick={() => { setProofImage(''); setProofPreview(''); }}
@@ -283,7 +283,7 @@ export default function Recharge() {
                   <IconClose className="w-4 h-4" />
                 </button>
               </div>
-              <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-[#FFD700] transition-colors">
+              <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-[#E5C158] transition-colors">
                 <IconRefresh className="w-4 h-4" />
                 Cambiar imagen
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -292,7 +292,7 @@ export default function Recharge() {
           )}
           {uploading && (
             <div className="mt-2 flex items-center gap-2 text-sm text-gray-400">
-              <div className="w-4 h-4 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
               Procesando...
             </div>
           )}
@@ -301,7 +301,7 @@ export default function Recharge() {
         <button
           onClick={handleRecharge}
           disabled={loading || !amount || !reference}
-          className="w-full py-3.5 bg-[#FFD700] text-black font-bold rounded-xl hover:bg-[#FFE44D] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
+          className="w-full py-3.5 bg-[#E5C158] text-black font-bold rounded-xl hover:bg-[#F0D78C] active:scale-[0.98] transition-colors duration-200 shadow-[0_4px_16px_rgba(255,215,0,0.15)] hover:shadow-[0_6px_24px_rgba(255,215,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base"
         >
           {loading ? (
             <>
@@ -317,14 +317,14 @@ export default function Recharge() {
         </button>
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 p-5 md:p-8">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 p-5 md:p-8">
         <h3 className="text-white font-semibold text-lg mb-4">Mis Recargas</h3>
         {loadingHistory ? (
           <p className="text-gray-400 text-sm text-center py-4">Cargando...</p>
         ) : recentRecharges.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-16 h-16 mx-auto mb-3 bg-[#FFD700]/5 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-[#FFD700]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div className="w-16 h-16 mx-auto mb-3 bg-[#E5C158]/5 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-[#E5C158]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
             <p className="text-gray-400 text-sm">Sin recargas registradas</p>
           </div>

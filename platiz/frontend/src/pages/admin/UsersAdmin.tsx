@@ -68,7 +68,7 @@ export default function UsersAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <HiUserGroup className="w-8 h-8 text-[#FFD700]" />
+          <HiUserGroup className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Socios Global Dorado</h1>
             <p className="section-subtitle">Gestiona los socios de la plataforma</p>
@@ -83,24 +83,24 @@ export default function UsersAdmin() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 px-4 py-3 glass rounded-2xl border border-[#FFD700]/10 max-w-md">
+      <div className="flex items-center gap-3 px-4 py-3 glass rounded-2xl border border-[#E5C158]/10 max-w-md">
         <HiSearch className="w-5 h-5 text-gray-500 flex-shrink-0" />
         <input type="text" placeholder="Buscar por nombre, email o teléfono..." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 w-full" />
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#FFD700]/10">
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Socio</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Email</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Teléfono</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Rol</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
-                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Peliculas</th>
-                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Registro</th>
-                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acción</th>
+              <tr className="border-b border-[#E5C158]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Socio</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Email</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Teléfono</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Rol</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Estado</th>
+                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Peliculas</th>
+                 <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Registro</th>
+                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Acción</th>
               </tr>
             </thead>
             <tbody>
@@ -109,10 +109,10 @@ export default function UsersAdmin() {
               ) : users.length === 0 ? (
                 <tr><td colSpan={8} className="p-12 text-center text-gray-500">Sin socios registrados</td></tr>
               ) : users.map((user) => (
-                <tr key={user.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                <tr key={user.id} className="border-b border-[#E5C158]/5 hover:bg-[#E5C158]/5 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-gradient-to-br from-[#DAA520] to-[#B8860B] rounded-lg flex items-center justify-center text-black font-bold text-sm">{user.username.charAt(0).toUpperCase()}</div>
+                      <div className="w-9 h-9 bg-gradient-to-br from-[#C4A44A] to-[#A6842C] rounded-lg flex items-center justify-center text-black font-bold text-sm">{user.username.charAt(0).toUpperCase()}</div>
                       <span className="font-medium text-white">{user.username}</span>
                     </div>
                   </td>
@@ -141,8 +141,8 @@ export default function UsersAdmin() {
                         <button onClick={() => updateStatus(user.id, 'rejected')} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors" title="Rechazar"><HiX className="w-4 h-4" /></button>
                       </div>
                     )}
-                    <button onClick={() => { setPassModal(user.id); setNewPass(''); }} className="ml-2 px-3 py-1.5 rounded-lg bg-[#FFD700] text-black text-xs font-bold hover:bg-[#FFE44D] transition-colors" title="Cambiar contrasena">Clave</button>
-                    {user.role === 'admin' && <span className="text-xs text-[#FFD700]/60">—</span>}
+                    <button onClick={() => { setPassModal(user.id); setNewPass(''); }} className="ml-2 px-3 py-1.5 rounded-lg bg-[#E5C158] text-black text-xs font-bold hover:bg-[#F0D78C] transition-colors" title="Cambiar contrasena">Clave</button>
+                    {user.role === 'admin' && <span className="text-xs text-[#E5C158]/60">—</span>}
                   </td>
                 </tr>
               ))}
@@ -152,14 +152,14 @@ export default function UsersAdmin() {
       </div>
       {passModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setPassModal(null)}>
-          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Cambiar Contrasena">
+          <div className="bg-[#111] border border-[#E5C158]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Cambiar Contrasena">
             <h3 className="text-white font-bold mb-4">Cambiar Contrasena</h3>
             <label className="label" htmlFor="new-password">Nueva contrasena</label>
-            <input id="new-password" className="w-full bg-black/30 border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white mb-4"
+            <input id="new-password" className="w-full bg-black/30 border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white mb-4"
               type="text" placeholder="Nueva contrasena (min 6 caracteres)"
               value={newPass} onChange={e => setNewPass(e.target.value)} />
             <div className="flex gap-3">
-              <button onClick={() => resetPassword(passModal)} className="flex-1 py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm">Guardar</button>
+              <button onClick={() => resetPassword(passModal)} className="flex-1 py-2 bg-[#E5C158] text-black rounded-lg font-bold text-sm">Guardar</button>
               <button onClick={() => setPassModal(null)} className="flex-1 py-2 bg-white/10 text-white rounded-lg text-sm">Cancelar</button>
             </div>
           </div>

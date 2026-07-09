@@ -29,11 +29,11 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4 bg-gold-grid">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#FFD700]/5 via-transparent to-[#DAA520]/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#E5C158]/5 via-transparent to-[#C4A44A]/5 pointer-events-none" />
       <div className="relative w-full max-w-md">
-        <div className="absolute -top-20 -left-20 w-60 h-60 bg-[#FFD700]/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-[#DAA520]/10 rounded-full blur-3xl" />
-        <div className="relative glass rounded-3xl p-8 border border-[#FFD700]/10">
+        <div className="absolute -top-20 -left-20 w-60 h-60 bg-[#E5C158]/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-[#C4A44A]/10 rounded-full blur-3xl" />
+        <div className="relative glass rounded-3xl p-8 border border-[#E5C158]/10">
           <div className="text-center mb-8">
             <Logo size={36} className="mx-auto mb-4" />
             <p className="text-gray-400 mt-1">Inicia sesión en tu cuenta</p>
@@ -58,7 +58,7 @@ export default function Login() {
             </button>
           </form>
           <p className="text-center text-gray-400 mt-6">
-            ¿No tienes cuenta? <Link to="/register" className="text-[#FFD700] hover:text-[#FFE44D] font-medium">Regístrate</Link>
+            ¿No tienes cuenta? <Link to="/register" className="text-[#E5C158] hover:text-[#F0D78C] font-medium">Regístrate</Link>
           </p>
         </div>
       </div>

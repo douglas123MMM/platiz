@@ -40,9 +40,9 @@ export default function SearchPage() {
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="text-center">
-        <IconSearch className="w-10 h-10 text-[#FFD700] mx-auto mb-4" />
+        <IconSearch className="w-10 h-10 text-[#E5C158] mx-auto mb-4" />
         <h1 className="section-title">Resultados de búsqueda</h1>
-        {query && <p className="section-subtitle">Mostrando resultados para "<strong className="text-[#FFD700]">{query}</strong>"</p>}
+        {query && <p className="section-subtitle">Mostrando resultados para "<strong className="text-[#E5C158]">{query}</strong>"</p>}
       </div>
 
       {loading ? (
@@ -73,7 +73,7 @@ export default function SearchPage() {
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-2xl">{group.icon}</span>
                 <h2 className="text-2xl font-bold text-white">{group.name}</h2>
-                <Link to={`/${slug}`} className="ml-auto flex items-center gap-1 text-sm text-[#FFD700] hover:text-[#FFE44D] transition-colors">
+                <Link to={`/${slug}`} className="ml-auto flex items-center gap-1 text-sm text-[#E5C158] hover:text-[#F0D78C] transition-colors">
                   Ver todo <IconArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -94,15 +94,15 @@ export default function SearchPage() {
                         )}
                       </div>
                     )}
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FFD700] transition-colors">{item.title}</h3>
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#E5C158] transition-colors">{item.title}</h3>
                     {item.description && <p className="text-gray-400 text-sm mb-4 line-clamp-3">{item.description}</p>}
                     {item.video_url && (
-                      <Link to={`/player?type=item&id=${item.id}`} className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
+                      <Link to={`/player?type=item&id=${item.id}`} className="inline-flex items-center gap-2 text-[#E5C158] hover:text-[#F0D78C] text-sm font-medium transition-colors">
                         <IconPlay className="w-4 h-4" /> Reproducir
                       </Link>
                     )}
                     {item.link && !item.video_url && (
-                      <a href={item.link} target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 text-[#FFD700] hover:text-[#FFE44D] text-sm font-medium transition-colors">
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 text-[#E5C158] hover:text-[#F0D78C] text-sm font-medium transition-colors">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Descargar
                       </a>
                     )}

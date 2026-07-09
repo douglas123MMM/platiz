@@ -31,7 +31,7 @@ export async function getMemberships(req: AuthRequest, res: Response): Promise<v
   try {
     const { search } = req.query;
     const isAdmin = req.user?.role === 'admin';
-    let query = supabase.from('memberships').select('*').order('expiry_date', { ascending: true });
+    let query = supabase.from('memberships').select('*').order('created_at', { ascending: false });
     // TODO: activar filtro por user_id cuando la columna exista
     // if (!isAdmin) query = query.eq('user_id', req.user?.id);
     if (search && typeof search === 'string' && search.trim()) {

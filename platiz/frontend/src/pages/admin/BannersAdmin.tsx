@@ -59,7 +59,7 @@ export default function BannersAdmin() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
-          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={editId ? 'Editar Banner' : 'Nuevo Banner'}>
+          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#E5C158]/10" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={editId ? 'Editar Banner' : 'Nuevo Banner'}>
             <h2 className="text-xl font-bold text-white mb-6">{editId ? 'Editar' : 'Nuevo'} Banner</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -76,7 +76,7 @@ export default function BannersAdmin() {
               </div>
               <div>
                 <label className="label" htmlFor="banner-image">Imagen promocional</label>
-                <input id="banner-image" type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20" />
+                <input id="banner-image" type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#E5C158]/10 file:text-[#E5C158] hover:file:bg-[#E5C158]/20" />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Guardando...' : editId ? 'Actualizar' : 'Crear'}</button>
@@ -102,12 +102,12 @@ export default function BannersAdmin() {
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="font-semibold text-white">{banner.title}</h3>
-                {banner.link && <a href={banner.link} target="_blank" rel="noopener noreferrer" className="text-xs text-[#FFD700] hover:text-[#FFE44D]">{banner.link.substring(0, 40)}</a>}
+                {banner.link && <a href={banner.link} target="_blank" rel="noopener noreferrer" className="text-xs text-[#E5C158] hover:text-[#F0D78C]">{banner.link.substring(0, 40)}</a>}
                 <span className={`badge mt-2 ${banner.active ? 'badge-success' : 'badge-danger'}`}>{banner.active ? 'Activo' : 'Inactivo'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => toggleActive(banner)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-white transition-colors">{banner.active ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}</button>
-                <button onClick={() => { setForm({ title: banner.title, description: banner.description || '', link: banner.link || '' }); setEditId(banner.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#FFD700] transition-colors"><IconPencil className="w-4 h-4" /></button>
+                <button onClick={() => { setForm({ title: banner.title, description: banner.description || '', link: banner.link || '' }); setEditId(banner.id); setShowForm(true); }} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-[#E5C158] transition-colors"><IconPencil className="w-4 h-4" /></button>
                 <button onClick={() => deleteBanner(banner.id)} className="p-2 rounded-lg hover:bg-[#111] text-gray-400 hover:text-red-400 transition-colors"><IconTrash className="w-4 h-4" /></button>
               </div>
             </div>

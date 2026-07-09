@@ -53,7 +53,7 @@ export default function TransactionsAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <IconMovies className="w-8 h-8 text-[#FFD700]" />
+          <IconMovies className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Transacciones</h1>
             <p className="section-subtitle">Historial de transacciones de la tienda</p>
@@ -64,16 +64,16 @@ export default function TransactionsAdmin() {
         </button>
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#FFD700]/10">
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Usuario</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Tipo</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Monto</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Descripción</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Fecha</th>
+              <tr className="border-b border-[#E5C158]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Usuario</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Tipo</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Monto</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Descripción</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Fecha</th>
               </tr>
             </thead>
             <tbody>
@@ -82,7 +82,7 @@ export default function TransactionsAdmin() {
               ) : transactions.length === 0 ? (
                 <tr><td colSpan={5} className="p-12 text-center text-gray-500">Sin transacciones registradas</td></tr>
               ) : transactions.map((t) => (
-                <tr key={t.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                <tr key={t.id} className="border-b border-[#E5C158]/5 hover:bg-[#E5C158]/5 transition-colors">
                   <td className="p-4">
                     <p className="text-white text-sm font-medium">{t.user?.username || 'N/A'}</p>
                     <p className="text-gray-500 text-xs">{t.user?.email || ''}</p>

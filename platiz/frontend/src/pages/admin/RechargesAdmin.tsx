@@ -72,7 +72,7 @@ export default function RechargesAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <IconChat className="w-8 h-8 text-[#FFD700]" />
+          <IconChat className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Recargas</h1>
             <p className="section-subtitle">Gestionar recargas via Binance Pay</p>
@@ -93,8 +93,8 @@ export default function RechargesAdmin() {
             onClick={() => setStatusFilter(f.key)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
               statusFilter === f.key
-                ? 'bg-[#FFD700] text-black'
-                : 'bg-white/[0.03] text-gray-400 border border-[#FFD700]/15 hover:text-[#FFD700]'
+                ? 'bg-[#E5C158] text-black'
+                : 'bg-white/[0.03] text-gray-400 border border-[#E5C158]/15 hover:text-[#E5C158]'
             }`}
           >
             {f.label}
@@ -102,17 +102,17 @@ export default function RechargesAdmin() {
         ))}
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#FFD700]/10">
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Usuario</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Monto</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Comprobante</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Fecha</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Accion</th>
+              <tr className="border-b border-[#E5C158]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Usuario</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Monto</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Comprobante</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Fecha</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Estado</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Accion</th>
               </tr>
             </thead>
             <tbody>
@@ -121,19 +121,19 @@ export default function RechargesAdmin() {
               ) : recharges.length === 0 ? (
                 <tr><td colSpan={6} className="p-12 text-center text-gray-500">No hay recargas{statusFilter === 'pending' ? ' pendientes' : ''}</td></tr>
               ) : recharges.map((r) => (
-                <tr key={r.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                <tr key={r.id} className="border-b border-[#E5C158]/5 hover:bg-[#E5C158]/5 transition-colors">
                   <td className="p-4">
                     <p className="text-white text-sm font-medium">{r.user?.username || 'Usuario'}</p>
                     <p className="text-gray-500 text-xs">{r.user?.email || ''}</p>
                     {r.user?.phone && <p className="text-gray-600 text-xs">{r.user.phone}</p>}
                   </td>
-                  <td className="p-4 text-[#FFD700] text-sm font-bold">${r.amount.toFixed(2)} USDT</td>
+                  <td className="p-4 text-[#E5C158] text-sm font-bold">${r.amount.toFixed(2)} USDT</td>
                   <td className="p-4">
                     {r.proof_image ? (
                       <img
                         src={r.proof_image}
                         alt="Comprobante"
-                        className="w-10 h-10 rounded-lg object-cover cursor-pointer hover:ring-2 ring-[#FFD700] transition-colors"
+                        className="w-10 h-10 rounded-lg object-cover cursor-pointer hover:ring-2 ring-[#E5C158] transition-colors"
                         onClick={() => setPreviewImage(r.proof_image!)}
                       />
                     ) : (

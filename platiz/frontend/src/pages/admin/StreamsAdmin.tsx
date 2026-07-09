@@ -68,7 +68,7 @@ export default function StreamsAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <HiVideoCamera className="w-8 h-8 text-[#FFD700]" />
+          <HiVideoCamera className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Gestión de Transmisiones</h1>
             <p className="section-subtitle">Administra transmisiones en vivo y videos desde múltiples plataformas</p>
@@ -79,7 +79,7 @@ export default function StreamsAdmin() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
-          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#E5C158]/10" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-xl font-bold text-white mb-6">{editId ? 'Editar' : 'Nueva'} Transmisión</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -98,13 +98,13 @@ export default function StreamsAdmin() {
                 <label className="label">URL del video o transmisión</label>
                 <input className="input" placeholder="https://youtube.com/watch?v=... o https://drive.google.com/..." value={form.video_url} onChange={(e) => setForm({ ...form, video_url: e.target.value })} required />
                 {detectedType && (
-                  <p className="text-xs mt-1 text-[#FFD700]/70">
+                  <p className="text-xs mt-1 text-[#E5C158]/70">
                     Tipo detectado: <span className="font-medium uppercase">{detectedType}</span>
                   </p>
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" id="showLanding" checked={form.show_on_landing} onChange={(e) => setForm({ ...form, show_on_landing: e.target.checked })} className="w-4 h-4 rounded border-[#FFD700]/30 bg-[#0a0a0f] text-[#FFD700] focus:ring-[#FFD700]/20" />
+                <input type="checkbox" id="showLanding" checked={form.show_on_landing} onChange={(e) => setForm({ ...form, show_on_landing: e.target.checked })} className="w-4 h-4 rounded border-[#E5C158]/30 bg-[#0a0a0f] text-[#E5C158] focus:ring-[#E5C158]/20" />
                 <label htmlFor="showLanding" className="text-sm text-gray-300">Mostrar en la Landing Page</label>
               </div>
               <div className="flex gap-3 pt-2">
@@ -116,18 +116,18 @@ export default function StreamsAdmin() {
         </div>
       )}
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#FFD700]/10">
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Transmisión</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Plataforma</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Tipo</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Landing</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Estado</th>
-                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Fecha</th>
-                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#FFD700]/60">Acciones</th>
+              <tr className="border-b border-[#E5C158]/10">
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Transmisión</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Plataforma</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Tipo</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Landing</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Estado</th>
+                <th className="text-left p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Fecha</th>
+                <th className="text-right p-4 text-xs font-semibold uppercase tracking-wider text-[#E5C158]/60">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -140,14 +140,14 @@ export default function StreamsAdmin() {
                   <p className="text-xs text-gray-600 mt-1">Agrega enlaces de YouTube, Vimeo, Twitch, Google Drive, M3U8 y más</p>
                 </td></tr>
               ) : streams.map((s) => (
-                <tr key={s.id} className="border-b border-[#FFD700]/5 hover:bg-[#FFD700]/5 transition-colors">
+                <tr key={s.id} className="border-b border-[#E5C158]/5 hover:bg-[#E5C158]/5 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       {s.thumbnail_url ? (
                         <img src={s.thumbnail_url} alt={s.title} className="w-12 h-8 object-cover rounded" />
                       ) : (
                         <div className="w-12 h-8 bg-[#111] rounded flex items-center justify-center">
-                          <HiPlay className="w-4 h-4 text-[#FFD700]/40" />
+                          <HiPlay className="w-4 h-4 text-[#E5C158]/40" />
                         </div>
                       )}
                       <div>
@@ -171,7 +171,7 @@ export default function StreamsAdmin() {
                   <td className="p-4 text-gray-400 text-sm">{new Date(s.created_at).toLocaleDateString()}</td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => toggleActive(s.id)} className="p-2 rounded-lg bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors" title="Activar/Desactivar"><HiSwitchHorizontal className="w-4 h-4" /></button>
+                      <button onClick={() => toggleActive(s.id)} className="p-2 rounded-lg bg-[#E5C158]/10 text-[#E5C158] hover:bg-[#E5C158]/20 transition-colors" title="Activar/Desactivar"><HiSwitchHorizontal className="w-4 h-4" /></button>
                       <button onClick={() => editStream(s)} className="p-2 rounded-lg bg-[#00D4FF]/10 text-[#00D4FF] hover:bg-[#00D4FF]/20 transition-colors" title="Editar"><HiPencil className="w-4 h-4" /></button>
                       <button onClick={() => deleteStream(s.id)} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors" title="Eliminar"><HiTrash className="w-4 h-4" /></button>
                     </div>

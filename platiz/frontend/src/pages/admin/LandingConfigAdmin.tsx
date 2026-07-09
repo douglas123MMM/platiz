@@ -128,7 +128,7 @@ export default function LandingConfigAdmin() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
     </div>
   );
 
@@ -137,32 +137,32 @@ export default function LandingConfigAdmin() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center gap-3">
-        <HiGlobe className="w-8 h-8 text-[#FFD700]" />
+        <HiGlobe className="w-8 h-8 text-[#E5C158]" />
         <div>
           <h1 className="section-title text-2xl">Landing de Afiliados</h1>
           <p className="section-subtitle">Configura el video y contenido que ven los clientes al entrar por un enlace de afiliado</p>
         </div>
-        <button onClick={() => switchPage(activePage)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111] text-gray-400 hover:text-white border border-[#FFD700]/10 text-sm transition-colors">
+        <button onClick={() => switchPage(activePage)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111] text-gray-400 hover:text-white border border-[#E5C158]/10 text-sm transition-colors">
           <HiRefresh className="w-4 h-4" /> Recargar
         </button>
       </div>
 
       {/* Logo de la Plataforma */}
-      <div className="glass rounded-2xl border border-[#FFD700]/10 p-6">
+      <div className="glass rounded-2xl border border-[#E5C158]/10 p-6">
         <div className="flex items-center gap-3 mb-4">
-          <HiPhotograph className="w-6 h-6 text-[#FFD700]" />
+          <HiPhotograph className="w-6 h-6 text-[#E5C158]" />
           <span className="text-white font-medium">Logo de la Plataforma</span>
         </div>
         <div className="flex items-center gap-4">
           {logoUrl ? (
-            <img src={logoUrl} alt="Logo" className="w-16 h-16 object-contain rounded-xl bg-[#111] p-2 border border-[#FFD700]/10" />
+            <img src={logoUrl} alt="Logo" className="w-16 h-16 object-contain rounded-xl bg-[#111] p-2 border border-[#E5C158]/10" />
           ) : (
-            <div className="w-16 h-16 rounded-xl bg-[#111] border border-[#FFD700]/10 flex items-center justify-center text-2xl text-[#FFD700]">G</div>
+            <div className="w-16 h-16 rounded-xl bg-[#111] border border-[#E5C158]/10 flex items-center justify-center text-2xl text-[#E5C158]">G</div>
           )}
           <div className="flex-1">
             <p className="text-gray-400 text-xs mb-2">Logo de Global Dorado</p>
             <div className="flex gap-2 flex-wrap">
-              <label className="px-4 py-2 bg-[#FFD700]/10 text-[#FFD700] rounded-xl text-sm font-medium hover:bg-[#FFD700]/20 cursor-pointer">
+              <label className="px-4 py-2 bg-[#E5C158]/10 text-[#E5C158] rounded-xl text-sm font-medium hover:bg-[#E5C158]/20 cursor-pointer">
                 {logoUploading ? 'Subiendo...' : 'Subir Logo'}
                 <input type="file" accept="image/*" className="hidden" disabled={logoUploading}
                   onChange={async (e) => {
@@ -179,7 +179,7 @@ export default function LandingConfigAdmin() {
               </label>
               <input className="input flex-1 min-w-[200px]" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="O pega la URL..." />
               <button onClick={async () => { await api.put('/settings', { logo_url: logoUrl }); toast.success('Logo guardado'); }}
-                className="px-4 py-2 bg-[#FFD700] text-black rounded-xl text-sm font-bold hover:bg-[#FFE44D]">Guardar</button>
+                className="px-4 py-2 bg-[#E5C158] text-black rounded-xl text-sm font-bold hover:bg-[#F0D78C]">Guardar</button>
             </div>
           </div>
         </div>
@@ -190,16 +190,16 @@ export default function LandingConfigAdmin() {
           <button
             key={key}
             onClick={() => switchPage(key)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activePage === key ? 'bg-[#FFD700] text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-[#FFD700]/10'}`}
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activePage === key ? 'bg-[#E5C158] text-black' : 'bg-[#111] text-gray-400 hover:text-white border border-[#E5C158]/10'}`}
           >
             {label}
           </button>
         ))}
       </div>
 
-      <div className="glass rounded-2xl border border-[#FFD700]/10 p-6 space-y-5">
-        <div className="flex items-center gap-3 pb-4 border-b border-[#FFD700]/10">
-          <HiVideoCamera className="w-6 h-6 text-[#FFD700]" />
+      <div className="glass rounded-2xl border border-[#E5C158]/10 p-6 space-y-5">
+        <div className="flex items-center gap-3 pb-4 border-b border-[#E5C158]/10">
+          <HiVideoCamera className="w-6 h-6 text-[#E5C158]" />
           <span className="text-white font-medium">Editando: {PAGE_LABELS[activePage] || activePage}</span>
           <span className="text-xs text-gray-500">/landing/&#123;codigo&#125;/{activePage}</span>
         </div>
@@ -214,12 +214,12 @@ export default function LandingConfigAdmin() {
           <textarea className="textarea" rows={3} value={form.subtitle} onChange={e => setForm({ ...form, subtitle: e.target.value })} placeholder="Subtitulo descriptivo" />
         </div>
 
-        <div className="bg-[#0a0a0f] rounded-xl p-4 border border-[#FFD700]/10 space-y-3">
-          <label className="label flex items-center gap-2"><HiVideoCamera className="w-4 h-4 text-[#FFD700]" /> Video de la Landing</label>
+        <div className="bg-[#0a0a0f] rounded-xl p-4 border border-[#E5C158]/10 space-y-3">
+          <label className="label flex items-center gap-2"><HiVideoCamera className="w-4 h-4 text-[#E5C158]" /> Video de la Landing</label>
 
           <div className="flex gap-3">
             <input className="input flex-1" value={form.video_url} onChange={e => { setForm({ ...form, video_url: e.target.value }); setVideoChanged(true); }} placeholder="URL del video (YouTube, Drive, MP4...) o sube uno nuevo" />
-            <label className={`flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium ${videoUploading ? 'bg-gray-600 text-gray-300' : 'bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 border border-[#FFD700]/20'}`}>
+            <label className={`flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium ${videoUploading ? 'bg-gray-600 text-gray-300' : 'bg-[#E5C158]/10 text-[#E5C158] hover:bg-[#E5C158]/20 border border-[#E5C158]/20'}`}>
               {videoUploading ? 'Subiendo...' : 'Subir video'}
               <input type="file" accept="video/mp4,video/webm,video/mov,video/mkv" onChange={handleVideoUpload} className="hidden" disabled={videoUploading} />
             </label>
@@ -227,7 +227,7 @@ export default function LandingConfigAdmin() {
 
           {videoUploading && (
             <div className="flex items-center gap-2 text-sm text-gray-400">
-              <div className="w-4 h-4 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
               Subiendo video a Supabase...
             </div>
           )}
@@ -255,7 +255,7 @@ export default function LandingConfigAdmin() {
         <div>
           <label className="label flex items-center justify-between">
             <span>Beneficios / Bullets</span>
-            <button onClick={addBullet} className="text-xs text-[#FFD700] hover:text-[#FFE44D] flex items-center gap-1"><HiPlus className="w-3 h-3" /> Agregar</button>
+            <button onClick={addBullet} className="text-xs text-[#E5C158] hover:text-[#F0D78C] flex items-center gap-1"><HiPlus className="w-3 h-3" /> Agregar</button>
           </label>
           <div className="space-y-2 mt-2">
             {form.bullets.map((b, i) => (
@@ -280,7 +280,7 @@ export default function LandingConfigAdmin() {
         </div>
 
         <div className="flex items-center gap-2">
-          <input type="checkbox" id="showForm" checked={form.show_form} onChange={e => setForm({ ...form, show_form: e.target.checked })} className="w-4 h-4 rounded border-[#FFD700]/30 bg-[#0a0a0f] text-[#FFD700] focus:ring-[#FFD700]/20" />
+          <input type="checkbox" id="showForm" checked={form.show_form} onChange={e => setForm({ ...form, show_form: e.target.checked })} className="w-4 h-4 rounded border-[#E5C158]/30 bg-[#0a0a0f] text-[#E5C158] focus:ring-[#E5C158]/20" />
           <label htmlFor="showForm" className="text-sm text-gray-300">Mostrar formulario de registro</label>
         </div>
 

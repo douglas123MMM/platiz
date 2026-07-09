@@ -53,7 +53,7 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
       </div>
     );
   }
@@ -79,12 +79,12 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-[#0a0a0f] text-white">
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs text-gray-500 mb-6">
-          <Link to="/" className="hover:text-[#FFD700]">Inicio</Link>
+        <div className="flex items-center gap-2 text-xs text-gray-300 mb-6">
+          <Link to="/" className="hover:text-[#E5C158]">Inicio</Link>
           <span>/</span>
-          <Link to={`/catalogo/${new URLSearchParams(window.location.search).get('ref') || ''}`} className="hover:text-[#FFD700]">Catalogo</Link>
+          <Link to={`/catalogo/${new URLSearchParams(window.location.search).get('ref') || ''}`} className="hover:text-[#E5C158]">Catalogo</Link>
           <span>/</span>
-          <span className="text-gray-400 truncate">{product.title}</span>
+          <span className="text-gray-300 truncate">{product.title}</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -99,15 +99,15 @@ export default function ProductDetailPage() {
 
           {/* Info */}
           <div className="flex flex-col">
-            <span className="inline-flex self-start px-3 py-1 rounded-full text-xs font-medium bg-[#FFD700]/10 text-[#FFD700] border border-[#FFD700]/20 mb-3">
+            <span className="inline-flex self-start px-3 py-1 rounded-full text-xs font-medium bg-[#E5C158]/10 text-[#E5C158] border border-[#E5C158]/20 mb-3">
               {cat === 'movies' || cat === 'Streaming' ? '📺 Streaming' : cat}
             </span>
             <h1 className="text-2xl md:text-3xl font-bold mb-3">{product.title}</h1>
 
             {/* Plans */}
             <div className="mb-4">
-              <p className="text-sm text-gray-400 mb-2">Consulta el precio con el vendedor:</p>
-              <div className="p-3 rounded-xl border border-[#FFD700]/20 bg-[#FFD700]/5">
+              <p className="text-sm text-gray-300 mb-2">Consulta el precio con el vendedor:</p>
+              <div className="p-3 rounded-xl border border-[#E5C158]/20 bg-[#E5C158]/5">
                 <p className="text-white text-sm">Los precios los define cada afiliado. Contacta al vendedor para conocer el precio actualizado.</p>
               </div>
             </div>
@@ -122,12 +122,12 @@ export default function ProductDetailPage() {
 
             {/* Purchase Info - solo despues de comprar */}
             {purchaseRegistered && (
-            <div className="mt-4 p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
-              <p className="text-[#FFD700] text-xs font-bold mb-2">ID de Compra: {purchaseId}</p>
+            <div className="mt-4 p-4 rounded-xl bg-[#E5C158]/5 border border-[#E5C158]/10">
+              <p className="text-[#E5C158] text-xs font-bold mb-2">ID de Compra: {purchaseId}</p>
               {product.price > 0 && (
-                <div className="space-y-1 text-xs text-gray-400 mb-3">
+                <div className="space-y-1 text-xs text-gray-300 mb-3">
                   <div className="flex justify-between"><span>Producto:</span><span className="text-white">{product.title}</span></div>
-                  <div className="flex justify-between"><span>Precio:</span><span className="text-[#FFD700] font-bold">${product.price.toFixed(2)} USDT</span></div>
+                  <div className="flex justify-between"><span>Precio:</span><span className="text-[#E5C158] font-bold">${product.price.toFixed(2)} USDT</span></div>
                   {product.duration_days > 0 && <div className="flex justify-between"><span>Duracion:</span><span className="text-white">{product.duration_days} dias</span></div>}
                   <div className="flex justify-between"><span>Entrega:</span><span className="text-white">{product.delivery_type === 'automatica' ? 'Automatica' : 'Manual'}</span></div>
                 </div>
@@ -150,8 +150,8 @@ export default function ProductDetailPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-3 text-sm font-medium transition-colors ${
                   activeTab === tab
-                    ? 'text-[#FFD700] border-b-2 border-[#FFD700]'
-                    : 'text-gray-500 hover:text-gray-300'
+                    ? 'text-[#E5C158] border-b-2 border-[#E5C158]'
+                    : 'text-gray-300 hover:text-gray-300'
                 }`}
               >
                 {tab === 'desc' ? 'Descripcion' : tab === 'guide' ? 'Guia de Uso' : 'Garantia'}
@@ -169,8 +169,8 @@ export default function ProductDetailPage() {
                   <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10 text-center">
                     <span className="text-emerald-400 text-xs font-medium">Licencia 100% original</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10 text-center">
-                    <span className="text-[#FFD700] text-xs font-medium">Soporte 24/7 incluido</span>
+                  <div className="p-3 rounded-xl bg-[#E5C158]/5 border border-[#E5C158]/10 text-center">
+                    <span className="text-[#E5C158] text-xs font-medium">Soporte Garantizado</span>
                   </div>
                   <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 text-center">
                     <span className="text-blue-400 text-xs font-medium">Pago seguro con Binance</span>
@@ -178,13 +178,13 @@ export default function ProductDetailPage() {
                 </div>
                   </>
                 )}
-                {!product.description && <p className="text-gray-500">Sin descripcion disponible.</p>}
+                {!product.description && <p className="text-gray-300">Sin descripcion disponible.</p>}
               </div>
             )}
             {activeTab === 'guide' && (
               <div className="text-gray-300 space-y-3">
-                <div className="p-4 rounded-xl bg-[#FFD700]/5 border border-[#FFD700]/10">
-                  <h3 className="text-[#FFD700] font-semibold mb-2">Como usar tu {product.category || 'servicio'}</h3>
+                <div className="p-4 rounded-xl bg-[#E5C158]/5 border border-[#E5C158]/10">
+                  <h3 className="text-[#E5C158] font-semibold mb-2">Como usar tu {product.category || 'servicio'}</h3>
                   <ol className="list-decimal pl-5 space-y-1.5 text-sm">
                     <li>Recibe los datos de acceso en tu WhatsApp o email</li>
                     <li>Descarga la aplicacion oficial desde la tienda de tu dispositivo</li>
@@ -195,20 +195,20 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <span className="text-[#FFD700] text-xs font-medium">✅ Cuenta original</span>
-                    <p className="text-gray-500 text-xs mt-1">Licencia 100% verificada</p>
+                    <span className="text-[#E5C158] text-xs font-medium">✅ Cuenta original</span>
+                    <p className="text-gray-300 text-xs mt-1">Licencia 100% verificada</p>
                   </div>
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <span className="text-[#FFD700] text-xs font-medium">✅ Soporte 24/7</span>
-                    <p className="text-gray-500 text-xs mt-1">Asistencia via WhatsApp</p>
+                    <span className="text-[#E5C158] text-xs font-medium">✅ Soporte Garantizado</span>
+                    <p className="text-gray-300 text-xs mt-1">Asistencia via WhatsApp</p>
                   </div>
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <span className="text-[#FFD700] text-xs font-medium">✅ Entrega inmediata</span>
-                    <p className="text-gray-500 text-xs mt-1">Datos enviados al instante</p>
+                    <span className="text-[#E5C158] text-xs font-medium">✅ Entrega inmediata</span>
+                    <p className="text-gray-300 text-xs mt-1">Datos enviados al instante</p>
                   </div>
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <span className="text-[#FFD700] text-xs font-medium">✅ Multi-dispositivo</span>
-                    <p className="text-gray-500 text-xs mt-1">Compatible con TV, PC y movil</p>
+                    <span className="text-[#E5C158] text-xs font-medium">✅ Multi-dispositivo</span>
+                    <p className="text-gray-300 text-xs mt-1">Compatible con TV, PC y movil</p>
                   </div>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export default function ProductDetailPage() {
                 <p>✅ Si el servicio falla, contactanos y te damos una cuenta nueva</p>
                 <p>✅ Soporte tecnico incluido para ayudarte con la configuracion</p>
                 <p>✅ Todos los pagos quedan registrados con un ID unico de referencia</p>
-                <p>✅ Tiempo de respuesta: menos de 24 horas</p>
+                <p>✅ Tiempo de respuesta: atencion directa</p>
               </div>
             )}
           </div>
@@ -234,7 +234,7 @@ export default function ProductDetailPage() {
                 <Link
                   key={p.id}
                   to={`/producto/${p.id}${window.location.search}`}
-                  className="group rounded-xl overflow-hidden border border-white/5 hover:border-[#FFD700]/20 bg-[#111] hover:-translate-y-1 transition-all duration-300"
+                  className="group rounded-xl overflow-hidden border border-white/5 hover:border-[#E5C158]/20 bg-[#111] hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="aspect-[4/3] bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] flex items-center justify-center overflow-hidden">
                     {p.image_url ? (
@@ -244,9 +244,9 @@ export default function ProductDetailPage() {
                     )}
                   </div>
                   <div className="p-3">
-                    <span className="text-[10px] text-gray-500">{p.category || p.category_slug}</span>
+                    <span className="text-[10px] text-gray-300">{p.category || p.category_slug}</span>
                     <p className="text-xs font-medium text-white line-clamp-2 mt-1">{p.title}</p>
-                    {p.price > 0 && <p className="text-[#FFD700] text-sm font-bold mt-1">${p.price.toFixed(2)} USDT</p>}
+                    {p.price > 0 && <p className="text-[#E5C158] text-sm font-bold mt-1">${p.price.toFixed(2)} USDT</p>}
                   </div>
                 </Link>
               ))}

@@ -603,7 +603,7 @@ function renderText(text: string): React.ReactNode {
   return parts.map((part, i) => {
     if (/^https?:\/\//.test(part)) {
       return (
-        <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-[#FFD700] underline hover:text-[#FFE44D] break-all">
+        <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-[#E5C158] underline hover:text-[#F0D78C] break-all">
           {part}
         </a>
       );
@@ -699,7 +699,7 @@ export default function SupportChat() {
     <div className="flex flex-col h-[calc(100vh-6rem)] animate-fade-in max-w-2xl mx-auto">
       {/* Header */}
       <div className="text-center py-4 px-4 border-b border-white/5">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#DAA520] flex items-center justify-center mx-auto mb-2 shadow-lg shadow-[#FFD700]/10">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E5C158] to-[#C4A44A] flex items-center justify-center mx-auto mb-2 shadow-lg shadow-[#E5C158]/10">
           <IconChat className="w-6 h-6 text-black" />
         </div>
         <h2 className="text-base font-bold text-white">Soporte Global Dorado</h2>
@@ -711,13 +711,13 @@ export default function SupportChat() {
         {messages.map((msg, i) => (
           <div key={i} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'assistant' && (
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#FFD700] to-[#DAA520] flex items-center justify-center flex-shrink-0 mb-1">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#E5C158] to-[#C4A44A] flex items-center justify-center flex-shrink-0 mb-1">
                 <IconChat className="w-3.5 h-3.5 text-black" />
               </div>
             )}
             <div className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed ${
               msg.role === 'user'
-                ? 'bg-[#FFD700] text-black rounded-2xl rounded-br-md shadow-md'
+                ? 'bg-[#E5C158] text-black rounded-2xl rounded-br-md shadow-md'
                 : 'bg-white/5 border border-white/5 text-gray-200 rounded-2xl rounded-bl-md'
             }`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
               <p className="whitespace-pre-wrap">{msg.role === 'assistant' ? renderText(msg.text) : msg.text}</p>
@@ -742,11 +742,11 @@ export default function SupportChat() {
           </button>
         </div>
         <div className="flex gap-2">
-          <input className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FFD700]/30 focus:bg-white/[0.07] transition-all"
+          <input className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#E5C158]/30 focus:bg-white/[0.07] transition-all"
             placeholder="Escribe tu pregunta..." value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && send()} />
-          <button onClick={() => send()} className="w-11 h-11 rounded-full bg-[#FFD700] flex items-center justify-center text-black font-bold hover:bg-[#FFE44D] active:scale-95 transition-all shadow-lg shadow-[#FFD700]/20">
+          <button onClick={() => send()} className="w-11 h-11 rounded-full bg-[#E5C158] flex items-center justify-center text-black font-bold hover:bg-[#F0D78C] active:scale-95 transition-all shadow-lg shadow-[#E5C158]/20">
             <IconSend className="w-4 h-4" />
           </button>
         </div>
@@ -754,7 +754,7 @@ export default function SupportChat() {
 
       {showProofForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setShowProofForm(false)}>
-          <div className="bg-[#111] border border-[#FFD700]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#111] border border-[#E5C158]/20 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-bold">Enviar Comprobante de Pago</h3>
               <button onClick={() => setShowProofForm(false)} className="text-gray-400 text-lg">&times;</button>
@@ -763,27 +763,27 @@ export default function SupportChat() {
               <div className="text-center py-4">
                 <p className="text-green-400 text-lg mb-2">Comprobante enviado</p>
                 <p className="text-gray-400 text-sm">El admin lo revisara y te enviara tus credenciales.</p>
-                <button onClick={() => setShowProofForm(false)} className="mt-4 w-full py-2 bg-[#FFD700] text-black rounded-lg font-bold text-sm">Cerrar</button>
+                <button onClick={() => setShowProofForm(false)} className="mt-4 w-full py-2 bg-[#E5C158] text-black rounded-lg font-bold text-sm">Cerrar</button>
               </div>
             ) : (
               <div className="space-y-3">
                 {proofMsg && <p className="text-red-400 text-xs text-center">{proofMsg}</p>}
-                <input className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                <input className="w-full bg-[#1a1a1a] border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
                   placeholder="Servicio (ej: Netflix 1 pantalla)" value={proofForm.service}
                   onChange={e => setProofForm({...proofForm, service: e.target.value})} />
-                <input className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                <input className="w-full bg-[#1a1a1a] border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
                   placeholder="Monto (ej: 3 USDT)" value={proofForm.amount}
                   onChange={e => setProofForm({...proofForm, amount: e.target.value})} />
-                <input className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                <input className="w-full bg-[#1a1a1a] border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
                   placeholder="Metodo de pago (ej: Binance, PagoMovil)" value={proofForm.payment_method}
                   onChange={e => setProofForm({...proofForm, payment_method: e.target.value})} />
-                <textarea className="w-full bg-[#1a1a1a] border border-[#FFD700]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+                <textarea className="w-full bg-[#1a1a1a] border border-[#E5C158]/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
                   placeholder="Detalles del comprobante (opcional)" rows={2} value={proofForm.proof_message}
                   onChange={e => setProofForm({...proofForm, proof_message: e.target.value})} />
                 <div className="flex items-center gap-2">
                   <input type="file" accept="image/*" id="proofFile" className="hidden"
                     onChange={e => setProofFile(e.target.files?.[0] || null)} />
-                  <label htmlFor="proofFile" className={`text-xs px-3 py-1.5 rounded-lg cursor-pointer font-medium ${proofFile ? 'bg-green-600 text-white' : 'bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20'}`}>
+                  <label htmlFor="proofFile" className={`text-xs px-3 py-1.5 rounded-lg cursor-pointer font-medium ${proofFile ? 'bg-green-600 text-white' : 'bg-[#E5C158]/10 text-[#E5C158] hover:bg-[#E5C158]/20'}`}>
                     {proofFile ? '✅ Foto lista' : '📷 Subir foto del pago'}
                   </label>
                 </div>

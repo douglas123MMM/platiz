@@ -35,7 +35,7 @@ export default function PlayerPage() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#FFD700]/30 border-t-[#FFD700] rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-[#E5C158]/30 border-t-[#E5C158] rounded-full animate-spin" />
           <p className="text-gray-500">Cargando reproductor...</p>
         </div>
       </div>
@@ -65,13 +65,13 @@ export default function PlayerPage() {
 
   return (
     <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
-      <Link to="/dashboard" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#FFD700] transition-colors text-sm">
+      <Link to="/dashboard" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#E5C158] transition-colors text-sm">
         <HiArrowLeft className="w-4 h-4" /> Volver
       </Link>
 
-      <MediaPlayer videoUrl={videoUrl} videoType={videoType} title={title} thumbnail={thumbnail} className="shadow-2xl shadow-[#FFD700]/5" autoPlay />
+      <MediaPlayer videoUrl={videoUrl} videoType={videoType} title={title} thumbnail={thumbnail} className="shadow-2xl shadow-[#E5C158]/5" autoPlay />
 
-      <div className="glass rounded-2xl p-6 border border-[#FFD700]/10">
+      <div className="glass rounded-2xl p-6 border border-[#E5C158]/10">
         <h1 className="text-2xl font-bold text-white mb-2">{title}</h1>
         {item.platform && (
           <span className="badge badge-gold text-xs mb-3">{item.platform}</span>

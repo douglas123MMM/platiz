@@ -71,7 +71,7 @@ export default function ContentAdmin() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <IconLightning className="w-8 h-8 text-[#FFD700]" />
+          <IconLightning className="w-8 h-8 text-[#E5C158]" />
           <div>
             <h1 className="section-title text-2xl">Arsenal Digital</h1>
             <p className="section-subtitle">Añade recursos, licencias y contenido al catálogo</p>
@@ -82,7 +82,7 @@ export default function ContentAdmin() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
-          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#FFD700]/10" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-lg glass rounded-3xl p-8 border border-[#E5C158]/10" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-xl font-bold text-white mb-6">{editId ? 'Editar' : 'Nuevo'} Recurso</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -123,14 +123,14 @@ export default function ContentAdmin() {
                       toast.success('Guardado');
                     } catch { toast.error('Error al subir video'); }
                     setUploadingVideo(false);
-                  }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20 flex-1" />
-                  {uploadingVideo && <span className="text-[#FFD700] text-xs animate-pulse">Subiendo...</span>}
+                  }} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#E5C158]/10 file:text-[#E5C158] hover:file:bg-[#E5C158]/20 flex-1" />
+                  {uploadingVideo && <span className="text-[#E5C158] text-xs animate-pulse">Subiendo...</span>}
                 </div>
                 <p className="text-xs text-gray-400 mt-1 bg-red-500/10 border border-red-500/20 rounded p-2">IMPORTANTE: Para que el video funcione en TODOS los navegadores y dispositivos, debe estar en formato <b>MP4 con codec H.264</b>. Si el video fue grabado con TikTok, conviertelo primero a MP4 normal antes de subir.</p>
               </div>
               <div>
                 <label className="label">Imagen del recurso</label>
-                <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#FFD700]/10 file:text-[#FFD700] hover:file:bg-[#FFD700]/20" />
+                <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#E5C158]/10 file:text-[#E5C158] hover:file:bg-[#E5C158]/20" />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Guardando...' : editId ? 'Actualizar' : 'Crear'}</button>
@@ -144,7 +144,7 @@ export default function ContentAdmin() {
       <div className="flex gap-2 flex-wrap">
         {catError && <p className="text-red-400 text-sm w-full">{catError}</p>}
         {categories.map((cat) => (
-          <button key={cat.id} onClick={() => setSelectedCat(cat.slug)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedCat === cat.slug ? 'bg-[#FFD700]/15 text-[#FFD700] border border-[#FFD700]/20' : 'glass text-gray-400 hover:text-[#FFD700] border border-[#FFD700]/5'}`}>
+          <button key={cat.id} onClick={() => setSelectedCat(cat.slug)} className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedCat === cat.slug ? 'bg-[#E5C158]/15 text-[#E5C158] border border-[#E5C158]/20' : 'glass text-gray-400 hover:text-[#E5C158] border border-[#E5C158]/5'}`}>
             {cat.name}
           </button>
         ))}
@@ -161,8 +161,8 @@ export default function ContentAdmin() {
             )}
             <h3 className="font-semibold text-white mb-1">{item.title}</h3>
             {item.description && <p className="text-xs text-gray-500 mb-3 line-clamp-2 whitespace-pre-wrap">{item.description}</p>}
-            {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#FFD700] hover:text-[#FFE44D]"><IconExternalLink className="w-3 h-3" /> {item.link.substring(0, 30)}...</a>}
-            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#FFD700]/10">
+            {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#E5C158] hover:text-[#F0D78C]"><IconExternalLink className="w-3 h-3" /> {item.link.substring(0, 30)}...</a>}
+            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#E5C158]/10">
               <button onClick={() => editItem(item)} className="btn-ghost text-xs flex items-center gap-1"><IconPencil className="w-3 h-3" /> Editar</button>
               <button onClick={() => deleteItem(item.id)} className="btn-ghost text-xs text-red-400 hover:text-red-300 flex items-center gap-1 ml-auto"><IconTrash className="w-3 h-3" /> Eliminar</button>
             </div>

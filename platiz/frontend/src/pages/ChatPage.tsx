@@ -67,14 +67,14 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-4 animate-fade-in">
-      <div className={`${sidebarOpen ? 'fixed inset-0 z-50 flex' : 'hidden'} lg:relative lg:flex lg:w-80 flex-col glass rounded-2xl border border-[#FFD700]/10 overflow-hidden`}>
-        <div className="p-4 border-b border-[#FFD700]/10 flex items-center justify-between">
+      <div className={`${sidebarOpen ? 'fixed inset-0 z-50 flex' : 'hidden'} lg:relative lg:flex lg:w-80 flex-col glass rounded-2xl border border-[#E5C158]/10 overflow-hidden`}>
+        <div className="p-4 border-b border-[#E5C158]/10 flex items-center justify-between">
           <h2 className="font-semibold text-white">Historial</h2>
           <button onClick={newChat} className="btn-ghost p-2 rounded-lg"><IconPlus className="w-5 h-5" /></button>
         </div>
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {conversations.map((conv) => (
-            <div key={conv.id} className={`group flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${activeConv === conv.id ? 'bg-[#FFD700]/10 border border-[#FFD700]/20' : 'hover:bg-[#FFD700]/5 border border-transparent'}`} onClick={() => loadConversation(conv.id)}>
+            <div key={conv.id} className={`group flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${activeConv === conv.id ? 'bg-[#E5C158]/10 border border-[#E5C158]/20' : 'hover:bg-[#E5C158]/5 border border-transparent'}`} onClick={() => loadConversation(conv.id)}>
               <IconChat className="w-5 h-5 text-gray-500 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">{conv.title}</p>
@@ -85,17 +85,17 @@ export default function ChatPage() {
           ))}
           {conversations.length === 0 && <p className="text-gray-500 text-sm text-center py-8">Sin conversaciones</p>}
         </div>
-        <div className="p-4 border-t border-[#FFD700]/10">
+        <div className="p-4 border-t border-[#E5C158]/10">
           <button onClick={newChat} className="btn-secondary w-full text-sm flex items-center justify-center gap-2"><IconPlus className="w-4 h-4" /> Nuevo chat</button>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col glass rounded-2xl border border-[#FFD700]/10 overflow-hidden">
-        <div className="p-4 border-b border-[#FFD700]/10 flex items-center gap-4">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 rounded-lg hover:bg-[#FFD700]/5 text-gray-400"><IconMenu className="w-5 h-5" /></button>
-          <HiChip className="w-6 h-6 text-[#FFD700]" />
+      <div className="flex-1 flex flex-col glass rounded-2xl border border-[#E5C158]/10 overflow-hidden">
+        <div className="p-4 border-b border-[#E5C158]/10 flex items-center gap-4">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 rounded-lg hover:bg-[#E5C158]/5 text-gray-400"><IconMenu className="w-5 h-5" /></button>
+          <HiChip className="w-6 h-6 text-[#E5C158]" />
           <span className="text-sm text-gray-300 font-medium">IA:</span>
-          <select value={selectedProvider} onChange={(e) => setSelectedProvider(e.target.value)} className="bg-[#0a0a0f] border border-[#333] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FFD700]">
+          <select value={selectedProvider} onChange={(e) => setSelectedProvider(e.target.value)} className="bg-[#0a0a0f] border border-[#333] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#E5C158]">
             {providers.map((p) => <option key={p.id} value={p.id}>{p.name} {p.model ? `(${p.model})` : ''}</option>)}
           </select>
         </div>
@@ -110,19 +110,19 @@ export default function ChatPage() {
           )}
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-up`}>
-              <div className={`max-w-[80%] md:max-w-[70%] p-4 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-r from-[#DAA520] to-[#B8860B] text-black rounded-br-md font-medium' : 'bg-[#0a0a0f]/80 border border-[#FFD700]/10 text-gray-200 rounded-bl-md'}`}>
-                {msg.role === 'assistant' && msg.provider_name && <p className="text-xs text-[#FFD700] mb-1 font-medium">{msg.provider_name}</p>}
+              <div className={`max-w-[80%] md:max-w-[70%] p-4 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-r from-[#C4A44A] to-[#A6842C] text-black rounded-br-md font-medium' : 'bg-[#0a0a0f]/80 border border-[#E5C158]/10 text-gray-200 rounded-bl-md'}`}>
+                {msg.role === 'assistant' && msg.provider_name && <p className="text-xs text-[#E5C158] mb-1 font-medium">{msg.provider_name}</p>}
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
               </div>
             </div>
           ))}
           {loading && (
             <div className="flex justify-start animate-slide-up">
-              <div className="bg-[#0a0a0f]/80 border border-[#FFD700]/10 p-4 rounded-2xl rounded-bl-md">
+              <div className="bg-[#0a0a0f]/80 border border-[#E5C158]/10 p-4 rounded-2xl rounded-bl-md">
                 <div className="flex gap-2">
-                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-[#FFD700] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="w-2 h-2 bg-[#E5C158] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-2 h-2 bg-[#E5C158] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-2 h-2 bg-[#E5C158] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function ChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 border-t border-[#FFD700]/10">
+        <div className="p-4 border-t border-[#E5C158]/10">
           <div className="flex gap-3">
             <input type="text" className="input flex-1" placeholder="Escribe tu mensaje a la IA..." value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()} />
              <button onClick={sendMessage} disabled={loading || !input.trim()} className="btn-primary px-5 disabled:opacity-50 disabled:cursor-not-allowed"><IconSend className="w-5 h-5" /></button>

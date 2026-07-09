@@ -26,8 +26,8 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = [
-    { label: 'Usuarios', value: stats.users, icon: IconUsers, color: 'from-[#FFD700]/15 to-[#DAA520]/5', textColor: 'text-[#FFD700]', href: '/admin/users' },
-    { label: 'Pendientes', value: stats.pendingUsers, icon: IconStar, color: 'from-[#FFD700]/15 to-[#DAA520]/5', textColor: 'text-[#FFD700]', href: '/admin/users' },
+    { label: 'Usuarios', value: stats.users, icon: IconUsers, color: 'from-[#E5C158]/15 to-[#C4A44A]/5', textColor: 'text-[#E5C158]', href: '/admin/users' },
+    { label: 'Pendientes', value: stats.pendingUsers, icon: IconStar, color: 'from-[#E5C158]/15 to-[#C4A44A]/5', textColor: 'text-[#E5C158]', href: '/admin/users' },
     { label: 'Contenido', value: stats.items, icon: IconCourses, color: 'from-[#00D4FF]/15 to-[#0097A7]/5', textColor: 'text-[#00D4FF]', href: '/admin/content' },
     { label: 'Banners', value: stats.banners, icon: IconPhoto, color: 'from-purple-500/15 to-purple-600/5', textColor: 'text-purple-400', href: '/admin/banners' },
     { label: 'IA Providers', value: stats.providers, icon: IconAi, color: 'from-pink-500/15 to-pink-600/5', textColor: 'text-pink-400', href: '/admin/ai' },
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
           <h1 className="section-title text-3xl">Panel Global Dorado</h1>
           <p className="section-subtitle">Gestiona tu imperio digital</p>
         </div>
-        <Link to="/admin/landing-config" className="ml-auto text-xs text-[#FFD700]/60 hover:text-[#FFD700] border border-[#FFD700]/20 rounded-lg px-3 py-1.5">Editar Logo</Link>
+        <Link to="/admin/landing-config" className="ml-auto text-xs text-[#E5C158]/60 hover:text-[#E5C158] border border-[#E5C158]/20 rounded-lg px-3 py-1.5">Editar Logo</Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {cards.map((card) => {
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><IconLightning className="text-[#FFD700]" /> Accesos rápidos</h3>
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2"><IconLightning className="text-[#E5C158]" /> Accesos rápidos</h3>
           <div className="space-y-3">
             {[
               { label: 'Gestionar Usuarios', href: '/admin/users', desc: 'Aprueba o rechaza nuevos socios' },
@@ -69,11 +69,11 @@ export default function AdminDashboard() {
             ].map((item) => (
               <Link key={item.href} to={item.href} className="flex items-center justify-between p-3 rounded-xl bg-[#111]/50 hover:bg-[#111] transition-colors group">
                 <div>
-                  <p className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-colors">{item.label}</p>
+                  <p className="text-sm font-medium text-white group-hover:text-[#E5C158] transition-colors">{item.label}</p>
                   <p className="text-xs text-gray-500">{item.desc}</p>
                 </div>
-                <div className="w-8 h-8 rounded-lg bg-[#111] flex items-center justify-center group-hover:bg-[#FFD700]/10 transition-colors">
-                  <IconAi className="w-4 h-4 text-gray-500 group-hover:text-[#FFD700]" />
+                <div className="w-8 h-8 rounded-lg bg-[#111] flex items-center justify-center group-hover:bg-[#E5C158]/10 transition-colors">
+                  <IconAi className="w-4 h-4 text-gray-500 group-hover:text-[#E5C158]" />
                 </div>
               </Link>
             ))}
@@ -82,8 +82,8 @@ export default function AdminDashboard() {
         <div className="card">
           <h3 className="text-lg font-semibold text-white mb-4">Estadísticas Global Dorado</h3>
           <p className="text-gray-500 text-sm">El panel de estadísticas detalladas estará disponible próximamente.</p>
-          <div className="mt-6 p-4 bg-[#FFD700]/5 rounded-xl border border-[#FFD700]/10">
-            <p className="text-[#FFD700] text-sm font-medium flex items-center gap-2"><IconLightning className="w-4 h-4" /> Recuerda:</p>
+          <div className="mt-6 p-4 bg-[#E5C158]/5 rounded-xl border border-[#E5C158]/10">
+            <p className="text-[#E5C158] text-sm font-medium flex items-center gap-2"><IconLightning className="w-4 h-4" /> Recuerda:</p>
             <p className="text-gray-400 text-xs mt-1">Los socios ganan el 80% de comisión directa por cada venta del acceso vitalicio al sistema.</p>
           </div>
         </div>
