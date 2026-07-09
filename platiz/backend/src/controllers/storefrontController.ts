@@ -51,7 +51,7 @@ export async function updateStore(req: AuthRequest, res: Response): Promise<void
     const { data: store } = await supabase.from('user_stores').select('id').eq('id', req.params.id).eq('user_id', req.user!.id).single();
     if (!store) { res.status(404).json({ error: 'Tienda no encontrada' }); return; }
 
-    const { store_name, description, whatsapp, primary_color, accent_color, text_color, card_color, logo_url, is_active } = req.body;
+    const { store_name, description, whatsapp, primary_color, accent_color, text_color, card_color, logo_url, banner_url, is_active } = req.body;
     const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
     if (store_name !== undefined) updates.store_name = store_name;
     if (description !== undefined) updates.description = description;
@@ -61,6 +61,7 @@ export async function updateStore(req: AuthRequest, res: Response): Promise<void
     if (text_color !== undefined) updates.text_color = text_color;
     if (card_color !== undefined) updates.card_color = card_color;
     if (logo_url !== undefined) updates.logo_url = logo_url;
+    if (banner_url !== undefined) updates.banner_url = banner_url;
     if (is_active !== undefined) updates.is_active = is_active;
 
     const { data, error } = await supabase.from('user_stores').update(updates).eq('id', req.params.id).select().single();

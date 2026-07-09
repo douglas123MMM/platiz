@@ -39,6 +39,7 @@ export default function MyStorePage() {
   const [storeName, setStoreName] = useState('Mi Tienda');
   const [whatsapp, setWhatsapp] = useState('');
   const [description, setDescription] = useState('');
+  const [bannerUrl, setBannerUrl] = useState('');
 
   // Product form
   const [showProduct, setShowProduct] = useState(false);
@@ -63,6 +64,7 @@ export default function MyStorePage() {
         setStoreName(data.store_name);
         setWhatsapp(data.whatsapp || '');
         setDescription(data.description || '');
+        setBannerUrl(data.banner_url || '');
         // Load products
         const { data: prods } = await api.get(`/storefront/store/${data.id}/products`);
         setProducts(prods || []);
@@ -121,7 +123,8 @@ export default function MyStorePage() {
       await api.put(`/storefront/store/${store.id}`, {
         store_name: storeName,
         description,
-        whatsapp: whatsapp.replace(/\D/g, '')
+        whatsapp: whatsapp.replace(/\D/g, ''),
+        banner_url: bannerUrl
       });
       setStore({ ...store, store_name: storeName, description, whatsapp });
       toast.success('Actualizado');
@@ -249,6 +252,7 @@ export default function MyStorePage() {
                   <input value={storeName} onChange={e => setStoreName(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="Nombre" />
                   <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="WhatsApp" />
                   <textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm resize-none" placeholder="Descripcion" />
+                  <input value={bannerUrl} onChange={e => setBannerUrl(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="URL del banner (imagen de portada)" />
                   <button onClick={handleUpdateInfo} className="w-full py-2.5 bg-[#E5C158] text-black font-semibold rounded-lg text-sm">Guardar cambios</button>
                 </div>
                 <div className="mt-4 pt-4 border-t border-white/[0.04]">

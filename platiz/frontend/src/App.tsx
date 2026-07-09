@@ -63,6 +63,8 @@ export default function App() {
       <Route path="/catalogo/:code" element={<AffiliateCatalog />} />
       <Route path="/producto/:id" element={<ProductDetailPage />} />
       <Route path="/tienda/:slug" element={<PublicStore />} />
+      <Route path="/tienda/:slug/catalogo" element={<PublicStore />} />
+      <Route path="/tienda/:slug/contacto" element={<PublicStore />} />
       <Route path="/landing/:code" element={<AffiliateLanding />} />
       <Route path="/presentacion/:code" element={<AffiliateLanding />} />
       <Route path="/franquicia/:code" element={<AffiliateLanding />} />
