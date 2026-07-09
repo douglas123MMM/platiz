@@ -12,6 +12,7 @@ const navItems = [
   { path: '/recharge', label: 'Recargar', icon: IconStar, roles: ['client', 'admin'] },
   { path: '/purchases', label: 'Mis Compras', icon: IconShield, roles: ['client', 'admin'] },
   { path: '/afiliado', label: 'Mi Oficina', icon: IconCog, roles: ['client', 'admin'] },
+  { path: '/tienda', label: 'Mi Tienda', icon: IconGrid, roles: ['client', 'admin'] },
   { path: '/soporte', label: 'Soporte', icon: IconChat, roles: ['client', 'admin'] },
   { path: '/movies', label: 'Entretenimiento', icon: IconMovies, roles: ['client', 'admin'] },
   { path: '/courses', label: 'Capacitación', icon: IconCourses, roles: ['client', 'admin'] },

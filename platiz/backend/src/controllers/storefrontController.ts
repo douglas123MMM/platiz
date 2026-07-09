@@ -73,7 +73,7 @@ export async function updateStore(req: AuthRequest, res: Response): Promise<void
 
 export async function getStoreProducts(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { data, error } = await supabase.from('store_products').select('*').eq('store_id', req.params.storeId).order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('catalog_products').select('*').eq('store_id', req.params.storeId).order('sort_order', { ascending: true }).order('created_at', { ascending: false });
     if (error) throw error;
     res.json(data || []);
   } catch {
@@ -89,7 +89,7 @@ export async function createStoreProduct(req: AuthRequest, res: Response): Promi
     const { name, description, price, image_url, category } = req.body;
     if (!name || price === undefined) { res.status(400).json({ error: 'Nombre y precio requeridos' }); return; }
 
-    const { data, error } = await supabase.from('store_products').insert([{
+    const { data, error } = await supabase.from('catalog_products').insert([{
       store_id: req.params.storeId,
       name,
       description: description || '',
@@ -117,7 +117,7 @@ export async function updateStoreProduct(req: AuthRequest, res: Response): Promi
     if (is_active !== undefined) updates.is_active = is_active;
     if (sort_order !== undefined) updates.sort_order = sort_order;
 
-    const { data, error } = await supabase.from('store_products').update(updates).eq('id', req.params.productId).eq('store_id', req.params.storeId).select().single();
+    const { data, error } = await supabase.from('catalog_products').update(updates).eq('id', req.params.productId).eq('store_id', req.params.storeId).select().single();
     if (error) throw error;
     res.json(data);
   } catch {
@@ -127,7 +127,7 @@ export async function updateStoreProduct(req: AuthRequest, res: Response): Promi
 
 export async function deleteStoreProduct(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { error } = await supabase.from('store_products').delete().eq('id', req.params.productId).eq('store_id', req.params.storeId);
+    const { error } = await supabase.from('catalog_products').delete().eq('id', req.params.productId).eq('store_id', req.params.storeId);
     if (error) throw error;
     res.json({ ok: true });
   } catch {
@@ -163,7 +163,7 @@ export async function getPublicStoreProducts(req: AuthRequest, res: Response): P
     const { data: store } = await supabase.from('user_stores').select('id').eq('slug', req.params.slug).eq('is_active', true).single();
     if (!store) { res.status(404).json({ error: 'Tienda no encontrada' }); return; }
 
-    const { data, error } = await supabase.from('store_products').select('*').eq('store_id', store.id).eq('is_active', true).order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('catalog_products').select('*').eq('store_id', store.id).eq('is_active', true).order('sort_order', { ascending: true }).order('created_at', { ascending: false });
     if (error) throw error;
     res.json(data || []);
   } catch {

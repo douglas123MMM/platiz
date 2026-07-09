@@ -36,6 +36,8 @@ import Purchases from './pages/Purchases';
 import RechargesAdmin from './pages/admin/RechargesAdmin';
 import PurchasesAdmin from './pages/admin/PurchasesAdmin';
 import LandingConfigAdmin from './pages/admin/LandingConfigAdmin';
+import MyStorePage from './pages/storefront/MyStorePage';
+import PublicStore from './pages/storefront/PublicStore';
 
 function LoadingScreen() {
   return (
@@ -60,6 +62,7 @@ export default function App() {
     <Routes>
       <Route path="/catalogo/:code" element={<AffiliateCatalog />} />
       <Route path="/producto/:id" element={<ProductDetailPage />} />
+      <Route path="/tienda/:slug" element={<PublicStore />} />
       <Route path="/landing/:code" element={<AffiliateLanding />} />
       <Route path="/presentacion/:code" element={<AffiliateLanding />} />
       <Route path="/franquicia/:code" element={<AffiliateLanding />} />
@@ -90,6 +93,7 @@ export default function App() {
         <Route path="/recharge" element={<Recharge />} />
         <Route path="/purchases" element={<Purchases />} />
         <Route path="/membresias" element={<MembershipsAdmin />} />
+        <Route path="/tienda" element={<MyStorePage />} />
       </Route>
       <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
         <Route path="/admin" element={<AdminDashboard />} />
