@@ -252,7 +252,7 @@ export default function MyStorePage() {
                   <input value={storeName} onChange={e => setStoreName(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="Nombre" />
                   <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="WhatsApp" />
                   <textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm resize-none" placeholder="Descripcion" />
-                  <input value={bannerUrl} onChange={e => setBannerUrl(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="URL del banner (imagen de portada)" />
+                  <input value={bannerUrl} onChange={e => setBannerUrl(e.target.value)} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2.5 text-white text-sm" placeholder="URL de la foto de portada" />
                   <button onClick={handleUpdateInfo} className="w-full py-2.5 bg-[#E5C158] text-black font-semibold rounded-lg text-sm">Guardar cambios</button>
                 </div>
                 <div className="mt-4 pt-4 border-t border-white/[0.04]">
