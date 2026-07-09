@@ -13,10 +13,20 @@ interface Product {
   price: number; image_url: string; category: string;
 }
 
-const WAIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+const WhatsAppSVG = ({ className = 'w-5 h-5' }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
   </svg>
+);
+
+const SearchIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="w-5 h-5">
+    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+  </svg>
+);
+
+const ChevronRight = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="w-5 h-5"><path d="M9 18l6-6-6-6"/></svg>
 );
 
 export default function PublicStore() {
@@ -50,8 +60,28 @@ export default function PublicStore() {
     })();
   }, [slug]);
 
-  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center"><div className="w-8 h-8 rounded-full border-[3px] border-gray-200 border-t-green-500 animate-spin" /></div>;
-  if (notFound || !store) return <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6"><div className="text-5xl mb-4">🔍</div><h1 className="text-xl font-bold text-gray-800">Tienda no encontrada</h1></div>;
+  const navigate = (t: 'inicio' | 'catalogo' | 'contacto') => {
+    setTab(t);
+    const paths: Record<string, string> = { inicio: `/tienda/${store!.slug}`, catalogo: `/tienda/${store!.slug}/catalogo`, contacto: `/tienda/${store!.slug}/contacto` };
+    window.history.pushState({}, '', paths[t]);
+  };
+
+  if (loading) return (
+    <div className="min-h-screen bg-[#fafaf8] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 rounded-2xl border-[3px] border-amber-200 border-t-amber-500 animate-spin" />
+        <span className="text-stone-400 text-sm font-medium tracking-wide">Cargando tienda</span>
+      </div>
+    </div>
+  );
+
+  if (notFound || !store) return (
+    <div className="min-h-screen bg-[#fafaf8] flex flex-col items-center justify-center p-6 text-center">
+      <div className="w-24 h-24 rounded-3xl bg-stone-100 flex items-center justify-center text-5xl mb-6 shadow-sm">🔍</div>
+      <h1 className="text-2xl font-bold text-stone-800 mb-2">Tienda no encontrada</h1>
+      <p className="text-stone-400 max-w-xs">Este enlace no existe o la tienda esta pausada.</p>
+    </div>
+  );
 
   const categories = ['Todos', ...new Set(products.map(p => p.category).filter(Boolean))];
   const filtered = products.filter(p => {
@@ -60,140 +90,131 @@ export default function PublicStore() {
     return true;
   });
 
-  const waLink = store.whatsapp ? `https://wa.me/${store.whatsapp}?text=${encodeURIComponent('Hola! Vi tu tienda y quiero info')}` : '#';
-  const waProduct = (p: Product) => store.whatsapp ? `https://wa.me/${store.whatsapp}?text=${encodeURIComponent('Hola! Me interesa: ' + p.name + ' - $' + p.price)}` : '#';
+  const waLink = (text?: string) => store.whatsapp
+    ? `https://wa.me/${store.whatsapp}?text=${encodeURIComponent(text || 'Hola! Vi tu tienda y quiero mas info')}`
+    : '#';
+
+  const accent = store.accent_color;
+  const accentRGB = hexToRGB(accent);
+  const bgColor = '#fafaf8';
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
-      
-      {/* BANNER / HERO */}
-      <div className="relative w-full" style={{ backgroundColor: store.accent_color + '15' }}>
+    <div className="min-h-screen" style={{ backgroundColor: bgColor, fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif" }}>
+
+      {/* ====== HERO BANNER ====== */}
+      <header className="relative overflow-hidden" style={{ background: `linear-gradient(160deg, ${accent}18 0%, ${accent}05 40%, #fafaf8 100%)` }}>
         {store.banner_url ? (
-          <div className="w-full aspect-[2/1] max-h-64 overflow-hidden">
-            <img src={store.banner_url} alt={store.store_name} className="w-full h-full object-cover" />
+          <div className="w-full aspect-[2.2/1] max-h-[320px] overflow-hidden">
+            <img src={store.banner_url} alt={`${store.store_name} banner`} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           </div>
         ) : (
-          <div className="w-full h-48 flex flex-col items-center justify-center text-center px-6" style={{ 
-            background: `linear-gradient(135deg, ${store.accent_color}20, ${store.accent_color}08)` 
-          }}>
+          <div className="w-full pt-8 pb-6 px-6 flex flex-col items-center text-center">
             {store.logo_url ? (
-              <img src={store.logo_url} alt={store.store_name} className="w-20 h-20 rounded-2xl object-cover shadow-lg mb-4" />
+              <img src={store.logo_url} alt={store.store_name} className="w-24 h-24 rounded-3xl object-cover shadow-xl mb-5 ring-4 ring-white/80" />
             ) : (
-              <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-4" style={{ backgroundColor: store.accent_color }}>
-                {store.store_name.charAt(0)}
+              <div className="w-24 h-24 rounded-3xl flex items-center justify-center text-white text-4xl font-extrabold shadow-xl mb-5 ring-4 ring-white/80"
+                style={{ background: `linear-gradient(135deg, ${accent}, ${adjustColor(accent, -40)})` }}>
+                {store.store_name.charAt(0).toUpperCase()}
               </div>
             )}
-            <h1 className="text-2xl font-bold text-gray-900">{store.store_name}</h1>
-            {store.description && <p className="text-gray-500 mt-1 text-sm">{store.description}</p>}
+            <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">{store.store_name}</h1>
+            {store.description && <p className="text-stone-500 mt-2 max-w-md text-sm leading-relaxed">{store.description}</p>}
+            <div className="flex gap-2 mt-4">
+              <a href={waLink(`Hola ${store.store_name}! Quiero info`)} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:-translate-y-0.5 transition-all duration-300">
+                <WhatsAppSVG className="w-4 h-4" /> WhatsApp
+              </a>
+            </div>
           </div>
         )}
-      </div>
+      </header>
 
-      {/* NAV TABS */}
-      <nav className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-3xl mx-auto flex">
+      {/* ====== NAVIGATION TABS ====== */}
+      <nav className="sticky top-0 z-40 backdrop-blur-xl border-b border-stone-200/50" style={{ backgroundColor: 'rgba(250,250,248,0.88)' }}>
+        <div className="max-w-3xl mx-auto flex px-2">
           {[
-            { id: 'inicio', label: 'Inicio', path: `/tienda/${store.slug}` },
-            { id: 'catalogo', label: 'Catalogo', path: `/tienda/${store.slug}/catalogo` },
-            { id: 'contacto', label: 'Contacto', path: `/tienda/${store.slug}/contacto` },
+            { id: 'inicio' as const, label: 'Inicio', icon: '✦' },
+            { id: 'catalogo' as const, label: 'Catalogo', icon: '☰' },
+            { id: 'contacto' as const, label: 'Contacto', icon: '✉' },
           ].map(t => (
-            <a
-              key={t.id}
-              href={t.path}
-              onClick={e => { e.preventDefault(); setTab(t.id as any); window.history.pushState({}, '', t.path); }}
-              className={`flex-1 text-center py-3 text-sm font-semibold border-b-2 transition ${
-                tab === t.id ? 'border-current text-gray-900' : 'border-transparent text-gray-400 hover:text-gray-600'
-              }`}
-              style={tab === t.id ? { color: store.accent_color, borderColor: store.accent_color } : {}}
-            >
-              {t.label}
-            </a>
+            <button key={t.id} onClick={() => navigate(t.id)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-3.5 text-sm font-medium transition-all duration-200 relative"
+              style={{ color: tab === t.id ? accent : '#a8a29e' }}>
+              <span className="text-xs">{t.icon}</span> {t.label}
+              {tab === t.id && <div className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full transition-all" style={{ backgroundColor: accent }} />}
+            </button>
           ))}
         </div>
       </nav>
 
-      {/* CONTENIDO */}
-      <main className="max-w-3xl mx-auto px-4 py-6 pb-32">
-        
-        {/* === INICIO === */}
+      {/* ====== CONTENT ====== */}
+      <main className="max-w-3xl mx-auto px-4 py-1 pb-32">
+
+        {/* ========== INICIO ========== */}
         {tab === 'inicio' && (
-          <div className="space-y-6">
-            <div className="text-center py-8">
-              <h2 className="text-lg font-bold text-gray-800 mb-2">Bienvenido a {store.store_name}</h2>
-              <p className="text-gray-500 text-sm max-w-md mx-auto">
-                {store.description || 'Descubre nuestros productos y contactanos por WhatsApp para hacer tu pedido.'}
-              </p>
-            </div>
-
+          <div className="space-y-8 pt-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <a href={`/tienda/${store.slug}/catalogo`} onClick={e => { e.preventDefault(); setTab('catalogo'); window.history.pushState({}, '', `/tienda/${store.slug}/catalogo`); }}
-                className="p-5 rounded-2xl text-center hover:-translate-y-0.5 transition-all cursor-pointer"
-                style={{ backgroundColor: store.accent_color + '10', border: '1px solid ' + store.accent_color + '20' }}>
-                <div className="text-3xl mb-2">🛍️</div>
-                <div className="text-sm font-semibold text-gray-800">Ver Catalogo</div>
-                <div className="text-xs text-gray-400 mt-0.5">{products.length} productos</div>
-              </a>
-              <a href={waLink} target="_blank" rel="noopener noreferrer"
-                className="p-5 rounded-2xl text-center hover:-translate-y-0.5 transition-all"
-                style={{ backgroundColor: '#25D36610', border: '1px solid #25D36620' }}>
-                <div className="text-3xl mb-2">💬</div>
-                <div className="text-sm font-semibold text-gray-800">WhatsApp</div>
-                <div className="text-xs text-gray-400 mt-0.5">Contacto directo</div>
-              </a>
-              <a href={`/tienda/${store.slug}/contacto`} onClick={e => { e.preventDefault(); setTab('contacto'); window.history.pushState({}, '', `/tienda/${store.slug}/contacto`); }}
-                className="p-5 rounded-2xl text-center hover:-translate-y-0.5 transition-all"
-                style={{ backgroundColor: store.card_color + '30', border: '1px solid ' + store.accent_color + '15' }}>
-                <div className="text-3xl mb-2">📍</div>
-                <div className="text-sm font-semibold text-gray-800">Contacto</div>
-                <div className="text-xs text-gray-400 mt-0.5">Donde estamos</div>
-              </a>
+              {[
+                { label: 'Ver Catalogo', sub: `${products.length} productos`, icon: '🛍️', action: () => navigate('catalogo'), bg: accent + '12', border: accent + '20' },
+                { label: 'WhatsApp', sub: 'Contacto directo', icon: '💬', action: () => window.open(waLink('Hola! Quiero info'), '_blank'), bg: '#ecfdf5', border: '#a7f3d0' },
+                { label: 'Contacto', sub: 'Donde estamos', icon: '📍', action: () => navigate('contacto'), bg: accent + '08', border: accent + '12' },
+              ].map(card => (
+                <button key={card.label} onClick={card.action}
+                  className="p-5 rounded-2xl text-left hover:-translate-y-1 transition-all duration-300 hover:shadow-md group"
+                  style={{ backgroundColor: card.bg, border: `1px solid ${card.border}` }}>
+                  <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300 inline-block">{card.icon}</div>
+                  <div className="text-sm font-semibold text-stone-800">{card.label}</div>
+                  <div className="text-xs text-stone-400 mt-0.5">{card.sub}</div>
+                </button>
+              ))}
             </div>
 
-            {products.length > 0 && (
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-bold text-gray-800">Productos destacados</h3>
-                  <a href={`/tienda/${store.slug}/catalogo`} onClick={e => { e.preventDefault(); setTab('catalogo'); window.history.pushState({}, '', `/tienda/${store.slug}/catalogo`); }}
-                    className="text-sm font-semibold" style={{ color: store.accent_color }}>Ver todos →</a>
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 shadow-sm border border-stone-200/50">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-lg font-bold text-stone-800">Productos destacados</h3>
+                <button onClick={() => navigate('catalogo')} className="text-sm font-semibold hover:underline transition flex items-center gap-1" style={{ color: accent }}>
+                  Ver todos <ChevronRight />
+                </button>
+              </div>
+              {products.length === 0 ? (
+                <div className="text-center py-12 text-stone-300">
+                  <div className="text-5xl mb-3">📦</div>
+                  <p className="text-sm font-medium">Sin productos todavia</p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {products.slice(0, 6).map(p => (
-                    <a key={p.id} href={waProduct(p)} target="_blank" rel="noopener noreferrer"
-                      className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all group">
-                      <div className="aspect-square bg-gray-50 overflow-hidden">
-                        {p.image_url ? <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                          : <div className="w-full h-full flex items-center justify-center text-3xl opacity-20">📦</div>}
-                      </div>
-                      <div className="p-2.5">
-                        <div className="text-xs font-semibold text-gray-800 line-clamp-1">{p.name}</div>
-                        <div className="text-sm font-bold mt-0.5" style={{ color: store.accent_color }}>${p.price}</div>
-                      </div>
-                    </a>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {products.slice(0, 6).map((p, i) => (
+                    <ProductCard key={p.id} product={p} accent={accent} waLink={waLink} index={i} />
                   ))}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
 
-        {/* === CATALOGO === */}
+        {/* ========== CATALOGO ========== */}
         {tab === 'catalogo' && (
-          <div>
-            <div className="mb-4">
-              <div className="relative">
-                <input type="text" placeholder="Buscar producto..." value={search} onChange={e => setSearch(e.target.value)}
-                  className="w-full h-11 pl-10 pr-4 rounded-xl bg-gray-50 border border-gray-100 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-gray-200 focus:bg-white transition" />
-                <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-              </div>
+          <div className="space-y-5 pt-4">
+            <div className="bg-gradient-to-br from-stone-50 to-white rounded-3xl p-6 border border-stone-200/50 shadow-sm">
+              <h2 className="text-2xl font-extrabold text-stone-800 mb-1">Catalogo</h2>
+              <p className="text-stone-400 text-sm">Descubre nuestros productos y pedi por WhatsApp</p>
             </div>
 
-            <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide">
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300"><SearchIcon /></div>
+              <input type="text" placeholder="Buscar producto..." value={search} onChange={e => setSearch(e.target.value)}
+                className="w-full h-12 pl-11 pr-4 rounded-2xl bg-white border border-stone-200 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:border-stone-300 focus:ring-4 focus:ring-stone-50 transition-all" />
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               {categories.map(cat => (
                 <button key={cat} onClick={() => setSelectedCat(cat)}
-                  className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition flex-shrink-0"
+                  className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 flex-shrink-0 shadow-sm"
                   style={{
-                    backgroundColor: selectedCat === cat ? store.accent_color : '#f3f4f6',
-                    color: selectedCat === cat ? '#fff' : '#6b7280'
+                    backgroundColor: selectedCat === cat ? accent : '#fff',
+                    color: selectedCat === cat ? '#fff' : '#78716c',
+                    boxShadow: selectedCat === cat ? `0 4px 14px rgba(${accentRGB},0.35)` : '0 1px 3px rgba(0,0,0,0.04)'
                   }}>
                   {cat}
                 </button>
@@ -201,78 +222,130 @@ export default function PublicStore() {
             </div>
 
             {filtered.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="text-4xl mb-3">📦</div>
-                <p className="text-gray-400 text-sm">{search ? 'Sin resultados' : 'Sin productos'}</p>
+              <div className="text-center py-20">
+                <div className="text-6xl mb-4 opacity-30">📦</div>
+                <p className="text-stone-400 font-medium">{search ? 'Nada encontrado' : 'Catalogo vacio'}</p>
+                {search && <button onClick={() => setSearch('')} className="mt-3 text-sm font-semibold text-stone-500 hover:text-stone-700">Limpiar busqueda</button>}
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                {filtered.map(p => (
-                  <a key={p.id} href={waProduct(p)} target="_blank" rel="noopener noreferrer"
-                    className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
-                    <div className="aspect-square bg-gray-50 overflow-hidden relative">
-                      {p.image_url ? <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        : <div className="w-full h-full flex items-center justify-center"><div className="text-4xl opacity-20">📦</div></div>}
-                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/90 backdrop-blur-sm text-gray-500">{p.category}</span>
-                    </div>
-                    <div className="p-3">
-                      <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug">{p.name}</h3>
-                      {p.description && <p className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">{p.description}</p>}
-                      <div className="flex items-center justify-between mt-2.5">
-                        <span className="text-base font-bold" style={{ color: store.accent_color }}>${p.price}</span>
-                        <span className="w-8 h-8 rounded-full bg-green-50 text-green-500 flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition-all"><WAIcon /></span>
-                      </div>
-                    </div>
-                  </a>
+                {filtered.map((p, i) => (
+                  <ProductCard key={p.id} product={p} accent={accent} waLink={waLink} index={i} />
                 ))}
               </div>
             )}
           </div>
         )}
 
-        {/* === CONTACTO === */}
+        {/* ========== CONTACTO ========== */}
         {tab === 'contacto' && (
-          <div className="space-y-6">
-            <div className="text-center py-4">
-              <h2 className="text-lg font-bold text-gray-800 mb-1">Contactanos</h2>
-              <p className="text-gray-400 text-sm">Pedinos info por WhatsApp</p>
+          <div className="space-y-5 pt-4">
+            <div className="bg-gradient-to-br from-stone-50 to-white rounded-3xl p-6 border border-stone-200/50 shadow-sm text-center">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                <WhatsAppSVG className="w-8 h-8 text-emerald-500" />
+              </div>
+              <h2 className="text-xl font-extrabold text-stone-800 mb-1">Contacto</h2>
+              <p className="text-stone-400 text-sm">Escribinos por WhatsApp y te respondemos rapido</p>
             </div>
 
-            <a href={waLink} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-4 p-5 rounded-2xl bg-green-50 border border-green-100 hover:bg-green-100 transition">
-              <div className="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center flex-shrink-0">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            <a href={waLink('Hola! Quiero info de sus productos')} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-4 p-5 rounded-2xl bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 transition-all duration-200 group shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-200">
+                <WhatsAppSVG className="w-6 h-6" />
               </div>
-              <div>
-                <div className="text-sm font-semibold text-gray-800">WhatsApp</div>
-                <div className="text-xs text-gray-500">{store.whatsapp || 'Sin numero'}</div>
+              <div className="flex-1">
+                <div className="text-sm font-semibold text-stone-800">WhatsApp</div>
+                <div className="text-xs text-stone-500">{store.whatsapp || 'Numero no configurado'}</div>
               </div>
-              <svg className="ml-auto w-5 h-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+              <ChevronRight />
             </a>
 
-            <div className="p-5 rounded-2xl bg-gray-50 border border-gray-100 text-center">
-              <div className="text-3xl mb-2">🕐</div>
-              <div className="text-sm font-semibold text-gray-800">Horario de atencion</div>
-              <div className="text-xs text-gray-400 mt-1">Lunes a Viernes 9:00 - 18:00</div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white/70 rounded-2xl p-5 border border-stone-200/50 shadow-sm text-center">
+                <div className="text-2xl mb-2">🕐</div>
+                <div className="text-xs font-semibold text-stone-700">Lunes a Viernes</div>
+                <div className="text-[11px] text-stone-400 mt-0.5">9:00 AM - 6:00 PM</div>
+              </div>
+              <div className="bg-white/70 rounded-2xl p-5 border border-stone-200/50 shadow-sm text-center">
+                <div className="text-2xl mb-2">🚀</div>
+                <div className="text-xs font-semibold text-stone-700">Respuesta</div>
+                <div className="text-[11px] text-stone-400 mt-0.5">En menos de 1 hora</div>
+              </div>
             </div>
           </div>
         )}
-
       </main>
 
-      {/* FLOATING WA */}
-      <a href={waLink} target="_blank" rel="noopener noreferrer"
-        className="fixed bottom-5 right-5 w-14 h-14 rounded-2xl bg-green-500 text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all z-50"
-        style={{ boxShadow: '0 4px 24px rgba(37,211,102,0.35)' }}>
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+      {/* ====== FLOATING WHATSAPP ====== */}
+      <a href={waLink('Hola! Quiero info')} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 z-50"
+        style={{ boxShadow: '0 8px 30px rgba(16,185,129,0.35)' }}>
+        <WhatsAppSVG className="w-7 h-7" />
       </a>
 
-      {/* FOOTER */}
-      <footer className="text-center py-8">
-        <p className="text-[11px] text-gray-300">{store.store_name} · Creado con Global Dorado</p>
+      {/* ====== FOOTER ====== */}
+      <footer className="text-center py-10 px-4">
+        <div className="inline-flex items-center gap-1.5 text-[11px] text-stone-300 font-medium">
+          <span>{store.store_name}</span>
+          <span className="text-stone-200">·</span>
+          <span>Creado con <span className="font-bold text-stone-400">Global Dorado</span></span>
+        </div>
       </footer>
 
-      <style>{`.scrollbar-hide::-webkit-scrollbar{display:none}.line-clamp-1{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1}.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}`}</style>
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        @keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
     </div>
   );
+}
+
+function ProductCard({ product, accent, waLink, index }: { product: Product; accent: string; waLink: (t?: string) => string; index: number }) {
+  return (
+    <a href={waLink(`Me interesa: ${product.name} - $${product.price}`)} target="_blank" rel="noopener noreferrer"
+      className="group bg-white rounded-2xl overflow-hidden border border-stone-200/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      style={{ animation: `cardIn 0.4s ease-out ${index * 0.06}s both` }}>
+      <div className="aspect-square bg-stone-50 overflow-hidden relative">
+        {product.image_url ? (
+          <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="text-center opacity-15">
+              <div className="text-5xl mb-1">📦</div>
+              <div className="text-[10px] uppercase tracking-widest font-bold text-stone-400">{product.category}</div>
+            </div>
+          </div>
+        )}
+        <div className="absolute top-2.5 left-2.5">
+          <span className="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-white/90 backdrop-blur-sm text-stone-500 shadow-sm border border-white/50">
+            {product.category}
+          </span>
+        </div>
+      </div>
+      <div className="p-3.5">
+        <h3 className="text-[13px] font-semibold text-stone-800 leading-snug line-clamp-2 mb-1.5 group-hover:text-stone-900">{product.name}</h3>
+        {product.description && <p className="text-[11px] text-stone-400 line-clamp-1 mb-2.5">{product.description}</p>}
+        <div className="flex items-center justify-between">
+          <span className="text-base font-extrabold tracking-tight" style={{ color: accent }}>${product.price}</span>
+          <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-200 transition-all duration-300">
+            <WhatsAppSVG className="w-4 h-4" />
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function hexToRGB(hex: string): string {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!r) return '0,0,0';
+  return `${parseInt(r[1], 16)},${parseInt(r[2], 16)},${parseInt(r[3], 16)}`;
+}
+
+function adjustColor(hex: string, amount: number): string {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!r) return hex;
+  return `#${[r[1], r[2], r[3]].map(h =>
+    Math.max(0, Math.min(255, parseInt(h, 16) + amount)).toString(16).padStart(2, '0')
+  ).join('')}`;
 }
