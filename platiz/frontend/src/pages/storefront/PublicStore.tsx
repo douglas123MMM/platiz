@@ -143,30 +143,34 @@ export default function PublicStore() {
     <div className="min-h-screen" style={{ backgroundColor: '#f9f8f5', fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif", fontVariantNumeric: 'lining-nums', WebkitFontSmoothing: 'antialiased' }}>
       <style>{CSS}</style>
 
-      {/* HERO - Perfil del negocio */}
-      <div className="max-w-3xl mx-auto flex items-center gap-4 px-4 py-6">
-        {store.banner_url && !bannerError ? (
-          <img src={store.banner_url} alt={`Foto de ${store.store_name}`} width="80" height="80"
-            className="w-20 h-20 rounded-2xl object-cover shadow-lg flex-shrink-0 ring-1 ring-black/5 bg-white"
-            loading="eager" fetchPriority="high"
-            onError={() => setBannerError(true)} />
-        ) : store.logo_url ? (
-          <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="80" height="80"
-            className="w-20 h-20 rounded-2xl object-cover shadow-lg flex-shrink-0 ring-1 ring-black/5 bg-white"
-            onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-        ) : (
-          <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-extrabold shadow-lg flex-shrink-0 ring-1 ring-black/5"
-            style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
-            {store.store_name.charAt(0)}
-          </div>
+      {/* HERO - Foto atras con blur + foto de perfil adelante */}
+      <div className="w-full relative overflow-hidden" style={{ background: `linear-gradient(160deg, ${accent}20 0%, ${accent}06 60%, #f9f8f5 100%)` }}>
+        {store.banner_url && !bannerError && (
+          <img src={store.banner_url} alt="" className="w-full h-full object-cover absolute inset-0 opacity-20 blur-md scale-110"
+            loading="eager" fetchPriority="high" onError={() => setBannerError(true)} />
         )}
-        <div className="min-w-0">
-          <h1 className="text-xl font-extrabold text-stone-900 tracking-tight truncate">{store.store_name}</h1>
-          {store.description && <p className="text-stone-500 text-sm mt-0.5 line-clamp-2">{store.description}</p>}
-          <a href={wa()} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-2 px-3.5 py-2 rounded-full bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-emerald-200/40 hover:bg-emerald-600 transition-all focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 focus-visible:outline-none">
-            <span className="w-3.5 h-3.5">{I.wa}</span> WhatsApp
-          </a>
+        <div className="max-w-3xl mx-auto flex items-center gap-4 px-4 py-6 relative z-10">
+          {store.banner_url && !bannerError ? (
+            <img src={store.banner_url} alt={`Foto de ${store.store_name}`} width="80" height="80"
+              className="w-20 h-20 rounded-2xl object-cover shadow-xl flex-shrink-0 ring-1 ring-black/10 bg-white" />
+          ) : store.logo_url ? (
+            <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="80" height="80"
+              className="w-20 h-20 rounded-2xl object-cover shadow-lg flex-shrink-0 ring-1 ring-black/5 bg-white"
+              onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          ) : (
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-extrabold shadow-lg flex-shrink-0 ring-1 ring-black/5"
+              style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
+              {store.store_name.charAt(0)}
+            </div>
+          )}
+          <div className="min-w-0">
+            <h1 className="text-xl font-extrabold text-stone-900 tracking-tight truncate">{store.store_name}</h1>
+            {store.description && <p className="text-stone-500 text-sm mt-0.5 line-clamp-2">{store.description}</p>}
+            <a href={wa()} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 mt-2 px-3.5 py-2 rounded-full bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-emerald-200/40 hover:bg-emerald-600 transition-all focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 focus-visible:outline-none">
+              <span className="w-3.5 h-3.5">{I.wa}</span> WhatsApp
+            </a>
+          </div>
         </div>
       </div>
 
