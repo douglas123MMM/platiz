@@ -144,54 +144,60 @@ export default function PublicStore() {
       <style>{CSS}</style>
 
       {/* HERO / BANNER */}
-      <header className="relative border-b border-stone-200/40">
-        {store.banner_url && !bannerError ? (
-          <div className="w-full aspect-[2/1] sm:aspect-[3/1] max-h-[420px] overflow-hidden relative bg-stone-900">
-            <img
-              src={store.banner_url}
-              alt=""
-              width="1200" height="600"
-              className="w-full h-full object-cover"
-              loading="eager"
-              fetchPriority="high"
-              onError={() => setBannerError(true)}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" aria-hidden="true" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-              <div className="max-w-3xl mx-auto flex items-end gap-4">
-                {store.logo_url ? (
-                  <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="72" height="72"
-                    className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-2xl ring-2 ring-white/30 flex-shrink-0 hidden sm:block" />
-                ) : (
-                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-extrabold shadow-2xl ring-2 ring-white/30 flex-shrink-0 hidden sm:block"
-                    style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
-                    {store.store_name.charAt(0)}
-                  </div>
-                )}
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-lg">{store.store_name}</h1>
-                  {store.description && <p className="text-white/80 text-sm mt-1.5 max-w-md drop-shadow leading-relaxed">{store.description}</p>}
-                  <a href={wa()} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full bg-emerald-500/95 backdrop-blur-sm text-white text-xs sm:text-sm font-semibold shadow-lg shadow-black/20 hover:bg-emerald-500 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:outline-none">
-                    <span className="w-4 h-4">{I.wa}</span> WhatsApp
-                  </a>
+      {store.banner_url && !bannerError ? (
+        <div className="w-full relative bg-stone-900">
+          <img
+            src={store.banner_url}
+            alt=""
+            className="w-full block"
+            style={{ maxHeight: '360px', objectFit: 'cover', objectPosition: 'center' }}
+            loading="eager"
+            fetchPriority="high"
+            onError={() => setBannerError(true)}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/5 pointer-events-none" aria-hidden="true" />
+          <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+            <div className="max-w-3xl mx-auto flex items-end gap-3 sm:gap-4">
+              {store.logo_url ? (
+                <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="64" height="64"
+                  className="w-16 h-16 sm:w-18 sm:h-18 rounded-xl object-cover shadow-xl ring-2 ring-white/40 flex-shrink-0"
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              ) : (
+                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl ring-2 ring-white/40 flex-shrink-0"
+                  style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
+                  {store.store_name.charAt(0)}
                 </div>
+              )}
+              <div className="pb-0.5">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight drop-shadow-md">{store.store_name}</h1>
+                {store.description && <p className="text-white/80 text-xs sm:text-sm mt-1 max-w-md drop-shadow line-clamp-2">{store.description}</p>}
+                <a href={wa()} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 mt-2 px-3.5 py-2 rounded-full bg-emerald-500 text-white text-xs font-semibold shadow-lg shadow-black/20 hover:bg-emerald-600 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 focus-visible:outline-none">
+                  <span className="w-4 h-4">{I.wa}</span> WhatsApp
+                </a>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="pt-14 pb-10 px-6 text-center" style={{ background: `linear-gradient(170deg, ${accent}12 0%, ${accent}04 55%, #f9f8f5 100%)` }}>
+        </div>
+      ) : (
+        <div className="relative border-b border-stone-200/40" style={{ background: `linear-gradient(170deg, ${accent}12 0%, ${accent}04 50%, #f9f8f5 100%)` }}>
+          {store.banner_url && bannerError && (
+            <div className="w-full" style={{ maxHeight: '200px', overflow: 'hidden' }}>
+              <img src={store.banner_url} alt="" className="w-full object-cover opacity-10 pointer-events-none blur-sm" style={{ maxHeight: '200px' }} aria-hidden="true" />
+            </div>
+          )}
+          <div className={`px-6 text-center ${store.banner_url && bannerError ? 'py-10' : 'py-12'}`}>
             {store.logo_url ? (
-              <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="96" height="96"
-                className="w-24 h-24 rounded-2xl object-cover shadow-lg mx-auto mb-5 a-fade-up ring-1 ring-black/5"
+              <img src={store.logo_url} alt={`Logo de ${store.store_name}`} width="88" height="88"
+                className="w-22 h-22 rounded-2xl object-cover shadow-lg mx-auto mb-5 a-fade-up ring-1 ring-black/5"
                 onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
             ) : (
-              <div className="w-24 h-24 rounded-2xl mx-auto flex items-center justify-center text-white text-4xl font-extrabold shadow-lg mb-5 a-fade-up ring-1 ring-black/5"
+              <div className="w-22 h-22 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-extrabold shadow-lg mb-5 a-fade-up ring-1 ring-black/5"
                 style={{ background: `linear-gradient(135deg, ${accent}, ${adjustHex(accent, -25)})` }} aria-hidden="true">
                 {store.store_name.charAt(0)}
               </div>
             )}
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight a-fade-up">{store.store_name}</h1>
+            <h1 className="text-2xl font-extrabold text-stone-900 tracking-tight a-fade-up">{store.store_name}</h1>
             {store.description && <p className="text-stone-500 mt-2 text-sm max-w-md mx-auto a-fade-up leading-relaxed" style={{ animationDelay: '0.08s' }}>{store.description}</p>}
             <a href={wa()} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-full bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-200/60 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 a-fade-up focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -200,8 +206,8 @@ export default function PublicStore() {
               <span className="w-4 h-4">{I.wa}</span> WhatsApp
             </a>
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       {/* NAV */}
       <nav className="sticky top-0 z-40 backdrop-blur-xl border-b border-stone-200/30" style={{ backgroundColor: 'rgba(249,248,245,0.92)' }} aria-label="Navegaci\u00f3n principal">
