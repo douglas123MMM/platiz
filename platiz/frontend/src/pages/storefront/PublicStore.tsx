@@ -102,10 +102,10 @@ export default function PublicStore() {
   const send = () => {
     if (!store?.whatsapp || submitted || !checkoutForm.nombre || !checkoutForm.telefono) return;
     setSubmitted(true);
-    let m = `*${store.store_name}*\n\n*Cliente:* ${checkoutForm.nombre}\n*Tel\u00e9fono:* ${checkoutForm.telefono}\n`;
-    if (checkoutForm.direccion) m += `*Direcci\u00f3n:* ${checkoutForm.direccion}\n`;
-    m += `*Env\u00edo:* ${checkoutForm.metodo === 'domicilio' ? 'A domicilio' : 'Retiro en persona'}\n\n*PEDIDO:*\n`;
-    cart.forEach(c => m += `\u2022 ${c.quantity}\u00d7 ${c.name} \u2014 $${c.price * c.quantity}\n`);
+    let m = `*${store.store_name}*\n\n*Cliente:* ${checkoutForm.nombre}\n*Tel�fono:* ${checkoutForm.telefono}\n`;
+    if (checkoutForm.direccion) m += `*Direcci�n:* ${checkoutForm.direccion}\n`;
+    m += `*Env�o:* ${checkoutForm.metodo === 'domicilio' ? 'A domicilio' : 'Retiro en persona'}\n\n*PEDIDO:*\n`;
+    cart.forEach(c => m += `� ${c.quantity}� ${c.name} � $${c.price * c.quantity}\n`);
     m += `\n*TOTAL: $${total}*\n`;
     if (checkoutForm.notas) m += `\n${checkoutForm.notas}`;
     window.open(`https://wa.me/${store.whatsapp}?text=${encodeURIComponent(m)}`, '_blank');
@@ -113,13 +113,13 @@ export default function PublicStore() {
     setTimeout(() => setSubmitted(false), 3000);
   };
 
-  const wa = (t?: string) => store?.whatsapp ? `https://wa.me/${store.whatsapp}?text=${encodeURIComponent(t || 'Hola\u00a1 Quiero info')}` : '#';
+  const wa = (t?: string) => store?.whatsapp ? `https://wa.me/${store.whatsapp}?text=${encodeURIComponent(t || 'Hola� Quiero info')}` : '#';
 
   if (loading) return (
     <main className="min-h-screen bg-[#f9f8f5] flex items-center justify-center" role="status" aria-label="Cargando">
       <div className="flex flex-col items-center gap-4 a-fade-in">
         <div className="w-10 h-10 rounded-full border-[2px] border-stone-200 border-t-stone-400 animate-spin" />
-        <span className="text-stone-400 text-sm tracking-wide">Cargando\u2026</span>
+        <span className="text-stone-400 text-sm tracking-wide">Cargando�</span>
       </div>
     </main>
   );
@@ -128,7 +128,7 @@ export default function PublicStore() {
     <main className="min-h-screen bg-[#f9f8f5] flex flex-col items-center justify-center p-6 text-center a-fade-in">
       <div className="w-20 h-20 rounded-2xl bg-stone-100 flex items-center justify-center mb-6 shadow-sm border border-stone-200/50">{I.store}</div>
       <h1 className="text-xl font-bold text-stone-800 mb-2">Tienda no encontrada</h1>
-      <p className="text-stone-400 text-sm max-w-xs">Este enlace no existe o la tienda est\u00e1 pausada.</p>
+      <p className="text-stone-400 text-sm max-w-xs">Este enlace no existe o la tienda est� pausada.</p>
     </main>
   );
 
@@ -181,11 +181,11 @@ export default function PublicStore() {
       </div>
 
       {/* NAV */}
-      <nav className="sticky top-0 z-40 backdrop-blur-xl border-b border-stone-200/30" style={{ backgroundColor: 'rgba(249,248,245,0.92)' }} aria-label="Navegaci\u00f3n principal">
+      <nav className="sticky top-0 z-40 backdrop-blur-xl border-b border-stone-200/30" style={{ backgroundColor: 'rgba(249,248,245,0.92)' }} aria-label="Navegaci�n principal">
         <div className="max-w-3xl mx-auto flex items-center">
           {([
             { id: 'inicio' as TabType, label: 'Inicio' },
-            { id: 'catalogo' as TabType, label: 'Cat\u00e1logo' },
+            { id: 'catalogo' as TabType, label: 'Cat�logo' },
             { id: 'contacto' as TabType, label: 'Contacto' },
           ]).map(t => (
             <button key={t.id} onClick={() => go(t.id)}
@@ -195,7 +195,7 @@ export default function PublicStore() {
               {tab === t.id && <span className="absolute bottom-0 left-4 right-4 h-0.5 rounded-full" style={{ backgroundColor: accent }} aria-hidden="true" />}
             </button>
           ))}
-          <button onClick={() => setShowSearch(!showSearch)} className="px-3 py-3 flex items-center justify-center focus-visible:ring-2 rounded-lg focus-visible:outline-none" style={ring} aria-label={showSearch ? 'Cerrar b\u00fasqueda' : 'Buscar'}>
+          <button onClick={() => setShowSearch(!showSearch)} className="px-3 py-3 flex items-center justify-center focus-visible:ring-2 rounded-lg focus-visible:outline-none" style={ring} aria-label={showSearch ? 'Cerrar b�squeda' : 'Buscar'}>
             <span className={showSearch ? 'text-stone-600' : 'text-stone-400'}>{showSearch ? I.close : I.search}</span>
           </button>
           <button onClick={() => go('checkout')} className="px-2 py-3 flex items-center justify-center focus-visible:ring-2 rounded-lg focus-visible:outline-none relative" style={ring} aria-label={`Carrito, ${count} producto${count !== 1 ? 's' : ''}`}>
@@ -207,7 +207,7 @@ export default function PublicStore() {
           <div className="max-w-3xl mx-auto px-4 pb-3 a-scale-in">
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" aria-hidden="true">{I.search}</span>
-              <input autoFocus type="search" placeholder="Buscar\u2026" value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Escape' && setShowSearch(false)}
+              <input autoFocus type="search" placeholder="Buscar�" value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Escape' && setShowSearch(false)}
                 className="w-full h-11 pl-11 pr-10 rounded-xl bg-white border border-stone-200/80 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:border-transparent transition shadow-sm" style={ring}
                 aria-label="Buscar productos" autoComplete="off" spellCheck={false} />
               {search && <button onClick={() => { setSearch(''); setShowSearch(false); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-stone-500" aria-label="Limpiar">{I.close}</button>}
@@ -224,7 +224,7 @@ export default function PublicStore() {
           <div className="space-y-10">
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Cat\u00e1logo', sub: `${products.length} producto${products.length !== 1 ? 's' : ''}`, icon: I.grid, act: () => go('catalogo') },
+                { label: 'Cat�logo', sub: `${products.length} producto${products.length !== 1 ? 's' : ''}`, icon: I.grid, act: () => go('catalogo') },
                 { label: 'WhatsApp', sub: 'Contacto directo', icon: I.wa, act: () => window.open(wa(), '_blank'), green: true },
                 { label: 'Contacto', sub: 'Info y horarios', icon: I.mapPin, act: () => go('contacto') },
               ].map((c, i) => (
@@ -251,7 +251,7 @@ export default function PublicStore() {
               {products.length === 0 ? (
                 <div className="text-center py-20" role="status">
                   <div className="text-stone-200 mb-3">{I.store}</div>
-                  <p className="text-stone-400 text-sm">Sin productos todav\u00eda</p>
+                  <p className="text-stone-400 text-sm">Sin productos todav�a</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4" role="list">
@@ -266,18 +266,18 @@ export default function PublicStore() {
         {tab === 'catalogo' && (
           <div className="space-y-6">
             <div className="bg-white rounded-2xl p-6 border border-stone-200/40 shadow-sm a-fade-up">
-              <h1 className="text-2xl font-extrabold text-stone-800 mb-1">Cat\u00e1logo</h1>
-              <p className="text-stone-400 text-sm">Explor\u00e1 y ped\u00ed por WhatsApp</p>
+              <h1 className="text-2xl font-extrabold text-stone-800 mb-1">Cat�logo</h1>
+              <p className="text-stone-400 text-sm">Explor� y ped� por WhatsApp</p>
             </div>
 
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-300" aria-hidden="true">{I.search}</span>
-              <input type="search" placeholder="Buscar\u2026" value={search} onChange={e => setSearch(e.target.value)}
+              <input type="search" placeholder="Buscar�" value={search} onChange={e => setSearch(e.target.value)}
                 className="w-full h-12 pl-11 pr-4 rounded-xl bg-white border border-stone-200/80 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:border-transparent transition shadow-sm" style={ring}
                 autoComplete="off" spellCheck={false} aria-label="Buscar productos" />
             </div>
 
-            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar" role="tablist" aria-label="Categor\u00edas">
+            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar" role="tablist" aria-label="Categor�as">
               {cats.map(cat => (
                 <button key={cat} role="tab" onClick={() => setSelectedCat(cat)} aria-selected={selectedCat === cat}
                   className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex-shrink-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -295,7 +295,7 @@ export default function PublicStore() {
             {filtered.length === 0 ? (
               <div className="text-center py-20 a-fade-in" role="status">
                 <div className="text-stone-200 mb-4">{I.grid}</div>
-                <p className="text-stone-400 text-sm font-medium">{search ? 'Sin resultados' : 'Cat\u00e1logo vac\u00edo'}</p>
+                <p className="text-stone-400 text-sm font-medium">{search ? 'Sin resultados' : 'Cat�logo vac�o'}</p>
                 {search && <button onClick={() => setSearch('')} className="mt-3 text-sm font-semibold hover:underline" style={{ color: accent }}>Limpiar</button>}
               </div>
             ) : (
@@ -312,7 +312,7 @@ export default function PublicStore() {
             <div className="bg-white rounded-2xl p-8 border border-stone-200/40 shadow-sm text-center">
               <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-5 shadow-sm">{I.phone}</div>
               <h1 className="text-xl font-extrabold text-stone-800 mb-1">Contacto</h1>
-              <p className="text-stone-400 text-sm max-w-xs mx-auto">Escribinos por WhatsApp, te respondemos r\u00e1pido</p>
+              <p className="text-stone-400 text-sm max-w-xs mx-auto">Escribinos por WhatsApp, te respondemos r�pido</p>
             </div>
 
             <a href={wa()} target="_blank" rel="noopener noreferrer"
@@ -326,7 +326,7 @@ export default function PublicStore() {
 
             <div className="grid grid-cols-2 gap-4">
               {[
-                { t: 'Lunes a Viernes', d: '9 AM \u2013 6 PM', i: I.clock },
+                { t: 'Lunes a Viernes', d: '9 AM � 6 PM', i: I.clock },
                 { t: 'Respuesta', d: 'Menos de 1 hora', i: I.zap },
               ].map((c, i) => (
                 <div key={c.t} className="bg-white rounded-2xl p-5 border border-stone-200/40 shadow-sm text-center a-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
@@ -343,20 +343,20 @@ export default function PublicStore() {
         {tab === 'checkout' && (
           <div className="space-y-5 a-fade-up">
             <button onClick={() => go('catalogo')} className="text-sm text-stone-400 hover:text-stone-600 transition inline-flex items-center gap-1.5 focus-visible:ring-2 rounded-lg focus-visible:outline-none" style={ring}>
-              <span className="w-4 h-4">{I.arrowLeft}</span> Volver al cat\u00e1logo
+              <span className="w-4 h-4">{I.arrowLeft}</span> Volver al cat�logo
             </button>
 
             <div className="bg-white rounded-2xl border border-stone-200/40 shadow-sm overflow-hidden">
               <div className="p-6 border-b border-stone-100">
                 <h1 className="text-xl font-extrabold text-stone-800 mb-1">Tu pedido</h1>
-                <p className="text-stone-400 text-sm">Revis\u00e1 y complet\u00e1 tus datos</p>
+                <p className="text-stone-400 text-sm">Revis� y complet� tus datos</p>
               </div>
 
               {cart.length === 0 ? (
                 <div className="p-12 text-center" role="status">
                   <div className="text-stone-200 mb-4 flex justify-center"><span className="w-10 h-10">{I.cart}</span></div>
-                  <p className="text-stone-400 text-sm">Carrito vac\u00edo</p>
-                  <button onClick={() => go('catalogo')} className="mt-3 text-sm font-semibold hover:underline" style={{ color: accent }}>Ir al cat\u00e1logo</button>
+                  <p className="text-stone-400 text-sm">Carrito vac�o</p>
+                  <button onClick={() => go('catalogo')} className="mt-3 text-sm font-semibold hover:underline" style={{ color: accent }}>Ir al cat�logo</button>
                 </div>
               ) : (
                 <div className="p-6">
@@ -399,15 +399,15 @@ export default function PublicStore() {
                     <input id="c-name" name="nombre" type="text" required placeholder="Nombre completo" value={checkoutForm.nombre}
                       onChange={e => setCheckoutForm({...checkoutForm, nombre: e.target.value})} autoComplete="name"
                       className="w-full h-12 px-4 rounded-xl bg-stone-50 border border-stone-200/80 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:border-transparent transition" style={ring} />
-                    <input id="c-phone" name="telefono" type="tel" required placeholder="Tel\u00e9fono" value={checkoutForm.telefono}
+                    <input id="c-phone" name="telefono" type="tel" required placeholder="Tel�fono" value={checkoutForm.telefono}
                       onChange={e => setCheckoutForm({...checkoutForm, telefono: e.target.value})} autoComplete="tel"
                       className="w-full h-12 px-4 rounded-xl bg-stone-50 border border-stone-200/80 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:border-transparent transition" style={ring} />
-                    <input id="c-addr" name="direccion" type="text" placeholder="Direcci\u00f3n" value={checkoutForm.direccion}
+                    <input id="c-addr" name="direccion" type="text" placeholder="Direcci�n" value={checkoutForm.direccion}
                       onChange={e => setCheckoutForm({...checkoutForm, direccion: e.target.value})} autoComplete="street-address"
                       className="w-full h-12 px-4 rounded-xl bg-stone-50 border border-stone-200/80 text-sm text-stone-800 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:border-transparent transition" style={ring} />
 
                     <fieldset className="flex gap-2">
-                      <legend className="sr-only">M\u00e9todo de env\u00edo</legend>
+                      <legend className="sr-only">M�todo de env�o</legend>
                       {[
                         { v: 'domicilio', l: 'A domicilio', i: I.truck },
                         { v: 'retiro', l: 'Retiro', i: I.mapPin },
@@ -429,7 +429,7 @@ export default function PublicStore() {
                     <button type="submit" disabled={!checkoutForm.nombre || !checkoutForm.telefono || cart.length === 0 || submitted}
                       className="w-full py-3.5 rounded-xl bg-emerald-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200/50 hover:shadow-xl hover:bg-emerald-600 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:outline-none">
                       <span className="w-5 h-5">{I.wa}</span>
-                      {submitted ? '\u00a1Enviado\u00a1' : 'Enviar pedido por WhatsApp'}
+                      {submitted ? '�Enviado�' : 'Enviar pedido por WhatsApp'}
                     </button>
                   </form>
                 </div>
@@ -440,7 +440,7 @@ export default function PublicStore() {
       </main>
 
       {/* FLOATING */}
-      <div className="fixed bottom-5 right-5 flex flex-col gap-3 z-50" role="complementary" aria-label="Acciones r\u00e1pidas">
+      <div className="fixed bottom-5 right-5 flex flex-col gap-3 z-50" role="complementary" aria-label="Acciones r�pidas">
         {count > 0 && (
           <button onClick={() => go('checkout')}
             className="w-13 h-13 rounded-2xl bg-white flex items-center justify-center shadow-xl border border-stone-200/60 hover:scale-105 transition-all relative focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -460,7 +460,7 @@ export default function PublicStore() {
 
       <footer className="text-center py-12 px-4" role="contentinfo">
         <p className="text-[11px] text-stone-300 font-medium">
-          <span translate="no">{store.store_name}</span> \u00b7 Creado con <span className="font-semibold text-stone-400" translate="no">Global Dorado</span>
+          <span translate="no">{store.store_name}</span> � Creado con <span className="font-semibold text-stone-400" translate="no">Global Dorado</span>
         </p>
       </footer>
     </div>
